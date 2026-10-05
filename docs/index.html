@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FrutaMIDI Sampler</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --panel: #ffffff; --ink: #1d1d1b; --muted: #6b6a64; --line: #dedcd4;
+    --pad: #ffffff; --pad-hit: #f2b84b; --accent: #2f7d5b; --warn: #b5482f;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #161614; --panel: #201f1c; --ink: #f1efe8; --muted: #a09e95; --line: #35342f;
+      --pad: #262521; --pad-hit: #e0a536; --accent: #5cc193; --warn: #e2735a;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #161614; --panel: #201f1c; --ink: #f1efe8; --muted: #a09e95; --line: #35342f;
+    --pad: #262521; --pad-hit: #e0a536; --accent: #5cc193; --warn: #e2735a;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center;
+         background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+         padding: 12px 14px; margin-bottom: 16px; }
+  .bar label { display: flex; align-items: center; gap: 8px; color: var(--muted); }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--muted); display: inline-block; }
+  .dot.on { background: var(--accent); }
+  .dot.err { background: var(--warn); }
+  #status { display: flex; align-items: center; gap: 8px; }
+  button { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+           border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+  button:hover { border-color: var(--muted); }
+  button.active { border-color: var(--accent); color: var(--accent); }
+  .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+  @media (max-width: 560px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+  .pad { position: relative; aspect-ratio: 1 / 0.82; background: var(--pad); border: 1px solid var(--line);
+         border-radius: 12px; padding: 10px; display: flex; flex-direction: column; justify-content: space-between;
+         cursor: pointer; user-select: none; transition: background 0.12s, transform 0.05s; overflow: hidden; }
+  .pad.hit { background: var(--pad-hit); transform: scale(0.98); transition: none; color: #1d1d1b; }
+  .pad.learning { outline: 2px dashed var(--accent); outline-offset: 2px; }
+  .pad.drop { outline: 2px solid var(--accent); }
+  .pad .name { font-weight: 600; font-size: 14px; word-break: break-word; }
+  .pad .meta { display: flex; justify-content: space-between; align-items: flex-end; font-size: 12px; color: inherit; opacity: 0.7; }
+  .pad .learn { font-size: 11px; padding: 2px 7px; border-radius: 6px; }
+  .pad .at { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--accent); width: 0; }
+  .help { margin-top: 18px; color: var(--muted); font-size: 13px; }
+  .help kbd { font: 12px ui-monospace, monospace; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+  #log { margin-top: 14px; font: 12px ui-monospace, monospace; color: var(--muted); min-height: 1.4em; }
+  #gate { position: fixed; inset: 0; background: color-mix(in srgb, var(--bg) 88%, transparent);
+          display: flex; align-items: center; justify-content: center; z-index: 10; }
+  #gate button { font-size: 17px; padding: 14px 22px; border-color: var(--accent); }
+  input[type=range] { accent-color: var(--accent); }
+</style>
+</head>
+<body>
+<div id="gate"><button id="start">Clica para ativar o som</button></div>
+<main>
+  <h1>FrutaMIDI Sampler</h1>
+  <p class="sub">Recebe MIDI do FrutaMIDI (ou de qualquer controlador) e toca sons. Funciona no Windows e no Mac com o Chrome ou o Edge; o Safari não suporta Web MIDI.</p>
+
+  <div class="bar">
+    <span id="status"><span class="dot" id="dot"></span><span id="statusText">A procurar MIDI…</span></span>
+    <label>Volume <input id="vol" type="range" min="0" max="1" step="0.01" value="0.8"></label>
+    <label><input id="synthOn" type="checkbox" checked> Sintetizador nas notas sem pad</label>
+    <button id="reset" title="Repor sons e notas de origem">Repor</button>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <div id="log"></div>
+  <p class="help">
+    <strong>Trocar o som de um pad:</strong> arrasta um ficheiro de áudio (wav, mp3, aiff, m4a) para cima dele.
+    <strong>Mudar a nota de um pad:</strong> carrega em “aprender” e toca na fruta.
+    <strong>Sem hardware:</strong> teclas <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> /
+    <kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd> / <kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd>.
+    As notas sem pad (escalas melódicas do firmware) tocam no sintetizador; o aftertouch abre o filtro.
+    Os samples arrastados só ficam até fechares a página; as notas aprendidas ficam guardadas.
+    <strong>Windows:</strong> se o FrutaMIDI aparecer como “ocupado”, fecha o DAW (ou outro separador com esta página) e recarrega.
+  </p>
+</main>
+
+<script>
+(() => {
+  const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const noteName = n => NOTE_NAMES[n % 12] + (Math.floor(n / 12) - 2);   // convenção Ableton/Logic: 60 = C3
+  const KEYS = ['1', '2', '3', '4', 'q', 'w', 'e', 'r', 'a', 's', 'd', 'f'];
+  const BUILTIN = ['Bombo', 'Tarola', 'Hi-hat', 'Hi-hat aberto', 'Palmas', 'Tom grave',
+                   'Tom médio', 'Tom agudo', 'Aro', 'Cowbell', 'Shaker', 'Zap'];
+  const STORE = 'frutamidi-sampler-notes';
+
+  let ctx = null, master = null, noiseBuf = null;
+  const pads = BUILTIN.map((name, i) => ({ name, note: 36 + i, buffer: null, el: null }));
+  const voices = new Map();      // nota -> voz do sintetizador
+  let learning = -1;
+
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
+    if (Array.isArray(saved) && saved.length === pads.length) saved.forEach((n, i) => { pads[i].note = n; });
+  } catch (e) { /* sem storage: fica com as notas de origem */ }
+  const saveNotes = () => { try { localStorage.setItem(STORE, JSON.stringify(pads.map(p => p.note))); } catch (e) {} };
+
+  // ------------------------------- áudio -------------------------------
+  function initAudio() {
+    if (ctx) return ctx.resume();
+    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    master = ctx.createGain();
+    master.gain.value = +document.getElementById('vol').value;
+    const comp = ctx.createDynamicsCompressor();
+    master.connect(comp).connect(ctx.destination);
+    noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+
+  const env = (g, t, peak, decay) => {
+    g.gain.setValueAtTime(peak, t);
+    g.gain.exponentialRampToValueAtTime(0.001, t + decay);
+  };
+  function osc(type, f0, f1, t, dur, peak, out) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(f0, t);
+    if (f1) o.frequency.exponentialRampToValueAtTime(f1, t + dur * 0.6);
+    env(g, t, peak, dur); o.connect(g).connect(out); o.start(t); o.stop(t + dur + 0.05);
+  }
+  function noise(type, freq, q, t, dur, peak, out) {
+    const s = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = noiseBuf; f.type = type; f.frequency.value = freq; f.Q.value = q;
+    env(g, t, peak, dur); s.connect(f).connect(g).connect(out); s.start(t); s.stop(t + dur + 0.05);
+  }
+  const DRUMS = [
+    (t, o) => osc('sine', 150, 42, t, 0.5, 1.0, o),
+    (t, o) => { noise('highpass', 1200, 0.7, t, 0.2, 0.6, o); osc('triangle', 190, 140, t, 0.12, 0.5, o); },
+    (t, o) => noise('highpass', 7500, 0.8, t, 0.05, 0.4, o),
+    (t, o) => noise('highpass', 7000, 0.8, t, 0.35, 0.35, o),
+    (t, o) => { [0, 0.012, 0.024].forEach(dt => noise('bandpass', 1500, 1.2, t + dt, 0.04, 0.6, o));
+                noise('bandpass', 1500, 1.2, t + 0.036, 0.18, 0.6, o); },
+    (t, o) => osc('sine', 110, 70, t, 0.45, 0.9, o),
+    (t, o) => osc('sine', 165, 105, t, 0.38, 0.85, o),
+    (t, o) => osc('sine', 240, 160, t, 0.3, 0.8, o),
+    (t, o) => { osc('square', 820, 0, t, 0.03, 0.25, o); noise('bandpass', 2500, 2, t, 0.03, 0.3, o); },
+    (t, o) => { const f = ctx.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 800; f.Q.value = 1.5; f.connect(o);
+                osc('square', 540, 0, t, 0.35, 0.3, f); osc('square', 800, 0, t, 0.35, 0.3, f); },
+    (t, o) => noise('bandpass', 5500, 1.5, t, 0.09, 0.5, o),
+    (t, o) => osc('sawtooth', 1400, 90, t, 0.25, 0.3, o),
+  ];
+
+  function playPad(i, velocity = 100) {
+    if (!ctx) return;
+    const p = pads[i], t = ctx.currentTime, out = ctx.createGain();
+    out.gain.value = (velocity / 127) ** 1.5;
+    out.connect(master);
+    if (p.buffer) {
+      const s = ctx.createBufferSource(); s.buffer = p.buffer; s.connect(out); s.start(t);
+    } else {
+      DRUMS[i](t, out);
+    }
+    flash(i);
+  }
+
+  function synthOn(note, velocity) {
+    if (!ctx || !document.getElementById('synthOn').checked) return;
+    synthOff(note);
+    const t = ctx.currentTime, f = 440 * 2 ** ((note - 69) / 12);
+    const g = ctx.createGain(), filt = ctx.createBiquadFilter();
+    filt.type = 'lowpass'; filt.frequency.value = 900; filt.Q.value = 4;
+    const oscs = [-7, 7].map(cents => {
+      const o = ctx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = cents;
+      o.connect(filt); o.start(t); return o;
+    });
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.22 * (velocity / 127), t + 0.015);
+    g.gain.setTargetAtTime(0.14 * (velocity / 127), t + 0.015, 0.2);
+    filt.connect(g).connect(master);
+    voices.set(note, { oscs, g, filt });
+  }
+  function synthOff(note) {
+    const v = voices.get(note);
+    if (!v) return;
+    const t = ctx.currentTime;
+    v.g.gain.cancelScheduledValues(t);
+    v.g.gain.setTargetAtTime(0, t, 0.12);
+    v.oscs.forEach(o => o.stop(t + 0.8));
+    voices.delete(note);
+  }
+  function aftertouch(note, value) {
+    const v = voices.get(note);
+    if (v) v.filt.frequency.setTargetAtTime(900 + value * 45, ctx.currentTime, 0.03);
+    const i = pads.findIndex(p => p.note === note);
+    if (i >= 0) pads[i].el.querySelector('.at').style.width = (value / 127 * 100) + '%';
+  }
+
+  // -------------------------------- MIDI --------------------------------
+  const log = msg => { document.getElementById('log').textContent = msg; };
+
+  function handleMidi(e) {
+    const [status, d1, d2] = e.data, type = status & 0xf0, ch = (status & 0x0f) + 1;
+    if (type === 0x90 && d2 > 0) {
+      log(`Note On  ${noteName(d1)} (${d1})  vel ${d2}  canal ${ch}`);
+      if (learning >= 0) { pads[learning].note = d1; saveNotes(); stopLearning(); render(); }
+      const i = pads.findIndex(p => p.note === d1);
+      if (i >= 0) playPad(i, d2); else synthOn(d1, d2);
+    } else if (type === 0x80 || (type === 0x90 && d2 === 0)) {
+      synthOff(d1);
+      const i = pads.findIndex(p => p.note === d1);
+      if (i >= 0) pads[i].el.querySelector('.at').style.width = '0';
+    } else if (type === 0xa0) {
+      aftertouch(d1, d2);
+    }
+  }
+
+  function setStatus(text, cls) {
+    document.getElementById('statusText').textContent = text;
+    document.getElementById('dot').className = 'dot ' + (cls || '');
+  }
+
+  let knownInputs = null;
+
+  function bindInputs(access) {
+    const inputs = [...access.inputs.values()].filter(i => i.state === 'connected');
+    const key = inputs.map(i => i.id).sort().join('|');
+    if (key === knownInputs) return;           // abrir uma porta também dispara statechange
+    knownInputs = key;
+    if (!inputs.length) { setStatus('Nenhum dispositivo MIDI. Liga o FrutaMIDI ao USB.', ''); return; }
+
+    const names = [], busy = [];
+    Promise.all(inputs.map(input => {
+      input.onmidimessage = handleMidi;
+      return input.open().then(() => names.push(input.name), () => busy.push(input.name));
+    })).then(() => {
+      if (names.length) {
+        setStatus('Ligado: ' + names.join(', ') + (busy.length ? ' · ocupado: ' + busy.join(', ') : ''), 'on');
+      } else {
+        // No Windows (driver MIDI clássico) só um programa de cada vez pode abrir um dispositivo MIDI.
+        setStatus(busy.join(', ') + ' está a ser usado por outro programa. No Windows só um programa ' +
+                  'de cada vez pode usar um dispositivo MIDI: fecha o DAW e recarrega esta página.', 'err');
+      }
+    });
+  }
+
+  if (navigator.requestMIDIAccess) {
+    navigator.requestMIDIAccess().then(access => {
+      bindInputs(access);
+      access.onstatechange = () => bindInputs(access);
+    }, () => setStatus('Acesso MIDI recusado. Autoriza o MIDI nas definições do site (ícone à esquerda do endereço).', 'err'));
+  } else {
+    setStatus('Este browser não tem Web MIDI. Usa o Chrome ou o Edge (o teclado funciona na mesma).', 'err');
+  }
+
+  // --------------------------------- UI ---------------------------------
+  function flash(i) {
+    const el = pads[i].el;
+    el.classList.add('hit');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('hit'), 110);
+  }
+  function stopLearning() {
+    learning = -1;
+    pads.forEach(p => p.el.classList.remove('learning'));
+  }
+
+  function render() {
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    pads.forEach((p, i) => {
+      const el = document.createElement('div');
+      el.className = 'pad';
+      el.innerHTML = `<div class="name"></div>
+        <div class="meta"><span class="note"></span><span>${KEYS[i].toUpperCase()}</span>
+        <button class="learn" type="button">aprender</button></div><div class="at"></div>`;
+      el.querySelector('.name').textContent = p.name;
+      el.querySelector('.note').textContent = `${noteName(p.note)} · ${p.note}`;
+      el.addEventListener('pointerdown', ev => {
+        if (ev.target.closest('.learn')) return;
+        initAudio(); playPad(i, 110);
+      });
+      el.querySelector('.learn').addEventListener('click', () => {
+        if (learning === i) { stopLearning(); log(''); return; }
+        stopLearning(); learning = i; el.classList.add('learning');
+        log(`A aprender: toca na fruta que deve disparar "${p.name}"…`);
+      });
+      el.addEventListener('dragover', ev => { ev.preventDefault(); el.classList.add('drop'); });
+      el.addEventListener('dragleave', () => el.classList.remove('drop'));
+      el.addEventListener('drop', async ev => {
+        ev.preventDefault(); el.classList.remove('drop');
+        const file = ev.dataTransfer.files[0];
+        if (!file) return;
+        initAudio();
+        try {
+          p.buffer = await ctx.decodeAudioData(await file.arrayBuffer());
+          p.name = file.name.replace(/\.[^.]+$/, '');
+          render(); log(`Carregado: ${file.name}`);
+        } catch (err) { log(`Não consegui ler ${file.name}: formato não suportado.`); }
+      });
+      p.el = el;
+      grid.appendChild(el);
+    });
+  }
+
+  document.addEventListener('keydown', ev => {
+    if (ev.repeat || ev.metaKey || ev.ctrlKey || ev.target.tagName === 'INPUT') return;
+    const i = KEYS.indexOf(ev.key.toLowerCase());
+    if (i >= 0) { initAudio(); playPad(i, 110); }
+  });
+  document.getElementById('vol').addEventListener('input', ev => { if (master) master.gain.value = +ev.target.value; });
+  document.getElementById('reset').addEventListener('click', () => {
+    pads.forEach((p, i) => { p.note = 36 + i; p.buffer = null; p.name = BUILTIN[i]; });
+    saveNotes(); stopLearning(); render(); log('Sons e notas repostos.');
+  });
+  document.getElementById('start').addEventListener('click', () => {
+    initAudio(); document.getElementById('gate').remove();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

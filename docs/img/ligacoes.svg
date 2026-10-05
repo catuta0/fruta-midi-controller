@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 420" width="760" height="420" role="img" aria-label="Quatro fios ligam o Pico ao MPR121; botão e potenciómetro são opcionais" font-family="-apple-system, 'Segoe UI', system-ui, sans-serif" font-size="13">
+<rect width="760" height="420" rx="12" fill="#ffffff"/>
+<defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#9b9a92"/></marker></defs>
+<text x="24" y="34" font-size="15" fill="#1d1d1b" text-anchor="start" font-weight="600">Quatro fios ligam o Pico ao MPR121; botão e potenciómetro são opcionais</text>
+<text x="24" y="54" font-size="11.5" fill="#6b6a64" text-anchor="start" font-weight="400">Pinos físicos do Pico contados de 1 a 40, USB virado para cima; MPR121 no endereço 0x5A</text>
+<path d="M264 140H440" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<circle cx="264" cy="140" r="3" fill="#9b9a92"/>
+<path d="M264 172H440" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<circle cx="264" cy="172" r="3" fill="#9b9a92"/>
+<path d="M264 204H440" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<circle cx="264" cy="204" r="3" fill="#9b9a92"/>
+<path d="M264 236H440" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<circle cx="264" cy="236" r="3" fill="#9b9a92"/>
+<path d="M264 292H440" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<circle cx="264" cy="292" r="3" fill="#9b9a92"/>
+<path d="M264 340H440" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<circle cx="264" cy="340" r="3" fill="#9b9a92"/>
+<path d="M264 372H440" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<circle cx="264" cy="372" r="3" fill="#9b9a92"/>
+<circle cx="440" cy="140" r="3" fill="#9b9a92"/>
+<circle cx="440" cy="172" r="3" fill="#9b9a92"/>
+<circle cx="440" cy="204" r="3" fill="#9b9a92"/>
+<circle cx="440" cy="236" r="3" fill="#9b9a92"/>
+<path d="M600 160H640" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<path d="M600 188H640" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<path d="M600 216H640" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<text x="352" y="134" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">3,3 V</text>
+<text x="352" y="166" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">massa</text>
+<text x="352" y="198" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">dados</text>
+<text x="352" y="230" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">relógio</text>
+<text x="352" y="286" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">opcional</text>
+<text x="352" y="334" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">opcional</text>
+<text x="620.0" y="150" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">0–11</text>
+<rect x="24" y="84" width="240" height="312" rx="8" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<text x="144.0" y="108" font-size="13" fill="#1d1d1b" text-anchor="middle" font-weight="600">Raspberry Pi Pico</text>
+<text x="252" y="144" font-size="13" fill="#1d1d1b" text-anchor="end" font-weight="400">3V3(OUT) · pino 36</text>
+<text x="252" y="176" font-size="13" fill="#1d1d1b" text-anchor="end" font-weight="400">GND · pino 38</text>
+<text x="252" y="208" font-size="13" fill="#1d1d1b" text-anchor="end" font-weight="400">GP4 · pino 6</text>
+<text x="252" y="240" font-size="13" fill="#1d1d1b" text-anchor="end" font-weight="400">GP5 · pino 7</text>
+<text x="252" y="296" font-size="13" fill="#1d1d1b" text-anchor="end" font-weight="400">GP15 · pino 20</text>
+<text x="252" y="344" font-size="13" fill="#1d1d1b" text-anchor="end" font-weight="400">GP26 / ADC0 · pino 31</text>
+<text x="252" y="376" font-size="13" fill="#1d1d1b" text-anchor="end" font-weight="400">AGND · pino 33</text>
+<rect x="440" y="84" width="160" height="168" rx="8" fill="#2f6fd6" fill-opacity="0.12" stroke="#2f6fd6" stroke-width="2"/>
+<text x="520.0" y="108" font-size="13" fill="#1d1d1b" text-anchor="middle" font-weight="600">MPR121</text>
+<text x="452" y="144" font-size="13" fill="#1d1d1b" text-anchor="start" font-weight="400">VIN (clone: 3.3V)</text>
+<text x="452" y="176" font-size="13" fill="#1d1d1b" text-anchor="start" font-weight="400">GND</text>
+<text x="452" y="208" font-size="13" fill="#1d1d1b" text-anchor="start" font-weight="400">SDA</text>
+<text x="452" y="240" font-size="13" fill="#1d1d1b" text-anchor="start" font-weight="400">SCL</text>
+<rect x="440" y="268" width="160" height="48" rx="8" fill="none" stroke="#9b9a92" stroke-width="1.25" stroke-dasharray="4 3"/>
+<text x="520.0" y="288" font-size="13" fill="#1d1d1b" text-anchor="middle" font-weight="600">Botão</text>
+<text x="520.0" y="306" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">2.ª perna → GND (18)</text>
+<rect x="440" y="324" width="160" height="72" rx="8" fill="none" stroke="#9b9a92" stroke-width="1.25" stroke-dasharray="4 3"/>
+<text x="520.0" y="346" font-size="13" fill="#1d1d1b" text-anchor="middle" font-weight="600">Potenciómetro</text>
+<text x="520.0" y="364" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">meio: GP26</text>
+<text x="520.0" y="380" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">extremos: AGND e 3V3</text>
+<rect x="640" y="128" width="96" height="120" rx="8" fill="none" stroke="#9b9a92" stroke-width="1.25"/>
+<text x="688.0" y="160" font-size="13" fill="#1d1d1b" text-anchor="middle" font-weight="600">Objetos</text>
+<text x="688.0" y="190" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">1 crocodilo</text>
+<text x="688.0" y="206" font-size="11.5" fill="#6b6a64" text-anchor="middle" font-weight="400">por elétrodo</text>
+</svg>
