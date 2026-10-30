@@ -4,3 +4,6 @@ build/
 *.hex
 *.bin
 *.elf
+*.kicad_prl
+fp-info-cache
+*-backups/

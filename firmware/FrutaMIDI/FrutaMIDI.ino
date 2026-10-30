@@ -17,7 +17,13 @@
     - Botão, toque curto  : próxima escala (o LED pisca N vezes = escala N)
     - Botão, 1 s premido  : recalibrar os sensores (tira as mãos das frutas!)
     - Potenciómetro       : oitava -2 … +2 (opcional, ver USE_POT)
+
+  Montagem:
+    - Breadboard (guia do README): pinos por defeito, I2C em GP4/GP5.
+    - PCB FrutaMIDI v1.0 (pasta hardware/): descomenta a linha abaixo ou compila com -DFRUTAMIDI_PCB.
 */
+
+// #define FRUTAMIDI_PCB
 
 #include <Wire.h>
 #include <Adafruit_MPR121.h>
@@ -37,14 +43,25 @@ const bool     SEND_AFTERTOUCH   = true;            // "pressão" -> Polyphonic 
 const uint16_t AT_MAX_DELTA      = 120;             // delta que corresponde a aftertouch 127
 const uint16_t AT_INTERVAL_MS    = 15;              // intervalo mínimo entre mensagens de aftertouch
 const bool     USE_BUTTON        = true;            // botão de escala / recalibração
+#ifdef FRUTAMIDI_PCB
+const bool     USE_POT           = true;            // a PCB tem sempre o potenciómetro de oitava
+#else
 const bool     USE_POT           = false;           // true se ligares o potenciómetro de oitava
+#endif
 const bool     SERIAL_DEBUG      = false;           // true = imprime deltas no Monitor Série (115200)
 
-#if defined(ARDUINO_ARCH_RP2040)
+#if defined(ARDUINO_ARCH_RP2040) && defined(FRUTAMIDI_PCB)
+#define I2C_BUS Wire1                               // PCB: todos os sinais na fila interior do Pico
+const int PIN_SDA = 26, PIN_SCL = 27;               // GP26 / GP27 = I2C1 (pinos físicos 31 e 32)
+const int PIN_BUTTON = 22;                          // GP22 (pino físico 29)
+const int PIN_POT = 28;                             // GP28 / ADC2 (pino físico 34)
+#elif defined(ARDUINO_ARCH_RP2040)
+#define I2C_BUS Wire
 const int PIN_SDA = 4, PIN_SCL = 5;                 // GP4 / GP5 (pinos físicos 6 e 7)
 const int PIN_BUTTON = 15;                          // GP15 (pino físico 20)
 const int PIN_POT = 26;                             // GP26 / ADC0 (pino físico 31)
 #else
+#define I2C_BUS Wire
 const int PIN_BUTTON = 7;                           // Pro Micro: SDA=2 e SCL=3 são fixos
 const int PIN_POT = A0;
 #endif
@@ -173,7 +190,7 @@ void startSensors() {
   for (uint8_t s = 0; s < NUM_SENSORS; s++) {
     // begin() faz reset ao chip; com AUTOCONFIG o MPR121 mede a capacidade de cada elétrodo
     // e escolhe a corrente de carga certa (uma melancia precisa de muito mais que um pad de cobre).
-    sensorOk[s] = sensors[s].begin(SENSOR_ADDR[s], &Wire, TOUCH_THRESHOLD, RELEASE_THRESHOLD, AUTOCONFIG);
+    sensorOk[s] = sensors[s].begin(SENSOR_ADDR[s], &I2C_BUS, TOUCH_THRESHOLD, RELEASE_THRESHOLD, AUTOCONFIG);
     if (SERIAL_DEBUG && Serial) {
       Serial.print("MPR121 0x"); Serial.print(SENSOR_ADDR[s], HEX);
       Serial.println(sensorOk[s] ? " OK" : " NAO ENCONTRADO");
@@ -260,11 +277,11 @@ void setup() {
   if (SERIAL_DEBUG) Serial.begin(115200);
 
 #if defined(ARDUINO_ARCH_RP2040)
-  Wire.setSDA(PIN_SDA);
-  Wire.setSCL(PIN_SCL);
+  I2C_BUS.setSDA(PIN_SDA);
+  I2C_BUS.setSCL(PIN_SCL);
 #endif
-  Wire.begin();
-  Wire.setClock(400000);
+  I2C_BUS.begin();
+  I2C_BUS.setClock(400000);
 
   for (uint8_t p = 0; p < MAX_PADS; p++) {
     activeNote[p] = NONE;

@@ -1,0 +1,7 @@
+"Ref","Valor","Footprint","Qtd"
+"A1","RaspberryPi_Pico","FrutaMIDI:RaspberryPi_Pico_Socket","1"
+"A2","Adafruit_MPR121_1982","FrutaMIDI:Adafruit_MPR121_1982_Socket","1"
+"J1","CFG_3V3_SCL_SDA","FrutaMIDI:Config_3pads","1"
+"J2","Terminais 5,08 mm (7x 2 vias)","FrutaMIDI:TerminalBlock_5.08_1x14","1"
+"RV1","10k lin (B10K)","FrutaMIDI:Potentiometer_RK09K_Vertical","1"
+"SW1","SW_Push_6mm","FrutaMIDI:SW_PUSH_6mm","1"

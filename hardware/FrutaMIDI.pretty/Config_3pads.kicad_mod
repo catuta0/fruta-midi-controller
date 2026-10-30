@@ -1,0 +1,150 @@
+(footprint "Config_3pads"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "3 furos para fios de configuração: SDA, SCL, 3V3")
+	(property "Reference" ""
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(uuid "96068294-0f1f-43e7-8393-6fb1c15c21b7")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "a813b858-46d5-4c06-9bb3-99bebc8272bc")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "a5fd49b9-5037-46d4-bddb-3519b454cdfc")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "65341053-8473-487e-9682-dd0bb227b751")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.6 -3.2)
+		(end 9.2 -3.2)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "9195b1c5-89ba-42ba-be69-2d194fa3edc8")
+	)
+	(fp_line
+		(start -1.6 1.6)
+		(end -1.6 -3.2)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "e9e9b2c5-3748-4773-8245-ed73c76f9b90")
+	)
+	(fp_line
+		(start 9.2 -3.2)
+		(end 9.2 1.6)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "457e5228-fe69-40e5-a1f7-49b842245b86")
+	)
+	(fp_line
+		(start 9.2 1.6)
+		(end -1.6 1.6)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "f041dc7c-3d33-4499-9562-50464a349e55")
+	)
+	(fp_text user "SDA"
+		(at 0 -2.3 0)
+		(layer "F.SilkS")
+		(uuid "11ff3173-c72f-4c3c-8725-19e10e8ffc22")
+		(effects
+			(font
+				(size 0.9 0.9)
+				(thickness 0.135)
+			)
+		)
+	)
+	(fp_text user "SCL"
+		(at 3.81 -2.3 0)
+		(layer "F.SilkS")
+		(uuid "19535deb-43de-449b-9276-34cc1b66ad8a")
+		(effects
+			(font
+				(size 0.9 0.9)
+				(thickness 0.135)
+			)
+		)
+	)
+	(fp_text user "3V3"
+		(at 7.62 -2.3 0)
+		(layer "F.SilkS")
+		(uuid "136de332-f9ac-4b9e-b8e3-28b359087586")
+		(effects
+			(font
+				(size 0.9 0.9)
+				(thickness 0.135)
+			)
+		)
+	)
+	(pad "1" thru_hole rect
+		(at 7.62 0)
+		(size 2.2 2.2)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(thermal_bridge_angle 45)
+		(uuid "a7bed7be-b321-4d47-8b04-b09330bc6530")
+	)
+	(pad "2" thru_hole circle
+		(at 3.81 0)
+		(size 2.2 2.2)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "0b705f9b-6aca-408b-87b5-fca26386a506")
+	)
+	(pad "3" thru_hole circle
+		(at 0 0)
+		(size 2.2 2.2)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "e6f64900-d3cc-4527-8bee-b43b13483cf2")
+	)
+	(embedded_fonts no)
+)

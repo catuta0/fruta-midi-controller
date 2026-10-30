@@ -8,11 +8,18 @@ O MPR121 deteta o toque, o Pico traduz-o em notas MIDI e o computador faz o som.
 
 **Sampler online:** <https://catuta0.github.io/fruta-midi-controller/> (abre no Edge ou no Chrome)
 
+**Duas formas de montar:**
+- **Breadboard:** sem soldar. Este README.
+- **PCB de uma face**, para gravar em casa pelo método químico, com esquemático KiCad, BOM e guia de montagem: [`hardware/`](hardware/).
+
+[![Render da PCB](hardware/fabrico/imagens/placa-3d.png)](hardware/)
+
 > O firmware compila sem erros para todas as placas listadas e o sampler foi testado com MIDI simulado. A montagem completa ainda não foi testada em hardware real: se encontrares problemas, abre uma *issue*.
 
 ## Conteúdo
 
 - [Início rápido (sem programar)](#início-rápido-sem-programar)
+- [Versão PCB](hardware/) (outra página)
 - [Lista de material](#lista-de-material)
 - [Ligações](#ligações)
 - [Firmware](#firmware)
@@ -29,12 +36,14 @@ Serve para Windows 10/11 e macOS; não precisas de instalar nada.
 1. Monta o hardware: ver [Ligações](#ligações).
 2. Na página [Releases](https://github.com/catuta0/fruta-midi-controller/releases/latest), descarrega o ficheiro da tua placa:
 
-   | Placa | Ficheiro |
-   | --- | --- |
-   | Raspberry Pi Pico | `FrutaMIDI-rpipico.uf2` |
-   | Raspberry Pi Pico W | `FrutaMIDI-rpipicow.uf2` |
-   | Raspberry Pi Pico 2 | `FrutaMIDI-rpipico2.uf2` |
-   | Raspberry Pi Pico 2 W | `FrutaMIDI-rpipico2w.uf2` |
+   | Placa | Breadboard | PCB FrutaMIDI |
+   | --- | --- | --- |
+   | Raspberry Pi Pico | `FrutaMIDI-rpipico.uf2` | `FrutaMIDI-pcb-rpipico.uf2` |
+   | Raspberry Pi Pico W | `FrutaMIDI-rpipicow.uf2` | `FrutaMIDI-pcb-rpipicow.uf2` |
+   | Raspberry Pi Pico 2 | `FrutaMIDI-rpipico2.uf2` | `FrutaMIDI-pcb-rpipico2.uf2` |
+   | Raspberry Pi Pico 2 W | `FrutaMIDI-rpipico2w.uf2` | `FrutaMIDI-pcb-rpipico2w.uf2` |
+
+   Os pinos da PCB são diferentes dos da breadboard, por isso cada montagem tem o seu ficheiro.
 
 3. Segura o botão **BOOTSEL** do Pico enquanto ligas o cabo USB. Aparece uma drive chamada **RPI-RP2** (Pico 2: **RP2350**): no Explorador de Ficheiros do Windows ou no Finder do Mac.
 4. Arrasta o `.uf2` para essa drive. O Pico reinicia sozinho e a drive desaparece: é normal.
@@ -122,6 +131,7 @@ O código está em [`firmware/FrutaMIDI/FrutaMIDI.ino`](firmware/FrutaMIDI/Fruta
 | `SEND_AFTERTOUCH` | true | Envia a "pressão" como Polyphonic Aftertouch |
 | `USE_BUTTON` / `USE_POT` | true / false | Ativa o botão e o potenciómetro |
 | `SERIAL_DEBUG` | false | Imprime o "delta" de cada pad no Monitor Série (115200) |
+| `#define FRUTAMIDI_PCB` | desligado | Descomenta para a [PCB](hardware/): I²C em GP26/GP27, botão em GP22, potenciómetro em GP28 (e ligado) |
 
 **Afinar a sensibilidade:** põe `SERIAL_DEBUG = true`, volta a carregar o firmware e abre o Monitor Série. Vês o delta de cada pad 4 vezes por segundo: perto de 0 em repouso, a subir quando tocas. O `TOUCH_THRESHOLD` deve ficar mais ou menos a meio.
 

@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "FrutaMIDI")(type "KiCad")(uri "${KIPRJMOD}/FrutaMIDI.pretty")(options "")(descr "Footprints do FrutaMIDI (pads largos para gravação caseira)"))
+)
