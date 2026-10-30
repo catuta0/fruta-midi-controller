@@ -1,0 +1,190 @@
+# exit_code: 1
+TAP version 13
+# Subtest: connected device is auto-selected and shown
+ok 1 - connected device is auto-selected and shown
+  ---
+  duration_ms: 1051.287916
+  type: 'test'
+  ...
+# Subtest: port open statechange does not re-open the port
+ok 2 - port open statechange does not re-open the port
+  ---
+  duration_ms: 405.119833
+  type: 'test'
+  ...
+# Subtest: each pad plays on its default note 36..47
+ok 3 - each pad plays on its default note 36..47
+  ---
+  duration_ms: 384.16375
+  type: 'test'
+  ...
+# Subtest: note on is logged with name, velocity and channel
+ok 4 - note on is logged with name, velocity and channel
+  ---
+  duration_ms: 309.055667
+  type: 'test'
+  ...
+# Subtest: pad velocity scales output gain as (v/127)^1.5
+ok 5 - pad velocity scales output gain as (v/127)^1.5
+  ---
+  duration_ms: 354.776791
+  type: 'test'
+  ...
+# Subtest: kick pad (note 36) starts a sine oscillator
+ok 6 - kick pad (note 36) starts a sine oscillator
+  ---
+  duration_ms: 308.600416
+  type: 'test'
+  ...
+# Subtest: unmapped note starts a two-oscillator synth voice at equal-tempered pitch
+ok 7 - unmapped note starts a two-oscillator synth voice at equal-tempered pitch
+  ---
+  duration_ms: 340.148208
+  type: 'test'
+  ...
+# Subtest: synth checkbox off silences unmapped notes
+ok 8 - synth checkbox off silences unmapped notes
+  ---
+  duration_ms: 370.106917
+  type: 'test'
+  ...
+# Subtest: note off (0x80) stops the synth voice
+ok 9 - note off (0x80) stops the synth voice
+  ---
+  duration_ms: 373.121042
+  type: 'test'
+  ...
+# Subtest: note on velocity 0 acts as note off
+ok 10 - note on velocity 0 acts as note off
+  ---
+  duration_ms: 371.060167
+  type: 'test'
+  ...
+# Subtest: retriggering a held synth note replaces the old voice
+ok 11 - retriggering a held synth note replaces the old voice
+  ---
+  duration_ms: 447.930916
+  type: 'test'
+  ...
+# Subtest: poly aftertouch opens the synth filter
+not ok 12 - poly aftertouch opens the synth filter
+  ---
+  duration_ms: 312.857625
+  type: 'test'
+  location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:173:1'
+  failureType: 'testCodeFailure'
+  error: 'lowpass frequency target set'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (file:///Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:178:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: poly aftertouch on a pad note drives the pad bar; note off resets it
+not ok 13 - poly aftertouch on a pad note drives the pad bar; note off resets it
+  ---
+  duration_ms: 318.962709
+  type: 'test'
+  location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:185:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    '' !== '100%'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: '100%'
+  actual: ''
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:189:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: notes on any channel are accepted (omni)
+ok 14 - notes on any channel are accepted (omni)
+  ---
+  duration_ms: 373.719417
+  type: 'test'
+  ...
+# Subtest: non-note messages are ignored without errors
+ok 15 - non-note messages are ignored without errors
+  ---
+  duration_ms: 395.282333
+  type: 'test'
+  ...
+# Subtest: MIDI access rejected shows the permission error
+ok 16 - MIDI access rejected shows the permission error
+  ---
+  duration_ms: 296.938625
+  type: 'test'
+  ...
+# Subtest: browser without Web MIDI shows the unsupported error
+ok 17 - browser without Web MIDI shows the unsupported error
+  ---
+  duration_ms: 278.557792
+  type: 'test'
+  ...
+# Subtest: busy device shows the busy error
+ok 18 - busy device shows the busy error
+  ---
+  duration_ms: 310.213333
+  type: 'test'
+  ...
+# Subtest: busy device next to a free one is listed as busy
+ok 19 - busy device next to a free one is listed as busy
+  ---
+  duration_ms: 313.199
+  type: 'test'
+  ...
+# Subtest: no device shows the plug-in hint; hot-plug connects; unplug reverts
+ok 20 - no device shows the plug-in hint; hot-plug connects; unplug reverts
+  ---
+  duration_ms: 385.775083
+  type: 'test'
+  ...
+# Subtest: learn mode assigns the next note and persists it
+ok 21 - learn mode assigns the next note and persists it
+  ---
+  duration_ms: 494.592583
+  type: 'test'
+  ...
+# Subtest: learn button pressed twice cancels learning
+ok 22 - learn button pressed twice cancels learning
+  ---
+  duration_ms: 434.743125
+  type: 'test'
+  ...
+# Subtest: keyboard fallback plays pads (no MIDI needed)
+ok 23 - keyboard fallback plays pads (no MIDI needed)
+  ---
+  duration_ms: 307.674208
+  type: 'test'
+  ...
+# Subtest: FINDING-SW-1 notes before the audio gate click are dropped without pad feedback
+ok 24 - FINDING-SW-1 notes before the audio gate click are dropped without pad feedback
+  ---
+  duration_ms: 263.76525
+  type: 'test'
+  ...
+# Subtest: FINDING-SW-2 learning a note already used by another pad shadows that pad
+ok 25 - FINDING-SW-2 learning a note already used by another pad shadows that pad
+  ---
+  duration_ms: 399.522875
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 23
+# fail 2
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10159.269208
+
+# --- stderr ---

@@ -1,0 +1,222 @@
+diff --git a/docs/index.html b/docs/index.html
+index 7f893f5..7a630db 100644
+--- a/docs/index.html
++++ b/docs/index.html
+@@ -1,5 +1,5 @@
+ <!doctype html>
+-<html lang="pt">
++<html lang="en">
+ <head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+@@ -55,60 +55,63 @@
+   .help { margin-top: 18px; color: var(--muted); font-size: 13px; }
+   .help kbd { font: 12px ui-monospace, monospace; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; }
+   #log { margin-top: 14px; font: 12px ui-monospace, monospace; color: var(--muted); min-height: 1.4em; }
+-  #gate { position: fixed; inset: 0; background: color-mix(in srgb, var(--bg) 88%, transparent);
++  #gate { position: fixed; inset: 0; background: color-mix(in srgb, var(--bg) 60%, transparent);
+           display: flex; align-items: center; justify-content: center; z-index: 10; }
+   #gate button { font-size: 17px; padding: 14px 22px; border-color: var(--accent); }
++  #gate button.nudge { background: var(--accent); color: var(--bg); animation: nudge 0.5s ease-out; }
++  @keyframes nudge { 0% { transform: scale(1.12); } 100% { transform: scale(1); } }
++  @media (prefers-reduced-motion: reduce) { #gate button.nudge { animation: none; } }
+   input[type=range] { accent-color: var(--accent); }
+ </style>
+ </head>
+ <body>
+-<div id="gate"><button id="start">Clica para ativar o som</button></div>
++<div id="gate"><button id="start">Click to enable sound</button></div>
+ <main>
+   <h1>FrutaMIDI Sampler</h1>
+-  <p class="sub">Recebe MIDI do FrutaMIDI (ou de qualquer controlador) e toca sons. Funciona no Windows e no Mac com o Chrome ou o Edge; o Safari não suporta Web MIDI.</p>
++  <p class="sub">Receives MIDI from FrutaMIDI (or any controller) and plays sounds. Works on Windows and Mac in Chrome or Edge; Safari does not support Web MIDI.</p>
+ 
+   <div class="bar">
+-    <span id="status"><span class="dot" id="dot"></span><span id="statusText">A procurar MIDI…</span></span>
++    <span id="status"><span class="dot" id="dot"></span><span id="statusText">Looking for MIDI…</span></span>
+     <label>Volume <input id="vol" type="range" min="0" max="1" step="0.01" value="0.8"></label>
+-    <label><input id="synthOn" type="checkbox" checked> Sintetizador nas notas sem pad</label>
+-    <button id="reset" title="Repor sons e notas de origem">Repor</button>
++    <label><input id="synthOn" type="checkbox" checked> Synth for notes without a pad</label>
++    <button id="reset" title="Restore default sounds and notes">Reset</button>
+   </div>
+ 
+   <div class="grid" id="grid"></div>
+ 
+   <div id="log"></div>
+   <p class="help">
+-    <strong>Trocar o som de um pad:</strong> arrasta um ficheiro de áudio (wav, mp3, aiff, m4a) para cima dele.
+-    <strong>Mudar a nota de um pad:</strong> carrega em “aprender” e toca na fruta.
+-    <strong>Sem hardware:</strong> teclas <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> /
++    <strong>Change a pad's sound:</strong> drag an audio file (wav, mp3, aiff, m4a) onto it.
++    <strong>Change a pad's note:</strong> press “learn” and touch the fruit (if another pad already uses that note, the two pads swap notes).
++    <strong>Without hardware:</strong> keys <kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd> /
+     <kbd>Q</kbd><kbd>W</kbd><kbd>E</kbd><kbd>R</kbd> / <kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><kbd>F</kbd>.
+-    As notas sem pad (escalas melódicas do firmware) tocam no sintetizador; o aftertouch abre o filtro.
+-    Os samples arrastados só ficam até fechares a página; as notas aprendidas ficam guardadas.
+-    <strong>Windows:</strong> se o FrutaMIDI aparecer como “ocupado”, fecha o DAW (ou outro separador com esta página) e recarrega.
++    Notes without a pad (the firmware's melodic scales) play on the synth; aftertouch opens the filter.
++    Dropped samples last only until you close the page; learned notes are saved.
++    <strong>Windows:</strong> if FrutaMIDI shows as “busy”, close the DAW (or another tab with this page) and reload.
+   </p>
+ </main>
+ 
+ <script>
+ (() => {
+   const NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+-  const noteName = n => NOTE_NAMES[n % 12] + (Math.floor(n / 12) - 2);   // convenção Ableton/Logic: 60 = C3
++  const noteName = n => NOTE_NAMES[n % 12] + (Math.floor(n / 12) - 2);   // Ableton/Logic convention: 60 = C3
+   const KEYS = ['1', '2', '3', '4', 'q', 'w', 'e', 'r', 'a', 's', 'd', 'f'];
+-  const BUILTIN = ['Bombo', 'Tarola', 'Hi-hat', 'Hi-hat aberto', 'Palmas', 'Tom grave',
+-                   'Tom médio', 'Tom agudo', 'Aro', 'Cowbell', 'Shaker', 'Zap'];
++  const BUILTIN = ['Kick', 'Snare', 'Hi-hat', 'Open hi-hat', 'Clap', 'Low tom',
++                   'Mid tom', 'High tom', 'Rim', 'Cowbell', 'Shaker', 'Zap'];
+   const STORE = 'frutamidi-sampler-notes';
+ 
+   let ctx = null, master = null, noiseBuf = null;
+   const pads = BUILTIN.map((name, i) => ({ name, note: 36 + i, buffer: null, el: null }));
+-  const voices = new Map();      // nota -> voz do sintetizador
++  const voices = new Map();      // note -> synth voice
+   let learning = -1;
+ 
+   try {
+     const saved = JSON.parse(localStorage.getItem(STORE) || 'null');
+     if (Array.isArray(saved) && saved.length === pads.length) saved.forEach((n, i) => { pads[i].note = n; });
+-  } catch (e) { /* sem storage: fica com as notas de origem */ }
++  } catch (e) { /* no storage: keep the default notes */ }
+   const saveNotes = () => { try { localStorage.setItem(STORE, JSON.stringify(pads.map(p => p.note))); } catch (e) {} };
+ 
+-  // ------------------------------- áudio -------------------------------
++  // ------------------------------- audio -------------------------------
+   function initAudio() {
+     if (ctx) return ctx.resume();
+     ctx = new (window.AudioContext || window.webkitAudioContext)();
+@@ -153,8 +156,16 @@
+     (t, o) => osc('sawtooth', 1400, 90, t, 0.25, 0.3, o),
+   ];
+ 
++  // Before the first click there is no AudioContext: still flash the pad and point at the
++  // "Click to enable sound" button so the user sees that MIDI arrives (ADR-005, SW-1).
++  function nudgeGate() {
++    const b = document.getElementById('start');
++    if (!b) return;
++    b.classList.remove('nudge'); void b.offsetWidth; b.classList.add('nudge');
++  }
++
+   function playPad(i, velocity = 100) {
+-    if (!ctx) return;
++    if (!ctx) { flash(i); nudgeGate(); return; }
+     const p = pads[i], t = ctx.currentTime, out = ctx.createGain();
+     out.gain.value = (velocity / 127) ** 1.5;
+     out.connect(master);
+@@ -167,7 +178,8 @@
+   }
+ 
+   function synthOn(note, velocity) {
+-    if (!ctx || !document.getElementById('synthOn').checked) return;
++    if (!ctx) { nudgeGate(); return; }
++    if (!document.getElementById('synthOn').checked) return;
+     synthOff(note);
+     const t = ctx.currentTime, f = 440 * 2 ** ((note - 69) / 12);
+     const g = ctx.createGain(), filt = ctx.createBiquadFilter();
+@@ -201,11 +213,20 @@
+   // -------------------------------- MIDI --------------------------------
+   const log = msg => { document.getElementById('log').textContent = msg; };
+ 
++  // Learning a note that another pad already uses swaps the two pads' notes, so no pad is
++  // silently shadowed (ADR-005, SW-2).
++  function assignNote(i, note) {
++    const other = pads.findIndex((p, j) => j !== i && p.note === note);
++    if (other >= 0) pads[other].note = pads[i].note;
++    pads[i].note = note;
++    saveNotes();
++  }
++
+   function handleMidi(e) {
+     const [status, d1, d2] = e.data, type = status & 0xf0, ch = (status & 0x0f) + 1;
+     if (type === 0x90 && d2 > 0) {
+-      log(`Note On  ${noteName(d1)} (${d1})  vel ${d2}  canal ${ch}`);
+-      if (learning >= 0) { pads[learning].note = d1; saveNotes(); stopLearning(); render(); }
++      log(`Note On  ${noteName(d1)} (${d1})  vel ${d2}  channel ${ch}`);
++      if (learning >= 0) { assignNote(learning, d1); stopLearning(); render(); }
+       const i = pads.findIndex(p => p.note === d1);
+       if (i >= 0) playPad(i, d2); else synthOn(d1, d2);
+     } else if (type === 0x80 || (type === 0x90 && d2 === 0)) {
+@@ -227,9 +248,9 @@
+   function bindInputs(access) {
+     const inputs = [...access.inputs.values()].filter(i => i.state === 'connected');
+     const key = inputs.map(i => i.id).sort().join('|');
+-    if (key === knownInputs) return;           // abrir uma porta também dispara statechange
++    if (key === knownInputs) return;           // opening a port also fires statechange
+     knownInputs = key;
+-    if (!inputs.length) { setStatus('Nenhum dispositivo MIDI. Liga o FrutaMIDI ao USB.', ''); return; }
++    if (!inputs.length) { setStatus('No MIDI device. Connect FrutaMIDI to USB.', ''); return; }
+ 
+     const names = [], busy = [];
+     Promise.all(inputs.map(input => {
+@@ -237,11 +258,11 @@
+       return input.open().then(() => names.push(input.name), () => busy.push(input.name));
+     })).then(() => {
+       if (names.length) {
+-        setStatus('Ligado: ' + names.join(', ') + (busy.length ? ' · ocupado: ' + busy.join(', ') : ''), 'on');
++        setStatus('Connected: ' + names.join(', ') + (busy.length ? ' · busy: ' + busy.join(', ') : ''), 'on');
+       } else {
+-        // No Windows (driver MIDI clássico) só um programa de cada vez pode abrir um dispositivo MIDI.
+-        setStatus(busy.join(', ') + ' está a ser usado por outro programa. No Windows só um programa ' +
+-                  'de cada vez pode usar um dispositivo MIDI: fecha o DAW e recarrega esta página.', 'err');
++        // On Windows (classic MIDI driver) only one program at a time can open a MIDI device.
++        setStatus(busy.join(', ') + ' is being used by another program. On Windows only one program ' +
++                  'at a time can use a MIDI device: close the DAW and reload this page.', 'err');
+       }
+     });
+   }
+@@ -250,9 +271,9 @@
+     navigator.requestMIDIAccess().then(access => {
+       bindInputs(access);
+       access.onstatechange = () => bindInputs(access);
+-    }, () => setStatus('Acesso MIDI recusado. Autoriza o MIDI nas definições do site (ícone à esquerda do endereço).', 'err'));
++    }, () => setStatus('MIDI access denied. Allow MIDI in the site settings (icon to the left of the address).', 'err'));
+   } else {
+-    setStatus('Este browser não tem Web MIDI. Usa o Chrome ou o Edge (o teclado funciona na mesma).', 'err');
++    setStatus('This browser has no Web MIDI. Use Chrome or Edge (the keyboard still works).', 'err');
+   }
+ 
+   // --------------------------------- UI ---------------------------------
+@@ -275,7 +296,7 @@
+       el.className = 'pad';
+       el.innerHTML = `<div class="name"></div>
+         <div class="meta"><span class="note"></span><span>${KEYS[i].toUpperCase()}</span>
+-        <button class="learn" type="button">aprender</button></div><div class="at"></div>`;
++        <button class="learn" type="button">learn</button></div><div class="at"></div>`;
+       el.querySelector('.name').textContent = p.name;
+       el.querySelector('.note').textContent = `${noteName(p.note)} · ${p.note}`;
+       el.addEventListener('pointerdown', ev => {
+@@ -285,7 +306,7 @@
+       el.querySelector('.learn').addEventListener('click', () => {
+         if (learning === i) { stopLearning(); log(''); return; }
+         stopLearning(); learning = i; el.classList.add('learning');
+-        log(`A aprender: toca na fruta que deve disparar "${p.name}"…`);
++        log(`Learning: touch the fruit that should trigger "${p.name}"…`);
+       });
+       el.addEventListener('dragover', ev => { ev.preventDefault(); el.classList.add('drop'); });
+       el.addEventListener('dragleave', () => el.classList.remove('drop'));
+@@ -297,8 +318,8 @@
+         try {
+           p.buffer = await ctx.decodeAudioData(await file.arrayBuffer());
+           p.name = file.name.replace(/\.[^.]+$/, '');
+-          render(); log(`Carregado: ${file.name}`);
+-        } catch (err) { log(`Não consegui ler ${file.name}: formato não suportado.`); }
++          render(); log(`Loaded: ${file.name}`);
++        } catch (err) { log(`Could not read ${file.name}: unsupported format.`); }
+       });
+       p.el = el;
+       grid.appendChild(el);
+@@ -313,7 +334,7 @@
+   document.getElementById('vol').addEventListener('input', ev => { if (master) master.gain.value = +ev.target.value; });
+   document.getElementById('reset').addEventListener('click', () => {
+     pads.forEach((p, i) => { p.note = 36 + i; p.buffer = null; p.name = BUILTIN[i]; });
+-    saveNotes(); stopLearning(); render(); log('Sons e notas repostos.');
++    saveNotes(); stopLearning(); render(); log('Sounds and notes reset.');
+   });
+   document.getElementById('start').addEventListener('click', () => {
+     initAudio(); document.getElementById('gate').remove();

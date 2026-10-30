@@ -12,3 +12,7 @@
 | T-008 | Requirements with IDs, rationale, source, verification method | systems-engineer | TODO | management/REQUIREMENTS.md |
 | T-009 | Architecture options (>=2) and ADR; freeze INTERFACES.json | systems-engineer + manager | TODO | management/DECISIONS.md |
 | T-010 | G1 gate | manager | TODO | — |
+| T-020 | Sampler browser tests | software-engineer | IN PROGRESS | tests/host/ |
+| T-030 | Translate README + hardware/README to English | documentation-engineer | PASS (interim) | handoffs/documentation-engineer/T-030.md |
+| T-040 | Firmware logic extraction + host unit tests + build matrix | firmware-engineer | IN PROGRESS | reports/firmware/ |
+| T-050 | Electrical analysis, datasheet checks, electrode-protection variants | electronics-engineer | IN PROGRESS | reports/electronics/ |

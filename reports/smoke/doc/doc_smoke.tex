@@ -1,0 +1,58 @@
+% FrutaMIDI documentation smoke test (task T-006-DOC).
+% Purpose: prove the LaTeX build route through the eng-tools MCP server.
+% Content is placeholder test data only; no project numbers appear here.
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{hyperref}
+
+\title{FrutaMIDI LaTeX Smoke Test}
+\author{Documentation engineer}
+\date{T-006-DOC}
+
+\begin{document}
+\maketitle
+
+This page checks that the project-local TinyTeX builds an article with a
+booktabs table and a numbered equation. The values are placeholders, not
+project data.
+
+\begin{table}[H]
+  \centering
+  \caption{Smoke-test table (two rows, placeholder values).}
+  \label{tab:smoke}
+  \begin{tabular}{lr}
+    \toprule
+    Item & Value \\
+    \midrule
+    Row A & 1 \\
+    Row B & 2 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Table~\ref{tab:smoke} has two rows. Equation~\eqref{eq:rc} is the RC time
+constant, used here only as typesetting content:
+\begin{equation}
+  \tau = R\,C
+  \label{eq:rc}
+\end{equation}
+
+Package checks (placeholder content):
+\begin{itemize}[noitemsep]
+  \item siunitx: \qty{10}{\kilo\ohm}
+  \item enumitem: this compact list
+  \item caption: the table caption above
+\end{itemize}
+
+\end{document}

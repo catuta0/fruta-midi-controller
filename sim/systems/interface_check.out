@@ -1,0 +1,72 @@
+firmware pins: {'pcb': {'PIN_SDA': 26, 'PIN_SCL': 27, 'PIN_BUTTON': 22, 'PIN_POT': 28, 'I2C_BUS': 'Wire1'}, 'breadboard': {'PIN_SDA': 4, 'PIN_SCL': 5, 'PIN_BUTTON': 15, 'PIN_POT': 26, 'I2C_BUS': 'Wire'}}
+footprints: ['A1', 'A2', 'H1', 'H2', 'H3', 'H4', 'J1', 'J2', 'RV1', 'SW1']
+PASS  fw.pcb.i2c_instance :: Wire1 SDA=GP26 SCL=GP27
+PASS  fw.breadboard.i2c_instance :: Wire SDA=GP4 SCL=GP5
+PASS  fw.pcb.PIN_SDA_vs_pcb :: GP26 -> Pico pin 31, PCB A1 pad 31 net {'SDA'} (expected SDA)
+PASS  fw.pcb.PIN_SCL_vs_pcb :: GP27 -> Pico pin 32, PCB A1 pad 32 net {'SCL'} (expected SCL)
+PASS  fw.pcb.PIN_BUTTON_vs_pcb :: GP22 -> Pico pin 29, PCB A1 pad 29 net {'BTN'} (expected BTN)
+PASS  fw.pcb.PIN_POT_vs_pcb :: GP28 -> Pico pin 34, PCB A1 pad 34 net {'POT'} (expected POT)
+PASS  pcb.A1.pin36 :: pad 36 net {'+3V3'}, Pico function 3V3
+PASS  pcb.A1.pin33 :: pad 33 net {'AGND'}, Pico function AGND
+PASS  pcb.A1.gnd_pins :: pads [3, 8, 13, 18, 23, 28, 38] -> [{'GND'}, {'GND'}, {'GND'}, {'GND'}, {'GND'}, {'GND'}, {'GND'}]
+PASS  pcb.A1.no_other_nets :: other connected pads: {}
+PASS  pcb.A1.AGND_isolated :: AGND net only on A1 pin 33 and RV1 (relies on the Pico module's internal AGND-GND link, SOURCE S-02 'also a GND pin')
+PASS  pcb.RV1 :: RV1 1/2/3 = [{'+3V3'}, {'POT'}, {'AGND'}]
+PASS  pcb.SW1 :: SW1 nets ['BTN', 'GND'] (active low, firmware INPUT_PULLUP)
+PASS  fw.button_pullup :: button read active-low with internal pull-up
+PASS  pcb.A2.pin1 :: module row pin 1 = Adafruit GND, PCB net {'GND'}
+PASS  pcb.A2.pin2 :: module row pin 2 = Adafruit E0, PCB net {'E0'}
+PASS  pcb.A2.pin3 :: module row pin 3 = Adafruit E1, PCB net {'E1'}
+PASS  pcb.A2.pin4 :: module row pin 4 = Adafruit E2, PCB net {'E2'}
+PASS  pcb.A2.pin5 :: module row pin 5 = Adafruit E3, PCB net {'E3'}
+PASS  pcb.A2.pin6 :: module row pin 6 = Adafruit E4, PCB net {'E4'}
+PASS  pcb.A2.pin7 :: module row pin 7 = Adafruit E5, PCB net {'E5'}
+PASS  pcb.A2.pin8 :: module row pin 8 = Adafruit E6, PCB net {'E6'}
+PASS  pcb.A2.pin9 :: module row pin 9 = Adafruit E7, PCB net {'E7'}
+PASS  pcb.A2.pin10 :: module row pin 10 = Adafruit E8, PCB net {'E8'}
+PASS  pcb.A2.pin11 :: module row pin 11 = Adafruit E9, PCB net {'E9'}
+PASS  pcb.A2.pin12 :: module row pin 12 = Adafruit E10, PCB net {'E10'}
+PASS  pcb.A2.pin13 :: module row pin 13 = Adafruit E11, PCB net {'E11'}
+PASS  pcb.J2.T1 :: terminal 1 net {'GND'} (expected GND)
+PASS  pcb.J2.T2 :: terminal 2 net {'E0'} (expected E0)
+PASS  pcb.J2.T3 :: terminal 3 net {'E1'} (expected E1)
+PASS  pcb.J2.T4 :: terminal 4 net {'E2'} (expected E2)
+PASS  pcb.J2.T5 :: terminal 5 net {'E3'} (expected E3)
+PASS  pcb.J2.T6 :: terminal 6 net {'E4'} (expected E4)
+PASS  pcb.J2.T7 :: terminal 7 net {'E5'} (expected E5)
+PASS  pcb.J2.T8 :: terminal 8 net {'E6'} (expected E6)
+PASS  pcb.J2.T9 :: terminal 9 net {'E7'} (expected E7)
+PASS  pcb.J2.T10 :: terminal 10 net {'E8'} (expected E8)
+PASS  pcb.J2.T11 :: terminal 11 net {'E9'} (expected E9)
+PASS  pcb.J2.T12 :: terminal 12 net {'E10'} (expected E10)
+PASS  pcb.J2.T13 :: terminal 13 net {'E11'} (expected E11)
+PASS  pcb.J2.T14 :: terminal 14 net {'GND'} (expected GND)
+PASS  pcb.J1 :: J1 1/2/3 = {'+3V3'}/{'SCL'}/{'SDA'}
+PASS  pcb.A2.S1_isolated_net :: S1 net {'S1'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S2_isolated_net :: S2 net {'S2'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S3_isolated_net :: S3 net {'S3'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S4_isolated_net :: S4 net {'S4'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S5_isolated_net :: S5 net {'S5'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S6_isolated_net :: S6 net {'S6'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S7_isolated_net :: S7 net {'S7'} (only joined to J1 by a hand wire)
+PASS  sch.S1_label :: schematic 'VIN/ADDR' vs Eagle-derived original=VIN qt=ADDR
+PASS  sch.S2_label :: schematic '3V3o/INT' vs Eagle-derived original=3V3 qt=INT
+PASS  sch.S3_label :: schematic 'GND/SDA' vs Eagle-derived original=GND qt=SDA
+PASS  sch.S4_label :: schematic 'ADDR/SCL' vs Eagle-derived original=ADDR qt=SCL
+PASS  sch.S5_label :: schematic 'SDA/GND' vs Eagle-derived original=SDA qt=GND
+PASS  sch.S6_label :: schematic 'SCL/3V3o' vs Eagle-derived original=SCL qt=3V3
+PASS  sch.S7_label :: schematic 'IRQ/VCC' vs Eagle-derived original=IRQ qt=VCC
+PASS  doc.hw_readme.config_wires.original :: README (3V3,SDA,SCL)=('S1', 'S5', 'S6'), derived=('S1', 'S5', 'S6')
+INFO  original: S-row = ['VIN', '3V3', 'GND', 'ADDR', 'SDA', 'SCL', 'IRQ'] ; module GND at S3 (3V3 wire there = short circuit)
+PASS  doc.hw_readme.config_wires.stemma_qt :: README (3V3,SDA,SCL)=('S7', 'S3', 'S4'), derived=('S7', 'S3', 'S4')
+INFO  stemma_qt: S-row = ['ADDR', 'INT', 'SDA', 'SCL', 'GND', '3V3', 'VCC'] ; module GND at S5 (3V3 wire there = short circuit)
+PASS  doc.README.GP4 :: GP4 at physical pin 6
+PASS  doc.README.GP5 :: GP5 at physical pin 7
+PASS  doc.README.GP15 :: GP15 at physical pin 20
+PASS  doc.README.GP26 :: GP26 at physical pin 31
+PASS  doc.README_vs_fw_breadboard :: firmware breadboard SDA/SCL/BTN/POT = GP4/GP5/GP15/GP26, README GP4/GP5/GP15/GP26
+PASS  doc.hw_readme.SDA :: SDA pin 31 GP26
+PASS  doc.hw_readme.SCL :: SCL pin 32 GP27
+PASS  doc.hw_readme.Button :: Button pin 29 GP22
+PASS  doc.hw_readme.Potentiometer :: Potentiometer pin 34 GP28
+SUMMARY: 67 checks, 67 PASS, 0 FAIL

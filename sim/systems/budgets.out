@@ -1,0 +1,100 @@
+==========================================================================================
+(a) CURRENT BUDGET
+==========================================================================================
+  MPR121 IC (ESI 1 ms)                 0.100 .. 1.000 mA      SOURCE S-04 (393 uA avg, 1 mA peak); low end ASSUMPTION
+  Module LDO quiescent                 0.020 .. 0.100 mA      ASSUMPTION (LDO datasheets not fetched)
+  Module power LED (R7 1k)             1.100 .. 1.500 mA      CALCULATION (3.3-Vf)/1k, Vf ASSUMPTION
+  Module IRQ LED (10k)                 0.000 .. 0.150 mA      CALCULATION, worst case INT held low
+  I2C pull-ups (4 x 10k, lines low)    0.000 .. 1.320 mA      CALCULATION, worst case
+  RP2040 I2C internal pull-ups         0.000 .. 0.132 mA      CALCULATION, R ASSUMPTION 50 kOhm min
+  Octave pot 10k +-20 %                0.275 .. 0.412 mA      CALCULATION V/R
+  Button pull-up (pressed)             0.000 .. 0.066 mA      CALCULATION, R ASSUMPTION
+  External 3V3 load, 1 sensor          1.495 .. 4.680 mA  CALCULATION (sum)
+  External 3V3 load, 2 sensors         2.715 .. 8.750 mA  CALCULATION
+PASS  A1 3V3 external load <= 300 mA :: worst 8.75 mA (2 sensors) vs 300 mA recommendation, margin 97.1 %
+  VSYS range = 3.95 .. 5.25 V  CALCULATION VBUS - Vdiode
+PASS  A2 VBUS current <= 100 mA declared [Pico (RP2040, USB active)] :: 21.0 .. 54.1 mA (board 20 .. 45 mA ASSUMPTION + external 1.04..9.14 mA) ; margin 46 %
+PASS  A2 VBUS current <= 100 mA declared [Pico W (CYW43 present, radio unused)] :: 26.0 .. 69.1 mA (board 25 .. 60 mA ASSUMPTION + external 1.04..9.14 mA) ; margin 31 %
+PASS  A2 VBUS current <= 100 mA declared [Pico 2 (RP2350, USB active)] :: 21.0 .. 59.1 mA (board 20 .. 50 mA ASSUMPTION + external 1.04..9.14 mA) ; margin 41 %
+PASS  A2 VBUS current <= 100 mA declared [Pico 2 W (CYW43 present, radio unused)] :: 26.0 .. 74.1 mA (board 25 .. 65 mA ASSUMPTION + external 1.04..9.14 mA) ; margin 26 %
+PASS  A3 VSYS within 1.8..5.5 V over USB VBUS range :: VSYS 3.95 .. 5.25 V
+PASS  A4 MPR121 VDD inside 2.0..3.6 V (S-04 Table 5) :: VDD 3.10 .. 3.40 V
+
+==========================================================================================
+(b) LATENCY BUDGET
+==========================================================================================
+  MPR121: FFI=6 SFI=4 ESI=1 ms DT=0 channels=12  SOURCE S-08 + S-04
+  Largest capacitance the MPR121 can charge to LSL with CDC=63 uA, CDT=32 us: 1203 pF  CALCULATION
+  touched() read          : 130 .. 160 us  CALCULATION
+  aftertouch per pad      : 238 .. 298 us  CALCULATION (baseline 1 B + filtered 2 B)
+  batch read 0x04..0x2A   : 962 .. 992 us  CALCULATION (39 B, design-rule alternative)
+  loop period, no touch   : 150 .. 260 us  CALCULATION
+  loop period, 12 pads AT : 3000 .. 3830 us  CALCULATION (aftertouch pass, every AT_INTERVAL_MS = 15 ms)
+
+  C [pF]   CDT    ESIeff   sense [ms]       loop [ms]      total [ms]       jitter [ms]   
+  20       1us    1.00     4.00 .. 8.00     0.00 .. 0.56   4.00 .. 9.56     5.56    (pads with aftertouch: 1)
+  20       1us    1.00     4.00 .. 8.00     0.00 .. 3.83   4.00 .. 12.83    8.83    (pads with aftertouch: 12)
+  50       2us    1.00     4.00 .. 8.00     0.00 .. 0.56   4.00 .. 9.56     5.56    (pads with aftertouch: 1)
+  50       2us    1.00     4.00 .. 8.00     0.00 .. 3.83   4.00 .. 12.83    8.83    (pads with aftertouch: 12)
+  100      4us    1.00     4.00 .. 8.00     0.00 .. 0.56   4.00 .. 9.56     5.56    (pads with aftertouch: 1)
+  100      4us    1.00     4.00 .. 8.00     0.00 .. 3.83   4.00 .. 12.83    8.83    (pads with aftertouch: 12)
+  200      8us    1.15     4.61 .. 9.22     0.00 .. 0.56   4.61 .. 10.77    6.17    (pads with aftertouch: 1)
+  200      8us    1.15     4.61 .. 9.22     0.00 .. 3.83   4.61 .. 14.05    9.44    (pads with aftertouch: 12)
+  300      16us   2.30     9.22 .. 18.43    0.00 .. 0.56   9.22 .. 19.99    10.77   (pads with aftertouch: 1)
+  300      16us   2.30     9.22 .. 18.43    0.00 .. 3.83   9.22 .. 23.26    14.05   (pads with aftertouch: 12)
+  500      32us   4.61     18.43 .. 36.86   0.00 .. 0.56   18.43 .. 38.42   19.99   (pads with aftertouch: 1)
+  500      32us   4.61     18.43 .. 36.86   0.00 .. 3.83   18.43 .. 41.69   23.26   (pads with aftertouch: 12)
+  700      32us   4.61     18.43 .. 36.86   0.00 .. 0.56   18.43 .. 38.42   19.99   (pads with aftertouch: 1)
+  700      32us   4.61     18.43 .. 36.86   0.00 .. 3.83   18.43 .. 41.69   23.26   (pads with aftertouch: 12)
+  1000     -      out of MPR121 range (> 1203 pF) CALCULATION
+  1000     -      out of MPR121 range (> 1203 pF) CALCULATION
+FAIL  B1 worst-case latency <= 10 ms, electrode C <= 100 pF :: worst 12.83 ms (CALCULATION, includes 2 x SFI x ESIeff sensing bound)
+FAIL  B2 worst-case latency <= 10 ms, electrode C 100..300 pF :: worst 23.26 ms
+FAIL  B3 worst-case latency <= 10 ms, electrode C > 300 pF :: worst 41.69 ms
+FAIL  B4 latency jitter <= 1 ms (C <= 100 pF) :: jitter 8.83 ms
+FAIL  B1-M1 worst-case latency <= 10 ms with burst read (C <= 100 pF) :: worst 10.25 ms (sense 8.00 + loop 1.25 + USB 1.00)
+  Mid-range estimate (C <= 100 pF, 1 pad): 6.63 ms  CALCULATION (1.5 x SFI x ESI + loop/2 + 0.5 ms USB)
+  DESIGN RULE: ESIeff stays at 1 ms while CDT <= 4 us, i.e. electrode C <= 109 pF (CALCULATION)
+  Loop blocked by nextScale(): up to 1080 ms; by recalibrate(): >= 360 ms + sensor begin()  CALCULATION
+FAIL  B5 no loop blocking > 10 ms during play :: nextScale blink blocks 1080 ms (touches and note-offs wait)
+  I2C: R_pullup_eff = 8.33 kOhm; max bus C for t_r<=300 ns (400 kHz) = 42.5 pF; for t_r<=1000 ns (100 kHz) = 141.6 pF
+FAIL  B6 I2C rise time <= 300 ns at 400 kHz (C_b 20..60 pF ASSUMPTION) :: t_r 141 .. 424 ns
+
+==========================================================================================
+(c) BOM COST
+==========================================================================================
+  A1 Raspberry Pi Pico H (or Pico/W/2/2W + headers)    x1  5.00 .. 8.00 EUR   ASSUMPTION (hardware/README.md)
+  A2 Adafruit MPR121 breakout 1982                     x1  9.00 .. 12.00 EUR  ASSUMPTION; SOURCE S-05 USD 7.95 list price (1-9 pcs) before EU shipping/VAT
+  Female header 1x20 (Pico socket)                     x2  1.00 .. 1.00 EUR   ASSUMPTION (README: 1 EUR for two)
+  Female header 1x13                                   x1  0.50 .. 0.50 EUR   ASSUMPTION
+  Female header 1x7                                    x1  0.40 .. 0.40 EUR   ASSUMPTION
+  J2 screw terminal 2-way 5.08 mm, interlocking        x7  2.00 .. 3.00 EUR   ASSUMPTION (README 2-3 EUR for 7)
+  SW1 tactile switch 6x6 mm                            x1  0.20 .. 0.20 EUR   ASSUMPTION
+  RV1 10k linear pot 9 mm + knob                       x1  1.00 .. 1.50 EUR   ASSUMPTION (README 1 / 1.5 EUR)
+  Single-sided copper clad 100x70 mm                   x1  1.00 .. 3.00 EUR   ASSUMPTION (not in repository BOM)
+  Etchant/toner/consumables share per board            x1  0.50 .. 2.00 EUR   ASSUMPTION (not in repository BOM)
+  Micro-USB data cable                                 x1  3.00 .. 3.00 EUR   ASSUMPTION (README)
+  Crocodile leads (12)                                 x1  5.00 .. 10.00 EUR  ASSUMPTION (README: 5 EUR per 10-pack, 2 packs)  [optional]
+  M3 screws + spacers (4)                              x1  2.00 .. 2.00 EUR   ASSUMPTION (README, optional)  [optional]
+  Core BOM (board + parts + cable)                         23.60 .. 34.60 EUR  CALCULATION
+  With optional leads and mounting                         30.60 .. 46.60 EUR  CALCULATION
+FAIL  C1 core BOM upper bound <= 30 EUR :: core 23.60 .. 34.60 EUR vs target <= 30 EUR
+PASS  C2 core BOM lower bound <= 30 EUR (target reachable) :: lowest 23.60 EUR
+
+==========================================================================================
+(d) MIDI NOTE RANGES (CALCULATION from fm_scales.h note_for_pad)
+==========================================================================================
+  pads=12 Drum Rack          raw notes  36.. 47  clamped=0
+  pads=12 Major pentatonic   raw notes  24.. 98  clamped=0
+  pads=12 Minor pentatonic   raw notes  24.. 99  clamped=0
+  pads=12 Major              raw notes  24.. 91  clamped=0
+  pads=12 Natural minor      raw notes  24.. 91  clamped=0
+  pads=12 Chromatic          raw notes  24.. 83  clamped=0
+  pads=24 Drum Rack          raw notes  36.. 59  clamped=0
+  pads=24 Major pentatonic   raw notes  24..127  clamped=0
+  pads=24 Minor pentatonic   raw notes  24..127  clamped=0
+  pads=24 Major              raw notes  24..112  clamped=0
+  pads=24 Natural minor      raw notes  24..111  clamped=0
+  pads=24 Chromatic          raw notes  24.. 95  clamped=0
+
+SUMMARY: 16 checks, 8 PASS, 8 FAIL

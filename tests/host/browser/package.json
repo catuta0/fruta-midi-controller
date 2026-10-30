@@ -1,0 +1,12 @@
+{
+  "name": "frutamidi-sampler-browser-tests",
+  "private": true,
+  "type": "module",
+  "description": "Headless Chrome tests of docs/index.html with a stubbed Web MIDI API (T-020).",
+  "scripts": {
+    "test": "node --test --test-reporter=spec sampler.test.mjs"
+  },
+  "dependencies": {
+    "playwright-core": "1.64.1"
+  }
+}

@@ -1,0 +1,16 @@
+\section{Reproducibility}
+\label{sec:repro}
+
+\subsection{Toolchain}
+\tbf{Tool versions from management/TOOLCHAIN.md (KiCad, arduino-cli and cores,
+Python, Node, TinyTeX and installed packages).}
+
+\subsection{How to rebuild}
+\begin{itemize}[noitemsep]
+  \item Hardware: \texttt{sh hardware/scripts/build\_all.sh} (regenerates, runs
+        ERC/DRC, exports fabrication files).
+  \item Report: MCP \texttt{eng-tools} \texttt{latex\_build} with
+        \texttt{reports/report/frutamidi\_report.tex}.
+\end{itemize}
+\tbf{Firmware compile and test commands, released file checksums
+(releases/V1\_BASELINE/).}

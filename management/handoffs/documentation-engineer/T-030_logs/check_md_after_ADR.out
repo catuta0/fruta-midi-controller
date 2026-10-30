@@ -1,0 +1,4 @@
+FAIL README.md: number multiset differs; removed={'1': 3} added={'0.8': 3}
+README.md: table lines old=66 new=66; headings old=12 new=12; images=3; local links checked
+hardware/README.md: table lines old=78 new=78; headings old=16 new=16; images=2; local links checked
+RESULT: FAIL (1)

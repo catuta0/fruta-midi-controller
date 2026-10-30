@@ -1,242 +1,242 @@
-# FrutaMIDI — controlador MIDI de fruta
+# FrutaMIDI — fruit MIDI controller
 
-Um controlador MIDI USB de 12 pads capacitivos (expansível a 24), ao estilo do Playtron: tocas numa fruta, numa planta ou num copo de água e sai uma nota. Usa um Raspberry Pi Pico e um sensor MPR121, custa cerca de 25 € e funciona em **Windows e Mac** sem drivers.
+A USB MIDI controller with 12 capacitive pads (expandable to 24), in the style of the Playtron: touch a piece of fruit, a plant or a glass of water and a note comes out. It uses a Raspberry Pi Pico and an MPR121 sensor, costs about 25 € and works on **Windows and Mac** without drivers.
 
-![O FrutaMIDI só envia notas; o som nasce no computador](docs/img/como-funciona.svg)
+![FrutaMIDI only sends notes; the sound is made by the computer](docs/img/como-funciona.svg)
 
-O MPR121 deteta o toque, o Pico traduz-o em notas MIDI e o computador faz o som. Para trocar de sons basta trocar de programa: o hardware fica igual.
+The MPR121 detects the touch, the Pico turns it into MIDI notes and the computer makes the sound. To change sounds, just change programs: the hardware stays the same.
 
-**Sampler online:** <https://catuta0.github.io/fruta-midi-controller/> (abre no Edge ou no Chrome)
+**Online sampler:** <https://catuta0.github.io/fruta-midi-controller/> (open it in Edge or Chrome)
 
-**Duas formas de montar:**
-- **Breadboard:** sem soldar. Este README.
-- **PCB de uma face**, para gravar em casa pelo método químico, com esquemático KiCad, BOM e guia de montagem: [`hardware/`](hardware/).
+**Two ways to build it:**
+- **Breadboard:** no soldering. This README.
+- **Single-sided PCB**, for etching at home with the chemical method, with KiCad schematic, BOM and assembly guide: [`hardware/`](hardware/).
 
-[![Render da PCB](hardware/fabrico/imagens/placa-3d.png)](hardware/)
+[![PCB render](hardware/fabrico/imagens/placa-3d.png)](hardware/)
 
-> O firmware compila sem erros para todas as placas listadas e o sampler foi testado com MIDI simulado. A montagem completa ainda não foi testada em hardware real: se encontrares problemas, abre uma *issue*.
+> The firmware compiles without errors for all the boards listed, and the sampler was tested with simulated MIDI. <!-- EVIDENCE --> The complete build has not yet been tested on real hardware: if you run into problems, open an *issue*.
 
-## Conteúdo
+## Contents
 
-- [Início rápido (sem programar)](#início-rápido-sem-programar)
-- [Versão PCB](hardware/) (outra página)
-- [Lista de material](#lista-de-material)
-- [Ligações](#ligações)
+- [Quick start (no programming)](#quick-start-no-programming)
+- [PCB version](hardware/) (separate page)
+- [Bill of materials](#bill-of-materials)
+- [Wiring](#wiring)
 - [Firmware](#firmware)
-- [Som](#som)
-- [Windows: o que saber](#windows-o-que-saber)
-- [Notas de design](#notas-de-design)
-- [Montagem passo a passo](#montagem-passo-a-passo)
-- [Resolução de problemas](#resolução-de-problemas)
+- [Sound](#sound)
+- [Windows: what to know](#windows-what-to-know)
+- [Design notes](#design-notes)
+- [Step-by-step assembly](#step-by-step-assembly)
+- [Troubleshooting](#troubleshooting)
 
-## Início rápido (sem programar)
+## Quick start (no programming)
 
-Serve para Windows 10/11 e macOS; não precisas de instalar nada.
+Works on Windows 10/11 and macOS; you do not need to install anything.
 
-1. Monta o hardware: ver [Ligações](#ligações).
-2. Na página [Releases](https://github.com/catuta0/fruta-midi-controller/releases/latest), descarrega o ficheiro da tua placa:
+1. Build the hardware: see [Wiring](#wiring).
+2. On the [Releases](https://github.com/catuta0/fruta-midi-controller/releases/latest) page, download the file for your board:
 
-   | Placa | Breadboard | PCB FrutaMIDI |
+   | Board | Breadboard | FrutaMIDI PCB |
    | --- | --- | --- |
    | Raspberry Pi Pico | `FrutaMIDI-rpipico.uf2` | `FrutaMIDI-pcb-rpipico.uf2` |
    | Raspberry Pi Pico W | `FrutaMIDI-rpipicow.uf2` | `FrutaMIDI-pcb-rpipicow.uf2` |
    | Raspberry Pi Pico 2 | `FrutaMIDI-rpipico2.uf2` | `FrutaMIDI-pcb-rpipico2.uf2` |
    | Raspberry Pi Pico 2 W | `FrutaMIDI-rpipico2w.uf2` | `FrutaMIDI-pcb-rpipico2w.uf2` |
 
-   Os pinos da PCB são diferentes dos da breadboard, por isso cada montagem tem o seu ficheiro.
+   The PCB uses different pins from the breadboard, so each build has its own file.
 
-3. Segura o botão **BOOTSEL** do Pico enquanto ligas o cabo USB. Aparece uma drive chamada **RPI-RP2** (Pico 2: **RP2350**): no Explorador de Ficheiros do Windows ou no Finder do Mac.
-4. Arrasta o `.uf2` para essa drive. O Pico reinicia sozinho e a drive desaparece: é normal.
-5. Abre o [sampler online](https://catuta0.github.io/fruta-midi-controller/) no Edge ou no Chrome. Clica para ativar o som e autoriza o acesso MIDI.
-6. Toca na fruta.
+3. Hold the Pico's **BOOTSEL** button while you plug in the USB cable. A drive called **RPI-RP2** (Pico 2: **RP2350**) appears in Windows File Explorer or the Mac Finder.
+4. Drag the `.uf2` onto that drive. The Pico restarts by itself and the drive disappears: this is normal.
+5. Open the [online sampler](https://catuta0.github.io/fruta-midi-controller/) in Edge or Chrome. Click to enable sound and allow MIDI access.
+6. Touch the fruit.
 
-## Lista de material
+## Bill of materials
 
-O essencial custa cerca de 23–31 €. Os preços são aproximados e variam muito entre lojas.
+The essentials cost about 23–31 €. Prices are approximate and vary a lot between shops.
 
-| Peça | Qtd | Para quê | Preço aprox. | Notas |
+| Part | Qty | Purpose | Approx. price | Notes |
 | --- | --- | --- | --- | --- |
-| Raspberry Pi Pico ou Pico 2 (versão **H**, já com pinos soldados) | 1 | Cérebro; aparece no computador como dispositivo MIDI | 5–7 € | O Pico W e o Pico 2 W também servem |
-| Breakout MPR121 (Adafruit 1982 ou clone CJMCU-121) | 1 | 12 sensores capacitivos | 3 € (clone) / 9 € (Adafruit) | Ambos funcionam a 3,3 V, como o Pico |
-| Cabo micro-USB **de dados** | 1 | Ligação ao computador | 3 € | Muitos cabos são só de carga; se o Pico não aparecer, é o cabo |
-| Breadboard 400 pontos | 1 | Protótipo sem soldar | 3 € | |
-| Fios jumper macho-macho | 10 | Ligações na breadboard | 2 € | |
-| Cabos com crocodilos nas duas pontas | 12 | Ligar cada pad a um objeto | 5 € (pack de 10) | Compra 2 packs |
-| Régua de terminais de parafuso, 12 vias | 1 | Ponto de ligação robusto para os crocodilos | 2 € | Passo de 5 mm é o mais fácil de apertar |
-| Botão de pressão 6 mm | 1 | Mudar escala / recalibrar | 0,20 € | Opcional, mas muito útil |
-| Potenciómetro 10 kΩ linear (B10K) + botão rotativo | 1 | Mudar de oitava | 1,50 € | Opcional |
-| Segundo MPR121 | 1 | Pads 13 a 24 | 3–9 € | Opcional |
-| Caixa de projeto ~100×60×25 mm ou impressão 3D | 1 | Proteger a eletrónica | 5 € | Opcional |
-| Placa perfurada + ferro de soldar | 1 | Versão definitiva | 3 € | Depois de testar na breadboard |
-| Pregos ou agulhas de inox, fita de cobre, tinta condutora | — | Elétrodos | 5–10 € | Opcional |
+| Raspberry Pi Pico or Pico 2 (**H** version, with headers already soldered) | 1 | Brain; shows up on the computer as a MIDI device | 5–7 € | Pico W and Pico 2 W also work |
+| MPR121 breakout (Adafruit 1982 or CJMCU-121 clone) | 1 | 12 capacitive sensors | 3 € (clone) / 9 € (Adafruit) | Both run at 3.3 V, like the Pico |
+| Micro-USB **data** cable | 1 | Connection to the computer | 3 € | Many cables are charge-only; if the Pico does not show up, it is the cable |
+| 400-point breadboard | 1 | Solderless prototype | 3 € | |
+| Male-to-male jumper wires | 10 | Breadboard connections | 2 € | |
+| Leads with alligator clips on both ends | 12 | Connect each pad to an object | 5 € (pack of 10) | Buy 2 packs |
+| Screw terminal strip, 12 ways | 1 | Sturdy connection point for the alligator clips | 2 € | 5 mm pitch is the easiest to tighten |
+| 6 mm push button | 1 | Change scale / recalibrate | 0.20 € | Optional, but very useful |
+| 10 kΩ linear potentiometer (B10K) + knob | 1 | Change octave | 1.50 € | Optional |
+| Second MPR121 | 1 | Pads 13 to 24 | 3–9 € | Optional |
+| Project box ~100×60×25 mm or 3D print | 1 | Protect the electronics | 5 € | Optional |
+| Perfboard + soldering iron | 1 | Permanent version | 3 € | After testing on the breadboard |
+| Stainless steel nails or needles, copper tape, conductive paint | — | Electrodes | 5–10 € | Optional |
 
-O firmware também compila para o Arduino Pro Micro / Leonardo (ATmega32u4). Nesse caso, usa um MPR121 da Adafruit (aceita 5 V) ou um Pro Micro de 3,3 V: os clones de MPR121 só aguentam 3,3 V.
+The firmware also compiles for the Arduino Pro Micro / Leonardo (ATmega32u4). In that case, use an Adafruit MPR121 (it accepts 5 V) or a 3.3 V Pro Micro: MPR121 clones only tolerate 3.3 V.
 
-## Ligações
+## Wiring
 
-![Quatro fios ligam o Pico ao MPR121; botão e potenciómetro são opcionais](docs/img/ligacoes.svg)
+![Four wires connect the Pico to the MPR121; button and potentiometer are optional](docs/img/ligacoes.svg)
 
-| Pico (GP) | Pino físico | Liga a | Função |
+| Pico (GP) | Physical pin | Connects to | Function |
 | --- | --- | --- | --- |
-| 3V3(OUT) | 36 | MPR121 **VIN** (Adafruit) ou **3.3V** (clone) | Alimentação do sensor |
-| GND | 38 | MPR121 **GND** | Massa comum |
-| GP4 | 6 | MPR121 **SDA** | Dados I²C |
-| GP5 | 7 | MPR121 **SCL** | Relógio I²C |
-| — | — | MPR121 **IRQ** | Não se liga: o firmware lê o sensor em ciclo |
-| — | — | MPR121 **ADDR** | Deixa como está (0x5A); só muda no 2.º sensor |
-| GP15 | 20 | Botão, perna 1 | Escala / recalibrar; a outra perna vai a GND (pino 18) |
-| GP26 / ADC0 | 31 | Potenciómetro, pino do meio | Oitava (opcional) |
-| 3V3(OUT) | 36 | Potenciómetro, um extremo | |
-| AGND | 33 | Potenciómetro, outro extremo | |
-| — | — | MPR121 **0–11** | Um crocodilo por objeto, via régua de terminais |
+| 3V3(OUT) | 36 | MPR121 **VIN** (Adafruit) or **3.3V** (clone) | Sensor power |
+| GND | 38 | MPR121 **GND** | Common ground |
+| GP4 | 6 | MPR121 **SDA** | I²C data |
+| GP5 | 7 | MPR121 **SCL** | I²C clock |
+| — | — | MPR121 **IRQ** | Not connected: the firmware polls the sensor in a loop |
+| — | — | MPR121 **ADDR** | Leave as is (0x5A); only changes on the 2nd sensor |
+| GP15 | 20 | Button, leg 1 | Scale / recalibrate; the other leg goes to GND (pin 18) |
+| GP26 / ADC0 | 31 | Potentiometer, middle pin | Octave (optional) |
+| 3V3(OUT) | 36 | Potentiometer, one end | |
+| AGND | 33 | Potentiometer, other end | |
+| — | — | MPR121 **0–11** | One alligator clip per object, via the terminal strip |
 
-Os pinos físicos contam-se de 1 a 40 com o USB virado para cima: o 1 é o canto superior esquerdo, desce-se pelo lado esquerdo até ao 20 e sobe-se pelo direito até ao 40.
+Physical pins are counted from 1 to 40 with the USB facing up: pin 1 is the top-left corner, you go down the left side to 20 and back up the right side to 40.
 
-**Segundo MPR121 (24 pads).** Liga-o em paralelo ao primeiro, nos mesmos 3V3, GND, SDA e SCL. Para mudar o endereço para 0x5B, liga o pino **ADDR** dele a 3V3. No clone, o ADDR costuma vir ligado a GND por uma pista ou ponte de solda que tens de cortar primeiro. No firmware, põe `NUM_SENSORS = 2`; os ficheiros `.uf2` dos Releases são para 1 sensor.
+**Second MPR121 (24 pads).** Connect it in parallel with the first, on the same 3V3, GND, SDA and SCL. To change its address to 0x5B, connect its **ADDR** pin to 3V3. On the clone, ADDR usually comes tied to GND by a trace or solder bridge that you must cut first. In the firmware, set `NUM_SENSORS = 2`; the `.uf2` files in Releases are for 1 sensor.
 
-**Pro Micro / Leonardo.** SDA = pino 2, SCL = pino 3, botão no pino 7, potenciómetro em A0.
+**Pro Micro / Leonardo.** SDA = pin 2, SCL = pin 3, button on pin 7, potentiometer on A0.
 
-Mantém os fios do I²C curtos (menos de 10 cm). Os cabos para as frutas podem ter 20–50 cm, mas separados uns dos outros.
+Keep the I²C wires short (under 10 cm). The leads to the fruit can be 20–50 cm, but kept apart from each other.
 
 ## Firmware
 
-O código está em [`firmware/FrutaMIDI/FrutaMIDI.ino`](firmware/FrutaMIDI/FrutaMIDI.ino). Só precisas de o compilar se quiseres mudar a configuração; senão, usa os `.uf2` do [Início rápido](#início-rápido-sem-programar).
+The code is in [`firmware/FrutaMIDI/FrutaMIDI.ino`](firmware/FrutaMIDI/FrutaMIDI.ino). You only need to compile it if you want to change the configuration; otherwise, use the `.uf2` files from the [Quick start](#quick-start-no-programming).
 
-**O que faz**
+**What it does**
 
-- Cada pad tocado envia Note On; ao largar, envia Note Off da mesma nota, mesmo que entretanto tenhas mudado de escala.
-- Enquanto tocas, envia Polyphonic Aftertouch (0–127): mais pele ou a mão mais perto dá um valor mais alto.
-- Tem 6 escalas. Arranca em modo Drum Rack (notas 36–47, para disparar samples); as outras são melódicas.
-- Botão: toque curto passa à escala seguinte e o LED pisca o número dela (1 Drum Rack · 2 Pentatónica maior · 3 Pentatónica menor · 4 Maior · 5 Menor natural · 6 Cromática). Premido 1 s, recalibra.
-- LED: 2 piscadelas lentas no arranque = sensor OK; a piscar depressa = MPR121 não encontrado (tenta de novo a cada 2 s); aceso = pad tocado.
+- Each touched pad sends Note On; when you let go, it sends Note Off for the same note, even if you have changed scale in the meantime.
+- While you touch, it sends Polyphonic Aftertouch (0–127): more skin, or the hand closer, gives a higher value.
+- It has 6 scales. It starts in Drum Rack mode (notes 36–47, for triggering samples); the others are melodic.
+- Button: a short press moves to the next scale and the LED blinks its number (1 Drum Rack · 2 Major pentatonic · 3 Minor pentatonic · 4 Major · 5 Natural minor · 6 Chromatic). Held for 0.8 s, it recalibrates.
+- LED: 2 slow blinks at startup = sensor OK; blinking fast = MPR121 not found (it retries every 2 s); on = pad touched.
 
-**Compilar (Arduino IDE 2, igual em Windows e Mac)**
+**Compiling (Arduino IDE 2, same on Windows and Mac)**
 
-1. Nas preferências do Arduino IDE (*File → Preferences* no Windows, *Arduino IDE → Settings* no Mac), junta este endereço a *Additional boards manager URLs*:
+1. In the Arduino IDE preferences (*File → Preferences* on Windows, *Arduino IDE → Settings* on Mac), add this address to *Additional boards manager URLs*:
    `https://github.com/earlephilhower/arduino-pico/releases/download/global/package_rp2040_index.json`
-2. No *Boards Manager*, instala **Raspberry Pi Pico/RP2040/RP2350** (Earle F. Philhower).
-3. No *Library Manager*, instala **Adafruit MPR121** (aceita as dependências) e **MIDI Library** (FortySevenEffects). Para o Pro Micro, instala **MIDIUSB** em vez da MIDI Library.
-4. Em *Tools*: *Board* → a tua placa; *USB Stack* → **Adafruit TinyUSB**. Sem este passo não compila.
-5. Primeiro upload: segura o **BOOTSEL** enquanto ligas o USB e carrega em *Upload*. Os seguintes já são automáticos (no Windows, o Pico aparece como porta COM).
+2. In the *Boards Manager*, install **Raspberry Pi Pico/RP2040/RP2350** (Earle F. Philhower).
+3. In the *Library Manager*, install **Adafruit MPR121** (accept the dependencies) and **MIDI Library** (FortySevenEffects). For the Pro Micro, install **MIDIUSB** instead of the MIDI Library.
+4. Under *Tools*: *Board* → your board; *USB Stack* → **Adafruit TinyUSB**. Without this step it does not compile.
+5. First upload: hold **BOOTSEL** while you plug in the USB and click *Upload*. Later uploads are automatic (on Windows, the Pico shows up as a COM port).
 
-**Configuração** (no topo do ficheiro)
+**Configuration** (at the top of the file)
 
-| Constante | Por defeito | Para quê |
+| Constant | Default | Purpose |
 | --- | --- | --- |
-| `NUM_SENSORS` | 1 | 2 para 24 pads |
-| `MIDI_CHANNEL` | 1 | Canal MIDI (1–16) |
-| `VELOCITY` | 100 | Velocidade fixa das notas |
-| `TOUCH_THRESHOLD` / `RELEASE_THRESHOLD` | 12 / 6 | Sensibilidade: mais alto = menos sensível |
-| `AUTOCONFIG` | true | Ajusta a corrente de carga ao tamanho de cada objeto. Deixa ligado para fruta |
-| `SEND_AFTERTOUCH` | true | Envia a "pressão" como Polyphonic Aftertouch |
-| `USE_BUTTON` / `USE_POT` | true / false | Ativa o botão e o potenciómetro |
-| `SERIAL_DEBUG` | false | Imprime o "delta" de cada pad no Monitor Série (115200) |
-| `#define FRUTAMIDI_PCB` | desligado | Descomenta para a [PCB](hardware/): I²C em GP26/GP27, botão em GP22, potenciómetro em GP28 (e ligado) |
+| `NUM_SENSORS` | 1 | 2 for 24 pads |
+| `MIDI_CHANNEL` | 1 | MIDI channel (1–16) |
+| `VELOCITY` | 100 | Fixed note velocity |
+| `TOUCH_THRESHOLD` / `RELEASE_THRESHOLD` | 12 / 6 | Sensitivity: higher = less sensitive |
+| `AUTOCONFIG` | true | Adjusts the charge current to the size of each object. Leave it on for fruit |
+| `SEND_AFTERTOUCH` | true | Sends the "pressure" as Polyphonic Aftertouch |
+| `USE_BUTTON` / `USE_POT` | true / false | Enables the button and the potentiometer |
+| `SERIAL_DEBUG` | false | Prints each pad's "delta" to the Serial Monitor (115200) |
+| `#define FRUTAMIDI_PCB` | off | Uncomment for the [PCB](hardware/): I²C on GP26/GP27, button on GP22, potentiometer on GP28 (and enabled) |
 
-**Afinar a sensibilidade:** põe `SERIAL_DEBUG = true`, volta a carregar o firmware e abre o Monitor Série. Vês o delta de cada pad 4 vezes por segundo: perto de 0 em repouso, a subir quando tocas. O `TOUCH_THRESHOLD` deve ficar mais ou menos a meio.
+**Tuning the sensitivity:** set `SERIAL_DEBUG = true`, upload the firmware again and open the Serial Monitor. You see each pad's delta 4 times per second: close to 0 at rest, rising when you touch. `TOUCH_THRESHOLD` should sit roughly in the middle.
 
-## Som
+## Sound
 
-O FrutaMIDI não faz som: envia notas. Escolhe um programa para as transformar em som.
+FrutaMIDI does not make sound: it sends notes. Choose a program to turn them into sound.
 
-**Sampler no browser (incluído).** Abre <https://catuta0.github.io/fruta-midi-controller/> no **Edge** (já vem no Windows) ou no Chrome. O Safari não tem Web MIDI. O ficheiro está em [`docs/index.html`](docs/index.html) e também funciona descarregado.
+**Browser sampler (included).** Open <https://catuta0.github.io/fruta-midi-controller/> in **Edge** (it comes with Windows) or Chrome. Safari does not have Web MIDI. The file is at [`docs/index.html`](docs/index.html) and also works when downloaded.
 
-- 12 pads com sons de bateria sintetizados, mapeados às notas 36–47 (o modo Drum Rack do firmware).
-- Arrasta um wav, mp3 ou ogg para cima de um pad para o substituir.
-- "aprender" muda a nota de um pad: carregas e tocas na fruta.
-- As notas sem pad (escalas melódicas) tocam num sintetizador, e o aftertouch abre o filtro.
-- Sem hardware, as teclas 1–4 / Q–R / A–F tocam os pads.
+- 12 pads with synthesised drum sounds, mapped to notes 36–47 (the firmware's Drum Rack mode).
+- Drag a wav, mp3 or ogg onto a pad to replace its sound.
+- The **"aprender"** (learn) button changes a pad's note: click it and touch the fruit.
+- Notes without a pad (melodic scales) play on a synthesiser, and aftertouch opens the filter.
+- Without hardware, the keys 1–4 / Q–R / A–F play the pads.
 
-**Programas de música**
+**Music programs**
 
-| Programa | Sistema | Custo | Como usar |
+| Program | System | Cost | How to use |
 | --- | --- | --- | --- |
-| [LMMS](https://lmms.io) | Windows, Mac, Linux | Grátis | Instrumento *AudioFileProcessor* ou *Kicker*; ativa a entrada MIDI na faixa |
-| [Ableton Live](https://www.ableton.com/live/) | Windows, Mac | Pago, com versão de teste | Drum Rack (C1–B1 = notas 36–47); *Settings → Link, Tempo & MIDI* → ativa **Track** na entrada FrutaMIDI |
-| [FL Studio](https://www.image-line.com) | Windows, Mac | Pago, com versão de teste | *FPC* para pads; ativa o FrutaMIDI em *Options → MIDI settings* |
-| [Reaper](https://www.reaper.fm) | Windows, Mac | Teste grátis, licença barata | Faixa com *ReaSamplOmatic5000*; entrada de gravação MIDI → FrutaMIDI |
-| GarageBand | Só Mac | Grátis | Faixa *Software Instrument*; reconhece o FrutaMIDI sozinho |
+| [LMMS](https://lmms.io) | Windows, Mac, Linux | Free | *AudioFileProcessor* or *Kicker* instrument; enable MIDI input on the track |
+| [Ableton Live](https://www.ableton.com/live/) | Windows, Mac | Paid, with trial version | Drum Rack (C1–B1 = notes 36–47); *Settings → Link, Tempo & MIDI* → enable **Track** on the FrutaMIDI input |
+| [FL Studio](https://www.image-line.com) | Windows, Mac | Paid, with trial version | *FPC* for pads; enable FrutaMIDI in *Options → MIDI settings* |
+| [Reaper](https://www.reaper.fm) | Windows, Mac | Free trial, cheap licence | Track with *ReaSamplOmatic5000*; MIDI record input → FrutaMIDI |
+| GarageBand | Mac only | Free | *Software Instrument* track; recognises FrutaMIDI by itself |
 
-Para o efeito "Playtron" clássico (o som dura enquanto a mão está na fruta), usa o sampler do DAW em modo *gate* ou *hold*, não em *one-shot*.
+For the classic "Playtron" effect (the sound lasts while your hand is on the fruit), use the DAW's sampler in *gate* or *hold* mode, not *one-shot*.
 
-## Windows: o que saber
+## Windows: what to know
 
-- **Sem drivers.** O Windows 10 e 11 reconhecem o FrutaMIDI sozinhos. Para confirmar, abre o *Gestor de Dispositivos*: aparece em *Dispositivos de som, vídeo e jogos*.
-- **Um programa de cada vez.** No Windows, um dispositivo MIDI normalmente só pode ser aberto por um programa de cada vez. Se o DAW disser que o FrutaMIDI está indisponível, fecha o separador do sampler no browser (e vice-versa). O sampler avisa quando o dispositivo está ocupado. As versões mais recentes do Windows 11 trazem o *Windows MIDI Services*, que pode levantar esta limitação.
-- **Latência.** No DAW, usa um driver **ASIO**: o da tua placa de som ou, num portátil sem placa, o gratuito [ASIO4ALL](https://asio4all.org) ou o [FlexASIO](https://github.com/dechamps/FlexASIO). Põe o buffer em 128 ou 256 amostras. Com o driver normal (MME/WASAPI partilhado) nota-se atraso.
-- **Nome do dispositivo.** O Windows guarda o nome do primeiro dispositivo que viu com aquele identificador USB. Se já tiveres usado o Pico com outro firmware, pode aparecer com outro nome; funciona na mesma.
-- **Portátil a bateria.** Tal como no Mac, a sensibilidade baixa quando o portátil não está ligado ao carregador (ver [Notas de design](#notas-de-design)).
+- **No drivers.** Windows 10 and 11 recognise FrutaMIDI by themselves. To check, open *Device Manager*: it appears under *Sound, video and game controllers*.
+- **One program at a time.** On Windows, a MIDI device can normally be opened by only one program at a time. If the DAW says FrutaMIDI is unavailable, close the sampler tab in the browser (and vice versa). The sampler warns you when the device is busy. The most recent versions of Windows 11 include *Windows MIDI Services*, which may lift this limitation.
+- **Latency.** In the DAW, use an **ASIO** driver: your sound card's or, on a laptop without one, the free [ASIO4ALL](https://asio4all.org) or [FlexASIO](https://github.com/dechamps/FlexASIO). Set the buffer to 128 or 256 samples. With the standard driver (MME/shared WASAPI) the delay is noticeable.
+- **Device name.** Windows keeps the name of the first device it saw with that USB identifier. If you have used the Pico with other firmware before, it may show up under another name; it works all the same.
+- **Laptop on battery.** As on the Mac, sensitivity drops when the laptop is not plugged into the charger (see [Design notes](#design-notes)).
 
-## Notas de design
+## Design notes
 
-O que mais pesa no resultado não é o código: são os objetos, os cabos e a ligação à terra. O MPR121 mede a capacidade de cada elétrodo. Quando tocas, o teu corpo, ligado à terra através do chão e do computador, acrescenta capacidade e a leitura cai. O "delta" é essa queda.
+What matters most for the result is not the code: it is the objects, the cables and the ground connection. The MPR121 measures the capacitance of each electrode. When you touch it, your body, grounded through the floor and the computer, adds capacitance and the reading drops. The "delta" is that drop.
 
-**Terra e computador**
+**Ground and computer**
 
-- O circuito fecha através de ti e do computador. Um portátil a bateria dá deltas mais pequenos e instáveis; ligado ao carregador costuma melhorar.
-- Truque do Makey Makey: um crocodilo ligado ao GND do Pico numa pulseira ou num objeto "terra". Quem lhe tocar com a outra mão tem um toque muito mais forte e consistente.
+- The circuit closes through you and the computer. A laptop on battery gives smaller, unstable deltas; plugged into the charger it usually improves.
+- Makey Makey trick: an alligator clip connected to the Pico's GND on a wristband or on a "ground" object. Anyone touching it with the other hand gets a much stronger and more consistent touch.
 
-**Que objetos funcionam**
+**Which objects work**
 
-- Bons: fruta e legumes com água (limão, maçã, pepino, batata), plantas de folha grossa, água num copo, metal, fita de cobre, tinta condutora, desenhos a lápis 6B bem carregados, plasticina caseira com sal.
-- Maus: madeira seca, plástico, vidro, fruta muito seca ou com casca grossa e seca.
-- Os objetos não se podem tocar entre si nem estar em cima de uma superfície molhada: isso faz curto entre pads.
-- Para eventos longos, os legumes duros (batata, cenoura, maçã) aguentam dias; banana e morango estragam-se depressa.
+- Good: fruit and vegetables with water in them (lemon, apple, cucumber, potato), thick-leaved plants, water in a glass, metal, copper tape, conductive paint, heavily shaded 6B pencil drawings, homemade salt dough.
+- Bad: dry wood, plastic, glass, very dry fruit or fruit with a thick, dry skin.
+- Objects must not touch each other or sit on a wet surface: that shorts pads together.
+- For long events, hard vegetables (potato, carrot, apple) last for days; bananas and strawberries spoil quickly.
 
-**Ligação ao objeto**
+**Connecting to the object**
 
-- O crocodilo só na casca funciona mal. Espeta um prego ou agulha de inox, ou 1–2 cm de fio descarnado, e prende o crocodilo aí.
-- O ácido da fruta oxida o cobre em poucas horas. O inox dura muito mais.
+- An alligator clip on the skin alone works poorly. Push in a stainless steel nail or needle, or 1–2 cm of stripped wire, and clip onto that.
+- Fruit acid oxidises copper within a few hours. Stainless steel lasts much longer.
 
-**Cabos**
+**Cables**
 
-- O próprio cabo faz parte do elétrodo: tocar no fio também dispara a nota, e cabos compridos captam ruído.
-- Usa até 50 cm por cabo, separados uns dos outros. Não uses cabo plano multicondutor nem feixes atados: tocar num fio dispara o vizinho (diafonia).
+- The cable itself is part of the electrode: touching the wire also triggers the note, and long cables pick up noise.
+- Use up to 50 cm per cable, kept apart from each other. Do not use flat multi-conductor cable or tied bundles: touching one wire triggers its neighbour (crosstalk).
 
-**Calibração e sensibilidade**
+**Calibration and sensitivity**
 
-- No arranque, o MPR121 mede a "linha de base" de cada elétrodo e, com `AUTOCONFIG`, ajusta a corrente de carga ao tamanho do objeto. Liga as frutas antes do USB, ou carrega 1 s no botão depois de trocar objetos, sem tocar em nada.
-- Notas fantasma: sobe os thresholds para 20 / 10. Não reage: desce para 8 / 4. Mede primeiro com `SERIAL_DEBUG`.
-- Objetos muito grandes (melancia inteira, vaso com terra húmida) podem sair da gama do sensor: o pad fica sempre ligado ou nunca liga. Usa um objeto mais pequeno ou um pedaço.
+- At startup, the MPR121 measures each electrode's "baseline" and, with `AUTOCONFIG`, adjusts the charge current to the size of the object. Connect the fruit before the USB, or hold the button for 0.8 s after swapping objects, without touching anything.
+- Ghost notes: raise the thresholds to 20 / 10. No response: lower them to 8 / 4. Measure first with `SERIAL_DEBUG`.
+- Very large objects (a whole watermelon, a pot of damp soil) can fall outside the sensor's range: the pad stays on all the time or never turns on. Use a smaller object or a piece of it.
 
-**Caixa e versão definitiva**
+**Enclosure and permanent version**
 
-- Depois de testar na breadboard, solda tudo numa placa perfurada. Põe o Pico num header fêmea para o poderes tirar.
-- Régua de terminais ou bornes de 4 mm na tampa, numerados 0–11, e furos para o USB e para o botão.
-- Usa uma caixa de plástico ou madeira: metal perto dos elétrodos rouba sensibilidade.
+- After testing on the breadboard, solder everything onto a perfboard. Put the Pico in a female header so you can remove it.
+- Terminal strip or 4 mm binding posts on the lid, numbered 0–11, and holes for the USB and the button.
+- Use a plastic or wooden box: metal near the electrodes takes away sensitivity.
 
-**Segurança.** Tudo funciona a 3,3 V vindos do USB, por isso é seguro tocar. Nunca ligues os elétrodos a nada que esteja ligado à corrente elétrica.
+**Safety.** USB-powered, 3.3 V logic; not evaluated for ESD or for touching while connected to mains-powered equipment — see the hardware analysis. <!-- EVIDENCE --> Never connect the electrodes to anything plugged into mains power.
 
-## Montagem passo a passo
+## Step-by-step assembly
 
-Testa cada passo antes de avançar: quando algo falha, sabes logo onde está o problema.
+Test each step before moving on: when something fails, you know straight away where the problem is.
 
-1. **Pico sozinho.** Carrega o firmware só com o Pico ligado. O LED deve piscar depressa, porque ainda não há sensor, e o FrutaMIDI já aparece no sampler.
-2. **Sensor.** Com o USB desligado, coloca o Pico e o MPR121 na breadboard e liga os 4 fios: 3V3, GND, SDA e SCL. Ao ligar o USB: 2 piscadelas lentas e o LED apagado.
-3. **Primeiro toque.** Toca com o dedo diretamente no pino 0 do MPR121. O LED acende e o sampler mostra "Note On C1 (36)".
-4. **Primeira fruta.** Um crocodilo do pino 0 a um prego espetado num limão. Recalibra (1 s no botão, ou desliga e liga o USB) sem tocar em nada, e depois toca no limão.
-5. **Afinar.** Se houver notas fantasma ou falhas, ajusta os thresholds (ver [Notas de design](#notas-de-design)).
-6. **Os 12 pads.** Junta a régua de terminais e as restantes frutas, recalibra, e testa pad a pad no sampler.
-7. **Controlos.** Junta o botão (GP15 ↔ GND) e, se quiseres, o potenciómetro com `USE_POT = true`.
-8. **Versão final.** Passa para a placa perfurada e a caixa.
+1. **Pico alone.** Upload the firmware with only the Pico connected. The LED should blink fast, because there is no sensor yet, and FrutaMIDI already shows up in the sampler.
+2. **Sensor.** With the USB unplugged, place the Pico and the MPR121 on the breadboard and connect the 4 wires: 3V3, GND, SDA and SCL. When you plug in the USB: 2 slow blinks, then the LED off.
+3. **First touch.** Touch pin 0 of the MPR121 directly with your finger. The LED lights up and the sampler shows "Note On C1 (36)".
+4. **First fruit.** One alligator lead from pin 0 to a nail pushed into a lemon. Recalibrate (0.8 s on the button, or unplug and replug the USB) without touching anything, then touch the lemon.
+5. **Tune.** If there are ghost notes or missed touches, adjust the thresholds (see [Design notes](#design-notes)).
+6. **All 12 pads.** Add the terminal strip and the rest of the fruit, recalibrate, and test pad by pad in the sampler.
+7. **Controls.** Add the button (GP15 ↔ GND) and, if you like, the potentiometer with `USE_POT = true`.
+8. **Final version.** Move to the perfboard and the enclosure.
 
-## Resolução de problemas
+## Troubleshooting
 
-| Sintoma | Causa provável | O que fazer |
+| Symptom | Likely cause | What to do |
 | --- | --- | --- |
-| Erro a compilar com `Adafruit_TinyUSB` ou `usbMidi` | USB Stack errado | *Tools → USB Stack → Adafruit TinyUSB* |
-| O Pico não aparece de todo | Cabo só de carga | Troca de cabo; testa com BOOTSEL premido (deve surgir a drive RPI-RP2) |
-| LED a piscar depressa sem parar | MPR121 não responde no I²C | Confirma 3V3/GND e que SDA→GP4 e SCL→GP5 não estão trocados; no 2.º sensor, confirma o ADDR |
-| Windows: o DAW não vê o FrutaMIDI, ou o sampler diz "ocupado" | Outro programa tem o dispositivo aberto | Fecha o outro programa (ou o separador do sampler) e reabre |
-| Aparece, mas o DAW não toca | Entrada MIDI desativada ou faixa não armada | Ativa a entrada FrutaMIDI nas definições MIDI do DAW e arma a faixa |
-| Windows: o som chega atrasado | Driver de áudio sem ASIO | Usa ASIO (ASIO4ALL ou FlexASIO) com buffer de 128–256 |
-| Um pad está sempre ligado | Calibrou com a mão no objeto, ou o objeto é grande demais | Recalibra sem tocar; usa um objeto mais pequeno; sobe o threshold |
-| Tocar num pad dispara o vizinho | Fios juntos ou objetos encostados | Afasta os cabos e separa os objetos; seca a mesa |
-| Notas fantasma ao aproximar a mão | Threshold baixo ou cabos compridos | Sobe para 20 / 10; encurta os cabos |
-| A sensibilidade muda ao longo do dia | Fruta a secar, portátil a bateria | Recalibra; liga o carregador; usa o truque do fio de terra |
-| Uma nota fica presa no DAW | Desligaste o USB com a mão no objeto | Toca e larga outra vez o mesmo pad: o Note Off liberta a nota |
-| O sampler diz que não há Web MIDI | Safari, ou browser antigo | Usa o Edge ou o Chrome |
+| Compile error mentioning `Adafruit_TinyUSB` or `usbMidi` | Wrong USB Stack | *Tools → USB Stack → Adafruit TinyUSB* |
+| The Pico does not show up at all | Charge-only cable | Change the cable; test with BOOTSEL held (the RPI-RP2 drive should appear) |
+| LED keeps blinking fast | MPR121 not responding on I²C | Check 3V3/GND and that SDA→GP4 and SCL→GP5 are not swapped; on the 2nd sensor, check ADDR |
+| Windows: the DAW does not see FrutaMIDI, or the sampler says "ocupado" (busy) | Another program has the device open | Close the other program (or the sampler tab) and reopen |
+| It shows up, but the DAW does not play | MIDI input disabled or track not armed | Enable the FrutaMIDI input in the DAW's MIDI settings and arm the track |
+| Windows: the sound arrives late | Audio driver without ASIO | Use ASIO (ASIO4ALL or FlexASIO) with a buffer of 128–256 |
+| A pad is always on | It calibrated with a hand on the object, or the object is too large | Recalibrate without touching; use a smaller object; raise the threshold |
+| Touching one pad triggers its neighbour | Wires together or objects touching | Move the cables apart and separate the objects; dry the table |
+| Ghost notes when the hand gets close | Low threshold or long cables | Raise to 20 / 10; shorten the cables |
+| Sensitivity changes over the day | Fruit drying out, laptop on battery | Recalibrate; plug in the charger; use the ground-wire trick |
+| A note gets stuck in the DAW | You unplugged the USB with a hand on the object | Touch and release the same pad again: the Note Off frees the note |
+| The sampler says there is no Web MIDI | Safari, or an old browser | Use Edge or Chrome |
 
-## Licença
+## Licence
 
-[MIT](LICENSE): podes usar, modificar e partilhar à vontade.
+[MIT](LICENSE): you are free to use, modify and share it.

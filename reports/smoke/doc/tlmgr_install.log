@@ -1,0 +1,9 @@
+tlmgr: package repository https://tlnet.yihui.org (not verified: gpg unavailable)
+tlmgr: prefetching 3 containers using 3 parallel downloads (curl)
+[1/3, ??:??/??:??] install: caption [61k]
+[2/3, 00:00/00:00] install: enumitem [14k]
+[3/3, 00:00/00:00] install: siunitx [70k]
+running mktexlsr ...
+done running mktexlsr.
+tlmgr: package log updated: /Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-var/web2c/tlmgr.log
+tlmgr: command log updated: /Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-var/web2c/tlmgr-commands.log

@@ -1,0 +1,4 @@
+tlmgr install: package lmodern not present in repository.
+tlmgr: action install returned an error; continuing.
+tlmgr: package repository https://tlnet.yihui.org (not verified: gpg unavailable)
+tlmgr: An error has occurred. See above messages. Exiting.

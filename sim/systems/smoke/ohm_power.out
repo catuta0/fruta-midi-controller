@@ -1,0 +1,5 @@
+python: 3.9.6
+inputs: V = 3.3 V, R = 10000.0 Ohm
+I = V/R = 0.330000000000 mA (hand 0.33 mA, |err| = 0.000e+00)
+P = V*I = 1.089000000000 mW (hand 1.089 mW, |err| = 0.000e+00)
+RESULT: PASS (both assertions within abs tol 1e-09)

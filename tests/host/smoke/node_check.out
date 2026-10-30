@@ -1,0 +1,4 @@
+node v26.4.0
+file docs/index.html bytes=16076
+requestMIDIAccess occurrences=2
+RESULT PASS (>=1)

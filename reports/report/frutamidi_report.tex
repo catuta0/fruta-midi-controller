@@ -1,0 +1,59 @@
+% FrutaMIDI engineering report — skeleton (task T-031).
+% Each section lives in sections/*.tex so specialists' results can be dropped in.
+% Rule: every number must come from management/metrics.json or a cited report,
+% with its label (SOURCE, CALCULATION, SIMULATION, MEASUREMENT, ASSUMPTION).
+% Status words: PASS, PARTIAL, FAIL, BLOCKED, NOT RUN.
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath}
+\usepackage{siunitx}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{../figures/}}
+
+% Placeholder marker. Search the source for \tbf to find every open item.
+\newcommand{\tbf}[1]{\noindent\fcolorbox{red}{red!5}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{%
+  \textbf{\textcolor{red}{TO BE FILLED FROM EVIDENCE.}} #1}}\par\medskip}
+% Evidence label, e.g. \lbl{MEASUREMENT}
+\newcommand{\lbl}[1]{\textsc{\small #1}}
+
+\title{FrutaMIDI: capacitive USB MIDI controller\\[2pt]\large Engineering report}
+\author{FrutaMIDI engineering project}
+\date{Revision: \texttt{TO BE FILLED FROM EVIDENCE}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\tbf{One-paragraph summary of scope, verification status and open risks, written
+last from the gate summaries.}
+\end{abstract}
+
+\tableofcontents
+\clearpage
+
+\input{sections/01_introduction}
+\input{sections/02_requirements}
+\input{sections/03_architecture}
+\input{sections/04_interfaces}
+\input{sections/05_electronics}
+\input{sections/06_firmware}
+\input{sections/07_host_software}
+\input{sections/08_review}
+\input{sections/09_limitations}
+\input{sections/10_validation_plan}
+\input{sections/11_reproducibility}
+
+\appendix
+\input{sections/A_sources}
+
+\end{document}

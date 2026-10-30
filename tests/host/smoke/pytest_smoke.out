@@ -1,0 +1,7 @@
+# Raw output of eng-tools run_pytest target=tests/host/smoke (T-006-SW, rev e4668d4-dirty)
+command: /Users/rod/fruta-midi-controller/.venv/bin/python -m pytest -q /Users/rod/fruta-midi-controller/tests/host/smoke
+exit_code: 0
+duration_s: 0.5
+output:
+......                                                                   [100%]
+6 passed in 0.01s
