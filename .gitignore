@@ -7,3 +7,6 @@ build/
 *.kicad_prl
 fp-info-cache
 *-backups/
+tools/
+.venv/
+node_modules/

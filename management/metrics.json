@@ -1,0 +1,21 @@
+{
+  "schema": "every entry: name, value, unit, label (SOURCE|CALCULATION|SIMULATION|MEASUREMENT|ASSUMPTION), revision, evidence",
+  "entries": [
+    {
+      "name": "host_free_disk",
+      "value": 8.4,
+      "unit": "GiB",
+      "label": "MEASUREMENT",
+      "revision": "setup",
+      "evidence": "logs/setup-environment.md"
+    },
+    {
+      "name": "bom_target",
+      "value": "25-30",
+      "unit": "EUR",
+      "label": "ASSUMPTION",
+      "revision": "definition",
+      "evidence": "management/PROJECT_DEFINITION.md"
+    }
+  ]
+}

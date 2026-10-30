@@ -1,0 +1,13 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./smoke.tex
+LaTeX2e <2026-06-01>
+L3 programming layer <2026-09-09>
+(/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/base/size10.clo)) (/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/l3kernel/l3backend-pdftex.def)
+No file smoke.aux.
+[1{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./smoke.aux) )</Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb>
+Output written on smoke.pdf (1 page, 28601 bytes).
+Transcript written on smoke.log.
