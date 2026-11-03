@@ -1,0 +1,113 @@
+........................................................................ [ 27%]
+........................................................................ [ 55%]
+....................................................F.FF...FF........... [ 83%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+_________________ test_note_clamp_0_127[120-0-1-0-steps0-127] __________________
+
+probe = <conftest.Probe object at 0x1080b9fa0>, root = 120, fixed = 0
+octave = 1, pad = 0, steps = [0], expected = 127
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+E       AssertionError: assert 132 == 127
+E        +  where 132 = int('notec 120 0 1 0 0')
+E        +    where int = <conftest.Probe object at 0x1080b9fa0>.int
+
+tests/firmware/logic/test_scales.py:85: AssertionError
+___________________ test_note_clamp_0_127[0-0--2-0-steps2-0] ___________________
+
+probe = <conftest.Probe object at 0x1080b9fa0>, root = 0, fixed = 0, octave = -2
+pad = 0, steps = [0], expected = 0
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+E       AssertionError: assert 232 == 0
+E        +  where 232 = int('notec 0 0 -2 0 0')
+E        +    where int = <conftest.Probe object at 0x1080b9fa0>.int
+
+tests/firmware/logic/test_scales.py:85: AssertionError
+__________________ test_note_clamp_0_127[60-0--6-0-steps3-0] ___________________
+
+probe = <conftest.Probe object at 0x1080b9fa0>, root = 60, fixed = 0
+octave = -6, pad = 0, steps = [0], expected = 0
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+E       AssertionError: assert 244 == 0
+E        +  where 244 = int('notec 60 0 -6 0 0')
+E        +    where int = <conftest.Probe object at 0x1080b9fa0>.int
+
+tests/firmware/logic/test_scales.py:85: AssertionError
+_________________ test_note_clamp_0_127[100-0-2-23-steps7-127] _________________
+
+probe = <conftest.Probe object at 0x1080b9fa0>, root = 100, fixed = 0
+octave = 2, pad = 23, steps = [0], expected = 127
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+E       AssertionError: assert 144 == 127
+E        +  where 144 = int('notec 100 0 2 23 0')
+E        +    where int = <conftest.Probe object at 0x1080b9fa0>.int
+
+tests/firmware/logic/test_scales.py:85: AssertionError
+___________________________ test_clamp_one_below_max ___________________________
+
+probe = <conftest.Probe object at 0x1080b9fa0>
+
+    def test_clamp_one_below_max(probe):
+        assert probe.int("notec 126 0 0 0 0 1") == 126
+        assert probe.int("notec 126 0 0 1 0 1") == 127
+>       assert probe.int("notec 126 0 0 1 0 2") == 127   # 128 -> 127
+E       AssertionError: assert 128 == 127
+E        +  where 128 = int('notec 126 0 0 1 0 2')
+E        +    where int = <conftest.Probe object at 0x1080b9fa0>.int
+
+tests/firmware/logic/test_scales.py:91: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[120-0-1-0-steps0-127]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[0-0--2-0-steps2-0]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[60-0--6-0-steps3-0]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[100-0-2-23-steps7-127]
+FAILED tests/firmware/logic/test_scales.py::test_clamp_one_below_max - Assert...
+5 failed, 255 passed in 1.97s

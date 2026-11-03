@@ -1,0 +1,28 @@
+# Sources — electronics (T-050)
+
+Accessed 2026-10-30. "Read" means the text was opened and the quoted value was found in it. "Search" means the
+value comes from a search-engine extract of the document; it was not opened, so treat it as lower confidence.
+
+| ID | Source | Values used | How |
+|---|---|---|---|
+| EE-S01 | NXP/Freescale MPR121 data sheet, https://www.nxp.com/docs/en/data-sheet/MPR121.pdf | VDD 2.0–3.6 V (Table 5); abs max VDD −0.3..+3.6 V, SDA/SCL/IRQ VSS−0.3..VDD+0.3 V (Table 3); ESD HBM ±2000 V, MM ±200 V, CDM ±500 V (Table 4); IDD 393 µA @ 1 ms, peak 1 mA; ELE leakage 0.025 µA; ELE self-capacitance 15 pF; SDA/SCL VIH 0.7·VDD, C 7 pF; fSCL 400 kHz, tR 20+0.1Cb..300 ns (Table 7); CDC 1–63 µA, CDT 0.5–32 µs; USL/TL/LSL Eqn 1–3; Cin = I·T/V Eqn 4; "sampled at the end of each charge cycle"; SCTS = 0 also searches CDT; 10 pF–2000 pF range; pull-up "typically 4.7 kΩ" | Read (PDF text extracted locally) |
+| EE-S02 | Adafruit MPR121 breakout Eagle schematic (original, 1982), https://github.com/adafruit/Adafruit-MPR121-PCB `Adafruit MPR121 Breakout.sch` | U4 MIC5225-3.3, IN+EN = VIN, OUT = 3.3V = MPR121 VDD; Q1/Q2 BSS138, gate = 3.3V; 10k R2/R4 to VIN (host side), 10k R1/R3 to 3.3V (chip side); JP2: 1 VIN, 2 3.3V, 3 GND, 4 ADDR, 5 SDA, 6 SCL, 7 IRQ; ELEC nets go straight from MPR121 to JP1 (no series R); red LED + 1k on IRQ | Read (XML nets) |
+| EE-S03 | Adafruit Eagle schematic STEMMA QT, same repo, `Adafruit MPR121Q QT.sch` | U2 AP2112K-3.3, IN+EN = VCC; OUT = 3.3V = MPR121 VDD; dual BSS138 Q3, gate = 3.3V; R8 4×10k pack (2 to VCC, 2 to 3.3V); JP2: 1 VCC, 2 3.3V, 3 GND, 4 SCL, 5 SDA, 6 INT, 7 ADDR; green LED D2 + 10k R9 on 3.3V | Read (XML nets) |
+| EE-S04 | Adafruit learn guide, pinouts page, https://learn.adafruit.com/adafruit-mpr121-12-key-capacitive-touch-sensor-breakout-tutorial/pinouts | "give it the same power as the logic level of your microcontroller"; on-board ultra-low-dropout 3.3 V regulator; 3Vo up to 100 mA | Read |
+| EE-S05 | Adafruit_MPR121 library, https://github.com/adafruit/Adafruit_MPR121 `Adafruit_MPR121.cpp` | CONFIG1 0x10 (16 µA, FFI 6), CONFIG2 0x20 (0.5 µs, ESI 1 ms); autoconfig AUTOCONFIG0 0x0B, USL 200, TL 180, LSL 130; AUTOCONFIG1 not written | Read |
+| EE-S06 | Diodes Inc. AP2112 data sheet, https://www.diodes.com/assets/Datasheets/AP2112.pdf | AP2112-3.3: dropout 5 typ / 8 max mV at 10 mA, 125/200 mV at 300 mA; IQ 55/80 µA; VOUT ±1.5 % | Read |
+| EE-S07 | Microchip MIC5225 data sheet DS20006683A (third-party copy, encrypted PDF) | dropout 50 mV typ at 100 µA; 230/300 mV at 50 mA; 310/450 mV at 150 mA | Search, not verified |
+| EE-S08 | Raspberry Pi Pico pinout, https://pico.pinout.xyz/ and https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html | pin 29 GP22; 31 GP26 = I2C1 SDA / ADC0; 32 GP27 = I2C1 SCL / ADC1; 33 AGND; 34 GP28 = ADC2; 35 ADC_VREF; 36 3V3 out, "recommended to keep the load less than 300mA"; VSYS 2–5 V | Read (Pico datasheet PDF too large for the fetch tool; official wording not opened) |
+| EE-S09 | onsemi BSS138 / BSS138K / BSS138L data | VGS(th) 0.8/1.3/1.5 V; BSS138K Coss 9.75 pF typ; BSS138L Coss 25 pF max (VDS 25 V) | Search, not verified |
+| EE-S10 | TI TPD4E05U06 product page, https://www.ti.com/product/TPD4E05U06 | 4 ch, VRWM 5.5 V, 0.5 pF typ, 10 nA max leakage, IEC ±12 kV contact; USON/DFN 2.5×1 mm | Read |
+| EE-S11 | Vishay 1N4148 data sheet, https://www.vishay.com/docs/81857/1n4148.pdf | IR 25 nA at VR 20 V; CD 4 pF at 0 V; VF 1 V at 10 mA | Read |
+| EE-S12 | Phoenix Contact 1715721 MKDS 1,5/2-5,08 | pin 0.9 × 0.9 mm, hole 1.3 mm, pitch 5.08 mm | Search |
+| EE-S13 | Alps RK09K1130A5R product page, https://tech.alpsalpine.com/e/products/detail/RK09K1130A5R/ | 10 kΩ ±20 %, 0.05 W | Read |
+| EE-S14 | Yageo MFR leaded resistor data (MFR-12) | body 3.4 ± 0.3 × Ø1.9 ± 0.2 mm, lead Ø0.45–0.5 mm, 1/6 W, 200 V working / 400 V overload | Search |
+| EE-S15 | IPC-2221B (generic standard for PCB design) | external-conductor current formula I = 0.048·ΔT^0.44·A^0.725; Table 6-1 B2 0–15 V: 0.1 mm | Standard, from memory: not opened in this session |
+| EE-S16 | IEC 61000-4-2 | 150 pF / 330 Ω; contact levels 2/4/6/8 kV; first peak 3.75 A/kV | Standard, from memory: not opened in this session |
+| EE-S14b | Yageo leaded resistors data sheet (MFR series table), https://pccomponents.com/datasheets/YAGEO-LEADED_RESISTORS.PDF | MFR-12: 1/6 W, L 3.4 ± 0.3, Ø1.9 ± 0.2, lead Ø0.5 ± 0.05 mm; max working 200 V, max overload 400 V, dielectric withstanding 300 V; short-time overload 2.5×RCWV 5 s; pulse overload 4×RCWV 10000 cycles (1 s on / 25 s off); no µs pulse / ESD rating | Read (T-053) |
+| EE-S17 | Vishay Beyschlag MBA/SMA 0204, MBB/SMA 0207, MBE/SMA 0414 Professional, doc 28766 rev 11-Jul-2018, https://www.vishay.com/docs/28766/mbxsma.pdf | Umax AC/DC 200/350/500 V; Uins (1 min) 300/500/800 V; range 10 Ω–2.43 MΩ; 1.2/50 µs pulse rating per IEC 60115-1 4.27 (5 pulses, ΔR ≤ 0.5 % + 0.05 Ω) and single-pulse load given ONLY as charts (image), value at 3.3 kΩ not readable | Read (text); chart values not read |
+| EE-S18 | Ohmite OX/OY ceramic composition data sheet | OX: 1 W, 3.3 Ω–100 kΩ, 50 J single impulse, 300 V working | Search, not verified (storage.sea.com.ua copy refused connection) |
+| EE-S19 | Vishay VR25/VR37/VR68 product overview, https://www.vishay.com/docs/48446/_vr25_vr37_vr68_ppt_product-overview.pdf | range 100 kΩ–68 MΩ (does not include 2.7–3.3 kΩ); pulse 7 kV (VR25) / 10 kV (VR37), 1 nF discharge per IEC 60065 14.2 | Search |
+| EE-S20 | Search extract of a Vishay listing: "MBA/SMA 0204: 2 kV, MBB/SMA 0207: 4 kV, MBE/SMA 0414: 6 kV" | not confirmed as the 1.2/50 µs value at 3.3 kΩ | Search, not verified |

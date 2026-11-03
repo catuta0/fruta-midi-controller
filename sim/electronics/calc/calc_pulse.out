@@ -1,0 +1,7 @@
+# calc_pulse.py  CALCULATION
+RCWV = min(sqrt(P*R), 200 V) = 23.45 V
+Short-time overload (2.5 x RCWV, 5 s): 58.63 V, 5.21 J   Pulse overload (4 x RCWV, 1 s): 93.81 V, 2.67 J per pulse
+IEC 4 kV: Ipk 1.10 A, peak voltage across R 3636 V = 9.1 x max overload 400 V; energy 1.09 mJ in tau 0.54 us = 1/2444 of one 1-s pulse-overload pulse
+IEC 8 kV: Ipk 2.20 A, peak voltage across R 7273 V = 18.2 x max overload 400 V; energy 4.36 mJ in tau 0.54 us = 1/611 of one 1-s pulse-overload pulse
+Verdict: energy is far below the 1-s ratings, but those ratings do not cover us pulses (adiabatic film heating),
+and the peak voltage exceeds the 400 V max overload voltage at both levels -> not supported by datasheet data.

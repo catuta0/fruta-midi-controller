@@ -12,7 +12,7 @@ The MPR121 detects the touch, the Pico turns it into MIDI notes and the computer
 - **Breadboard:** no soldering. This README.
 - **Single-sided PCB**, for etching at home with the chemical method, with KiCad schematic, BOM and assembly guide: [`hardware/`](hardware/).
 
-[![PCB render](hardware/fabrico/imagens/placa-3d.png)](hardware/)
+[![PCB render](hardware/fabrication/images/board-3d.png)](hardware/)
 
 > The firmware compiles without errors for all the boards listed, and the sampler was tested with simulated MIDI. <!-- EVIDENCE --> The complete build has not yet been tested on real hardware: if you run into problems, open an *issue*.
 
@@ -52,7 +52,7 @@ Works on Windows 10/11 and macOS; you do not need to install anything.
 
 ## Bill of materials
 
-The essentials cost about 23–31 €. Prices are approximate and vary a lot between shops.
+The essentials cost about 23–31 €. This total excludes the 14 recommended resistors (and, on the PCB, the JP1 solder bridge), because their price is not sourced. Prices are approximate and vary a lot between shops.
 
 | Part | Qty | Purpose | Approx. price | Notes |
 | --- | --- | --- | --- | --- |
@@ -63,6 +63,8 @@ The essentials cost about 23–31 €. Prices are approximate and vary a lot bet
 | Male-to-male jumper wires | 10 | Breadboard connections | 2 € | |
 | Leads with alligator clips on both ends | 12 | Connect each pad to an object | 5 € (pack of 10) | Buy 2 packs |
 | Screw terminal strip, 12 ways | 1 | Sturdy connection point for the alligator clips | 2 € | 5 mm pitch is the easiest to tighten |
+| Resistor 3.3 kΩ (3k3), axial | 12 | One in series with each electrode (ESD protection) | — | Recommended; same part as on the PCB (Yageo MFR-12FTF52-3K3) |
+| Resistor 4.7 kΩ (4k7), axial | 2 | I²C pull-ups, SDA and SCL to 3V3 | — | Recommended, because the firmware runs I²C at 400 kHz (Yageo MFR-12FTF52-4K7) |
 | 6 mm push button | 1 | Change scale / recalibrate | 0.20 € | Optional, but very useful |
 | 10 kΩ linear potentiometer (B10K) + knob | 1 | Change octave | 1.50 € | Optional |
 | Second MPR121 | 1 | Pads 13 to 24 | 3–9 € | Optional |
@@ -88,7 +90,8 @@ The firmware also compiles for the Arduino Pro Micro / Leonardo (ATmega32u4). In
 | GP26 / ADC0 | 31 | Potentiometer, middle pin | Octave (optional) |
 | 3V3(OUT) | 36 | Potentiometer, one end | |
 | AGND | 33 | Potentiometer, other end | |
-| — | — | MPR121 **0–11** | One alligator clip per object, via the terminal strip |
+| 3V3(OUT) | 36 | 4.7 kΩ resistor to SDA (GP4), and another 4.7 kΩ to SCL (GP5) | I²C pull-ups (recommended) |
+| — | — | MPR121 **0–11** | Each pin through its own 3.3 kΩ resistor to the terminal strip, then one alligator clip per object |
 
 Physical pins are counted from 1 to 40 with the USB facing up: pin 1 is the top-left corner, you go down the left side to 20 and back up the right side to 40.
 
@@ -96,19 +99,21 @@ Physical pins are counted from 1 to 40 with the USB facing up: pin 1 is the top-
 
 **Pro Micro / Leonardo.** SDA = pin 2, SCL = pin 3, button on pin 7, potentiometer on A0.
 
+**Protection and pull-ups (recommended).** Put a 3.3 kΩ resistor in series between each MPR121 electrode pin (0–11) and its terminal, so the resistor sits between the sensor and anything you touch. Add two 4.7 kΩ pull-ups from 3V3 to SDA and to SCL: the firmware runs I²C at 400 kHz. These are the same values used on the [PCB](hardware/README.md#electrical-safety).
+
 Keep the I²C wires short (under 10 cm). The leads to the fruit can be 20–50 cm, but kept apart from each other.
 
 ## Firmware
 
-The code is in [`firmware/FrutaMIDI/FrutaMIDI.ino`](firmware/FrutaMIDI/FrutaMIDI.ino). You only need to compile it if you want to change the configuration; otherwise, use the `.uf2` files from the [Quick start](#quick-start-no-programming).
+The code is in [`firmware/FrutaMIDI/FrutaMIDI.ino`](firmware/FrutaMIDI/FrutaMIDI.ino), with helper headers `fm_*.h` in the same folder. The scales are defined in [`fm_scales.h`](firmware/FrutaMIDI/fm_scales.h). You only need to compile it if you want to change the configuration; otherwise, use the `.uf2` files from the [Quick start](#quick-start-no-programming).
 
 **What it does**
 
 - Each touched pad sends Note On; when you let go, it sends Note Off for the same note, even if you have changed scale in the meantime.
-- While you touch, it sends Polyphonic Aftertouch (0–127): more skin, or the hand closer, gives a higher value.
+- While you touch, it sends Polyphonic Aftertouch (0–127): more skin, or the hand closer, gives a higher value. When you let go, it sends aftertouch 0 before the Note Off, so the pressure never stays stuck.
 - It has 6 scales. It starts in Drum Rack mode (notes 36–47, for triggering samples); the others are melodic.
 - Button: a short press moves to the next scale and the LED blinks its number (1 Drum Rack · 2 Major pentatonic · 3 Minor pentatonic · 4 Major · 5 Natural minor · 6 Chromatic). Held for 0.8 s, it recalibrates.
-- LED: 2 slow blinks at startup = sensor OK; blinking fast = MPR121 not found (it retries every 2 s); on = pad touched.
+- LED: 2 slow blinks at startup = sensor OK; blinking fast = MPR121 not found (it retries every 2 s); on = pad touched. The pads keep playing while the LED blinks; while a blink pattern runs, the LED shows the pattern instead of touches.
 
 **Compiling (Arduino IDE 2, same on Windows and Mac)**
 
@@ -205,18 +210,18 @@ What matters most for the result is not the code: it is the objects, the cables 
 - Terminal strip or 4 mm binding posts on the lid, numbered 0–11, and holes for the USB and the button.
 - Use a plastic or wooden box: metal near the electrodes takes away sensitivity.
 
-**Safety.** USB-powered, 3.3 V logic; not evaluated for ESD or for touching while connected to mains-powered equipment — see the hardware analysis. <!-- EVIDENCE --> Never connect the electrodes to anything plugged into mains power.
+**Safety.** FrutaMIDI is USB-powered with 3.3 V logic. On the [PCB v1.1](hardware/README.md#electrical-safety), each electrode has a 3.3 kΩ series resistor. This was analysed against IEC 61000-4-2 contact discharge at ±4 kV; that result is a calculation and has not been tested. The PCB has not been evaluated beyond that. The breadboard build uses the same recommended 3.3 kΩ series resistors (see [Wiring](#wiring)), but its wiring layout has not been evaluated for ESD. Neither build has been evaluated for touching while connected to mains-powered equipment. <!-- EVIDENCE --> Never connect the electrodes to anything plugged into mains power.
 
 ## Step-by-step assembly
 
 Test each step before moving on: when something fails, you know straight away where the problem is.
 
 1. **Pico alone.** Upload the firmware with only the Pico connected. The LED should blink fast, because there is no sensor yet, and FrutaMIDI already shows up in the sampler.
-2. **Sensor.** With the USB unplugged, place the Pico and the MPR121 on the breadboard and connect the 4 wires: 3V3, GND, SDA and SCL. When you plug in the USB: 2 slow blinks, then the LED off.
+2. **Sensor.** With the USB unplugged, place the Pico and the MPR121 on the breadboard and connect the 4 wires: 3V3, GND, SDA and SCL, plus the two 4.7 kΩ pull-ups (3V3 to SDA, 3V3 to SCL). When you plug in the USB: 2 slow blinks, then the LED off.
 3. **First touch.** Touch pin 0 of the MPR121 directly with your finger. The LED lights up and the sampler shows "Note On C1 (36)".
 4. **First fruit.** One alligator lead from pin 0 to a nail pushed into a lemon. Recalibrate (0.8 s on the button, or unplug and replug the USB) without touching anything, then touch the lemon.
 5. **Tune.** If there are ghost notes or missed touches, adjust the thresholds (see [Design notes](#design-notes)).
-6. **All 12 pads.** Add the terminal strip and the rest of the fruit, recalibrate, and test pad by pad in the sampler.
+6. **All 12 pads.** Add the terminal strip, with a 3.3 kΩ resistor between each MPR121 pin and its terminal, and the rest of the fruit, recalibrate, and test pad by pad in the sampler.
 7. **Controls.** Add the button (GP15 ↔ GND) and, if you like, the potentiometer with `USE_POT = true`.
 8. **Final version.** Move to the perfboard and the enclosure.
 

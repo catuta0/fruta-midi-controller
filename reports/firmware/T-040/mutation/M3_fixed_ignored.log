@@ -1,0 +1,89 @@
+........................................................................ [ 33%]
+........................................................................ [ 67%]
+..................FFFF.......F.......................................    [100%]
+=================================== FAILURES ===================================
+_____________________ test_fixed_scale_ignores_octave[-2] ______________________
+
+probe = <conftest.Probe object at 0x10666e130>, octave = -2
+
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_fixed_scale_ignores_octave(probe, octave):
+        got = [int(x) for x in probe.run([f"note 0 {octave} {p}" for p in range(12)])]
+>       assert got == FIRST_OCTAVE[0]
+E       assert [12, 13, 14, 15, 16, 17, ...] == [36, 37, 38, 39, 40, 41, ...]
+E         
+E         At index 0 diff: 12 != 36
+E         Use -v to get more diff
+
+tests/firmware/logic/test_scales.py:63: AssertionError
+_____________________ test_fixed_scale_ignores_octave[-1] ______________________
+
+probe = <conftest.Probe object at 0x10666e130>, octave = -1
+
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_fixed_scale_ignores_octave(probe, octave):
+        got = [int(x) for x in probe.run([f"note 0 {octave} {p}" for p in range(12)])]
+>       assert got == FIRST_OCTAVE[0]
+E       assert [24, 25, 26, 27, 28, 29, ...] == [36, 37, 38, 39, 40, 41, ...]
+E         
+E         At index 0 diff: 24 != 36
+E         Use -v to get more diff
+
+tests/firmware/logic/test_scales.py:63: AssertionError
+______________________ test_fixed_scale_ignores_octave[1] ______________________
+
+probe = <conftest.Probe object at 0x10666e130>, octave = 1
+
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_fixed_scale_ignores_octave(probe, octave):
+        got = [int(x) for x in probe.run([f"note 0 {octave} {p}" for p in range(12)])]
+>       assert got == FIRST_OCTAVE[0]
+E       assert [48, 49, 50, 51, 52, 53, ...] == [36, 37, 38, 39, 40, 41, ...]
+E         
+E         At index 0 diff: 48 != 36
+E         Use -v to get more diff
+
+tests/firmware/logic/test_scales.py:63: AssertionError
+______________________ test_fixed_scale_ignores_octave[2] ______________________
+
+probe = <conftest.Probe object at 0x10666e130>, octave = 2
+
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_fixed_scale_ignores_octave(probe, octave):
+        got = [int(x) for x in probe.run([f"note 0 {octave} {p}" for p in range(12)])]
+>       assert got == FIRST_OCTAVE[0]
+E       assert [60, 61, 62, 63, 64, 65, ...] == [36, 37, 38, 39, 40, 41, ...]
+E         
+E         At index 0 diff: 60 != 36
+E         Use -v to get more diff
+
+tests/firmware/logic/test_scales.py:63: AssertionError
+_________________ test_note_clamp_0_127[120-1-2-0-steps6-120] __________________
+
+probe = <conftest.Probe object at 0x10666e130>, root = 120, fixed = 1
+octave = 2, pad = 0, steps = [0], expected = 120
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+E       AssertionError: assert 127 == 120
+E        +  where 127 = int('notec 120 1 2 0 0')
+E        +    where int = <conftest.Probe object at 0x10666e130>.int
+
+tests/firmware/logic/test_scales.py:85: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_scales.py::test_fixed_scale_ignores_octave[-2]
+FAILED tests/firmware/logic/test_scales.py::test_fixed_scale_ignores_octave[-1]
+FAILED tests/firmware/logic/test_scales.py::test_fixed_scale_ignores_octave[1]
+FAILED tests/firmware/logic/test_scales.py::test_fixed_scale_ignores_octave[2]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[120-1-2-0-steps6-120]
+5 failed, 208 passed in 1.42s

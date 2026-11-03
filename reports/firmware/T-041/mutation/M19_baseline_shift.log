@@ -1,0 +1,100 @@
+........................................................................ [ 27%]
+...................................FFF..........F....................... [ 55%]
+........................................................................ [ 83%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+___________________________ test_hand_decoded_vector ___________________________
+
+probe = <conftest.Probe object at 0x106100d00>
+
+    def test_hand_decoded_vector(probe):
+        filt = [0] * 24
+        base = [0] * 12
+        # E0: LSB 0xA5, MSB 0x02 -> 0x2A5 = 677; baseline 0xA9 -> 0xA9 << 2 = 676; delta -1
+        filt[0], filt[1], base[0] = 0xA5, 0x02, 0xA9
+        # E1: 0x0300 + 0x00 = 768; baseline 0xC8 -> 800; delta 32
+        filt[2], filt[3], base[1] = 0x00, 0x03, 0xC8
+        # E5: LSB 0xFF, MSB 0x03 -> 1023 (max); baseline 0xFF -> 1020; delta -3
+        filt[10], filt[11], base[5] = 0xFF, 0x03, 0xFF
+        # E7: reserved high bits set: MSB 0xFD -> only bits 1..0 (=01) used -> 0x100 + 0x10 = 272;
+        #     baseline 0x50 -> 320; delta 48
+        filt[14], filt[15], base[7] = 0x10, 0xFD, 0x50
+        # E11 (last pair, offsets 22/23): 0x01F4 = 500; baseline 0x8C -> 560; delta 60
+        filt[22], filt[23], base[11] = 0xF4, 0x01, 0x8C
+        got = run(probe, filt, base)
+        expected = [(0, 0, 0)] * 12
+        expected[0] = (677, 676, -1)
+        expected[1] = (768, 800, 32)
+        expected[5] = (1023, 1020, -3)
+        expected[7] = (272, 320, 48)
+        expected[11] = (500, 560, 60)
+>       assert got == expected
+E       assert [(677, 338, -...0, -513), ...] == [(677, 676, -...020, -3), ...]
+E         
+E         At index 0 diff: (677, 338, -339) != (677, 676, -1)
+E         Use -v to get more diff
+
+tests/firmware/logic/test_mpr121.py:52: AssertionError
+_________________________ test_electrodes_do_not_alias _________________________
+
+probe = <conftest.Probe object at 0x106100d00>
+
+    def test_electrodes_do_not_alias(probe):
+        # distinct value per electrode: filtered = 100 + 37*e (LSB first), baseline byte = 40 + 5*e
+        filt, base = [], []
+        for e in range(12):
+            v = 100 + 37 * e
+            filt += [v & 0xFF, v >> 8]
+            base.append(40 + 5 * e)
+        got = run(probe, filt, base)
+>       assert got == [(100 + 37 * e, (40 + 5 * e) * 4, (40 + 5 * e) * 4 - (100 + 37 * e)) for e in range(12)]
+E       assert [(100, 80, -2...0, -155), ...] == [(100, 160, 6...60, -25), ...]
+E         
+E         At index 0 diff: (100, 80, -20) != (100, 160, 60)
+E         Use -v to get more diff
+
+tests/firmware/logic/test_mpr121.py:63: AssertionError
+______________ test_delta_matches_old_library_path_for_valid_data ______________
+
+probe = <conftest.Probe object at 0x106100d00>
+
+    def test_delta_matches_old_library_path_for_valid_data(probe):
+        """Old path: filteredData() = LSB | MSB << 8 (Adafruit readRegister16, LSB first),
+        baselineData() = byte << 2. Identical whenever the reserved high bits are 0."""
+        import random
+        rng = random.Random(7)
+        for _ in range(50):
+            f = [rng.randrange(0, 1024) for _ in range(12)]
+            b = [rng.randrange(0, 256) for _ in range(12)]
+            filt = [x for v in f for x in (v & 0xFF, v >> 8)]
+            got = run(probe, filt, b)
+>           assert [g[2] for g in got] == [(bb << 2) - ((ff & 0xFF) | ((ff >> 8) << 8)) for ff, bb in zip(f, b)]
+E           assert [-235, -238, ...86, -132, ...] == [193, -168, -...720, -72, ...]
+E             
+E             At index 0 diff: -235 != 193
+E             Use -v to get more diff
+
+tests/firmware/logic/test_mpr121.py:76: AssertionError
+__________________________ test_block_offset_decoding __________________________
+
+probe = <conftest.Probe object at 0x106100d00>
+
+    def test_block_offset_decoding(probe):
+        """A run starting at lo is decoded with index e - lo (as the sketch does)."""
+        # run of 3 electrodes read from E4: filtered 300, 301, 302; baseline bytes 80, 81, 82
+        filt = [300 & 0xFF, 300 >> 8, 301 & 0xFF, 301 >> 8, 302 & 0xFF, 302 >> 8] + [0] * 18
+        base = [80, 81, 82] + [0] * 9
+        got = run(probe, filt, base)[:3]
+>       assert got == [(300, 320, 20), (301, 324, 23), (302, 328, 26)]
+E       assert [(300, 160, -...2, 164, -138)] == [(300, 320, 2...302, 328, 26)]
+E         
+E         At index 0 diff: (300, 160, -140) != (300, 320, 20)
+E         Use -v to get more diff
+
+tests/firmware/logic/test_mpr121.py:145: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_mpr121.py::test_hand_decoded_vector - assert...
+FAILED tests/firmware/logic/test_mpr121.py::test_electrodes_do_not_alias - as...
+FAILED tests/firmware/logic/test_mpr121.py::test_delta_matches_old_library_path_for_valid_data
+FAILED tests/firmware/logic/test_mpr121.py::test_block_offset_decoding - asse...
+4 failed, 256 passed in 1.14s

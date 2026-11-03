@@ -1,0 +1,3179 @@
+........................................................................ [ 27%]
+........................................FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF [ 55%]
+FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF.... [ 83%]
+............................................E                            [100%]
+==================================== ERRORS ====================================
+________________ ERROR at teardown of test_midi_note[120-1-127] ________________
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+tmp_path_factory = TempPathFactory(_given_basetemp=None, _trace=<pluggy._tracing.TagTracerSub object at 0x10a1e87f0>, _basetemp=PosixPath...ar/folders/lt/zbcqcm695tgfjgctc1f9qsv40000gn/T/pytest-of-rod/pytest-131'), _retention_count=3, _retention_policy='all')
+
+    @pytest.fixture(scope="session")
+    def probe(tmp_path_factory):
+        build = tmp_path_factory.mktemp("fm_probe")
+        exe = build / "fm_probe"
+        subprocess.run([cxx(), *CXXFLAGS, "-I", str(FW), str(HERE / "fm_probe.cpp"), "-o", str(exe)],
+                       check=True)
+        p = Probe(exe)
+        yield p
+>       p.close()
+
+tests/firmware/logic/conftest.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+
+    def close(self):
+>       self.proc.stdin.close()
+E       BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:51: BrokenPipeError
+=================================== FAILURES ===================================
+______________________ test_runs_hand_cases[32-expected1] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, mask = 32, expected = [(5, 1)]
+
+    @pytest.mark.parametrize("mask,expected", [
+        (0, []),
+        (1 << 5, [(5, 1)]),                      # 1 pad: 1 run of 1 = 9 bytes, same as before
+        (0b11, [(0, 2)]),                        # adjacent
+        (0b101, [(0, 3)]),                       # gap 1 -> merged (15 bytes < 18)
+        (0b1001, [(0, 1), (3, 1)]),              # gap 2 -> separate (18 bytes = 18, not 21)
+        ((1 << 0) | (1 << 11), [(0, 1), (11, 1)]),
+        (0xFFF, [(0, 12)]),                      # all 12 -> one run: 42 bytes
+        (0xF000, []),                            # bits above electrode 11 ignored
+    ])
+    def test_runs_hand_cases(probe, mask, expected):
+>       assert runs(probe, mask) == expected
+
+tests/firmware/logic/test_mpr121.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/test_mpr121.py:88: in runs
+    out = probe.one(f"runs {mask}")
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['runs 32']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+            self.proc.stdin.write(line + "\n")
+            self.proc.stdin.flush()
+            res = self.proc.stdout.readline()
+>           assert res, f"probe exited (code {self.proc.poll()}) on: {line}"
+E           AssertionError: probe exited (code -9) on: runs 32
+E           assert ''
+
+tests/firmware/logic/conftest.py:38: AssertionError
+______________________ test_runs_hand_cases[3-expected2] _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, mask = 3, expected = [(0, 2)]
+
+    @pytest.mark.parametrize("mask,expected", [
+        (0, []),
+        (1 << 5, [(5, 1)]),                      # 1 pad: 1 run of 1 = 9 bytes, same as before
+        (0b11, [(0, 2)]),                        # adjacent
+        (0b101, [(0, 3)]),                       # gap 1 -> merged (15 bytes < 18)
+        (0b1001, [(0, 1), (3, 1)]),              # gap 2 -> separate (18 bytes = 18, not 21)
+        ((1 << 0) | (1 << 11), [(0, 1), (11, 1)]),
+        (0xFFF, [(0, 12)]),                      # all 12 -> one run: 42 bytes
+        (0xF000, []),                            # bits above electrode 11 ignored
+    ])
+    def test_runs_hand_cases(probe, mask, expected):
+>       assert runs(probe, mask) == expected
+
+tests/firmware/logic/test_mpr121.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/test_mpr121.py:88: in runs
+    out = probe.one(f"runs {mask}")
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['runs 3']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_runs_hand_cases[5-expected3] _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, mask = 5, expected = [(0, 3)]
+
+    @pytest.mark.parametrize("mask,expected", [
+        (0, []),
+        (1 << 5, [(5, 1)]),                      # 1 pad: 1 run of 1 = 9 bytes, same as before
+        (0b11, [(0, 2)]),                        # adjacent
+        (0b101, [(0, 3)]),                       # gap 1 -> merged (15 bytes < 18)
+        (0b1001, [(0, 1), (3, 1)]),              # gap 2 -> separate (18 bytes = 18, not 21)
+        ((1 << 0) | (1 << 11), [(0, 1), (11, 1)]),
+        (0xFFF, [(0, 12)]),                      # all 12 -> one run: 42 bytes
+        (0xF000, []),                            # bits above electrode 11 ignored
+    ])
+    def test_runs_hand_cases(probe, mask, expected):
+>       assert runs(probe, mask) == expected
+
+tests/firmware/logic/test_mpr121.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/test_mpr121.py:88: in runs
+    out = probe.one(f"runs {mask}")
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['runs 5']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_runs_hand_cases[9-expected4] _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, mask = 9
+expected = [(0, 1), (3, 1)]
+
+    @pytest.mark.parametrize("mask,expected", [
+        (0, []),
+        (1 << 5, [(5, 1)]),                      # 1 pad: 1 run of 1 = 9 bytes, same as before
+        (0b11, [(0, 2)]),                        # adjacent
+        (0b101, [(0, 3)]),                       # gap 1 -> merged (15 bytes < 18)
+        (0b1001, [(0, 1), (3, 1)]),              # gap 2 -> separate (18 bytes = 18, not 21)
+        ((1 << 0) | (1 << 11), [(0, 1), (11, 1)]),
+        (0xFFF, [(0, 12)]),                      # all 12 -> one run: 42 bytes
+        (0xF000, []),                            # bits above electrode 11 ignored
+    ])
+    def test_runs_hand_cases(probe, mask, expected):
+>       assert runs(probe, mask) == expected
+
+tests/firmware/logic/test_mpr121.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/test_mpr121.py:88: in runs
+    out = probe.one(f"runs {mask}")
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['runs 9']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_runs_hand_cases[2049-expected5] _____________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, mask = 2049
+expected = [(0, 1), (11, 1)]
+
+    @pytest.mark.parametrize("mask,expected", [
+        (0, []),
+        (1 << 5, [(5, 1)]),                      # 1 pad: 1 run of 1 = 9 bytes, same as before
+        (0b11, [(0, 2)]),                        # adjacent
+        (0b101, [(0, 3)]),                       # gap 1 -> merged (15 bytes < 18)
+        (0b1001, [(0, 1), (3, 1)]),              # gap 2 -> separate (18 bytes = 18, not 21)
+        ((1 << 0) | (1 << 11), [(0, 1), (11, 1)]),
+        (0xFFF, [(0, 12)]),                      # all 12 -> one run: 42 bytes
+        (0xF000, []),                            # bits above electrode 11 ignored
+    ])
+    def test_runs_hand_cases(probe, mask, expected):
+>       assert runs(probe, mask) == expected
+
+tests/firmware/logic/test_mpr121.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/test_mpr121.py:88: in runs
+    out = probe.one(f"runs {mask}")
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['runs 2049']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_runs_hand_cases[4095-expected6] _____________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, mask = 4095
+expected = [(0, 12)]
+
+    @pytest.mark.parametrize("mask,expected", [
+        (0, []),
+        (1 << 5, [(5, 1)]),                      # 1 pad: 1 run of 1 = 9 bytes, same as before
+        (0b11, [(0, 2)]),                        # adjacent
+        (0b101, [(0, 3)]),                       # gap 1 -> merged (15 bytes < 18)
+        (0b1001, [(0, 1), (3, 1)]),              # gap 2 -> separate (18 bytes = 18, not 21)
+        ((1 << 0) | (1 << 11), [(0, 1), (11, 1)]),
+        (0xFFF, [(0, 12)]),                      # all 12 -> one run: 42 bytes
+        (0xF000, []),                            # bits above electrode 11 ignored
+    ])
+    def test_runs_hand_cases(probe, mask, expected):
+>       assert runs(probe, mask) == expected
+
+tests/firmware/logic/test_mpr121.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/test_mpr121.py:88: in runs
+    out = probe.one(f"runs {mask}")
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['runs 4095']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+____________________ test_runs_hand_cases[61440-expected7] _____________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, mask = 61440, expected = []
+
+    @pytest.mark.parametrize("mask,expected", [
+        (0, []),
+        (1 << 5, [(5, 1)]),                      # 1 pad: 1 run of 1 = 9 bytes, same as before
+        (0b11, [(0, 2)]),                        # adjacent
+        (0b101, [(0, 3)]),                       # gap 1 -> merged (15 bytes < 18)
+        (0b1001, [(0, 1), (3, 1)]),              # gap 2 -> separate (18 bytes = 18, not 21)
+        ((1 << 0) | (1 << 11), [(0, 1), (11, 1)]),
+        (0xFFF, [(0, 12)]),                      # all 12 -> one run: 42 bytes
+        (0xF000, []),                            # bits above electrode 11 ignored
+    ])
+    def test_runs_hand_cases(probe, mask, expected):
+>       assert runs(probe, mask) == expected
+
+tests/firmware/logic/test_mpr121.py:103: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/test_mpr121.py:88: in runs
+    out = probe.one(f"runs {mask}")
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['runs 61440']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+________________________ test_runs_exhaustive_all_masks ________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>
+
+    def test_runs_exhaustive_all_masks(probe):
+        masks = list(range(4096))
+>       outs = probe.run([f"runs {m}" for m in masks])
+
+tests/firmware/logic/test_mpr121.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['runs 0', 'runs 1', 'runs 2', 'runs 3', 'runs 4', 'runs 5', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________________ test_block_offset_decoding __________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>
+
+    def test_block_offset_decoding(probe):
+        """A run starting at lo is decoded with index e - lo (as the sketch does)."""
+        # run of 3 electrodes read from E4: filtered 300, 301, 302; baseline bytes 80, 81, 82
+        filt = [300 & 0xFF, 300 >> 8, 301 & 0xFF, 301 >> 8, 302 & 0xFF, 302 >> 8] + [0] * 18
+        base = [80, 81, 82] + [0] * 9
+>       got = run(probe, filt, base)[:3]
+
+tests/firmware/logic/test_mpr121.py:144: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/test_mpr121.py:28: in run
+    return [tuple(int(x) for x in t.split("/")) for t in probe.one(line).split()]
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['mpr 2c 01 2d 01 2e 01 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 50 51 52 00 00 00 00 00 00 00 00 00']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_exhaustive_against_reference _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>
+
+    def test_exhaustive_against_reference(probe):
+        lines, exp = [], []
+        for cur in range(-2, 3):
+            for adc in range(1024):
+                lines.append(f"pot {adc} {cur}")
+                exp.append(reference(adc, cur))
+>       got = [int(x) for x in probe.run(lines)]
+
+tests/firmware/logic/test_pot.py:19: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['pot 0 -2', 'pot 1 -2', 'pot 2 -2', 'pot 3 -2', 'pot 4 -2', 'pot 5 -2', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[655-0-0] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 655, cur = 0, expected = 0
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 655 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[656-0-1] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 656, cur = 0, expected = 1
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 656 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[369-0-0] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 369, cur = 0, expected = 0
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 369 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________________ test_boundaries[368-0--1] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 368, cur = 0
+expected = -1
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 368 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[574-1-1] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 574, cur = 1, expected = 1
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 574 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[573-1-0] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 573, cur = 1, expected = 0
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 573 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[860-1-1] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 860, cur = 1, expected = 1
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 860 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[861-1-2] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 861, cur = 1, expected = 2
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 861 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[0--2--2] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 0, cur = -2, expected = -2
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 0 -2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________________ test_boundaries[1023-2-2] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 1023, cur = 2
+expected = 2
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 1023 2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________________ test_boundaries[1023--2-2] __________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 1023, cur = -2
+expected = 2
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 1023 -2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[0-2--2] ____________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 0, cur = 2, expected = -2
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 0 2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_boundaries[512-0-0] ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, adc = 512, cur = 0, expected = 0
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+
+tests/firmware/logic/test_pot.py:35: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 512 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[1-1] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 1
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 204 -2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[1-2] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 1
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 409 -1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[1-3] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 1
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 614 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[1-4] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 1
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 819 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[3-1] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 3
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 202 -2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[3-2] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 3
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 407 -1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[3-3] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 3
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 612 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[3-4] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 3
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 817 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[5-1] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 5
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 200 -2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[5-2] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 5
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 405 -1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[5-3] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 5
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 610 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_noise_at_border_does_not_chatter[5-4] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 5
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 815 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________ test_noise_at_border_does_not_chatter[10-1] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 10
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 195 -2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________ test_noise_at_border_does_not_chatter[10-2] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 10
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 400 -1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________ test_noise_at_border_does_not_chatter[10-3] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 10
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 605 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________ test_noise_at_border_does_not_chatter[10-4] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, k = 0, noise = 10
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+>               cur = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:46: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 810 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________ test_slow_ramp_with_noise_switches_once_per_border ______________
+
+probe = <conftest.Probe object at 0x10a35ee20>
+
+    def test_slow_ramp_with_noise_switches_once_per_border(probe):
+        cur, changes = -2, []
+        seq = [a + (3 if i % 2 else -3) for i, a in enumerate(range(3, 1021))]
+        seq += [a + (3 if i % 2 else -3) for i, a in enumerate(range(1020, 2, -1))]
+        for adc in seq:
+>           nxt = probe.int(f"pot {adc} {cur}")
+
+tests/firmware/logic/test_pot.py:55: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['pot 0 -2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+____________________________ test_number_of_scales _____________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>
+
+    def test_number_of_scales(probe):
+>       assert probe.int("nscales") == 6
+
+tests/firmware/logic/test_scales.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['nscales']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_______________________ test_scale_table_matches_spec[0] _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 0
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_table_matches_spec(probe, i):
+        root, ln, fixed, steps = SCALE_TABLE[i]
+>       assert probe.one(f"scale {i}") == " ".join(map(str, [root, ln, fixed, *steps]))
+
+tests/firmware/logic/test_scales.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scale 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_______________________ test_scale_table_matches_spec[1] _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 1
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_table_matches_spec(probe, i):
+        root, ln, fixed, steps = SCALE_TABLE[i]
+>       assert probe.one(f"scale {i}") == " ".join(map(str, [root, ln, fixed, *steps]))
+
+tests/firmware/logic/test_scales.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scale 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_______________________ test_scale_table_matches_spec[2] _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 2
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_table_matches_spec(probe, i):
+        root, ln, fixed, steps = SCALE_TABLE[i]
+>       assert probe.one(f"scale {i}") == " ".join(map(str, [root, ln, fixed, *steps]))
+
+tests/firmware/logic/test_scales.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scale 2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_______________________ test_scale_table_matches_spec[3] _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 3
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_table_matches_spec(probe, i):
+        root, ln, fixed, steps = SCALE_TABLE[i]
+>       assert probe.one(f"scale {i}") == " ".join(map(str, [root, ln, fixed, *steps]))
+
+tests/firmware/logic/test_scales.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scale 3']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_______________________ test_scale_table_matches_spec[4] _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 4
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_table_matches_spec(probe, i):
+        root, ln, fixed, steps = SCALE_TABLE[i]
+>       assert probe.one(f"scale {i}") == " ".join(map(str, [root, ln, fixed, *steps]))
+
+tests/firmware/logic/test_scales.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scale 4']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_______________________ test_scale_table_matches_spec[5] _______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 5
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_table_matches_spec(probe, i):
+        root, ln, fixed, steps = SCALE_TABLE[i]
+>       assert probe.one(f"scale {i}") == " ".join(map(str, [root, ln, fixed, *steps]))
+
+tests/firmware/logic/test_scales.py:36: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scale 5']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________________ test_first_octave[0] _____________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 0
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_first_octave(probe, i):
+        expected = FIRST_OCTAVE[i]
+>       got = [int(x) for x in probe.run([f"note {i} 0 {p}" for p in range(len(expected))])]
+
+tests/firmware/logic/test_scales.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 0 0 0', 'note 0 0 1', 'note 0 0 2', 'note 0 0 3', 'note 0 0 4', 'note 0 0 5', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________________ test_first_octave[1] _____________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 1
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_first_octave(probe, i):
+        expected = FIRST_OCTAVE[i]
+>       got = [int(x) for x in probe.run([f"note {i} 0 {p}" for p in range(len(expected))])]
+
+tests/firmware/logic/test_scales.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 1 0 0', 'note 1 0 1', 'note 1 0 2', 'note 1 0 3', 'note 1 0 4']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________________ test_first_octave[2] _____________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 2
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_first_octave(probe, i):
+        expected = FIRST_OCTAVE[i]
+>       got = [int(x) for x in probe.run([f"note {i} 0 {p}" for p in range(len(expected))])]
+
+tests/firmware/logic/test_scales.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 2 0 0', 'note 2 0 1', 'note 2 0 2', 'note 2 0 3', 'note 2 0 4']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________________ test_first_octave[3] _____________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 3
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_first_octave(probe, i):
+        expected = FIRST_OCTAVE[i]
+>       got = [int(x) for x in probe.run([f"note {i} 0 {p}" for p in range(len(expected))])]
+
+tests/firmware/logic/test_scales.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 3 0 0', 'note 3 0 1', 'note 3 0 2', 'note 3 0 3', 'note 3 0 4', 'note 3 0 5', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________________ test_first_octave[4] _____________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 4
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_first_octave(probe, i):
+        expected = FIRST_OCTAVE[i]
+>       got = [int(x) for x in probe.run([f"note {i} 0 {p}" for p in range(len(expected))])]
+
+tests/firmware/logic/test_scales.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 4 0 0', 'note 4 0 1', 'note 4 0 2', 'note 4 0 3', 'note 4 0 4', 'note 4 0 5', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________________ test_first_octave[5] _____________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 5
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_first_octave(probe, i):
+        expected = FIRST_OCTAVE[i]
+>       got = [int(x) for x in probe.run([f"note {i} 0 {p}" for p in range(len(expected))])]
+
+tests/firmware/logic/test_scales.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 5 0 0', 'note 5 0 1', 'note 5 0 2', 'note 5 0 3', 'note 5 0 4', 'note 5 0 5', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+________________________ test_wrap_into_next_octave[0] _________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 0
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+
+tests/firmware/logic/test_scales.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 0 0 12']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+________________________ test_wrap_into_next_octave[1] _________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 1
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+
+tests/firmware/logic/test_scales.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 1 0 5']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+________________________ test_wrap_into_next_octave[2] _________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 2
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+
+tests/firmware/logic/test_scales.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 2 0 5']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+________________________ test_wrap_into_next_octave[3] _________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 3
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+
+tests/firmware/logic/test_scales.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 3 0 7']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+________________________ test_wrap_into_next_octave[4] _________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 4
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+
+tests/firmware/logic/test_scales.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 4 0 7']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+________________________ test_wrap_into_next_octave[5] _________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 5
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+
+tests/firmware/logic/test_scales.py:49: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 5 0 12']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-2-1] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 1, octave = -2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 1 -2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-2-2] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 2, octave = -2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 2 -2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-2-3] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 3, octave = -2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 3 -2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-2-4] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 4, octave = -2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 4 -2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-2-5] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 5, octave = -2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 5 -2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-1-1] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 1, octave = -1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 1 -1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-1-2] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 2, octave = -1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 2 -1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-1-3] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 3, octave = -1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 3 -1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-1-4] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 4, octave = -1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 4 -1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_octave_shift_moves_by_12[-1-5] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 5, octave = -1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 5 -1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[1-1] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 1, octave = 1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 1 1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[1-2] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 2, octave = 1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 2 1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[1-3] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 3, octave = 1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 3 1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[1-4] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 4, octave = 1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 4 1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[1-5] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 5, octave = 1
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 5 1 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[2-1] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 1, octave = 2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 1 2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[2-2] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 2, octave = 2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 2 2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[2-3] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 3, octave = 2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 3 2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[2-4] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 4, octave = 2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 4 2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_octave_shift_moves_by_12[2-5] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 5, octave = 2
+
+    @pytest.mark.parametrize("i", range(1, 6))
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_octave_shift_moves_by_12(probe, i, octave):
+        for p, base in enumerate(FIRST_OCTAVE[i]):
+>           assert probe.int(f"note {i} {octave} {p}") == base + 12 * octave
+
+tests/firmware/logic/test_scales.py:57: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 5 2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_fixed_scale_ignores_octave[-2] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, octave = -2
+
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_fixed_scale_ignores_octave(probe, octave):
+>       got = [int(x) for x in probe.run([f"note 0 {octave} {p}" for p in range(12)])]
+
+tests/firmware/logic/test_scales.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 0 -2 0', 'note 0 -2 1', 'note 0 -2 2', 'note 0 -2 3', 'note 0 -2 4', 'note 0 -2 5', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_____________________ test_fixed_scale_ignores_octave[-1] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, octave = -1
+
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_fixed_scale_ignores_octave(probe, octave):
+>       got = [int(x) for x in probe.run([f"note 0 {octave} {p}" for p in range(12)])]
+
+tests/firmware/logic/test_scales.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 0 -1 0', 'note 0 -1 1', 'note 0 -1 2', 'note 0 -1 3', 'note 0 -1 4', 'note 0 -1 5', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_fixed_scale_ignores_octave[1] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, octave = 1
+
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_fixed_scale_ignores_octave(probe, octave):
+>       got = [int(x) for x in probe.run([f"note 0 {octave} {p}" for p in range(12)])]
+
+tests/firmware/logic/test_scales.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 0 1 0', 'note 0 1 1', 'note 0 1 2', 'note 0 1 3', 'note 0 1 4', 'note 0 1 5', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+______________________ test_fixed_scale_ignores_octave[2] ______________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, octave = 2
+
+    @pytest.mark.parametrize("octave", [-2, -1, 1, 2])
+    def test_fixed_scale_ignores_octave(probe, octave):
+>       got = [int(x) for x in probe.run([f"note 0 {octave} {p}" for p in range(12)])]
+
+tests/firmware/logic/test_scales.py:62: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['note 0 2 0', 'note 0 2 1', 'note 0 2 2', 'note 0 2 3', 'note 0 2 4', 'note 0 2 5', ...]
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_real_table_extremes_inside_midi_range __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>
+
+    def test_real_table_extremes_inside_midi_range(probe):
+        # Lowest: any non-fixed scale, pad 0, octave -2 -> 48 - 24 = 24.
+>       assert probe.int("note 1 -2 0") == 24
+
+tests/firmware/logic/test_scales.py:68: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['note 1 -2 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________ test_note_clamp_0_127[120-0-1-0-steps0-127] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, root = 120, fixed = 0
+octave = 1, pad = 0, steps = [0], expected = 127
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+
+tests/firmware/logic/test_scales.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['notec 120 0 1 0 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________ test_note_clamp_0_127[127-0-0-0-steps1-127] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, root = 127, fixed = 0
+octave = 0, pad = 0, steps = [0], expected = 127
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+
+tests/firmware/logic/test_scales.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['notec 127 0 0 0 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________ test_note_clamp_0_127[0-0--2-0-steps2-0] ___________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, root = 0, fixed = 0, octave = -2
+pad = 0, steps = [0], expected = 0
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+
+tests/firmware/logic/test_scales.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['notec 0 0 -2 0 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_note_clamp_0_127[60-0--6-0-steps3-0] ___________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, root = 60, fixed = 0
+octave = -6, pad = 0, steps = [0], expected = 0
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+
+tests/firmware/logic/test_scales.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['notec 60 0 -6 0 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_note_clamp_0_127[12-0--1-0-steps4-0] ___________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, root = 12, fixed = 0
+octave = -1, pad = 0, steps = [0], expected = 0
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+
+tests/firmware/logic/test_scales.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['notec 12 0 -1 0 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+__________________ test_note_clamp_0_127[13-0--1-0-steps5-1] ___________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, root = 13, fixed = 0
+octave = -1, pad = 0, steps = [0], expected = 1
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+
+tests/firmware/logic/test_scales.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['notec 13 0 -1 0 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________ test_note_clamp_0_127[120-1-2-0-steps6-120] __________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, root = 120, fixed = 1
+octave = 2, pad = 0, steps = [0], expected = 120
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+
+tests/firmware/logic/test_scales.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['notec 120 1 2 0 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________ test_note_clamp_0_127[100-0-2-23-steps7-127] _________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, root = 100, fixed = 0
+octave = 2, pad = 23, steps = [0], expected = 127
+
+    @pytest.mark.parametrize("root,fixed,octave,pad,steps,expected", [
+        (120, 0, 1, 0, [0], 127),        # 132 -> 127
+        (127, 0, 0, 0, [0], 127),        # exactly 127
+        (0, 0, -2, 0, [0], 0),           # -24 -> 0
+        (60, 0, -6, 0, [0], 0),          # -12 -> 0
+        (12, 0, -1, 0, [0], 0),          # exactly 0
+        (13, 0, -1, 0, [0], 1),          # 1, not clamped
+        (120, 1, 2, 0, [0], 120),        # fixed scale: octave ignored, no clamp
+        (100, 0, 2, 23, [0], 127),       # 100 + 24 + 12*23 -> 127
+    ])
+    def test_note_clamp_0_127(probe, root, fixed, octave, pad, steps, expected):
+>       assert probe.int(f"notec {root} {fixed} {octave} {pad} {' '.join(map(str, steps))}") == expected
+
+tests/firmware/logic/test_scales.py:85: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['notec 100 0 2 23 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+___________________________ test_clamp_one_below_max ___________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>
+
+    def test_clamp_one_below_max(probe):
+>       assert probe.int("notec 126 0 0 0 0 1") == 126
+
+tests/firmware/logic/test_scales.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:48: in int
+    return int(self.one(line))
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['notec 126 0 0 0 0 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+____________________________ test_next_scale_wraps _____________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>
+
+    def test_next_scale_wraps(probe):
+>       assert [int(x) for x in probe.run([f"next {i} 6" for i in range(6)])] == [1, 2, 3, 4, 5, 0]
+
+tests/firmware/logic/test_scales.py:95: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>
+lines = ['next 0 6', 'next 1 6', 'next 2 6', 'next 3 6', 'next 4 6', 'next 5 6']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________________ test_scale_names_english[0] __________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 0
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_names_english(probe, i):
+>       assert probe.one(f"scalename {i}") == NAMES[i]
+
+tests/firmware/logic/test_scales.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scalename 0']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________________ test_scale_names_english[1] __________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 1
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_names_english(probe, i):
+>       assert probe.one(f"scalename {i}") == NAMES[i]
+
+tests/firmware/logic/test_scales.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scalename 1']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________________ test_scale_names_english[2] __________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 2
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_names_english(probe, i):
+>       assert probe.one(f"scalename {i}") == NAMES[i]
+
+tests/firmware/logic/test_scales.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scalename 2']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________________ test_scale_names_english[3] __________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 3
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_names_english(probe, i):
+>       assert probe.one(f"scalename {i}") == NAMES[i]
+
+tests/firmware/logic/test_scales.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scalename 3']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________________ test_scale_names_english[4] __________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 4
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_names_english(probe, i):
+>       assert probe.one(f"scalename {i}") == NAMES[i]
+
+tests/firmware/logic/test_scales.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scalename 4']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+_________________________ test_scale_names_english[5] __________________________
+
+probe = <conftest.Probe object at 0x10a35ee20>, i = 5
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_names_english(probe, i):
+>       assert probe.one(f"scalename {i}") == NAMES[i]
+
+tests/firmware/logic/test_scales.py:104: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/firmware/logic/conftest.py:45: in one
+    return self.run([line])[0]
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <conftest.Probe object at 0x10a35ee20>, lines = ['scalename 5']
+
+    def run(self, lines):
+        """Send a list of command lines, return the list of result lines."""
+        out = []
+        for line in lines:
+            assert "\n" not in line
+>           self.proc.stdin.write(line + "\n")
+E           BrokenPipeError: [Errno 32] Broken pipe
+
+tests/firmware/logic/conftest.py:35: BrokenPipeError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_mpr121.py::test_runs_hand_cases[32-expected1]
+FAILED tests/firmware/logic/test_mpr121.py::test_runs_hand_cases[3-expected2]
+FAILED tests/firmware/logic/test_mpr121.py::test_runs_hand_cases[5-expected3]
+FAILED tests/firmware/logic/test_mpr121.py::test_runs_hand_cases[9-expected4]
+FAILED tests/firmware/logic/test_mpr121.py::test_runs_hand_cases[2049-expected5]
+FAILED tests/firmware/logic/test_mpr121.py::test_runs_hand_cases[4095-expected6]
+FAILED tests/firmware/logic/test_mpr121.py::test_runs_hand_cases[61440-expected7]
+FAILED tests/firmware/logic/test_mpr121.py::test_runs_exhaustive_all_masks - ...
+FAILED tests/firmware/logic/test_mpr121.py::test_block_offset_decoding - Brok...
+FAILED tests/firmware/logic/test_pot.py::test_exhaustive_against_reference - ...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[655-0-0] - BrokenPip...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[656-0-1] - BrokenPip...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[369-0-0] - BrokenPip...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[368-0--1] - BrokenPi...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[574-1-1] - BrokenPip...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[573-1-0] - BrokenPip...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[860-1-1] - BrokenPip...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[861-1-2] - BrokenPip...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[0--2--2] - BrokenPip...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[1023-2-2] - BrokenPi...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[1023--2-2] - BrokenP...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[0-2--2] - BrokenPipe...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[512-0-0] - BrokenPip...
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[1-1]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[1-2]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[1-3]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[1-4]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[3-1]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[3-2]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[3-3]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[3-4]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[5-1]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[5-2]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[5-3]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[5-4]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[10-1]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[10-2]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[10-3]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[10-4]
+FAILED tests/firmware/logic/test_pot.py::test_slow_ramp_with_noise_switches_once_per_border
+FAILED tests/firmware/logic/test_scales.py::test_number_of_scales - BrokenPip...
+FAILED tests/firmware/logic/test_scales.py::test_scale_table_matches_spec[0]
+FAILED tests/firmware/logic/test_scales.py::test_scale_table_matches_spec[1]
+FAILED tests/firmware/logic/test_scales.py::test_scale_table_matches_spec[2]
+FAILED tests/firmware/logic/test_scales.py::test_scale_table_matches_spec[3]
+FAILED tests/firmware/logic/test_scales.py::test_scale_table_matches_spec[4]
+FAILED tests/firmware/logic/test_scales.py::test_scale_table_matches_spec[5]
+FAILED tests/firmware/logic/test_scales.py::test_first_octave[0] - BrokenPipe...
+FAILED tests/firmware/logic/test_scales.py::test_first_octave[1] - BrokenPipe...
+FAILED tests/firmware/logic/test_scales.py::test_first_octave[2] - BrokenPipe...
+FAILED tests/firmware/logic/test_scales.py::test_first_octave[3] - BrokenPipe...
+FAILED tests/firmware/logic/test_scales.py::test_first_octave[4] - BrokenPipe...
+FAILED tests/firmware/logic/test_scales.py::test_first_octave[5] - BrokenPipe...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[0] - B...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[1] - B...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[2] - B...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[3] - B...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[4] - B...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[5] - B...
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-2-1]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-2-2]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-2-3]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-2-4]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-2-5]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-1-1]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-1-2]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-1-3]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-1-4]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[-1-5]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[1-1]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[1-2]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[1-3]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[1-4]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[1-5]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[2-1]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[2-2]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[2-3]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[2-4]
+FAILED tests/firmware/logic/test_scales.py::test_octave_shift_moves_by_12[2-5]
+FAILED tests/firmware/logic/test_scales.py::test_fixed_scale_ignores_octave[-2]
+FAILED tests/firmware/logic/test_scales.py::test_fixed_scale_ignores_octave[-1]
+FAILED tests/firmware/logic/test_scales.py::test_fixed_scale_ignores_octave[1]
+FAILED tests/firmware/logic/test_scales.py::test_fixed_scale_ignores_octave[2]
+FAILED tests/firmware/logic/test_scales.py::test_real_table_extremes_inside_midi_range
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[120-0-1-0-steps0-127]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[127-0-0-0-steps1-127]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[0-0--2-0-steps2-0]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[60-0--6-0-steps3-0]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[12-0--1-0-steps4-0]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[13-0--1-0-steps5-1]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[120-1-2-0-steps6-120]
+FAILED tests/firmware/logic/test_scales.py::test_note_clamp_0_127[100-0-2-23-steps7-127]
+FAILED tests/firmware/logic/test_scales.py::test_clamp_one_below_max - Broken...
+FAILED tests/firmware/logic/test_scales.py::test_next_scale_wraps - BrokenPip...
+FAILED tests/firmware/logic/test_scales.py::test_scale_names_english[0] - Bro...
+FAILED tests/firmware/logic/test_scales.py::test_scale_names_english[1] - Bro...
+FAILED tests/firmware/logic/test_scales.py::test_scale_names_english[2] - Bro...
+FAILED tests/firmware/logic/test_scales.py::test_scale_names_english[3] - Bro...
+FAILED tests/firmware/logic/test_scales.py::test_scale_names_english[4] - Bro...
+FAILED tests/firmware/logic/test_scales.py::test_scale_names_english[5] - Bro...
+ERROR tests/firmware/smoke/test_midi_math.py::test_midi_note[120-1-127] - Bro...
+100 failed, 160 passed, 1 error in 1059.24s (0:17:39)

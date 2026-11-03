@@ -1,0 +1,294 @@
+..........................................FFFFFFFFFFFFFF....F.F......... [ 27%]
+........................................................................ [ 55%]
+........................................................................ [ 83%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+_____________________ test_count_and_timing_1ms_tick[60-1] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 1, ms = 60
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 61:0 END:122' == '0:1 60:0 END:120'
+E         
+E         - 0:1 60:0 END:120
+E         ?      ^         ^
+E         + 0:1 61:0 END:122
+E         ?      ^         ^
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+_____________________ test_count_and_timing_1ms_tick[60-2] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 2, ms = 60
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 61:0 122:1 183:0 END:244' == '0:1 60:0 120:1 180:0 END:240'
+E         
+E         - 0:1 60:0 120:1 180:0 END:240
+E         ?      ^     ^     ^         ^
+E         + 0:1 61:0 122:1 183:0 END:244
+E         ?      ^     ^     ^         ^
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+_____________________ test_count_and_timing_1ms_tick[60-3] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 3, ms = 60
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 61:0 122...305:0 END:366' == '0:1 60:0 120...300:0 END:360'
+E         
+E         - 0:1 60:0 120:1 180:0 240:1 300:0 END:360
+E         ?      ^     ^     ^     ^     ^         ^
+E         + 0:1 61:0 122:1 183:0 244:1 305:0 END:366
+E         ?      ^     ^     ^     ^     ^         ^
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+_____________________ test_count_and_timing_1ms_tick[60-6] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 6, ms = 60
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 61:0 122...671:0 END:732' == '0:1 60:0 120...660:0 END:720'
+E         
+E         - 0:1 60:0 120:1 180:0 240:1 300:0 360:1 420:0 480:1 540:0 600:1 660:0 END:720
+E         + 0:1 61:0 122:1 183:0 244:1 305:0 366:1 427:0 488:1 549:0 610:1 671:0 END:732
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+_____________________ test_count_and_timing_1ms_tick[90-1] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 1, ms = 90
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 91:0 END:182' == '0:1 90:0 END:180'
+E         
+E         - 0:1 90:0 END:180
+E         ?      ^         ^
+E         + 0:1 91:0 END:182
+E         ?      ^         ^
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+_____________________ test_count_and_timing_1ms_tick[90-2] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 2, ms = 90
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 91:0 182:1 273:0 END:364' == '0:1 90:0 180:1 270:0 END:360'
+E         
+E         - 0:1 90:0 180:1 270:0 END:360
+E         ?      ^     ^     ^         ^
+E         + 0:1 91:0 182:1 273:0 END:364
+E         ?      ^     ^     ^         ^
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+_____________________ test_count_and_timing_1ms_tick[90-3] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 3, ms = 90
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 91:0 182...455:0 END:546' == '0:1 90:0 180...450:0 END:540'
+E         
+E         - 0:1 90:0 180:1 270:0 360:1 450:0 END:540
+E         ?      ^     ^     ^     ^     ^         ^
+E         + 0:1 91:0 182:1 273:0 364:1 455:0 END:546
+E         ?      ^     ^     ^     ^     ^         ^
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+_____________________ test_count_and_timing_1ms_tick[90-6] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 6, ms = 90
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 91:0 182...01:0 END:1092' == '0:1 90:0 180...90:0 END:1080'
+E         
+E         - 0:1 90:0 180:1 270:0 360:1 450:0 540:1 630:0 720:1 810:0 900:1 990:0 END:1080
+E         + 0:1 91:0 182:1 273:0 364:1 455:0 546:1 637:0 728:1 819:0 910:1 1001:0 END:1092
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+____________________ test_count_and_timing_1ms_tick[120-1] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 1, ms = 120
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 121:0 END:242' == '0:1 120:0 END:240'
+E         
+E         - 0:1 120:0 END:240
+E         ?       ^         ^
+E         + 0:1 121:0 END:242
+E         ?       ^         ^
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+____________________ test_count_and_timing_1ms_tick[120-2] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 2, ms = 120
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 121:0 24...363:0 END:484' == '0:1 120:0 24...360:0 END:480'
+E         
+E         - 0:1 120:0 240:1 360:0 END:480
+E         ?       ^     ^     ^         ^
+E         + 0:1 121:0 242:1 363:0 END:484
+E         ?       ^     ^     ^         ^
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+____________________ test_count_and_timing_1ms_tick[120-3] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 3, ms = 120
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 121:0 24...605:0 END:726' == '0:1 120:0 24...600:0 END:720'
+E         
+E         - 0:1 120:0 240:1 360:0 480:1 600:0 END:720
+E         ?       ^     ^     ^     ^     ^         ^
+E         + 0:1 121:0 242:1 363:0 484:1 605:0 END:726
+E         ?       ^     ^     ^     ^     ^         ^
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+____________________ test_count_and_timing_1ms_tick[120-6] _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>, times = 6, ms = 120
+
+    @pytest.mark.parametrize("times", [1, 2, 3, 6])
+    @pytest.mark.parametrize("ms", [60, 90, 120])
+    def test_count_and_timing_1ms_tick(probe, times, ms):
+        # 1 ms ticks: ON at 0, OFF at ms, ON at 2ms, ...; finished after 2*times*ms.
+>       assert probe.one(f"blink {times} {ms} 1 5000") == expected(times, ms)
+E       AssertionError: assert '0:1 121:0 24...31:0 END:1452' == '0:1 120:0 24...20:0 END:1440'
+E         
+E         - 0:1 120:0 240:1 360:0 480:1 600:0 720:1 840:0 960:1 1080:0 1200:1 1320:0 END:1440
+E         + 0:1 121:0 242:1 363:0 484:1 605:0 726:1 847:0 968:1 1089:0 1210:1 1331:0 END:1452
+
+tests/firmware/logic/test_blink.py:21: AssertionError
+__________________________ test_scale_6_lasts_1080ms ___________________________
+
+probe = <conftest.Probe object at 0x10a739a30>
+
+    def test_scale_6_lasts_1080ms(probe):
+        out = probe.one("blink 6 90 1 3000").split()
+        assert sum(1 for e in out if e.endswith(":1")) == 6
+>       assert out[-1] == "END:1080"
+E       AssertionError: assert 'END:1092' == 'END:1080'
+E         
+E         - END:1080
+E         ?       ^^
+E         + END:1092
+E         ?       ^^
+
+tests/firmware/logic/test_blink.py:27: AssertionError
+_______________ test_coarse_tick_keeps_count_and_min_duration[3] _______________
+
+probe = <conftest.Probe object at 0x10a739a30>, tick = 3
+
+    @pytest.mark.parametrize("tick", [3, 7, 13])
+    def test_coarse_tick_keeps_count_and_min_duration(probe, tick):
+        out = probe.one(f"blink 6 90 {tick} 4000").split()
+        edges = [(int(t), int(v)) for t, v in (e.split(":") for e in out if not e.startswith("END"))]
+        assert [v for _, v in edges] == [1, 0] * 6
+        end = int(out[-1].split(":")[1])
+        times = [t for t, _ in edges] + [end]
+        for a, b in zip(times, times[1:]):
+>           assert 90 <= b - a < 90 + tick, (a, b)
+E           AssertionError: (0, 93)
+E           assert (93 - 0) < (90 + 3)
+
+tests/firmware/logic/test_blink.py:38: AssertionError
+____________________ test_doc1_after_pads_live_during_blink ____________________
+
+probe = <conftest.Probe object at 0x10a739a30>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+
+    def test_doc1_after_pads_live_during_blink(probe, cfg):
+        bb, pb = scenario(cfg["DEBOUNCE_MS"])
+        out = probe.one(f"loopsim 0 4 {cfg['DEBOUNCE_MS']} {bb} {pb}").split()
+        notes = [e for e in out if ":ON:" in e or ":OFF:" in e]
+        assert "1200:SCALE:5" in out
+        assert notes == ["1500:ON:48", "1700:OFF:48"]          # chromatic pad 0 = 48, no delay
+        leds = [e for e in out if ":LED:" in e]
+>       assert leds == [f"{1200 + 90 * k}:LED:{1 - k % 2}" for k in range(12)]   # 6 blinks, 90 ms
+E       AssertionError: assert ['1200:LED:1'...5:LED:0', ...] == ['1200:LED:1'...0:LED:0', ...]
+E         
+E         At index 1 diff: '1291:LED:0' != '1290:LED:0'
+E         Use -v to get more diff
+
+tests/firmware/logic/test_blink.py:68: AssertionError
+_____________________ test_button_still_works_during_blink _____________________
+
+probe = <conftest.Probe object at 0x10a739a30>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+
+    def test_button_still_works_during_blink(probe, cfg):
+        # Two short presses 300 ms apart: the second lands inside the first blink and is honoured.
+        n = 2500
+        bb = "".join("1" if (1000 <= t < 1100 or 1400 <= t < 1500) else "0" for t in range(n))
+        pb = "0" * n
+        out = probe.one(f"loopsim 0 0 {cfg['DEBOUNCE_MS']} {bb} {pb}").split()
+        assert [e for e in out if ":SCALE:" in e] == ["1100:SCALE:1", "1500:SCALE:2"]
+        # blink restarts with the new count (3 blinks from 1500)
+>       assert [e for e in out if ":LED:" in e and int(e.split(":")[0]) >= 1500] == \
+            [f"{1500 + 90 * k}:LED:{1 - k % 2}" for k in range(6)]
+E       AssertionError: assert ['1500:LED:1'... '1955:LED:0'] == ['1500:LED:1'... '1950:LED:0']
+E         
+E         At index 1 diff: '1591:LED:0' != '1590:LED:0'
+E         Use -v to get more diff
+
+tests/firmware/logic/test_blink.py:87: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[60-1]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[60-2]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[60-3]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[60-6]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[90-1]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[90-2]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[90-3]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[90-6]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[120-1]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[120-2]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[120-3]
+FAILED tests/firmware/logic/test_blink.py::test_count_and_timing_1ms_tick[120-6]
+FAILED tests/firmware/logic/test_blink.py::test_scale_6_lasts_1080ms - Assert...
+FAILED tests/firmware/logic/test_blink.py::test_coarse_tick_keeps_count_and_min_duration[3]
+FAILED tests/firmware/logic/test_blink.py::test_doc1_after_pads_live_during_blink
+FAILED tests/firmware/logic/test_blink.py::test_button_still_works_during_blink
+16 failed, 244 passed in 1.46s

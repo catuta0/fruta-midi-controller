@@ -2,7 +2,7 @@
 
 > **Draft — not yet validated on hardware.**
 
-It describes the firmware at git revision `e4668d4` (`firmware/FrutaMIDI/FrutaMIDI.ino`). Every behaviour below is traced to that file or to the project README; see [Traceability](#traceability) at the end. The hardware has not been tested as a complete build, so this manual describes what the firmware is written to do, not measured behaviour.
+This manual describes the firmware after task T-041 (`firmware/FrutaMIDI/FrutaMIDI.ino` and its `fm_*.h` headers). Every behaviour below is traced to that source or to the project README; see [Traceability](#traceability) at the end. The complete build has not been tested on hardware, so this manual describes what the firmware is written to do, not measured behaviour.
 
 ## Contents
 
@@ -32,8 +32,8 @@ FrutaMIDI is a USB MIDI device. Each of its 12 pads (24 with a second sensor) se
 
 - **Touch** an object: FrutaMIDI sends a Note On for that pad, with a fixed velocity of 100, on MIDI channel 1. Both values can be changed in the firmware.
 - **Let go:** FrutaMIDI sends a Note Off for the same note. This holds even if you changed scale or octave while touching, so notes do not get stuck.
-- **Press harder / touch more:** while you touch, FrutaMIDI sends Polyphonic Aftertouch from 0 to 127. A larger change in the sensor reading gives a higher value. Programs that use aftertouch respond to it; according to the README, the sampler opens a filter with it.
-- **The LED** stays on while any pad is touched.
+- **Press harder / touch more:** while you touch, FrutaMIDI sends Polyphonic Aftertouch from 0 to 127. A larger change in the sensor reading gives a higher value. If the value falls back to the bottom of the range while you are still touching, FrutaMIDI sends 0. When you let go, it sends aftertouch 0 just before the Note Off, so a program never keeps a leftover pressure value. Programs that use aftertouch respond to it; according to the README, the sampler opens a filter with it.
+- **The LED** stays on while any pad is touched, except while a blink pattern is running (see [LED signals](#led-signals)).
 - **Several pads at once** work: each pad has its own note.
 
 ## Scales
@@ -42,7 +42,7 @@ FrutaMIDI has 6 scales. It always starts in scale 1, Drum Rack.
 
 **To change scale:** briefly press the button and release it. FrutaMIDI moves to the next scale, and after the last scale it returns to scale 1. The LED then blinks the number of the new scale (1 to 6 blinks).
 
-While the LED is blinking, FrutaMIDI does not read the pads. Wait for the blinks to finish before playing.
+The pads keep playing while the LED blinks. If you press the button again before the blinks finish, FrutaMIDI moves to the next scale and the blinking starts over with the new number.
 
 | # | Scale | Notes sent by pads 0–11 (MIDI note numbers, octave 0) | Octave knob |
 | --- | --- | --- | --- |
@@ -54,6 +54,8 @@ While the LED is blinking, FrutaMIDI does not read the pads. Wait for the blinks
 | 6 | Chromatic | 48 49 50 51 52 53 54 55 56 57 58 59 | Applies |
 
 The Drum Rack notes 36–47 match the 12 pads of the online sampler. In the melodic scales, once a pad runs past the last step of the scale, the next pad starts the same pattern one octave (12 notes) higher. With a second sensor, pads 12–23 continue the same pattern.
+
+To change the scales, edit the scale table in the firmware source: `firmware/FrutaMIDI/fm_scales.h`.
 
 ## Octave
 
@@ -69,7 +71,9 @@ Recalibrate after you swap, move or add objects, or when a pad stays on by itsel
 
 1. Take your hands off all objects.
 2. **Hold the button for 0.8 s.** Recalibration starts while you are still holding; releasing the button afterwards does not change the scale.
-3. FrutaMIDI first sends Note Off for every sounding note, then restarts the sensor, which measures each pad at rest again. The LED gives 3 quick blinks.
+3. FrutaMIDI first releases every sounding note (aftertouch 0 where needed, then Note Off), then restarts the sensor, which measures each pad at rest again. The LED gives 3 quick blinks.
+
+While the sensor restarts, FrutaMIDI does not read the pads or the button. Wait for the 3 blinks before playing.
 
 Unplugging and replugging the USB has the same effect, and also resets the scale to Drum Rack and the octave to 0.
 
@@ -83,40 +87,52 @@ Unplugging and replugging the USB has the same effect, and also resets the scale
 | 1–6 blinks after a short button press | Number of the scale just selected |
 | 3 quick blinks after a long button press | Recalibration done |
 
+While one of the blink patterns is running, the LED shows the pattern rather than touches. The pads still work and still send notes.
+
 ## Troubleshooting
 
 | Symptom | What to do |
 | --- | --- |
-| LED blinks fast and does not stop | The sensor is not answering. Unplug the USB, then check the sensor wiring: 3V3, GND, SDA, SCL (PCB: the 3 configuration wires). Also check that you loaded the right `.uf2`: breadboard or PCB. |
+| LED blinks fast and does not stop | The sensor is not answering. Unplug the USB, then check the sensor wiring: 3V3, GND, SDA, SCL. On PCB v1.1, check the JP1 bridge for your module version and the 2 configuration wires; see [section 5 of the PCB guide](../../hardware/README.md#5-module-configuration-jp1-and-two-wires). Also check that you loaded the right `.uf2`: breadboard or PCB. |
 | A pad is always on | Recalibrate without touching anything. If it persists, the object may be too large: use a smaller piece. |
 | Notes trigger without touching | Recalibrate. Keep cables apart. See [Design notes](../../README.md#design-notes) for threshold settings. |
 | A pad does not react | Check the clip connection (use a nail or needle pushed into the fruit). Recalibrate. |
 | The octave knob does nothing | You are in Drum Rack (scale 1), or the breadboard firmware has the knob disabled (see [Octave](#octave)). |
 | A note is stuck in the program | Touch and release the same pad again: the Note Off releases it. |
-| Touches are ignored right after a button press | The LED is still blinking the scale number; wait for it to finish. |
+| The LED does not light when I touch a pad | A blink pattern may still be running; the pads still play. Wait for it to finish. |
 | The computer does not see FrutaMIDI | See [Troubleshooting](../../README.md#troubleshooting) in the main README (cable, USB stack, program settings). |
 
 ## Traceability
 
-Each claim below is traced to the source at `e4668d4`. Firmware line numbers refer to `git show e4668d4:firmware/FrutaMIDI/FrutaMIDI.ino`.
+The firmware source is the working tree after T-041. It is not committed yet. sha256 values:
+- `FrutaMIDI.ino` f460ec8361b586591d227a778710d00a55a35458c62c38f32fbf68e69a67b02c
+- `fm_blink.h` f181d70f7dcd74b7cddf15f14b2e9c2fa67ee1e3a9b1387170e3f853692b675a
+- `fm_button.h` 32bd40cd9bb316e67d0a67fb2025085fdd57f1fcdfd2cce132bbc3024d62de63
+- `fm_scales.h` 3ca6dca471699192abfad0872c77b67c08822ccb67e37351022ea9db710e7150
+- `fm_aftertouch.h` 1068ecd62b38f8b40ee8f1a4c8ac4aaceab83d0039b19784a1f9566f4c9a1297
+- `fm_pot.h` 99d889881f53c227530add5c31cdff377cb85fe0a04b3a44fc2792eb7596c7db
 
 | Claim | Value | Label | Evidence |
 | --- | --- | --- | --- |
-| Fixed velocity, channel | 100, 1 | SOURCE | `VELOCITY`, `MIDI_CHANNEL` |
+| Fixed velocity, channel | 100, 1 | SOURCE | `VELOCITY`, `MIDI_CHANNEL` (FrutaMIDI.ino) |
 | Note Off of the stored note | — | SOURCE | `releasePad()` uses `activeNote[pad]` |
-| Aftertouch range and mapping | 0–127, delta 12…120 | SOURCE | `sendPressure()`, `AT_MAX_DELTA = 120`, `TOUCH_THRESHOLD = 12` |
-| LED on while touched | — | SOURCE | `digitalWrite(LED_BUILTIN, anyTouched)` |
-| 6 scales, start in Drum Rack, wrap-around | — | SOURCE | `SCALES[]`, `scaleIdx = 0`, `nextScale()` |
-| Pad-to-note table | see Scales table | CALCULATION | `noteForPad()`: root + 12·octave + steps[pad mod len] + 12·⌊pad / len⌋, clamped 0–127. Roots 36 / 48. No value reaches the clamp at octave −2…+2: lowest 24, highest 99. |
-| Drum Rack ignores the octave | — | SOURCE | `fixed = true`, `int oct = sc.fixed ? 0 : octaveShift` |
-| Scale blinks block pad reading | 90 ms on / 90 ms off per blink | SOURCE | `blink(scaleIdx + 1, 90)` uses `delay()` |
-| Octave positions and dead band | −2…+2, 5 zones, ±0.7 zone | SOURCE | `handlePot()` |
+| Aftertouch range | 0–127 | SOURCE | `fm::pressure_from_delta()` with `TOUCH_THRESHOLD = 12`, `AT_MAX_DELTA = 120` |
+| Aftertouch 0 on a fall to the floor and before Note Off | — | SOURCE | `pressure_should_send()`: `if (p == 0) return lastSent > 0;` and `releasePad()`: `pressure_reset_on_release()` then `midiPolyPressure(note, 0)` |
+| LED on while touched, pattern has priority | — | SOURCE | `digitalWrite(LED_BUILTIN, led.level_or(millis(), anyTouched))`; `Blinker::level_or()` returns the pattern while it is active |
+| Blinking does not stop the pads | — | SOURCE | `fm_blink.h`: a non-blocking `Blinker` ticked from `loop()`; no `delay()` |
+| A new press during a blink restarts it | — | SOURCE | `Blinker::start()`: "start() while active restarts with the new pattern"; `nextScale()` calls `led.start()` |
+| 6 scales, start in Drum Rack, wrap-around | — | SOURCE | `SCALES[]` in fm_scales.h (English names), `scaleIdx = 0`, `fm::next_scale_index()` |
+| Pad-to-note table | see Scales table | CALCULATION | `fm::note_for_pad()`: root + 12·octave + steps[pad mod len] + 12·⌊pad / len⌋, clamped 0–127. Roots 36 / 48. Same formula and values as in e4668d4, so the table from T-031 is unchanged. Range at octave −2…+2: 24 to 99. |
+| Drum Rack ignores the octave | — | SOURCE | `fixed = true`; `int oct = sc.fixed ? 0 : octaveShift` |
+| Octave positions and dead band | −2…+2, 5 zones, 0.7 zone | SOURCE | `fm_pot.h`: `octave_from_adc()`, `POT_HYSTERESIS = 0.7f` |
 | Knob enabled on PCB / disabled on breadboard | true / false | SOURCE | `USE_POT` under `#ifdef FRUTAMIDI_PCB` |
-| Long press | > 800 ms, fires while held | SOURCE | `handleButton()`: `now - downAt > 800`, `longDone` suppresses the short press |
-| Recalibration sequence | Note Off all, restart, 3 blinks | SOURCE | `recalibrate()`: `releaseAll(); startSensors(); blink(3, 60);` |
-| Startup ready signal | 2 blinks of 120 ms | SOURCE | `if (anySensorOk()) blink(2, 120);` |
-| Sensor-missing signal and retry | toggles every 100 ms, retry every 2000 ms | SOURCE | `loop()`: `(millis() / 100) % 2`, `millis() - lastTry > 2000` |
+| Long press | > 800 ms, fires while held | SOURCE | `fm_button.h`: `BUTTON_LONG_MS = 800`; LongPress "fires once, while still held"; ShortPress only if no long press fired |
+| Recalibration sequence | release all, restart, 3 blinks | SOURCE | `recalibrate()`: `releaseAll(); startSensors(); led.start(…, BLINK_RECAL_TIMES, BLINK_RECAL_MS)`; 3 × 60 ms |
+| Pads and button not read during the sensor restart | — | SOURCE | `startSensors()` runs inside `recalibrate()` before `loop()` continues; reports/firmware/coverage.md lists the long-press block during `startSensors()` for hardware test |
+| Startup ready signal | 2 blinks of 120 ms | SOURCE | `BLINK_READY_TIMES = 2`, `BLINK_READY_MS = 120`, started in `setup()` when a sensor is found |
+| Sensor-missing signal and retry | toggles every 100 ms, retry every 2000 ms | SOURCE | `loop()`: `(millis() / 100) % 2`, `SENSOR_RETRY_MS = 2000` |
+| Scale blinks | N × 90 ms | SOURCE | `BLINK_SCALE_MS = 90` |
 | Power cycle resets scale and octave | 0 / 0 | SOURCE | initial values of `scaleIdx` and `octaveShift` |
-| Startup reference measurement | — | SOURCE | `startSensors()` calls `begin()` with `AUTOCONFIG` |
+| Startup reference measurement | — | SOURCE | `startSensors()` calls `begin()` with `AUTOCONFIG`, then `configureSensor()` |
 | Sampler pads on notes 36–47; aftertouch opens filter | — | README | README "Sound"; not traced to `docs/index.html` |
 | Flashing procedure, BOOTSEL, `.uf2` names | — | README | README "Quick start" |

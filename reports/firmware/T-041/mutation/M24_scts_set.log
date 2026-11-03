@@ -1,0 +1,17 @@
+........................................................................ [ 26%]
+..................................................F
+=================================== FAILURES ===================================
+____________________ test_autoconfig1_byte_has_scts_cleared ____________________
+
+probe = <conftest.Probe object at 0x10a40b3a0>
+
+    def test_autoconfig1_byte_has_scts_cleared(probe, ):
+        cfg = [int(x) for x in probe.one("mprcfg 3300").split()]
+>       assert cfg[0] == 0x00 and not cfg[0] & 0x80          # SCTS = 0, interrupts off
+E       assert (128 == 0)
+
+tests/firmware/logic/test_mpr121.py:162: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_mpr121.py::test_autoconfig1_byte_has_scts_cleared
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 122 passed in 0.88s

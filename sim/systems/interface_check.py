@@ -93,10 +93,12 @@ def fw_pins(ino):
 
 
 results = []
+names = []
 
 
 def check(name, ok, detail):
     results.append(ok)
+    names.append(name)
     print("%s  %s :: %s" % ("PASS" if ok else "FAIL", name, detail))
 
 
@@ -148,20 +150,57 @@ check("pcb.SW1", sw == {"BTN", "GND"}, "SW1 nets %s (active low, firmware INPUT_
 check("fw.button_pullup", "pinMode(PIN_BUTTON, INPUT_PULLUP)" in ino and "digitalRead(PIN_BUTTON) == LOW" in ino,
       "button read active-low with internal pull-up")
 
-# Module A2 electrode row and terminals J2
+# Module A2 electrode row, series resistors and terminals J2.
+# PCB from T-050 on: terminal net E<k> -> series resistor -> module net ELE<k> (ESD, ADR-007 D-2).
+# Older boards: terminal and module share net E<k>. Both topologies are accepted; the chain must be 1:1.
+def series_r_between(a, b):
+    hits = []
+    for ref, pads in fps.items():
+        if ref.startswith("R") and ref != "RV1":
+            nets = set().union(*pads.values())
+            if nets == {a, b}:
+                hits.append(ref)
+    return hits
+
 er = electrode_row()
+term_expect = ["GND"] + ["E%d" % i for i in range(12)] + ["GND"]
 for k in range(13):
     got = fps["A2"].get(str(k + 1))
-    exp = "GND" if er[k] == "GND" else er[k]
-    check("pcb.A2.pin%d" % (k + 1), got == {exp}, "module row pin %d = Adafruit %s, PCB net %s" % (k + 1, er[k], got))
-term_expect = ["GND"] + ["E%d" % i for i in range(12)] + ["GND"]
+    if er[k] == "GND":
+        check("pcb.A2.pin%d" % (k + 1), got == {"GND"}, "module row pin %d = Adafruit GND, PCB net %s" % (k + 1, got))
+        continue
+    e = int(er[k][1:])
+    mod_net = list(got)[0] if got and len(got) == 1 else None
+    if mod_net == "E%d" % e:
+        check("pcb.A2.pin%d" % (k + 1), True, "module pin %d = Adafruit %s, direct net E%d" % (k + 1, er[k], e))
+    else:
+        rs = series_r_between(mod_net, "E%d" % e)
+        check("pcb.A2.pin%d" % (k + 1), mod_net == "ELE%d" % e and len(rs) == 1,
+              "module pin %d = Adafruit %s, net %s -> series %s -> terminal net E%d" % (k + 1, er[k], mod_net, rs, e))
 for i in range(14):
     got = fps["J2"].get(str(i + 1))
     check("pcb.J2.T%d" % (i + 1), got == {term_expect[i]}, "terminal %d net %s (expected %s)" % (i + 1, got, term_expect[i]))
+# I2C pull-ups placed on the PCB (if any)
+pu = {n: series_r_between("+3V3", n) for n in ("SDA", "SCL")}
+print("INFO  PCB I2C pull-ups to +3V3: %s" % pu)
 
 # Config pads J1 and module S row
-check("pcb.J1", fps["J1"].get("1") == {"+3V3"} and fps["J1"].get("2") == {"SCL"} and fps["J1"].get("3") == {"SDA"},
-      "J1 1/2/3 = %s/%s/%s" % (fps["J1"].get("1"), fps["J1"].get("2"), fps["J1"].get("3")))
+if "JP1" in fps:
+    # T-052 topology (ADR-007 D-4): JP1 3-pad selector, centre +3V3, pad 1 -> S1 (original VIN), pad 3 -> S7 (QT VCC);
+    # J1 carries only SCL (pad 1) and SDA (pad 2) for the hand wires.
+    jp = [fps["JP1"].get(n) for n in "123"]
+    check("pcb.JP1_selector", jp == [{"S1"}, {"+3V3"}, {"S7"}], "JP1 1/2/3 = %s (expected S1/+3V3/S7)" % jp)
+    so_, sq_ = s_row("original"), s_row("stemma_qt")
+    check("pcb.JP1_targets", so_[0] == "VIN" and sq_[6] == "VCC",
+          "ORIG side S1 = %s (original), QT side S7 = %s (STEMMA QT)" % (so_[0], sq_[6]))
+    print("INFO  JP1 wrong choice: original+QT side -> 3V3 on S7 = %s ; QT+ORIG side -> 3V3 on S1 = %s (no GND reachable)"
+          % (so_[6], sq_[0]))
+    check("pcb.JP1_no_gnd_reachable", "GND" not in (so_[0], so_[6], sq_[0], sq_[6]), "S1/S7 are never GND in either revision")
+    j1 = [fps["J1"].get(n) for n in "12"]
+    check("pcb.J1", j1 == [{"SCL"}, {"SDA"}] and "3" not in fps["J1"], "J1 1/2 = %s" % j1)
+else:
+    check("pcb.J1", fps["J1"].get("1") == {"+3V3"} and fps["J1"].get("2") == {"SCL"} and fps["J1"].get("3") == {"SDA"},
+          "J1 1/2/3 = %s/%s/%s (pre-T-052 topology)" % (fps["J1"].get("1"), fps["J1"].get("2"), fps["J1"].get("3")))
 for k in range(1, 8):
     got = fps["A2"].get(str(13 + k))
     check("pcb.A2.S%d_isolated_net" % k, got is not None and len(got) == 1 and list(got)[0] == "S%d" % k,
@@ -188,6 +227,31 @@ for rev, row_name in (("original", "Original"), ("stemma_qt", "STEMMA QT")):
     gnd_s = "S%d" % (row.index("GND") + 1)
     print("INFO  %s: S-row = %s ; module GND at %s (3V3 wire there = short circuit)" % (rev, row, gnd_s))
 
+# Board revision label (ADR-008: "FrutaMIDI v1.1")
+labels_pcb = set(re.findall(r'\(gr_text "(FrutaMIDI v[^"]*)"', pcb))
+check("pcb.label_v1.1", labels_pcb == {"FrutaMIDI v1.1"}, "board label texts %s (ADR-008 expects 'FrutaMIDI v1.1')" % sorted(labels_pcb))
+
+# Documentation vs the current PCB topology (T-010)
+if "JP1" in fps:
+    check("doc.hw_readme.mentions_JP1", "JP1" in hw_readme, "hardware/README.md describes the JP1 3V3 selector")
+    check("doc.hw_readme.no_J1_3V3_wire", "J1 **3V3**" not in hw_readme and "3V3** hole of J1" not in hw_readme,
+          "hardware/README.md must not instruct a J1 3V3 wire / J1 3V3 hole")
+series = [r for r in fps if r.startswith("R") and r != "RV1" and set().union(*fps[r].values()) & {"E0"}]
+if series:
+    check("doc.hw_readme.continuity_through_series_R", "beeps" not in hw_readme.split("Between each terminal")[1][:200]
+          if "Between each terminal" in hw_readme else True,
+          "continuity test terminal->module now passes through a 3k3 resistor (%s); a beep test is not valid" % series)
+for name, txt in (("README.md", readme), ("hardware/README.md", hw_readme)):
+    base = ROOT if name == "README.md" else P("hardware")
+    links = [l.split("#")[0] for l in re.findall(r"\]\(([^)#][^)]*)\)", txt) if not re.match(r"[a-z]+:", l)]
+    broken = sorted({l for l in links if l and not os.path.exists(os.path.join(base, l))})
+    check("doc.links.%s" % name, not broken, "broken relative links: %s" % broken)
+pcb_silk = set(re.findall(r'\(gr_text "([^"]*)"', pcb))
+for word in ("ESCALA", "OITAVA"):
+    if word in hw_readme and word not in pcb_silk:
+        check("doc.hw_readme.silk_%s" % word, False, "README quotes silkscreen '%s', PCB silkscreen has %s"
+              % (word, sorted(w for w in pcb_silk if w.isalpha() and w.isupper())))
+
 # README pin tables
 for gp, phys, src, txt in (("GP4", 6, "README", readme), ("GP5", 7, "README", readme),
                            ("GP15", 20, "README", readme), ("GP26", 31, "README", readme)):
@@ -201,6 +265,10 @@ for sig, phys, gp in (("SDA", 31, "GP26"), ("SCL", 32, "GP27"), ("Button", 29, "
     ok = re.search(r"\| %s[^|]*\| %d \| %s" % (sig, phys, gp), hw_readme) is not None
     check("doc.hw_readme.%s" % sig, ok and GP_TO_PHYS[gp] == phys, "%s pin %d %s" % (sig, phys, gp))
 
+hw = [ok for n, ok in zip(names, results) if not n.startswith("doc.")]
+dc = [ok for n, ok in zip(names, results) if n.startswith("doc.")]
+print("SUMMARY hardware/firmware: %d checks, %d PASS, %d FAIL" % (len(hw), hw.count(True), hw.count(False)))
+print("SUMMARY documentation: %d checks, %d PASS, %d FAIL" % (len(dc), dc.count(True), dc.count(False)))
 n_fail = results.count(False)
 print("SUMMARY: %d checks, %d PASS, %d FAIL" % (len(results), results.count(True), n_fail))
 sys.exit(1 if n_fail else 0)

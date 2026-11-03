@@ -1,0 +1,458 @@
+diff --git a/firmware/FrutaMIDI/FrutaMIDI.ino b/firmware/FrutaMIDI/FrutaMIDI.ino
+index 4995d3e..b01b16a 100644
+--- a/firmware/FrutaMIDI/FrutaMIDI.ino
++++ b/firmware/FrutaMIDI/FrutaMIDI.ino
+@@ -1,26 +1,26 @@
+ /*
+-  FrutaMIDI — controlador MIDI USB capacitivo (estilo Playtron)
++  FrutaMIDI - capacitive USB MIDI controller (Playtron style)
+ 
+-  Placas suportadas:
+-    - Raspberry Pi Pico / Pico 2 (core "Raspberry Pi Pico/RP2040/RP2350" de Earle Philhower)
+-      -> Ferramentas > USB Stack > "Adafruit TinyUSB"   (obrigatório!)
++  Supported boards:
++    - Raspberry Pi Pico / Pico 2 (Earle Philhower "Raspberry Pi Pico/RP2040/RP2350" core)
++      -> Tools > USB Stack > "Adafruit TinyUSB"   (required!)
+     - Arduino Pro Micro / Leonardo (ATmega32u4)
+ 
+-  Sensores: 1 ou 2 × MPR121 (I2C), 12 pads cada.
++  Sensors: 1 or 2 x MPR121 (I2C), 12 pads each.
+ 
+-  Bibliotecas (Gestor de Bibliotecas):
+-    - Adafruit MPR121   (instala também a Adafruit BusIO)
+-    - MIDI Library      (FortySevenEffects)  -> só para o Pico
+-    - MIDIUSB           (Arduino)            -> só para o Pro Micro / Leonardo
++  Libraries (Library Manager):
++    - Adafruit MPR121   (also installs Adafruit BusIO)
++    - MIDI Library      (FortySevenEffects)  -> Pico only
++    - MIDIUSB           (Arduino)            -> Pro Micro / Leonardo only
+ 
+-  Controlos:
+-    - Botão, toque curto  : próxima escala (o LED pisca N vezes = escala N)
+-    - Botão, 1 s premido  : recalibrar os sensores (tira as mãos das frutas!)
+-    - Potenciómetro       : oitava -2 … +2 (opcional, ver USE_POT)
++  Controls:
++    - Button, short press : next scale (the LED blinks N times = scale N)
++    - Button, held 1 s    : recalibrate the sensors (take your hands off the fruit!)
++    - Potentiometer       : octave -2 .. +2 (optional, see USE_POT)
+ 
+-  Montagem:
+-    - Breadboard (guia do README): pinos por defeito, I2C em GP4/GP5.
+-    - PCB FrutaMIDI v1.0 (pasta hardware/): descomenta a linha abaixo ou compila com -DFRUTAMIDI_PCB.
++  Assembly:
++    - Breadboard (README guide): default pins, I2C on GP4/GP5.
++    - FrutaMIDI v1.0 PCB (hardware/ folder): uncomment the line below or build with -DFRUTAMIDI_PCB.
+ */
+ 
+ // #define FRUTAMIDI_PCB
+@@ -28,64 +28,69 @@
+ #include <Wire.h>
+ #include <Adafruit_MPR121.h>
+ 
+-// ============================ CONFIGURAÇÃO ============================
+-
+-const char*    DEVICE_NAME       = "FrutaMIDI";     // nome que aparece no DAW (só Pico)
++// Pure decision logic (header-only, no Arduino dependency) is unit-tested on host:
++// see tests/firmware/ and reports/firmware/coverage.md.
++#include "fm_time.h"
++#include "fm_scales.h"
++#include "fm_debounce.h"
++#include "fm_aftertouch.h"
++#include "fm_button.h"
++#include "fm_pot.h"
++#include "fm_midi.h"
++#include "fm_blink.h"
++#include "fm_mpr121.h"
++
++// ============================ CONFIGURATION ============================
++
++const char*    DEVICE_NAME       = "FrutaMIDI";     // name shown in the DAW (Pico only)
+ const uint8_t  NUM_SENSORS       = 1;               // 1 = 12 pads, 2 = 24 pads
+ const uint8_t  SENSOR_ADDR[2]    = {0x5A, 0x5B};    // ADDR->GND = 0x5A, ADDR->3V3 = 0x5B
+-const uint8_t  MIDI_CHANNEL      = 1;               // 1–16
+-const uint8_t  VELOCITY          = 100;             // velocidade fixa das notas (1–127)
+-const uint8_t  TOUCH_THRESHOLD   = 12;              // mais alto = menos sensível
+-const uint8_t  RELEASE_THRESHOLD = 6;               // tem de ser menor que TOUCH_THRESHOLD
+-const bool     AUTOCONFIG        = true;            // ajusta a corrente de carga ao tamanho de cada objeto (essencial p/ fruta)
+-const uint16_t DEBOUNCE_MS       = 15;              // ignora mudanças mais rápidas que isto
+-const bool     SEND_AFTERTOUCH   = true;            // "pressão" -> Polyphonic Aftertouch
+-const uint16_t AT_MAX_DELTA      = 120;             // delta que corresponde a aftertouch 127
+-const uint16_t AT_INTERVAL_MS    = 15;              // intervalo mínimo entre mensagens de aftertouch
+-const bool     USE_BUTTON        = true;            // botão de escala / recalibração
++const uint8_t  MIDI_CHANNEL      = 1;               // 1-16
++const uint8_t  VELOCITY          = 100;             // fixed note velocity (1-127)
++const uint8_t  TOUCH_THRESHOLD   = 12;              // higher = less sensitive
++const uint8_t  RELEASE_THRESHOLD = 6;               // must be lower than TOUCH_THRESHOLD
++const bool     AUTOCONFIG        = true;            // tunes the charge current to each object's size (essential for fruit)
++const uint16_t DEBOUNCE_MS       = 15;              // ignores changes faster than this
++const bool     SEND_AFTERTOUCH   = true;            // "pressure" -> Polyphonic Aftertouch
++const uint16_t AT_MAX_DELTA      = 120;             // delta that maps to aftertouch 127
++const uint16_t AT_INTERVAL_MS    = 15;              // minimum interval between aftertouch messages
++const bool     USE_BUTTON        = true;            // scale / recalibration button
+ #ifdef FRUTAMIDI_PCB
+-const bool     USE_POT           = true;            // a PCB tem sempre o potenciómetro de oitava
++const bool     USE_POT           = true;            // the PCB always has the octave potentiometer
+ #else
+-const bool     USE_POT           = false;           // true se ligares o potenciómetro de oitava
++const bool     USE_POT           = false;           // true if you wire the octave potentiometer
+ #endif
+-const bool     SERIAL_DEBUG      = false;           // true = imprime deltas no Monitor Série (115200)
++const bool     SERIAL_DEBUG      = false;           // true = print deltas on the Serial Monitor (115200)
+ 
+ #if defined(ARDUINO_ARCH_RP2040) && defined(FRUTAMIDI_PCB)
+-#define I2C_BUS Wire1                               // PCB: todos os sinais na fila interior do Pico
+-const int PIN_SDA = 26, PIN_SCL = 27;               // GP26 / GP27 = I2C1 (pinos físicos 31 e 32)
+-const int PIN_BUTTON = 22;                          // GP22 (pino físico 29)
+-const int PIN_POT = 28;                             // GP28 / ADC2 (pino físico 34)
++#define I2C_BUS Wire1                               // PCB: all signals on the inner row of the Pico
++const int PIN_SDA = 26, PIN_SCL = 27;               // GP26 / GP27 = I2C1 (physical pins 31 and 32)
++const int PIN_BUTTON = 22;                          // GP22 (physical pin 29)
++const int PIN_POT = 28;                             // GP28 / ADC2 (physical pin 34)
+ #elif defined(ARDUINO_ARCH_RP2040)
+ #define I2C_BUS Wire
+-const int PIN_SDA = 4, PIN_SCL = 5;                 // GP4 / GP5 (pinos físicos 6 e 7)
+-const int PIN_BUTTON = 15;                          // GP15 (pino físico 20)
+-const int PIN_POT = 26;                             // GP26 / ADC0 (pino físico 31)
++const int PIN_SDA = 4, PIN_SCL = 5;                 // GP4 / GP5 (physical pins 6 and 7)
++const int PIN_BUTTON = 15;                          // GP15 (physical pin 20)
++const int PIN_POT = 26;                             // GP26 / ADC0 (physical pin 31)
+ #else
+ #define I2C_BUS Wire
+-const int PIN_BUTTON = 7;                           // Pro Micro: SDA=2 e SCL=3 são fixos
++const int PIN_BUTTON = 7;                           // Pro Micro: SDA=2 and SCL=3 are fixed
+ const int PIN_POT = A0;
+ #endif
+ 
+-// Escalas. "fixed" = ignora o potenciómetro de oitava (útil para Drum Racks).
+-struct Scale {
+-  const char* name;
+-  uint8_t root;        // nota MIDI do pad 0 (36 = C1, 48 = C2 no Ableton / C3 noutros)
+-  uint8_t len;
+-  int8_t steps[12];
+-  bool fixed;
+-};
+-
+-const Scale SCALES[] = {
+-  {"Drum Rack (notas 36-47)", 36, 12, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, true},
+-  {"Pentatonica maior",       48,  5, {0, 2, 4, 7, 9},                         false},
+-  {"Pentatonica menor",       48,  5, {0, 3, 5, 7, 10},                        false},
+-  {"Maior",                   48,  7, {0, 2, 4, 5, 7, 9, 11},                  false},
+-  {"Menor natural",           48,  7, {0, 2, 3, 5, 7, 8, 10},                  false},
+-  {"Cromatica",               48, 12, {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}, false},
+-};
+-const uint8_t NUM_SCALES = sizeof(SCALES) / sizeof(SCALES[0]);
+-
+-// =========================== CAMADA MIDI USB ===========================
++// Scales (table, "fixed" flag and note mapping) live in fm_scales.h.
++using fm::Scale;
++using fm::SCALES;
++using fm::NUM_SCALES;
++
++// Compile-time guards for the configuration above (no runtime effect).
++static_assert(NUM_SENSORS >= 1 && NUM_SENSORS <= 2, "NUM_SENSORS must be 1 or 2");
++static_assert(MIDI_CHANNEL >= 1 && MIDI_CHANNEL <= 16, "MIDI_CHANNEL must be 1..16");
++static_assert(VELOCITY >= 1 && VELOCITY <= 127, "VELOCITY must be 1..127");
++static_assert(RELEASE_THRESHOLD < TOUCH_THRESHOLD, "RELEASE_THRESHOLD must be below TOUCH_THRESHOLD");
++static_assert(AT_MAX_DELTA > TOUCH_THRESHOLD, "AT_MAX_DELTA must be above TOUCH_THRESHOLD");
++
++// =========================== USB MIDI LAYER ===========================
+ 
+ #if defined(ARDUINO_ARCH_RP2040)
+   #include <Adafruit_TinyUSB.h>
+@@ -100,7 +105,7 @@ const uint8_t NUM_SCALES = sizeof(SCALES) / sizeof(SCALES[0]);
+     usbMidi.setStringDescriptor(DEVICE_NAME);
+     MIDI.begin(MIDI_CHANNEL_OMNI);
+     MIDI.turnThruOff();
+-    // O core já enumerou o USB antes do setup(): força o computador a voltar a ler o descritor.
++    // The core already enumerated USB before setup(): force the host to re-read the descriptor.
+     if (TinyUSBDevice.mounted()) {
+       TinyUSBDevice.detach();
+       delay(10);
+@@ -110,52 +115,47 @@ const uint8_t NUM_SCALES = sizeof(SCALES) / sizeof(SCALES[0]);
+   void midiNoteOn(uint8_t note, uint8_t vel) { MIDI.sendNoteOn(note, vel, MIDI_CHANNEL); }
+   void midiNoteOff(uint8_t note)             { MIDI.sendNoteOff(note, 0, MIDI_CHANNEL); }
+   void midiPolyPressure(uint8_t note, uint8_t p) { MIDI.sendAfterTouch(note, p, MIDI_CHANNEL); }
+-  void midiTask()                            { MIDI.read(); }  // esvazia o que o computador mandar
++  void midiTask()                            { MIDI.read(); }  // drain whatever the host sends
+ 
+ #elif defined(__AVR_ATmega32U4__)
+   #include <MIDIUSB.h>
+ 
+   void midiSend(uint8_t cin, uint8_t status, uint8_t d1, uint8_t d2) {
+-    midiEventPacket_t p = {cin, (uint8_t)(status | (MIDI_CHANNEL - 1)), d1, d2};
++    midiEventPacket_t p = {cin, fm::channel_status(status, MIDI_CHANNEL), d1, d2};
+     MidiUSB.sendMIDI(p);
+     MidiUSB.flush();
+   }
+   void midiBegin() {}
+-  void midiNoteOn(uint8_t note, uint8_t vel) { midiSend(0x09, 0x90, note, vel); }
+-  void midiNoteOff(uint8_t note)             { midiSend(0x08, 0x80, note, 0); }
+-  void midiPolyPressure(uint8_t note, uint8_t p) { midiSend(0x0A, 0xA0, note, p); }
++  void midiNoteOn(uint8_t note, uint8_t vel) { midiSend(fm::CIN_NOTE_ON, fm::STATUS_NOTE_ON, note, vel); }
++  void midiNoteOff(uint8_t note)             { midiSend(fm::CIN_NOTE_OFF, fm::STATUS_NOTE_OFF, note, 0); }
++  void midiPolyPressure(uint8_t note, uint8_t p) { midiSend(fm::CIN_POLY_PRESSURE, fm::STATUS_POLY_PRESSURE, note, p); }
+   void midiTask() {
+     midiEventPacket_t rx;
+     do { rx = MidiUSB.read(); } while (rx.header != 0);
+   }
+ 
+ #else
+-  #error "Placa nao suportada: usa um Raspberry Pi Pico (RP2040/RP2350) ou um ATmega32u4 (Pro Micro / Leonardo)."
++  #error "Unsupported board: use a Raspberry Pi Pico (RP2040/RP2350) or an ATmega32u4 (Pro Micro / Leonardo)."
+ #endif
+ 
+-// ================================ ESTADO ================================
++// ================================ STATE ================================
+ 
+ const uint8_t NONE = 255;
++const uint16_t SENSOR_RETRY_MS = 2000;  // retry period while no MPR121 answers
+ const uint8_t MAX_PADS = 24;
+ const uint8_t NUM_PADS = NUM_SENSORS * 12;
+ 
+ Adafruit_MPR121 sensors[2];
+ bool     sensorOk[2]           = {false, false};
+-uint8_t  activeNote[MAX_PADS];          // nota enviada por cada pad (NONE = solto)
+-uint8_t  lastPressure[MAX_PADS];
++uint8_t  activeNote[MAX_PADS];          // note sent by each pad (NONE = released)
++uint8_t  lastPressure[MAX_PADS];        // last aftertouch value sent for each pad
+ uint32_t lastChangeMs[MAX_PADS];
+ uint32_t lastPressureMs        = 0;
+ uint8_t  scaleIdx              = 0;
+ int8_t   octaveShift           = 0;
++fm::Blinker led;                         // non-blocking LED signalling, ticked from loop()
+ 
+-// =============================== AJUDANTES ===============================
+-
+-void blink(uint8_t times, uint16_t ms) {
+-  for (uint8_t i = 0; i < times; i++) {
+-    digitalWrite(LED_BUILTIN, HIGH); delay(ms);
+-    digitalWrite(LED_BUILTIN, LOW);  delay(ms);
+-  }
+-}
++// =============================== HELPERS ===============================
+ 
+ bool anySensorOk() {
+   for (uint8_t s = 0; s < NUM_SENSORS; s++) if (sensorOk[s]) return true;
+@@ -163,10 +163,7 @@ bool anySensorOk() {
+ }
+ 
+ uint8_t noteForPad(uint8_t pad) {
+-  const Scale& sc = SCALES[scaleIdx];
+-  int oct  = sc.fixed ? 0 : octaveShift;
+-  int note = sc.root + 12 * oct + sc.steps[pad % sc.len] + 12 * (pad / sc.len);
+-  return (uint8_t)constrain(note, 0, 127);
++  return fm::note_for_pad(SCALES[scaleIdx], octaveShift, pad);
+ }
+ 
+ void pressPad(uint8_t pad) {
+@@ -178,7 +175,10 @@ void pressPad(uint8_t pad) {
+ 
+ void releasePad(uint8_t pad) {
+   if (activeNote[pad] == NONE) return;
+-  midiNoteOff(activeNote[pad]);      // desliga sempre a nota que foi ligada, mesmo que a escala tenha mudado
++  // Return pressure to 0 before Note Off so no DAW keeps a stuck aftertouch value.
++  if (fm::pressure_reset_on_release(lastPressure[pad])) midiPolyPressure(activeNote[pad], 0);
++  lastPressure[pad] = 0;
++  midiNoteOff(activeNote[pad]);      // always turn off the note that was turned on, even if the scale changed
+   activeNote[pad] = NONE;
+ }
+ 
+@@ -186,14 +186,30 @@ void releaseAll() {
+   for (uint8_t p = 0; p < NUM_PADS; p++) releasePad(p);
+ }
+ 
++// After begin(): SCTS = 0 written explicitly and USL/TL/LSL derived from VDD (fm_mpr121.h).
++// All writes happen in stop mode (ECR = 0), so the chip runs auto-configuration once, with
++// these limits, when ECR is restored to the value begin() set.
++void configureSensor(uint8_t s) {
++  Adafruit_MPR121& m = sensors[s];
++  uint8_t ecr = m.readRegister8(fm::MPR121_REG_ECR);
++  uint8_t usl = fm::mpr121_usl(fm::MPR121_VDD_MV);
++  m.writeRegister(fm::MPR121_REG_ECR, 0x00);
++  m.writeRegister(fm::MPR121_REG_AUTOCONFIG1, fm::MPR121_AUTOCONFIG1_VALUE);
++  m.writeRegister(fm::MPR121_REG_UPLIMIT, usl);
++  m.writeRegister(fm::MPR121_REG_TARGETLIMIT, fm::mpr121_tl(usl));
++  m.writeRegister(fm::MPR121_REG_LOWLIMIT, fm::mpr121_lsl(usl));
++  m.writeRegister(fm::MPR121_REG_ECR, ecr);
++}
++
+ void startSensors() {
+   for (uint8_t s = 0; s < NUM_SENSORS; s++) {
+-    // begin() faz reset ao chip; com AUTOCONFIG o MPR121 mede a capacidade de cada elétrodo
+-    // e escolhe a corrente de carga certa (uma melancia precisa de muito mais que um pad de cobre).
++    // begin() resets the chip; with AUTOCONFIG the MPR121 measures each electrode's capacitance
++    // and picks the right charge current (a watermelon needs far more than a copper pad).
+     sensorOk[s] = sensors[s].begin(SENSOR_ADDR[s], &I2C_BUS, TOUCH_THRESHOLD, RELEASE_THRESHOLD, AUTOCONFIG);
++    if (sensorOk[s] && AUTOCONFIG) configureSensor(s);
+     if (SERIAL_DEBUG && Serial) {
+       Serial.print("MPR121 0x"); Serial.print(SENSOR_ADDR[s], HEX);
+-      Serial.println(sensorOk[s] ? " OK" : " NAO ENCONTRADO");
++      Serial.println(sensorOk[s] ? " OK" : " NOT FOUND");
+     }
+   }
+ }
+@@ -201,54 +217,67 @@ void startSensors() {
+ void recalibrate() {
+   releaseAll();
+   startSensors();
+-  blink(3, 60);
++  led.start(millis(), fm::BLINK_RECAL_TIMES, fm::BLINK_RECAL_MS);
+ }
+ 
+ void nextScale() {
+-  scaleIdx = (scaleIdx + 1) % NUM_SCALES;
+-  if (SERIAL_DEBUG && Serial) { Serial.print("Escala: "); Serial.println(SCALES[scaleIdx].name); }
+-  blink(scaleIdx + 1, 90);
++  scaleIdx = fm::next_scale_index(scaleIdx, NUM_SCALES);
++  if (SERIAL_DEBUG && Serial) { Serial.print("Scale: "); Serial.println(SCALES[scaleIdx].name); }
++  led.start(millis(), scaleIdx + 1, fm::BLINK_SCALE_MS);   // N blinks = scale N, pads stay live
+ }
+ 
+-// ================================ ENTRADAS ================================
++// ================================ INPUTS ================================
+ 
+ void handleButton() {
+   if (!USE_BUTTON) return;
+-  static uint32_t lastSample = 0, downAt = 0;
+-  static bool wasDown = false, longDone = false;
++  static fm::ButtonClassifier button;     // 10 ms sampling = debounce; > 800 ms = long press
+   uint32_t now = millis();
+-  if (now - lastSample < 10) return;   // amostra a cada 10 ms = debounce
+-  lastSample = now;
++  if (!button.sample_due(now)) return;
+ 
+   bool down = digitalRead(PIN_BUTTON) == LOW;
+-  if (down && !wasDown) { downAt = now; longDone = false; }
+-  if (down && !longDone && now - downAt > 800) { longDone = true; recalibrate(); }
+-  if (!down && wasDown && !longDone) nextScale();
+-  wasDown = down;
++  fm::ButtonEvent ev = button.update(now, down);
++  if (ev == fm::ButtonEvent::LongPress) recalibrate();
++  else if (ev == fm::ButtonEvent::ShortPress) nextScale();
+ }
+ 
+ void handlePot() {
+   if (!USE_POT) return;
+   static uint32_t lastRead = 0;
+-  if (millis() - lastRead < 30) return;
++  if (!fm::elapsed_at_least(millis(), lastRead, fm::POT_READ_MS)) return;
+   lastRead = millis();
+ 
+-  // 5 zonas (-2 … +2) com histerese para não saltar entre oitavas na fronteira.
+-  float pos = analogRead(PIN_POT) * 5.0f / 1024.0f;   // 0.0 … 5.0
+-  float centre = (octaveShift + 2) + 0.5f;
+-  if (fabsf(pos - centre) > 0.7f) {
+-    octaveShift = constrain((int)pos, 0, 4) - 2;
+-    if (SERIAL_DEBUG && Serial) { Serial.print("Oitava: "); Serial.println(octaveShift); }
++  // 5 zones (-2 .. +2) with hysteresis so the octave does not flicker at a border.
++  int8_t next = fm::octave_from_adc(analogRead(PIN_POT), octaveShift);
++  if (next != octaveShift) {
++    octaveShift = next;
++    if (SERIAL_DEBUG && Serial) { Serial.print("Octave: "); Serial.println(octaveShift); }
+   }
+ }
+ 
+-void sendPressure(uint8_t s, uint8_t e, uint8_t pad) {
+-  // delta = quanto a capacidade subiu em relação à linha de base (mão mais perto / mais pele = maior)
+-  int delta = (int)sensors[s].baselineData(e) - (int)sensors[s].filteredData(e);
+-  long p = map(constrain(delta, TOUCH_THRESHOLD, AT_MAX_DELTA), TOUCH_THRESHOLD, AT_MAX_DELTA, 0, 127);
+-  if (abs((int)p - (int)lastPressure[pad]) >= 2) {
+-    lastPressure[pad] = (uint8_t)p;
+-    midiPolyPressure(activeNote[pad], (uint8_t)p);
++// Burst read of `n` consecutive MPR121 registers starting at `reg` (auto-increment,
++// repeated start). Returns false if the sensor did not acknowledge or returned fewer bytes.
++bool readRegisters(uint8_t addr, uint8_t reg, uint8_t* buf, uint8_t n) {
++  I2C_BUS.beginTransmission(addr);
++  I2C_BUS.write(reg);
++  if (I2C_BUS.endTransmission(false) != 0) return false;
++  if (I2C_BUS.requestFrom(addr, n) != n) return false;
++  for (uint8_t i = 0; i < n; i++) buf[i] = (uint8_t)I2C_BUS.read();
++  return true;
++}
++
++// Filtered + baseline data of electrodes lo .. lo+n-1 of sensor s: 2 burst transactions
++// instead of 2 transactions per sounding pad.
++bool readSensorData(uint8_t s, uint8_t lo, uint8_t n, uint8_t* filt, uint8_t* base) {
++  return readRegisters(SENSOR_ADDR[s], fm::MPR121_REG_FILTDATA_0 + 2 * lo, filt, 2 * n) &&
++         readRegisters(SENSOR_ADDR[s], fm::MPR121_REG_BASELINE_0 + lo, base, n);
++}
++
++// delta = how far the capacitance rose above the baseline (closer hand / more skin = larger)
++void sendPressure(uint8_t pad, int delta) {
++  uint8_t p = fm::pressure_from_delta(delta, TOUCH_THRESHOLD, AT_MAX_DELTA);
++  if (fm::pressure_should_send(p, lastPressure[pad])) {
++    lastPressure[pad] = p;
++    midiPolyPressure(activeNote[pad], p);
+   }
+ }
+ 
+@@ -290,17 +319,17 @@ void setup() {
+   }
+ 
+   startSensors();
+-  if (anySensorOk()) blink(2, 120);   // 2 piscadelas lentas = pronto
++  if (anySensorOk()) led.start(millis(), fm::BLINK_READY_TIMES, fm::BLINK_READY_MS);   // 2 slow blinks = ready
+ }
+ 
+ void loop() {
+   midiTask();
+ 
+-  // Sem sensor: pisca depressa e tenta de novo a cada 2 s (podes ligar o MPR121 com tudo a correr).
++  // No sensor: blink fast and retry every 2 s (the MPR121 can be connected while running).
+   if (!anySensorOk()) {
+     static uint32_t lastTry = 0;
+-    digitalWrite(LED_BUILTIN, (millis() / 100) % 2);
+-    if (millis() - lastTry > 2000) { lastTry = millis(); startSensors(); }
++    digitalWrite(LED_BUILTIN, led.level_or(millis(), (millis() / 100) % 2));
++    if (fm::elapsed_more_than(millis(), lastTry, SENSOR_RETRY_MS)) { lastTry = millis(); startSensors(); }
+     return;
+   }
+ 
+@@ -308,28 +337,39 @@ void loop() {
+   handlePot();
+ 
+   uint32_t now = millis();
+-  bool pressureDue = SEND_AFTERTOUCH && now - lastPressureMs >= AT_INTERVAL_MS;
++  bool pressureDue = SEND_AFTERTOUCH && fm::elapsed_at_least(now, lastPressureMs, AT_INTERVAL_MS);
+   if (pressureDue) lastPressureMs = now;
+   bool anyTouched = false;
+ 
+   for (uint8_t s = 0; s < NUM_SENSORS; s++) {
+     if (!sensorOk[s]) continue;
+     uint16_t bits = sensors[s].touched();
++    uint16_t sounding = 0;                   // bit e = pad of electrode e has a note on
+ 
+     for (uint8_t e = 0; e < 12; e++) {
+       uint8_t pad = s * 12 + e;
+-      bool touched = bits & (1 << e);
++      bool touched = fm::pad_touched(bits, e);
+       bool active  = activeNote[pad] != NONE;
+ 
+-      if (touched != active && now - lastChangeMs[pad] >= DEBOUNCE_MS) {
+-        lastChangeMs[pad] = now;
+-        if (touched) pressPad(pad); else releasePad(pad);
+-      }
++      fm::PadAction action = fm::pad_step(touched, active, now, lastChangeMs[pad], DEBOUNCE_MS);
++      if (action == fm::PadAction::Press) pressPad(pad);
++      else if (action == fm::PadAction::Release) releasePad(pad);
+       if (touched) anyTouched = true;
+-      if (pressureDue && activeNote[pad] != NONE) sendPressure(s, e, pad);
++      if (activeNote[pad] != NONE) sounding |= (uint16_t)(1u << e);
++    }
++
++    // Aftertouch: burst reads over runs of sounding pads (one run when they are adjacent,
++    // all 12 pads = 2 transactions) instead of 2 transactions per sounding pad.
++    uint8_t lo, n;
++    for (uint8_t from = 0; pressureDue && fm::mpr121_next_run(sounding, from, lo, n); from = lo + n) {
++      uint8_t filt[fm::MPR121_FILT_BYTES], base[fm::MPR121_BASE_BYTES];
++      if (!readSensorData(s, lo, n, filt, base)) continue;
++      for (uint8_t e = lo; e < lo + n; e++) {
++        if (sounding & (1u << e)) sendPressure(s * 12 + e, fm::mpr121_delta(filt, base, e - lo));
++      }
+     }
+   }
+ 
+-  digitalWrite(LED_BUILTIN, anyTouched);
++  digitalWrite(LED_BUILTIN, led.level_or(millis(), anyTouched));
+   debugPrint();
+ }

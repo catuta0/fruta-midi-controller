@@ -1,0 +1,129 @@
+.......FFFFF............................F............................... [ 27%]
+........................................................................ [ 55%]
+........................................................................ [ 83%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+______________________ test_pressure_from_delta[119-125] _______________________
+
+probe = <conftest.Probe object at 0x10aa2fe80>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+delta = 119, expected = 125
+
+    @pytest.mark.parametrize("delta,expected", [
+        (-50, 0), (0, 0), (11, 0), (12, 0), (13, 1),
+        (66, 63),     # 54*127/108 = 63.5 -> 63 (truncation, as Arduino map())
+        (119, 125),   # 107*127/108 = 125.8 -> 125
+        (120, 127),   # AT_MAX_DELTA -> full scale
+        (121, 127), (1000, 127), (32767, 127),
+    ])
+    def test_pressure_from_delta(probe, cfg, delta, expected):
+>       assert probe.int(f"at {delta} {cfg['TOUCH_THRESHOLD']} {cfg['AT_MAX_DELTA']}") == expected
+E       AssertionError: assert 124 == 125
+E        +  where 124 = int('at 119 12 120')
+E        +    where int = <conftest.Probe object at 0x10aa2fe80>.int
+
+tests/firmware/logic/test_aftertouch.py:18: AssertionError
+______________________ test_pressure_from_delta[120-127] _______________________
+
+probe = <conftest.Probe object at 0x10aa2fe80>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+delta = 120, expected = 127
+
+    @pytest.mark.parametrize("delta,expected", [
+        (-50, 0), (0, 0), (11, 0), (12, 0), (13, 1),
+        (66, 63),     # 54*127/108 = 63.5 -> 63 (truncation, as Arduino map())
+        (119, 125),   # 107*127/108 = 125.8 -> 125
+        (120, 127),   # AT_MAX_DELTA -> full scale
+        (121, 127), (1000, 127), (32767, 127),
+    ])
+    def test_pressure_from_delta(probe, cfg, delta, expected):
+>       assert probe.int(f"at {delta} {cfg['TOUCH_THRESHOLD']} {cfg['AT_MAX_DELTA']}") == expected
+E       AssertionError: assert 126 == 127
+E        +  where 126 = int('at 120 12 120')
+E        +    where int = <conftest.Probe object at 0x10aa2fe80>.int
+
+tests/firmware/logic/test_aftertouch.py:18: AssertionError
+______________________ test_pressure_from_delta[121-127] _______________________
+
+probe = <conftest.Probe object at 0x10aa2fe80>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+delta = 121, expected = 127
+
+    @pytest.mark.parametrize("delta,expected", [
+        (-50, 0), (0, 0), (11, 0), (12, 0), (13, 1),
+        (66, 63),     # 54*127/108 = 63.5 -> 63 (truncation, as Arduino map())
+        (119, 125),   # 107*127/108 = 125.8 -> 125
+        (120, 127),   # AT_MAX_DELTA -> full scale
+        (121, 127), (1000, 127), (32767, 127),
+    ])
+    def test_pressure_from_delta(probe, cfg, delta, expected):
+>       assert probe.int(f"at {delta} {cfg['TOUCH_THRESHOLD']} {cfg['AT_MAX_DELTA']}") == expected
+E       AssertionError: assert 126 == 127
+E        +  where 126 = int('at 121 12 120')
+E        +    where int = <conftest.Probe object at 0x10aa2fe80>.int
+
+tests/firmware/logic/test_aftertouch.py:18: AssertionError
+______________________ test_pressure_from_delta[1000-127] ______________________
+
+probe = <conftest.Probe object at 0x10aa2fe80>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+delta = 1000, expected = 127
+
+    @pytest.mark.parametrize("delta,expected", [
+        (-50, 0), (0, 0), (11, 0), (12, 0), (13, 1),
+        (66, 63),     # 54*127/108 = 63.5 -> 63 (truncation, as Arduino map())
+        (119, 125),   # 107*127/108 = 125.8 -> 125
+        (120, 127),   # AT_MAX_DELTA -> full scale
+        (121, 127), (1000, 127), (32767, 127),
+    ])
+    def test_pressure_from_delta(probe, cfg, delta, expected):
+>       assert probe.int(f"at {delta} {cfg['TOUCH_THRESHOLD']} {cfg['AT_MAX_DELTA']}") == expected
+E       AssertionError: assert 126 == 127
+E        +  where 126 = int('at 1000 12 120')
+E        +    where int = <conftest.Probe object at 0x10aa2fe80>.int
+
+tests/firmware/logic/test_aftertouch.py:18: AssertionError
+_____________________ test_pressure_from_delta[32767-127] ______________________
+
+probe = <conftest.Probe object at 0x10aa2fe80>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+delta = 32767, expected = 127
+
+    @pytest.mark.parametrize("delta,expected", [
+        (-50, 0), (0, 0), (11, 0), (12, 0), (13, 1),
+        (66, 63),     # 54*127/108 = 63.5 -> 63 (truncation, as Arduino map())
+        (119, 125),   # 107*127/108 = 125.8 -> 125
+        (120, 127),   # AT_MAX_DELTA -> full scale
+        (121, 127), (1000, 127), (32767, 127),
+    ])
+    def test_pressure_from_delta(probe, cfg, delta, expected):
+>       assert probe.int(f"at {delta} {cfg['TOUCH_THRESHOLD']} {cfg['AT_MAX_DELTA']}") == expected
+E       AssertionError: assert 126 == 127
+E        +  where 126 = int('at 32767 12 120')
+E        +    where int = <conftest.Probe object at 0x10aa2fe80>.int
+
+tests/firmware/logic/test_aftertouch.py:18: AssertionError
+____________________ test_rate_limit_still_applies_to_zero _____________________
+
+probe = <conftest.Probe object at 0x10aa2fe80>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+
+    def test_rate_limit_still_applies_to_zero(probe, cfg):
+        s = [(True, 120)] * 100 + [(True, 0)] * 100 + [(False, 0)] * 50
+        ev = padsim(probe, cfg, s)
+        times = [int(e.split(":")[0]) for e in ev if ":AT:" in e]
+>       assert at_values(ev) == [127, 0]
+E       assert [126, 0] == [127, 0]
+E         
+E         At index 0 diff: 126 != 127
+E         Use -v to get more diff
+
+tests/firmware/logic/test_aftertouch.py:121: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_aftertouch.py::test_pressure_from_delta[119-125]
+FAILED tests/firmware/logic/test_aftertouch.py::test_pressure_from_delta[120-127]
+FAILED tests/firmware/logic/test_aftertouch.py::test_pressure_from_delta[121-127]
+FAILED tests/firmware/logic/test_aftertouch.py::test_pressure_from_delta[1000-127]
+FAILED tests/firmware/logic/test_aftertouch.py::test_pressure_from_delta[32767-127]
+FAILED tests/firmware/logic/test_aftertouch.py::test_rate_limit_still_applies_to_zero
+6 failed, 254 passed in 1.26s

@@ -1,0 +1,4 @@
+M24_scts_set: pytest_exit=1 result='1 failed, 122 passed in 0.88s' restored=yes
+M25_usl_formula: pytest_exit=1 result='1 failed, 123 passed in 0.86s' restored=yes
+M26_lsl_factor: pytest_exit=1 result='1 failed, 123 passed in 0.92s' restored=yes
+M27_wrong_register: pytest_exit=1 result='1 failed, 121 passed in 0.85s' restored=yes

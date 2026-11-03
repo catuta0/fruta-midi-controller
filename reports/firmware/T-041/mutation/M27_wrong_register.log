@@ -1,0 +1,21 @@
+........................................................................ [ 26%]
+.................................................F
+=================================== FAILURES ===================================
+_________________ test_config_register_addresses_match_library _________________
+
+probe = <conftest.Probe object at 0x1080b8ee0>
+
+    def test_config_register_addresses_match_library(probe):
+>       assert probe.one("mprregs") == f"{0x5E} {0x7B} {0x7C} {0x7D} {0x7E} {0x7F} 3300"
+E       AssertionError: assert '94 123 123 125 126 127 3300' == '94 123 124 125 126 127 3300'
+E         
+E         - 94 123 124 125 126 127 3300
+E         ?          ^
+E         + 94 123 123 125 126 127 3300
+E         ?          ^
+
+tests/firmware/logic/test_mpr121.py:152: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_mpr121.py::test_config_register_addresses_match_library
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 121 passed in 0.85s

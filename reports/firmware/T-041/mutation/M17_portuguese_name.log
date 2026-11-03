@@ -1,0 +1,39 @@
+........................................................................ [ 27%]
+........................................................................ [ 55%]
+...................................................................F.... [ 83%]
+.....................................F......                             [100%]
+=================================== FAILURES ===================================
+_________________________ test_scale_names_english[5] __________________________
+
+probe = <conftest.Probe object at 0x10604ddf0>, i = 5
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_scale_names_english(probe, i):
+>       assert probe.one(f"scalename {i}") == NAMES[i]
+E       AssertionError: assert 'Cromatica' == 'Chromatic'
+E         
+E         - Chromatic
+E         ?  -
+E         + Cromatica
+E         ?         +
+
+tests/firmware/logic/test_scales.py:104: AssertionError
+_________________ test_firmware_is_ascii_english[fm_scales.h] __________________
+
+f = PosixPath('/Users/rod/fruta-midi-controller/firmware/FrutaMIDI/fm_scales.h')
+
+    @pytest.mark.parametrize("f", FIRMWARE_FILES, ids=lambda p: p.name)
+    def test_firmware_is_ascii_english(f):
+        text = f.read_text(encoding="utf-8")
+        non_ascii = sorted({c for c in text if ord(c) > 127})
+        assert not non_ascii, non_ascii
+        hits = re.findall(PT_WORDS, text, flags=re.IGNORECASE)
+>       assert not hits, hits
+E       AssertionError: ['Cromatica']
+E       assert not ['Cromatica']
+
+tests/firmware/logic/test_sketch_uses_headers.py:74: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_scales.py::test_scale_names_english[5] - Ass...
+FAILED tests/firmware/logic/test_sketch_uses_headers.py::test_firmware_is_ascii_english[fm_scales.h]
+2 failed, 258 passed in 1.32s

@@ -1,0 +1,64 @@
+.................................FFFF................................... [ 27%]
+........................................................................ [ 55%]
+........................................................................ [ 83%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+__________________________ test_reset_on_release[1-1] __________________________
+
+probe = <conftest.Probe object at 0x106abc3a0>, last = 1, expected = 1
+
+    @pytest.mark.parametrize("last,expected", [(0, 0), (1, 1), (2, 1), (127, 1)])
+    def test_reset_on_release(probe, last, expected):
+>       assert probe.int(f"atreset {last}") == expected
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('atreset 1')
+E        +    where int = <conftest.Probe object at 0x106abc3a0>.int
+
+tests/firmware/logic/test_aftertouch.py:65: AssertionError
+__________________________ test_reset_on_release[2-1] __________________________
+
+probe = <conftest.Probe object at 0x106abc3a0>, last = 2, expected = 1
+
+    @pytest.mark.parametrize("last,expected", [(0, 0), (1, 1), (2, 1), (127, 1)])
+    def test_reset_on_release(probe, last, expected):
+>       assert probe.int(f"atreset {last}") == expected
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('atreset 2')
+E        +    where int = <conftest.Probe object at 0x106abc3a0>.int
+
+tests/firmware/logic/test_aftertouch.py:65: AssertionError
+_________________________ test_reset_on_release[127-1] _________________________
+
+probe = <conftest.Probe object at 0x106abc3a0>, last = 127, expected = 1
+
+    @pytest.mark.parametrize("last,expected", [(0, 0), (1, 1), (2, 1), (127, 1)])
+    def test_reset_on_release(probe, last, expected):
+>       assert probe.int(f"atreset {last}") == expected
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('atreset 127')
+E        +    where int = <conftest.Probe object at 0x106abc3a0>.int
+
+tests/firmware/logic/test_aftertouch.py:65: AssertionError
+__________ test_release_after_pressure_sends_one_zero_before_note_off __________
+
+probe = <conftest.Probe object at 0x106abc3a0>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+
+    def test_release_after_pressure_sends_one_zero_before_note_off(probe, cfg):
+        # touch 100..399 at delta 66 (p = 63), release at 400
+        s = [(100 <= t < 400, 66 if 100 <= t < 400 else 0) for t in range(600)]
+        ev = padsim(probe, cfg, s)
+        assert ev[0] == "100:ON:60"
+>       assert at_values(ev) == [63, 0]
+E       assert [63] == [63, 0]
+E         
+E         Right contains one more item: 0
+E         Use -v to get more diff
+
+tests/firmware/logic/test_aftertouch.py:84: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_aftertouch.py::test_reset_on_release[1-1] - ...
+FAILED tests/firmware/logic/test_aftertouch.py::test_reset_on_release[2-1] - ...
+FAILED tests/firmware/logic/test_aftertouch.py::test_reset_on_release[127-1]
+FAILED tests/firmware/logic/test_aftertouch.py::test_release_after_pressure_sends_one_zero_before_note_off
+4 failed, 256 passed in 1.20s

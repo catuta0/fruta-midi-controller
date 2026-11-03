@@ -1,0 +1,105 @@
+........................................................................ [ 33%]
+................................................................FFFFFF.. [ 67%]
+......................F..............................................    [100%]
+=================================== FAILURES ===================================
+________________________ test_wrap_into_next_octave[0] _________________________
+
+probe = <conftest.Probe object at 0x1064b02e0>, i = 0
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+E       AssertionError: assert 36 == 48
+E        +  where 36 = int('note 0 0 12')
+E        +    where int = <conftest.Probe object at 0x1064b02e0>.int
+
+tests/firmware/logic/test_scales.py:49: AssertionError
+________________________ test_wrap_into_next_octave[1] _________________________
+
+probe = <conftest.Probe object at 0x1064b02e0>, i = 1
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+E       AssertionError: assert 48 == 60
+E        +  where 48 = int('note 1 0 5')
+E        +    where int = <conftest.Probe object at 0x1064b02e0>.int
+
+tests/firmware/logic/test_scales.py:49: AssertionError
+________________________ test_wrap_into_next_octave[2] _________________________
+
+probe = <conftest.Probe object at 0x1064b02e0>, i = 2
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+E       AssertionError: assert 48 == 60
+E        +  where 48 = int('note 2 0 5')
+E        +    where int = <conftest.Probe object at 0x1064b02e0>.int
+
+tests/firmware/logic/test_scales.py:49: AssertionError
+________________________ test_wrap_into_next_octave[3] _________________________
+
+probe = <conftest.Probe object at 0x1064b02e0>, i = 3
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+E       AssertionError: assert 48 == 60
+E        +  where 48 = int('note 3 0 7')
+E        +    where int = <conftest.Probe object at 0x1064b02e0>.int
+
+tests/firmware/logic/test_scales.py:49: AssertionError
+________________________ test_wrap_into_next_octave[4] _________________________
+
+probe = <conftest.Probe object at 0x1064b02e0>, i = 4
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+E       AssertionError: assert 48 == 60
+E        +  where 48 = int('note 4 0 7')
+E        +    where int = <conftest.Probe object at 0x1064b02e0>.int
+
+tests/firmware/logic/test_scales.py:49: AssertionError
+________________________ test_wrap_into_next_octave[5] _________________________
+
+probe = <conftest.Probe object at 0x1064b02e0>, i = 5
+
+    @pytest.mark.parametrize("i", range(6))
+    def test_wrap_into_next_octave(probe, i):
+        ln = SCALE_TABLE[i][1]
+>       assert probe.int(f"note {i} 0 {ln}") == PAD_LEN_NOTE[i]
+E       AssertionError: assert 48 == 60
+E        +  where 48 = int('note 5 0 12')
+E        +    where int = <conftest.Probe object at 0x1064b02e0>.int
+
+tests/firmware/logic/test_scales.py:49: AssertionError
+__________________ test_real_table_extremes_inside_midi_range __________________
+
+probe = <conftest.Probe object at 0x1064b02e0>
+
+    def test_real_table_extremes_inside_midi_range(probe):
+        # Lowest: any non-fixed scale, pad 0, octave -2 -> 48 - 24 = 24.
+        assert probe.int("note 1 -2 0") == 24
+        # Highest: pentatonic pad 23 at +2 -> 103 + 24 = 127 exactly (not clamped).
+>       assert probe.int("note 1 2 23") == 127
+E       AssertionError: assert 115 == 127
+E        +  where 115 = int('note 1 2 23')
+E        +    where int = <conftest.Probe object at 0x1064b02e0>.int
+
+tests/firmware/logic/test_scales.py:70: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[0] - A...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[1] - A...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[2] - A...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[3] - A...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[4] - A...
+FAILED tests/firmware/logic/test_scales.py::test_wrap_into_next_octave[5] - A...
+FAILED tests/firmware/logic/test_scales.py::test_real_table_extremes_inside_midi_range
+7 failed, 206 passed in 1.34s

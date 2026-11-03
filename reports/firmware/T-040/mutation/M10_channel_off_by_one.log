@@ -1,0 +1,102 @@
+........................................................................ [ 33%]
+..FFFFFF................................................................ [ 67%]
+.....................................................................    [100%]
+=================================== FAILURES ===================================
+________________________ test_channel_status[144-1-144] ________________________
+
+probe = <conftest.Probe object at 0x10842cc10>, status = 144, ch = 1
+expected = 144
+
+    @pytest.mark.parametrize("status,ch,expected", [
+        (0x90, 1, 0x90), (0x90, 16, 0x9F), (0x80, 1, 0x80), (0x80, 10, 0x89), (0xA0, 1, 0xA0), (0xA0, 16, 0xAF),
+    ])
+    def test_channel_status(probe, status, ch, expected):
+>       assert probe.int(f"status {status} {ch}") == expected
+E       AssertionError: assert 145 == 144
+E        +  where 145 = int('status 144 1')
+E        +    where int = <conftest.Probe object at 0x10842cc10>.int
+
+tests/firmware/logic/test_midi_time.py:13: AssertionError
+_______________________ test_channel_status[144-16-159] ________________________
+
+probe = <conftest.Probe object at 0x10842cc10>, status = 144, ch = 16
+expected = 159
+
+    @pytest.mark.parametrize("status,ch,expected", [
+        (0x90, 1, 0x90), (0x90, 16, 0x9F), (0x80, 1, 0x80), (0x80, 10, 0x89), (0xA0, 1, 0xA0), (0xA0, 16, 0xAF),
+    ])
+    def test_channel_status(probe, status, ch, expected):
+>       assert probe.int(f"status {status} {ch}") == expected
+E       AssertionError: assert 144 == 159
+E        +  where 144 = int('status 144 16')
+E        +    where int = <conftest.Probe object at 0x10842cc10>.int
+
+tests/firmware/logic/test_midi_time.py:13: AssertionError
+________________________ test_channel_status[128-1-128] ________________________
+
+probe = <conftest.Probe object at 0x10842cc10>, status = 128, ch = 1
+expected = 128
+
+    @pytest.mark.parametrize("status,ch,expected", [
+        (0x90, 1, 0x90), (0x90, 16, 0x9F), (0x80, 1, 0x80), (0x80, 10, 0x89), (0xA0, 1, 0xA0), (0xA0, 16, 0xAF),
+    ])
+    def test_channel_status(probe, status, ch, expected):
+>       assert probe.int(f"status {status} {ch}") == expected
+E       AssertionError: assert 129 == 128
+E        +  where 129 = int('status 128 1')
+E        +    where int = <conftest.Probe object at 0x10842cc10>.int
+
+tests/firmware/logic/test_midi_time.py:13: AssertionError
+_______________________ test_channel_status[128-10-137] ________________________
+
+probe = <conftest.Probe object at 0x10842cc10>, status = 128, ch = 10
+expected = 137
+
+    @pytest.mark.parametrize("status,ch,expected", [
+        (0x90, 1, 0x90), (0x90, 16, 0x9F), (0x80, 1, 0x80), (0x80, 10, 0x89), (0xA0, 1, 0xA0), (0xA0, 16, 0xAF),
+    ])
+    def test_channel_status(probe, status, ch, expected):
+>       assert probe.int(f"status {status} {ch}") == expected
+E       AssertionError: assert 138 == 137
+E        +  where 138 = int('status 128 10')
+E        +    where int = <conftest.Probe object at 0x10842cc10>.int
+
+tests/firmware/logic/test_midi_time.py:13: AssertionError
+________________________ test_channel_status[160-1-160] ________________________
+
+probe = <conftest.Probe object at 0x10842cc10>, status = 160, ch = 1
+expected = 160
+
+    @pytest.mark.parametrize("status,ch,expected", [
+        (0x90, 1, 0x90), (0x90, 16, 0x9F), (0x80, 1, 0x80), (0x80, 10, 0x89), (0xA0, 1, 0xA0), (0xA0, 16, 0xAF),
+    ])
+    def test_channel_status(probe, status, ch, expected):
+>       assert probe.int(f"status {status} {ch}") == expected
+E       AssertionError: assert 161 == 160
+E        +  where 161 = int('status 160 1')
+E        +    where int = <conftest.Probe object at 0x10842cc10>.int
+
+tests/firmware/logic/test_midi_time.py:13: AssertionError
+_______________________ test_channel_status[160-16-175] ________________________
+
+probe = <conftest.Probe object at 0x10842cc10>, status = 160, ch = 16
+expected = 175
+
+    @pytest.mark.parametrize("status,ch,expected", [
+        (0x90, 1, 0x90), (0x90, 16, 0x9F), (0x80, 1, 0x80), (0x80, 10, 0x89), (0xA0, 1, 0xA0), (0xA0, 16, 0xAF),
+    ])
+    def test_channel_status(probe, status, ch, expected):
+>       assert probe.int(f"status {status} {ch}") == expected
+E       AssertionError: assert 176 == 175
+E        +  where 176 = int('status 160 16')
+E        +    where int = <conftest.Probe object at 0x10842cc10>.int
+
+tests/firmware/logic/test_midi_time.py:13: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_midi_time.py::test_channel_status[144-1-144]
+FAILED tests/firmware/logic/test_midi_time.py::test_channel_status[144-16-159]
+FAILED tests/firmware/logic/test_midi_time.py::test_channel_status[128-1-128]
+FAILED tests/firmware/logic/test_midi_time.py::test_channel_status[128-10-137]
+FAILED tests/firmware/logic/test_midi_time.py::test_channel_status[160-1-160]
+FAILED tests/firmware/logic/test_midi_time.py::test_channel_status[160-16-175]
+6 failed, 207 passed in 1.12s

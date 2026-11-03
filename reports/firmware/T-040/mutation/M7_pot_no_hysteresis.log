@@ -1,0 +1,434 @@
+........................................................................ [ 33%]
+....................FF.F.F.F......FFFFFFFFFFFFFFFFF..................... [ 67%]
+.....................................................................    [100%]
+=================================== FAILURES ===================================
+______________________ test_exhaustive_against_reference _______________________
+
+probe = <conftest.Probe object at 0x108a06130>
+
+    def test_exhaustive_against_reference(probe):
+        lines, exp = [], []
+        for cur in range(-2, 3):
+            for adc in range(1024):
+                lines.append(f"pot {adc} {cur}")
+                exp.append(reference(adc, cur))
+        got = [int(x) for x in probe.run(lines)]
+        bad = [(l, g, e) for l, g, e in zip(lines, got, exp) if g != e]
+>       assert not bad, bad[:10]
+E       AssertionError: [('pot 205 -2', -1, -2), ('pot 206 -2', -1, -2), ('pot 207 -2', -1, -2), ('pot 208 -2', -1, -2), ('pot 209 -2', -1, -2), ('pot 210 -2', -1, -2), ...]
+E       assert not [('pot 205 -2', -1, -2), ('pot 206 -2', -1, -2), ('pot 207 -2', -1, -2), ('pot 208 -2', -1, -2), ('pot 209 -2', -1, -2), ('pot 210 -2', -1, -2), ...]
+
+tests/firmware/logic/test_pot.py:21: AssertionError
+___________________________ test_boundaries[655-0-0] ___________________________
+
+probe = <conftest.Probe object at 0x108a06130>, adc = 655, cur = 0, expected = 0
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+E       AssertionError: assert 1 == 0
+E        +  where 1 = int('pot 655 0')
+E        +    where int = <conftest.Probe object at 0x108a06130>.int
+
+tests/firmware/logic/test_pot.py:35: AssertionError
+___________________________ test_boundaries[369-0-0] ___________________________
+
+probe = <conftest.Probe object at 0x108a06130>, adc = 369, cur = 0, expected = 0
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+E       AssertionError: assert -1 == 0
+E        +  where -1 = int('pot 369 0')
+E        +    where int = <conftest.Probe object at 0x108a06130>.int
+
+tests/firmware/logic/test_pot.py:35: AssertionError
+___________________________ test_boundaries[574-1-1] ___________________________
+
+probe = <conftest.Probe object at 0x108a06130>, adc = 574, cur = 1, expected = 1
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('pot 574 1')
+E        +    where int = <conftest.Probe object at 0x108a06130>.int
+
+tests/firmware/logic/test_pot.py:35: AssertionError
+___________________________ test_boundaries[860-1-1] ___________________________
+
+probe = <conftest.Probe object at 0x108a06130>, adc = 860, cur = 1, expected = 1
+
+    @pytest.mark.parametrize("adc,cur,expected", [
+        (655, 0, 0), (656, 0, 1),      # up: pos > 3.2  <=> adc > 655.36
+        (369, 0, 0), (368, 0, -1),     # down: pos < 1.8 <=> adc < 368.64
+        (574, 1, 1), (573, 1, 0),      # +1 down: pos < 2.8 <=> adc < 573.44
+        (860, 1, 1), (861, 1, 2),      # +1 up: pos > 4.2 <=> adc > 860.16
+        (0, -2, -2), (1023, 2, 2),     # ends never leave the end zones
+        (1023, -2, 2), (0, 2, -2),     # large jump goes straight to the zone under the wiper
+        (512, 0, 0),                   # centre
+    ])
+    def test_boundaries(probe, adc, cur, expected):
+>       assert probe.int(f"pot {adc} {cur}") == expected
+E       AssertionError: assert 2 == 1
+E        +  where 2 = int('pot 860 1')
+E        +    where int = <conftest.Probe object at 0x108a06130>.int
+
+tests/firmware/logic/test_pot.py:35: AssertionError
+__________________ test_noise_at_border_does_not_chatter[1-1] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 1
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (205, 1, -2, -1)
+E           assert -1 == -2
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[1-2] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 1
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (410, 1, -1, 0)
+E           assert 0 == -1
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[1-3] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 1
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (615, 1, 0, 1)
+E           assert 1 == 0
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[1-4] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 1
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (820, 1, 1, 2)
+E           assert 2 == 1
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[3-1] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 3
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (205, 3, -2, -1)
+E           assert -1 == -2
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[3-2] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 3
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (410, 3, -1, 0)
+E           assert 0 == -1
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[3-3] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 3
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (615, 3, 0, 1)
+E           assert 1 == 0
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[3-4] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 3
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (820, 3, 1, 2)
+E           assert 2 == 1
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[5-1] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 5
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (205, 5, -2, -1)
+E           assert -1 == -2
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[5-2] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 5
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (410, 5, -1, 0)
+E           assert 0 == -1
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[5-3] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 5
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (615, 5, 0, 1)
+E           assert 1 == 0
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+__________________ test_noise_at_border_does_not_chatter[5-4] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 5
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (820, 5, 1, 2)
+E           assert 2 == 1
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+_________________ test_noise_at_border_does_not_chatter[10-1] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 10
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (205, 10, -2, -1)
+E           assert -1 == -2
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+_________________ test_noise_at_border_does_not_chatter[10-2] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 10
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (410, 10, -1, 0)
+E           assert 0 == -1
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+_________________ test_noise_at_border_does_not_chatter[10-3] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 10
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (615, 10, 0, 1)
+E           assert 1 == 0
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+_________________ test_noise_at_border_does_not_chatter[10-4] __________________
+
+probe = <conftest.Probe object at 0x108a06130>, k = 199, noise = 10
+
+    @pytest.mark.parametrize("k", [1, 2, 3, 4])
+    @pytest.mark.parametrize("noise", [1, 3, 5, 10])
+    def test_noise_at_border_does_not_chatter(probe, k, noise):
+        border = -(-1024 * k // 5)          # first ADC count of zone k: 205, 410, 615, 820
+        for start in (k - 3, k - 2):        # octave of the zone below / above the border
+            cur = start
+            for k in range(200):
+                adc = border + (noise if k % 2 else -noise)
+                cur = probe.int(f"pot {adc} {cur}")
+>           assert cur == start, (border, noise, start, cur)
+E           AssertionError: (820, 10, 1, 2)
+E           assert 2 == 1
+
+tests/firmware/logic/test_pot.py:47: AssertionError
+______________ test_slow_ramp_with_noise_switches_once_per_border ______________
+
+probe = <conftest.Probe object at 0x108a06130>
+
+    def test_slow_ramp_with_noise_switches_once_per_border(probe):
+        cur, changes = -2, []
+        seq = [a + (3 if i % 2 else -3) for i, a in enumerate(range(3, 1021))]
+        seq += [a + (3 if i % 2 else -3) for i, a in enumerate(range(1020, 2, -1))]
+        for adc in seq:
+            nxt = probe.int(f"pot {adc} {cur}")
+            if nxt != cur:
+                changes.append(nxt)
+            cur = nxt
+>       assert changes == [-1, 0, 1, 2, 1, 0, -1, -2]
+E       assert [-1, -2, -1, -2, -1, -2, ...] == [-1, 0, 1, 2, 1, 0, ...]
+E         
+E         At index 1 diff: -2 != 0
+E         Left contains 40 more items, first extra item: -1
+E         Use -v to get more diff
+
+tests/firmware/logic/test_pot.py:59: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_pot.py::test_exhaustive_against_reference - ...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[655-0-0] - Assertion...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[369-0-0] - Assertion...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[574-1-1] - Assertion...
+FAILED tests/firmware/logic/test_pot.py::test_boundaries[860-1-1] - Assertion...
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[1-1]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[1-2]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[1-3]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[1-4]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[3-1]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[3-2]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[3-3]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[3-4]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[5-1]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[5-2]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[5-3]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[5-4]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[10-1]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[10-2]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[10-3]
+FAILED tests/firmware/logic/test_pot.py::test_noise_at_border_does_not_chatter[10-4]
+FAILED tests/firmware/logic/test_pot.py::test_slow_ramp_with_noise_switches_once_per_border
+22 failed, 191 passed in 1.50s

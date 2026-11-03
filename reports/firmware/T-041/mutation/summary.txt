@@ -1,0 +1,23 @@
+M1_debounce_ge_to_gt: pytest_exit=1 result='5 failed, 255 passed in 1.25s' restored=yes
+M2_scale_wrap: pytest_exit=1 result='7 failed, 253 passed in 1.22s' restored=yes
+M3_fixed_ignored: pytest_exit=1 result='5 failed, 255 passed in 1.16s' restored=yes
+M4_no_clamp: pytest_exit=1 result='5 failed, 255 passed in 1.97s' restored=yes
+M5_at_scale: pytest_exit=1 result='6 failed, 254 passed in 1.26s' restored=yes
+M6_at_filter: pytest_exit=1 result='4 failed, 256 passed in 1.21s' restored=yes
+M7_pot_no_hysteresis: pytest_exit=1 result='22 failed, 238 passed in 1.22s' restored=yes
+M8_button_no_sampling: pytest_exit=1 result='5 failed, 255 passed in 1.19s' restored=yes
+M9_time_not_wrap_safe: pytest_exit=1 result='3 failed, 257 passed in 1.21s' restored=yes
+M10_channel_off_by_one: pytest_exit=1 result='6 failed, 254 passed in 1.31s' restored=yes
+M11_blink_inverted: pytest_exit=1 result='17 failed, 243 passed in 1.23s' restored=yes
+M12_blink_half_period: pytest_exit=1 result='16 failed, 244 passed in 1.46s' restored=yes
+M13_padstep_no_timestamp: pytest_exit=1 result='1 failed, 259 passed in 1.28s' restored=yes
+M14_blink_count: pytest_exit=1 result='19 failed, 241 passed in 1.23s' restored=yes
+M15_no_floor_rule: pytest_exit=1 result='1 failed, 259 passed in 1.22s' restored=yes
+M16_no_reset_on_release: pytest_exit=1 result='4 failed, 256 passed in 1.20s' restored=yes
+M17_portuguese_name: pytest_exit=1 result='2 failed, 258 passed in 1.32s' restored=yes
+M18_no_10bit_mask: pytest_exit=1 result='1 failed, 259 passed in 1.50s' restored=yes
+M19_baseline_shift: pytest_exit=1 result='4 failed, 256 passed in 1.14s' restored=yes
+M20_lsb_msb_swapped: pytest_exit=1 result='4 failed, 256 passed in 1.28s' restored=yes
+M21_merge_gap_0: pytest_exit=1 result='2 failed, 258 passed in 1.15s' restored=yes
+M22_merge_gap_3: pytest_exit=1 result='2 failed, 258 passed in 1.18s' restored=yes
+M23_run_length: pytest_exit=1 result='100 failed, 160 passed, 1 error in 1059.24s (0:17:39)' restored=yes

@@ -1,0 +1,40 @@
+........................................................................ [ 27%]
+...................................F.................................... [ 55%]
+........................................................................ [ 83%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+___________________________ test_hand_decoded_vector ___________________________
+
+probe = <conftest.Probe object at 0x10869d1c0>
+
+    def test_hand_decoded_vector(probe):
+        filt = [0] * 24
+        base = [0] * 12
+        # E0: LSB 0xA5, MSB 0x02 -> 0x2A5 = 677; baseline 0xA9 -> 0xA9 << 2 = 676; delta -1
+        filt[0], filt[1], base[0] = 0xA5, 0x02, 0xA9
+        # E1: 0x0300 + 0x00 = 768; baseline 0xC8 -> 800; delta 32
+        filt[2], filt[3], base[1] = 0x00, 0x03, 0xC8
+        # E5: LSB 0xFF, MSB 0x03 -> 1023 (max); baseline 0xFF -> 1020; delta -3
+        filt[10], filt[11], base[5] = 0xFF, 0x03, 0xFF
+        # E7: reserved high bits set: MSB 0xFD -> only bits 1..0 (=01) used -> 0x100 + 0x10 = 272;
+        #     baseline 0x50 -> 320; delta 48
+        filt[14], filt[15], base[7] = 0x10, 0xFD, 0x50
+        # E11 (last pair, offsets 22/23): 0x01F4 = 500; baseline 0x8C -> 560; delta 60
+        filt[22], filt[23], base[11] = 0xF4, 0x01, 0x8C
+        got = run(probe, filt, base)
+        expected = [(0, 0, 0)] * 12
+        expected[0] = (677, 676, -1)
+        expected[1] = (768, 800, 32)
+        expected[5] = (1023, 1020, -3)
+        expected[7] = (272, 320, 48)
+        expected[11] = (500, 560, 60)
+>       assert got == expected
+E       assert [(677, 676, -...020, -3), ...] == [(677, 676, -...020, -3), ...]
+E         
+E         At index 7 diff: (64784, 320, -64464) != (272, 320, 48)
+E         Use -v to get more diff
+
+tests/firmware/logic/test_mpr121.py:52: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_mpr121.py::test_hand_decoded_vector - assert...
+1 failed, 259 passed in 1.50s

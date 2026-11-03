@@ -1,0 +1,82 @@
+...............F.....F..F..............F................................ [ 27%]
+........................................................................ [ 55%]
+........................................................................ [ 83%]
+............................................                             [100%]
+=================================== FAILURES ===================================
+__________________________ test_change_filter[2-0-1] ___________________________
+
+probe = <conftest.Probe object at 0x105d282e0>, p = 2, last = 0, expected = 1
+
+    @pytest.mark.parametrize("p,last,expected", [
+        (0, 0, 0), (1, 0, 0), (2, 0, 1), (0, 2, 1),
+        (0, 1, 1),        # T-041: falling to the floor is always sent (was 0 before T-041)
+        (0, 127, 1), (1, 2, 0), (2, 1, 0), (1, 3, 1),
+        (127, 127, 0), (126, 127, 0), (125, 127, 1), (127, 0, 1),
+    ])
+    def test_change_filter(probe, p, last, expected):
+>       assert probe.int(f"atsend {p} {last}") == expected
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('atsend 2 0')
+E        +    where int = <conftest.Probe object at 0x105d282e0>.int
+
+tests/firmware/logic/test_aftertouch.py:35: AssertionError
+__________________________ test_change_filter[1-3-1] ___________________________
+
+probe = <conftest.Probe object at 0x105d282e0>, p = 1, last = 3, expected = 1
+
+    @pytest.mark.parametrize("p,last,expected", [
+        (0, 0, 0), (1, 0, 0), (2, 0, 1), (0, 2, 1),
+        (0, 1, 1),        # T-041: falling to the floor is always sent (was 0 before T-041)
+        (0, 127, 1), (1, 2, 0), (2, 1, 0), (1, 3, 1),
+        (127, 127, 0), (126, 127, 0), (125, 127, 1), (127, 0, 1),
+    ])
+    def test_change_filter(probe, p, last, expected):
+>       assert probe.int(f"atsend {p} {last}") == expected
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('atsend 1 3')
+E        +    where int = <conftest.Probe object at 0x105d282e0>.int
+
+tests/firmware/logic/test_aftertouch.py:35: AssertionError
+________________________ test_change_filter[125-127-1] _________________________
+
+probe = <conftest.Probe object at 0x105d282e0>, p = 125, last = 127
+expected = 1
+
+    @pytest.mark.parametrize("p,last,expected", [
+        (0, 0, 0), (1, 0, 0), (2, 0, 1), (0, 2, 1),
+        (0, 1, 1),        # T-041: falling to the floor is always sent (was 0 before T-041)
+        (0, 127, 1), (1, 2, 0), (2, 1, 0), (1, 3, 1),
+        (127, 127, 0), (126, 127, 0), (125, 127, 1), (127, 0, 1),
+    ])
+    def test_change_filter(probe, p, last, expected):
+>       assert probe.int(f"atsend {p} {last}") == expected
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('atsend 125 127')
+E        +    where int = <conftest.Probe object at 0x105d282e0>.int
+
+tests/firmware/logic/test_aftertouch.py:35: AssertionError
+________________________ test_fall_from_1_to_0_is_sent _________________________
+
+probe = <conftest.Probe object at 0x105d282e0>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+
+    def test_fall_from_1_to_0_is_sent(probe, cfg):
+        # delta 13 -> p = 1 (not sent, |1-0| < 2); delta 14 -> p = 2 (sent); delta 13 -> 1 (not sent);
+        # delta 0 -> 0 (sent: floor). Exactly one zero.
+        seq = [13] * 30 + [14] * 30 + [13] * 30 + [0] * 30
+        s = [(True, d) for d in seq] + [(False, 0)] * 30
+        vals = at_values(padsim(probe, cfg, s))
+>       assert vals == [2, 0], vals
+E       AssertionError: []
+E       assert [] == [2, 0]
+E         
+E         Right contains 2 more items, first extra item: 2
+E         Use -v to get more diff
+
+tests/firmware/logic/test_aftertouch.py:114: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_aftertouch.py::test_change_filter[2-0-1] - A...
+FAILED tests/firmware/logic/test_aftertouch.py::test_change_filter[1-3-1] - A...
+FAILED tests/firmware/logic/test_aftertouch.py::test_change_filter[125-127-1]
+FAILED tests/firmware/logic/test_aftertouch.py::test_fall_from_1_to_0_is_sent
+4 failed, 256 passed in 1.21s

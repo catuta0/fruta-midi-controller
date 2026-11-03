@@ -1,0 +1,6 @@
+eng-tools run_pytest tests/firmware: exit 0, "268 passed in 1.97s"
+eng-tools firmware_compile rpipico PCB: exit 0
+Sketch uses 90700 bytes (4%) of program storage space. Maximum is 2093056 bytes.
+Global variables use 17632 bytes (6%) of dynamic memory, leaving 244512 bytes for local variables. Maximum is 262144 bytes.
+ad396820639eef47224115875512920ece70382df09027fba91e1d02cc1eaced  firmware/FrutaMIDI/FrutaMIDI.ino
+d443709e223b8d48281e52d20c7205bbc32de452b4415b4dabb9d21ca7b3dbf2  firmware/FrutaMIDI/fm_mpr121.h

@@ -1,0 +1,19 @@
+..............................................F......................... [ 33%]
+........................................................................ [ 67%]
+.....................................................................    [100%]
+=================================== FAILURES ===================================
+________________________________ test_pad_step _________________________________
+
+probe = <conftest.Probe object at 0x1087cdc40>
+
+    def test_pad_step(probe):
+>       assert probe.one("padstep 1 0 115 100 15") == "P 115"
+E       AssertionError: assert 'P 100' == 'P 115'
+E         
+E         - P 115
+E         + P 100
+
+tests/firmware/logic/test_blink.py:46: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_blink.py::test_pad_step - AssertionError: as...
+1 failed, 212 passed in 1.11s

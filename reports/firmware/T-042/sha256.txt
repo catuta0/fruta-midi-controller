@@ -1,0 +1,2 @@
+6ad1dd5abeaa1ee855eb80e96df11f8cb06eaa49a2be6c911883bd7c45659ecc  firmware/FrutaMIDI/fm_mpr121.h
+4fc04a004fe0478858d9cf2b50b683646b6f6f54b1b93fb1e37d0591dc358c78  tests/firmware/logic/test_mpr121.py

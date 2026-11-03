@@ -1,21 +1,15 @@
 # RESUME — read this first when resuming
 
-Last update: 2026-10-30 (UTC). Gate: pre-G1. Phase B setup complete; **session restart required** because `.claude/agents/` did not exist when the previous session started (per code.claude.com/docs/en/sub-agents) and `.mcp.json` is new.
+Last update: 2026-11-03. Mode: ADR-001 end-to-end run (gate summaries in management/gates/). Gates passed: G2 (smoke), G1 content delivered (requirements draft, ADR-006/007). Last commit a63257d; large uncommitted work in firmware/, hardware/, management/, reports/, sim/.
 
-## Done
-- Phase A definition confirmed by user: management/PROJECT_DEFINITION.md.
-- git restored from origin (`main` @ d85b330) — the app's folder copy omitted `.git`.
-- Environment inspected (logs/setup-environment.md); toolchain installed inside project: tools/arduino (rp2040 6.3.1, avr 1.8.8, libs), .venv (pytest 8.4.2), tools/TinyTeX (v2026.10). See management/TOOLCHAIN.md.
-- Agents: .claude/agents/{systems,electronics,firmware,software,documentation}-engineer.md, independent-reviewer.md (disallowedTools: [Agent], no tools allowlist → inherit MCP).
-- Skills: .claude/skills/{engineering-evidence,kicad-workflow,firmware-workflow,host-software-workflow,latex-workflow,engineering-reporting,engineering-change}.
-- Local MCP adapter: scripts/mcp/server.mjs registered in .mcp.json as `eng-tools` (tools: env_info, kicad_erc, kicad_drc, firmware_compile, run_pytest, latex_build). Verified outside Claude.
-- Manager LaTeX smoke test PASS (management/SMOKE_TESTS.md).
+## In progress (interrupted by API limits 2026-10-30, resumed 2026-11-03)
+- firmware-engineer T-041: English comments, aftertouch final 0, M1 burst read, F-1 SCTS=0, F-2 limits, 9-build matrix. Tree consistent (tests/firmware 260 passed, manager check 2026-11-03).
+- systems-engineer T-010: pypdf datasheets, REQ updates, interface_check for J1/JP1, requirements.csv, INTERFACES draft-2.
+- documentation-engineer T-032: docs for hardware v1.1.
+- electronics-engineer T-053: label v1.1, cleanup, resistor pulse rating.
 
-## Next steps (in order)
-1. Confirm agents are loaded (`/agents`) and approve the project MCP server `eng-tools` when prompted.
-2. Invoke EVERY specialist once: call `eng-tools.env_info`, then its route smoke test with a known answer (see SMOKE_TESTS.md rows marked NOT RUN). Electronics: tiny schematic+board in `sim/electronics/smoke/`, ERC/DRC 0. Firmware: compile rpipico + a pytest on extracted logic with known answers. Software: pytest/node test with known answer. Systems: a budget hand calculation reproduced in Python. Documentation: `latex_build` of reports/smoke/latex/smoke.tex copy. Reviewer: env_info + read-only check.
-3. systems-engineer: REQUIREMENTS.md (T-008); architecture options + manager ADR; freeze INTERFACES.json (T-009).
-4. Stop at G1 with the gate summary (Portuguese chat, English files).
-
-## Re-test MCP adapter outside Claude
-`printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"t","version":"0"}}}' '{"jsonrpc":"2.0","method":"notifications/initialized"}' '{"jsonrpc":"2.0","id":2,"method":"tools/list"}' | node scripts/mcp/server.mjs`
+## Remaining after these
+1. Manager: freeze INTERFACES.json; commit milestone; G3 summary.
+2. Independent review (G4) on a named revision with REQUIREMENTS + INTERFACES only; dispositions; fixes.
+3. Report (LaTeX) filled from evidence + physical validation plan; manual final.
+4. releases/V1_BASELINE/ with SHA-256 manifest, REPRODUCE.md, status matrix; EXECUTION_METRICS; push; ask user before GitHub release.

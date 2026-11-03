@@ -1,0 +1,25 @@
+........................................................................ [ 26%]
+...................................................F
+=================================== FAILURES ===================================
+_____________________ test_limits_from_vdd[3300-expected0] _____________________
+
+probe = <conftest.Probe object at 0x1067afac0>, vdd = 3300
+expected = (201, 180, 130)
+
+    @pytest.mark.parametrize("vdd,expected", [
+        (3300, (201, 180, 130)),   # 2.6/3.3*256 = 201.70 -> 201; 180.9 -> 180; 130.65 -> 130
+        (3100, (198, 178, 128)),   # 2.4/3.1*256 = 198.19 -> 198; 178.2 -> 178; 128.7 -> 128
+        (1800, (156, 140, 101)),   # 1.1/1.8*256 = 156.44 -> 156; 140.4 -> 140; 101.4 -> 101
+    ])
+    def test_limits_from_vdd(probe, vdd, expected):
+>       assert tuple(int(x) for x in probe.one(f"mprcfg {vdd}").split()[1:]) == expected
+E       assert (201, 180, 120) == (201, 180, 130)
+E         
+E         At index 2 diff: 120 != 130
+E         Use -v to get more diff
+
+tests/firmware/logic/test_mpr121.py:174: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_mpr121.py::test_limits_from_vdd[3300-expected0]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 123 passed in 0.92s

@@ -1,0 +1,88 @@
+..............................................F.............FF..F.F..... [ 33%]
+........................................................................ [ 67%]
+.....................................................................    [100%]
+=================================== FAILURES ===================================
+________________________________ test_pad_step _________________________________
+
+probe = <conftest.Probe object at 0x1088ed400>
+
+    def test_pad_step(probe):
+>       assert probe.one("padstep 1 0 115 100 15") == "P 115"
+E       AssertionError: assert '- 100' == 'P 115'
+E         
+E         - P 115
+E         + - 100
+
+tests/firmware/logic/test_blink.py:46: AssertionError
+____________________ test_boundary_exactly_debounce_ms[1-0] ____________________
+
+probe = <conftest.Probe object at 0x1088ed400>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+touched = 1, active = 0
+
+    @pytest.mark.parametrize("touched,active", [(1, 0), (0, 1)])
+    def test_boundary_exactly_debounce_ms(probe, cfg, touched, active):
+        db = cfg["DEBOUNCE_MS"]
+        last = 1000
+        assert probe.int(f"debounce {touched} {active} {last + db - 1} {last} {db}") == 0
+>       assert probe.int(f"debounce {touched} {active} {last + db} {last} {db}") == 1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('debounce 1 0 1015 1000 15')
+E        +    where int = <conftest.Probe object at 0x1088ed400>.int
+
+tests/firmware/logic/test_debounce.py:14: AssertionError
+____________________ test_boundary_exactly_debounce_ms[0-1] ____________________
+
+probe = <conftest.Probe object at 0x1088ed400>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+touched = 0, active = 1
+
+    @pytest.mark.parametrize("touched,active", [(1, 0), (0, 1)])
+    def test_boundary_exactly_debounce_ms(probe, cfg, touched, active):
+        db = cfg["DEBOUNCE_MS"]
+        last = 1000
+        assert probe.int(f"debounce {touched} {active} {last + db - 1} {last} {db}") == 0
+>       assert probe.int(f"debounce {touched} {active} {last + db} {last} {db}") == 1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('debounce 0 1 1015 1000 15')
+E        +    where int = <conftest.Probe object at 0x1088ed400>.int
+
+tests/firmware/logic/test_debounce.py:14: AssertionError
+_______________________ test_boundary_across_millis_wrap _______________________
+
+probe = <conftest.Probe object at 0x1088ed400>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+
+    def test_boundary_across_millis_wrap(probe, cfg):
+        db = cfg["DEBOUNCE_MS"]
+        last = 2**32 - 5
+        assert probe.int(f"debounce 1 0 {(last + db - 1) % 2**32} {last} {db}") == 0
+>       assert probe.int(f"debounce 1 0 {(last + db) % 2**32} {last} {db}") == 1
+E       AssertionError: assert 0 == 1
+E        +  where 0 = int('debounce 1 0 10 4294967291 15')
+E        +    where int = <conftest.Probe object at 0x1088ed400>.int
+
+tests/firmware/logic/test_debounce.py:28: AssertionError
+_____________ test_change_inside_lockout_is_applied_at_window_end ______________
+
+probe = <conftest.Probe object at 0x1088ed400>
+cfg = {'AT_INTERVAL_MS': 15, 'AT_MAX_DELTA': 120, 'DEBOUNCE_MS': 15, 'MIDI_CHANNEL': 1, ...}
+
+    def test_change_inside_lockout_is_applied_at_window_end(probe, cfg):
+        db = cfg["DEBOUNCE_MS"]
+        # Touch at 100, released (and stays released) at 105 -> off accepted at 100 + db.
+        raw = "0" * 100 + "1" * 5 + "0" * 50
+>       assert simulate(probe, db, raw) == [(100, "on"), (100 + db, "off")]
+E       AssertionError: assert [(100, 'on'), (116, 'off')] == [(100, 'on'), (115, 'off')]
+E         
+E         At index 1 diff: (116, 'off') != (115, 'off')
+E         Use -v to get more diff
+
+tests/firmware/logic/test_debounce.py:61: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_blink.py::test_pad_step - AssertionError: as...
+FAILED tests/firmware/logic/test_debounce.py::test_boundary_exactly_debounce_ms[1-0]
+FAILED tests/firmware/logic/test_debounce.py::test_boundary_exactly_debounce_ms[0-1]
+FAILED tests/firmware/logic/test_debounce.py::test_boundary_across_millis_wrap
+FAILED tests/firmware/logic/test_debounce.py::test_change_inside_lockout_is_applied_at_window_end
+5 failed, 208 passed in 1.53s

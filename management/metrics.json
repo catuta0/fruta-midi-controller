@@ -16,6 +16,54 @@
       "label": "ASSUMPTION",
       "revision": "definition",
       "evidence": "management/PROJECT_DEFINITION.md"
+    },
+    {
+      "name": "electrode_series_R",
+      "value": 3.3,
+      "unit": "kOhm",
+      "label": "CALCULATION+SIMULATION",
+      "revision": "T-052",
+      "evidence": "reports/electronics/analysis.md"
+    },
+    {
+      "name": "i2c_rise_time_400k_38pF",
+      "value": 103,
+      "unit": "ns",
+      "label": "CALCULATION",
+      "revision": "T-052",
+      "evidence": "sim/electronics/calc/calc_i2c.out"
+    },
+    {
+      "name": "rail_3v3_load_worst",
+      "value": 4.45,
+      "unit": "mA",
+      "label": "CALCULATION",
+      "revision": "T-052",
+      "evidence": "sim/electronics/calc/calc_power.out"
+    },
+    {
+      "name": "mpr121_vdd_min",
+      "value": 3.1,
+      "unit": "V",
+      "label": "CALCULATION",
+      "revision": "T-052",
+      "evidence": "reports/electronics/analysis.md"
+    },
+    {
+      "name": "electrode_sensitivity_rel_3k3",
+      "value": 0.904,
+      "unit": "-",
+      "label": "SIMULATION",
+      "revision": "T-052",
+      "evidence": "sim/electronics/calc/sim_electrode.out"
+    },
+    {
+      "name": "esd_peak_current_4kV_3k3",
+      "value": 1.1,
+      "unit": "A",
+      "label": "CALCULATION",
+      "revision": "T-052",
+      "evidence": "sim/electronics/calc/calc_esd_variants.out"
     }
   ]
 }

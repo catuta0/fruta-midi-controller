@@ -1,6 +1,705 @@
 {
-  "revision": "draft-0",
+  "revision": "draft-2",
   "frozen": false,
   "owner": "systems-engineer",
-  "interfaces": []
+  "status_note": "PROPOSED by systems-engineer (T-010, 2026-11-03). Not frozen; the manager freezes. Changes from draft-1: I2C 400 kHz retained (ADR-008, D-5 closed) with PCB pull-ups R13/R14 4k7; J1 is 2 holes (1 = SCL, 2 = SDA); the 3V3 hand wire is replaced by the JP1 3-pad selector (ADR-007 D-4); electrode series resistors R1..R12 3k3 (terminal net E<k>, module net ELE<k>); board label v1.1 (ADR-008; the PCB file still reads v1.0); firmware aftertouch burst reads (M1); host OS list. Evidence: sim/systems/interface_check.out (hardware/firmware 59/60 PASS, the only FAIL is the label; documentation 11/18 PASS).",
+  "sources": "requirements/SOURCES_SYSTEMS.md",
+  "interfaces": [
+    {
+      "id": "IF-USB-MIDI",
+      "name": "USB MIDI 1.0 device interface",
+      "requirements": [
+        "REQ-011",
+        "REQ-012",
+        "REQ-013",
+        "REQ-019"
+      ],
+      "usb": {
+        "speed": "full-speed (12 Mbit/s)",
+        "class": "Audio / MIDIStreaming, USB MIDI 1.0 (S-14)",
+        "endpoints": "bulk IN/OUT, 64-byte max packet (S-11 BULK_PACKET_SIZE)",
+        "power": {
+          "bus_powered": true,
+          "bMaxPower_mA": 100,
+          "label": "SOURCE S-11 (Adafruit TinyUSB USB_CONFIG_POWER default)"
+        },
+        "product_string": "FrutaMIDI",
+        "midi_port_name": "FrutaMIDI",
+        "stack": "Adafruit TinyUSB (arduino-pico USB Stack = Adafruit TinyUSB)",
+        "drivers": "none (class compliant)"
+      },
+      "event_packet": {
+        "format": "4 bytes: [cable(4b)|CIN(4b)], MIDI_0, MIDI_1, MIDI_2",
+        "cable": 0,
+        "label": "SOURCE S-14 Table 4-1"
+      },
+      "channel": {
+        "config_constant": "MIDI_CHANNEL",
+        "default": 1,
+        "range": [
+          1,
+          16
+        ],
+        "status_low_nibble": "MIDI_CHANNEL - 1"
+      },
+      "messages_out": [
+        {
+          "name": "Note On",
+          "status": "0x90 | ch",
+          "cin": "0x9",
+          "data1": "note 0..127 (see note_map)",
+          "data2": "velocity = VELOCITY (default 100, 1..127)",
+          "trigger": "pad touch accepted (debounce lockout 15 ms after previous change of that pad)"
+        },
+        {
+          "name": "Note Off",
+          "status": "0x80 | ch",
+          "cin": "0x8",
+          "data1": "same note as the matching Note On",
+          "data2": 0,
+          "trigger": "pad release accepted, or releaseAll() before recalibration"
+        },
+        {
+          "name": "Polyphonic Key Pressure",
+          "status": "0xA0 | ch",
+          "cin": "0xA",
+          "data1": "note of the touched pad",
+          "data2": "0..127 = map(clamp(delta, TOUCH_THRESHOLD=12, AT_MAX_DELTA=120), 12..120 -> 0..127), delta = baseline - filtered (10-bit counts)",
+          "rate": "evaluated every AT_INTERVAL_MS = 15 ms; sent only if |change| >= 2",
+          "enable": "SEND_AFTERTOUCH (default true)"
+        }
+      ],
+      "messages_in": "all incoming MIDI read and discarded (MIDI.read(), thru off)",
+      "note_map": {
+        "formula": "note = root + 12*octave(if not fixed) + steps[pad % len] + 12*(pad / len), clamped 0..127 (fm_scales.h)",
+        "default_scale_index": 0,
+        "scales": [
+          {
+            "index": 0,
+            "name": "Drum Rack",
+            "root": 36,
+            "steps": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11
+            ],
+            "fixed": true,
+            "notes_12_pads": [
+              36,
+              47
+            ],
+            "notes_24_pads": [
+              36,
+              59
+            ]
+          },
+          {
+            "index": 1,
+            "name": "Major pentatonic",
+            "root": 48,
+            "steps": [
+              0,
+              2,
+              4,
+              7,
+              9
+            ],
+            "fixed": false,
+            "notes_12_pads_oct-2..+2": [
+              24,
+              98
+            ]
+          },
+          {
+            "index": 2,
+            "name": "Minor pentatonic",
+            "root": 48,
+            "steps": [
+              0,
+              3,
+              5,
+              7,
+              10
+            ],
+            "fixed": false,
+            "notes_12_pads_oct-2..+2": [
+              24,
+              99
+            ]
+          },
+          {
+            "index": 3,
+            "name": "Major",
+            "root": 48,
+            "steps": [
+              0,
+              2,
+              4,
+              5,
+              7,
+              9,
+              11
+            ],
+            "fixed": false,
+            "notes_12_pads_oct-2..+2": [
+              24,
+              91
+            ]
+          },
+          {
+            "index": 4,
+            "name": "Natural minor",
+            "root": 48,
+            "steps": [
+              0,
+              2,
+              3,
+              5,
+              7,
+              8,
+              10
+            ],
+            "fixed": false,
+            "notes_12_pads_oct-2..+2": [
+              24,
+              91
+            ]
+          },
+          {
+            "index": 5,
+            "name": "Chromatic",
+            "root": 48,
+            "steps": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11
+            ],
+            "fixed": false,
+            "notes_12_pads_oct-2..+2": [
+              24,
+              83
+            ]
+          }
+        ],
+        "octave_range": [
+          -2,
+          2
+        ],
+        "label": "CALCULATION sim/systems/budgets.out section d"
+      },
+      "host_contract_sampler": "docs/index.html: pads default to notes 36..47; Note On velocity 0 = Note Off; 0xA0 -> synth filter; other notes -> synth",
+      "hosts": "Windows 10, Windows 11, macOS 12 or later (ADR-007 D-6)"
+    },
+    {
+      "id": "IF-I2C",
+      "name": "Pico to MPR121 I2C bus",
+      "requirements": [
+        "REQ-021",
+        "REQ-025",
+        "REQ-026",
+        "REQ-031"
+      ],
+      "variants": {
+        "breadboard": {
+          "bus": "Wire (i2c0)",
+          "sda": "GP4 (pin 6)",
+          "scl": "GP5 (pin 7)"
+        },
+        "pcb": {
+          "bus": "Wire1 (i2c1)",
+          "sda": "GP26 (pin 31)",
+          "scl": "GP27 (pin 32)",
+          "build_flag": "FRUTAMIDI_PCB"
+        },
+        "atmega32u4": {
+          "bus": "Wire",
+          "sda": "D2 (fixed)",
+          "scl": "D3 (fixed)",
+          "note": "optional, not a PCB target"
+        }
+      },
+      "clock_hz": 400000,
+      "clock_note": "400 kHz retained (ADR-008). Rise time PCB: 103 ns @38 pF (EE) / 153 ns @60 pF (systems, CALCULATION). Breadboard without 4k7 pull-ups fails above 42.5 pF (REQ-041, D-11).",
+      "addresses": [
+        {
+          "sensor": 0,
+          "addr": "0x5A",
+          "ADDR_pin": "open (100 k pull-down on module, S-05/S-07)"
+        },
+        {
+          "sensor": 1,
+          "addr": "0x5B",
+          "ADDR_pin": "to 3V3",
+          "note": "breadboard only on PCB v1.0"
+        }
+      ],
+      "pullups": "PCB: R13 (SCL) and R14 (SDA) 4.7 kOhm to +3V3; module: 10 k on the host side (to VIN/VCC) and 10 k on the MPR121 side (to 3.3 V) with BSS138 shifters (S-06/S-07); RP2040 internal pull-ups (S-09). Low-level sink 1.43 mA.",
+      "logic_level_V": 3.3,
+      "mpr121_config_written_by_library": {
+        "CONFIG1": "0x10 (FFI 6, CDC 16 uA global)",
+        "CONFIG2": "0x20 (CDT 0.5 us, SFI 4, ESI 1 ms)",
+        "DEBOUNCE": "0x00",
+        "ECR": "0x8C (CL=10, 12 electrodes, proximity off)",
+        "AUTOCONFIG0": "0x0B (ACE+ARE, FFI 6) when AUTOCONFIG",
+        "USL/TL/LSL": [
+          200,
+          180,
+          130
+        ],
+        "touch/release threshold": [
+          12,
+          6
+        ],
+        "label": "SOURCE S-08"
+      },
+      "transactions": [
+        "every loop, per sensor: touched() = readRegister16(0x00): write 1 B register, repeated start, read 2 B",
+        "aftertouch pass (every 15 ms if any pad active), per sensor: readRegisters(addr, 0x04, 24 B) and readRegisters(addr, 0x1E, 12 B) (M1 burst, fm_mpr121.h)",
+        "debug only: filteredData(e) 2 B, baselineData(e) 1 B"
+      ]
+    },
+    {
+      "id": "IF-PICO-PINS",
+      "name": "Raspberry Pi Pico pin map",
+      "requirements": [
+        "REQ-017",
+        "REQ-031"
+      ],
+      "physical_pinout": {
+        "1": "GP0",
+        "2": "GP1",
+        "3": "GND",
+        "4": "GP2",
+        "5": "GP3",
+        "6": "GP4",
+        "7": "GP5",
+        "8": "GND",
+        "9": "GP6",
+        "10": "GP7",
+        "11": "GP8",
+        "12": "GP9",
+        "13": "GND",
+        "14": "GP10",
+        "15": "GP11",
+        "16": "GP12",
+        "17": "GP13",
+        "18": "GND",
+        "19": "GP14",
+        "20": "GP15",
+        "21": "GP16",
+        "22": "GP17",
+        "23": "GND",
+        "24": "GP18",
+        "25": "GP19",
+        "26": "GP20",
+        "27": "GP21",
+        "28": "GND",
+        "29": "GP22",
+        "30": "RUN",
+        "31": "GP26",
+        "32": "GP27",
+        "33": "AGND",
+        "34": "GP28",
+        "35": "ADC_VREF",
+        "36": "3V3",
+        "37": "3V3_EN",
+        "38": "GND",
+        "39": "VSYS",
+        "40": "VBUS"
+      },
+      "physical_pinout_label": "SOURCE S-03 (secondary), consistent with S-02",
+      "breadboard": [
+        {
+          "signal": "SDA",
+          "gp": 4,
+          "pin": 6
+        },
+        {
+          "signal": "SCL",
+          "gp": 5,
+          "pin": 7
+        },
+        {
+          "signal": "BTN (active low, INPUT_PULLUP)",
+          "gp": 15,
+          "pin": 20
+        },
+        {
+          "signal": "POT wiper (optional, USE_POT=false default)",
+          "gp": 26,
+          "adc": 0,
+          "pin": 31
+        },
+        {
+          "signal": "3V3 to module VIN/VCC and pot end",
+          "pin": 36
+        },
+        {
+          "signal": "AGND to pot end",
+          "pin": 33
+        },
+        {
+          "signal": "GND",
+          "pin": 38
+        }
+      ],
+      "pcb": [
+        {
+          "signal": "SDA",
+          "net": "SDA",
+          "gp": 26,
+          "pin": 31
+        },
+        {
+          "signal": "SCL",
+          "net": "SCL",
+          "gp": 27,
+          "pin": 32
+        },
+        {
+          "signal": "BTN (SW1 to GND, active low)",
+          "net": "BTN",
+          "gp": 22,
+          "pin": 29
+        },
+        {
+          "signal": "POT wiper (RV1 pin 2)",
+          "net": "POT",
+          "gp": 28,
+          "adc": 2,
+          "pin": 34
+        },
+        {
+          "signal": "3V3(OUT)",
+          "net": "+3V3",
+          "pin": 36,
+          "loads": "JP1 pad 2 (selector to S1/S7), R13/R14 I2C pull-ups, RV1 pin 1"
+        },
+        {
+          "signal": "AGND",
+          "net": "AGND",
+          "pin": 33,
+          "loads": "RV1 pin 3 only; tied to GND inside the Pico (S-02 'also a GND pin')"
+        },
+        {
+          "signal": "GND",
+          "net": "GND",
+          "pins": [
+            3,
+            8,
+            13,
+            18,
+            23,
+            28,
+            38
+          ]
+        },
+        {
+          "signal": "unconnected",
+          "pins": "all others incl. VBUS 40, VSYS 39, 3V3_EN 37, RUN 30, ADC_VREF 35"
+        }
+      ],
+      "led": {
+        "Pico/Pico 2": "GP25",
+        "Pico W/Pico 2 W": "CYW43 WL_GPIO0 (LED_BUILTIN)",
+        "label": "SOURCE S-02"
+      },
+      "consistency": "PASS: firmware FRUTAMIDI_PCB pins == PCB A1 pad nets; firmware breadboard pins == README.md table (sim/systems/interface_check.out)"
+    },
+    {
+      "id": "IF-TERMINALS",
+      "name": "Screw-terminal strip J2 (14 x 5.08 mm, 7 interlocking 2-way blocks)",
+      "requirements": [
+        "REQ-022",
+        "REQ-023",
+        "REQ-030"
+      ],
+      "map": [
+        {
+          "terminal": 1,
+          "silk": "GND",
+          "net": "GND",
+          "mpr121": null
+        },
+        {
+          "terminal": 2,
+          "silk": "0",
+          "terminal_net": "E0",
+          "series_resistor": "R1 3k3",
+          "module_net": "ELE0",
+          "mpr121": "ELE0",
+          "module_row_pin": 2,
+          "firmware_pad": 0
+        },
+        {
+          "terminal": 3,
+          "silk": "1",
+          "terminal_net": "E1",
+          "series_resistor": "R2 3k3",
+          "module_net": "ELE1",
+          "mpr121": "ELE1",
+          "module_row_pin": 3,
+          "firmware_pad": 1
+        },
+        {
+          "terminal": 4,
+          "silk": "2",
+          "terminal_net": "E2",
+          "series_resistor": "R3 3k3",
+          "module_net": "ELE2",
+          "mpr121": "ELE2",
+          "module_row_pin": 4,
+          "firmware_pad": 2
+        },
+        {
+          "terminal": 5,
+          "silk": "3",
+          "terminal_net": "E3",
+          "series_resistor": "R4 3k3",
+          "module_net": "ELE3",
+          "mpr121": "ELE3",
+          "module_row_pin": 5,
+          "firmware_pad": 3
+        },
+        {
+          "terminal": 6,
+          "silk": "4",
+          "terminal_net": "E4",
+          "series_resistor": "R5 3k3",
+          "module_net": "ELE4",
+          "mpr121": "ELE4",
+          "module_row_pin": 6,
+          "firmware_pad": 4
+        },
+        {
+          "terminal": 7,
+          "silk": "5",
+          "terminal_net": "E5",
+          "series_resistor": "R6 3k3",
+          "module_net": "ELE5",
+          "mpr121": "ELE5",
+          "module_row_pin": 7,
+          "firmware_pad": 5
+        },
+        {
+          "terminal": 8,
+          "silk": "6",
+          "terminal_net": "E6",
+          "series_resistor": "R7 3k3",
+          "module_net": "ELE6",
+          "mpr121": "ELE6",
+          "module_row_pin": 8,
+          "firmware_pad": 6
+        },
+        {
+          "terminal": 9,
+          "silk": "7",
+          "terminal_net": "E7",
+          "series_resistor": "R8 3k3",
+          "module_net": "ELE7",
+          "mpr121": "ELE7",
+          "module_row_pin": 9,
+          "firmware_pad": 7
+        },
+        {
+          "terminal": 10,
+          "silk": "8",
+          "terminal_net": "E8",
+          "series_resistor": "R9 3k3",
+          "module_net": "ELE8",
+          "mpr121": "ELE8",
+          "module_row_pin": 10,
+          "firmware_pad": 8
+        },
+        {
+          "terminal": 11,
+          "silk": "9",
+          "terminal_net": "E9",
+          "series_resistor": "R10 3k3",
+          "module_net": "ELE9",
+          "mpr121": "ELE9",
+          "module_row_pin": 11,
+          "firmware_pad": 9
+        },
+        {
+          "terminal": 12,
+          "silk": "10",
+          "terminal_net": "E10",
+          "series_resistor": "R11 3k3",
+          "module_net": "ELE10",
+          "mpr121": "ELE10",
+          "module_row_pin": 12,
+          "firmware_pad": 10
+        },
+        {
+          "terminal": 13,
+          "silk": "11",
+          "terminal_net": "E11",
+          "series_resistor": "R12 3k3",
+          "module_net": "ELE11",
+          "mpr121": "ELE11",
+          "module_row_pin": 13,
+          "firmware_pad": 11
+        },
+        {
+          "terminal": 14,
+          "silk": "GND",
+          "net": "GND",
+          "mpr121": null
+        }
+      ],
+      "protection": "3.3 kOhm series resistor per electrode (ADR-008): PASS at +-4 kV by analysis, PARTIAL at 8 kV (risk R-006)"
+    },
+    {
+      "id": "IF-MPR121-MODULE",
+      "name": "Adafruit 1982 module socket A2 (1x13 electrode row + 1x7 power/I2C row S1..S7, module rotated 180 deg vs Adafruit files)",
+      "requirements": [
+        "REQ-024",
+        "REQ-025"
+      ],
+      "electrode_row": {
+        "pin1": "GND",
+        "pin2..13": "E0..E11",
+        "same_for_both_revisions": true,
+        "label": "SOURCE S-06/S-07 JP1 (pad 13 = GND, pads 12..1 = ELEC0..ELEC11)"
+      },
+      "s_row": {
+        "original": {
+          "S1": "VIN",
+          "S2": "3V3 out",
+          "S3": "GND",
+          "S4": "ADDR",
+          "S5": "SDA",
+          "S6": "SCL",
+          "S7": "IRQ",
+          "label": "SOURCE S-07 JP2 (R180) pads 1..7"
+        },
+        "stemma_qt": {
+          "S1": "ADDR",
+          "S2": "INT",
+          "S3": "SDA",
+          "S4": "SCL",
+          "S5": "GND",
+          "S6": "3V3 out",
+          "S7": "VCC",
+          "label": "SOURCE S-06 JP2 pads 7..1"
+        }
+      },
+      "consistency": "PASS: Eagle-derived S-row == gen_schematic.py labels; JP1 and J1 nets as above (interface_check). hardware/README.md still describes the old J1 3V3 wire (doc FAIL).",
+      "jp1_3v3_selector": {
+        "pad1": "S1 (silk 'ORIG')",
+        "pad2": "+3V3",
+        "pad3": "S7 (silk 'QT')",
+        "original": "bridge pad1-pad2 -> +3V3 to VIN",
+        "stemma_qt": "bridge pad2-pad3 -> +3V3 to VCC",
+        "wrong_choice": "ORIG on QT -> +3V3 on ADDR; QT on original -> +3V3 on IRQ; never GND (REQ-039 PASS) but exceeds VDD+0.3 V on an unpowered module (REQ-040 FAIL, D-10)"
+      },
+      "data_wires_J1": {
+        "J1 pad 1": "SCL",
+        "J1 pad 2": "SDA",
+        "original": {
+          "SDA": "S5",
+          "SCL": "S6"
+        },
+        "stemma_qt": {
+          "SDA": "S3",
+          "SCL": "S4"
+        },
+        "hazard": "a data wire on S1/S7 (+3V3 via JP1) or S2/S6 (module 3.3 V out) ties an I2C line to a supply (REQ-024 FAIL, D-9)"
+      }
+    },
+    {
+      "id": "IF-CONTROLS",
+      "name": "Button and octave potentiometer",
+      "button": {
+        "part": "SW1 6x6 mm tactile",
+        "electrical": "GPIO to GND, internal pull-up",
+        "sample_ms": 10,
+        "long_press_ms": ">800",
+        "short": "next scale",
+        "long": "recalibrate"
+      },
+      "pot": {
+        "part": "RV1 10 k linear",
+        "pins": {
+          "1": "+3V3",
+          "2": "POT (ADC)",
+          "3": "AGND"
+        },
+        "adc_bits": 10,
+        "read_ms": 30,
+        "zones": 5,
+        "hysteresis_zone": 0.7
+      }
+    },
+    {
+      "id": "IF-FW-BUILD",
+      "name": "Firmware build configuration",
+      "requirements": [
+        "REQ-033"
+      ],
+      "toolchain": "arduino-cli 1.5.1, arduino-pico core rp2040 6.3.1, Adafruit MPR121 1.2.1, Adafruit BusIO 1.17.4, MIDI Library 5.0.2 (management/TOOLCHAIN.md)",
+      "fqbn": {
+        "Pico": "rp2040:rp2040:rpipico:usbstack=tinyusb",
+        "Pico W": "rp2040:rp2040:rpipicow:usbstack=tinyusb",
+        "Pico 2": "rp2040:rp2040:rpipico2:usbstack=tinyusb",
+        "Pico 2 W": "rp2040:rp2040:rpipico2w:usbstack=tinyusb",
+        "Leonardo/Pro Micro (optional)": "arduino:avr:leonardo"
+      },
+      "flags": {
+        "FRUTAMIDI_PCB": "defined -> PCB pin map (Wire1 GP26/GP27, BTN GP22, POT GP28) and USE_POT=true; passed as --build-property compiler.cpp.extra_flags=-DFRUTAMIDI_PCB"
+      },
+      "artifacts": [
+        "FrutaMIDI-<board>.uf2 (breadboard)",
+        "FrutaMIDI-pcb-<board>.uf2 (PCB)"
+      ],
+      "config_constants": {
+        "NUM_SENSORS": 1,
+        "SENSOR_ADDR": [
+          "0x5A",
+          "0x5B"
+        ],
+        "MIDI_CHANNEL": 1,
+        "VELOCITY": 100,
+        "TOUCH_THRESHOLD": 12,
+        "RELEASE_THRESHOLD": 6,
+        "AUTOCONFIG": true,
+        "DEBOUNCE_MS": 15,
+        "SEND_AFTERTOUCH": true,
+        "AT_MAX_DELTA": 120,
+        "AT_INTERVAL_MS": 15,
+        "USE_BUTTON": true,
+        "USE_POT": "false (breadboard) / true (PCB)",
+        "SERIAL_DEBUG": false
+      },
+      "note": "Firmware T-041 in progress (lock held): aftertouch/English changes may alter config_constants; re-check before freeze"
+    }
+  ],
+  "board": {
+    "revision_label": "FrutaMIDI v1.1 (ADR-008); PCB file at sha256 f4dbc5c9 still reads v1.0",
+    "outline_mm": [
+      100,
+      70
+    ],
+    "copper": "B.Cu only",
+    "fabrication_folder": "hardware/fabrication"
+  }
 }

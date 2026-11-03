@@ -1,0 +1,14 @@
+M1_debounce_ge_to_gt: pytest_exit=1 result='5 failed, 208 passed in 1.53s' restored=yes
+M2_scale_wrap: pytest_exit=1 result='7 failed, 206 passed in 1.34s' restored=yes
+M3_fixed_ignored: pytest_exit=1 result='5 failed, 208 passed in 1.42s' restored=yes
+M4_no_clamp: pytest_exit=1 result='5 failed, 208 passed in 1.32s' restored=yes
+M5_at_scale: pytest_exit=1 result='5 failed, 208 passed in 1.26s' restored=yes
+M6_at_filter: pytest_exit=1 result='3 failed, 210 passed in 1.35s' restored=yes
+M7_pot_no_hysteresis: pytest_exit=1 result='22 failed, 191 passed in 1.50s' restored=yes
+M8_button_no_sampling: pytest_exit=1 result='5 failed, 208 passed in 1.35s' restored=yes
+M9_time_not_wrap_safe: pytest_exit=1 result='3 failed, 210 passed in 1.10s' restored=yes
+M10_channel_off_by_one: pytest_exit=1 result='6 failed, 207 passed in 1.12s' restored=yes
+M11_blink_inverted: pytest_exit=1 result='17 failed, 196 passed in 1.14s' restored=yes
+M12_blink_half_period: pytest_exit=1 result='16 failed, 197 passed in 1.13s' restored=yes
+M13_padstep_no_timestamp: pytest_exit=1 result='1 failed, 212 passed in 1.11s' restored=yes
+M14_blink_count: pytest_exit=1 result='19 failed, 194 passed in 1.14s' restored=yes
