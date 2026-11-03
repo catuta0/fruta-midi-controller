@@ -1,8 +1,8 @@
 {
-  "revision": "draft-2",
-  "frozen": false,
+  "revision": "frozen-1 (from draft-3)",
+  "frozen": true,
   "owner": "systems-engineer",
-  "status_note": "PROPOSED by systems-engineer (T-010, 2026-11-03). Not frozen; the manager freezes. Changes from draft-1: I2C 400 kHz retained (ADR-008, D-5 closed) with PCB pull-ups R13/R14 4k7; J1 is 2 holes (1 = SCL, 2 = SDA); the 3V3 hand wire is replaced by the JP1 3-pad selector (ADR-007 D-4); electrode series resistors R1..R12 3k3 (terminal net E<k>, module net ELE<k>); board label v1.1 (ADR-008; the PCB file still reads v1.0); firmware aftertouch burst reads (M1); host OS list. Evidence: sim/systems/interface_check.out (hardware/firmware 59/60 PASS, the only FAIL is the label; documentation 11/18 PASS).",
+  "status_note": "PROPOSED by systems-engineer (T-011, 2026-11-03), input 5f59c9e plus working tree. Not frozen; the manager freezes. Changes from draft-2: Pico I2C pads go through R15/R16 220 Ohm (nets SDA_PICO/SCL_PICO, ADR-012); JP1 silkscreen legend; board label v1.1 present; run-based aftertouch burst plan (fm_mpr121.h); AUTOCONFIG limits and SCTS now SOURCE (ADR-010/011); breadboard 4k7 pull-ups (ADR-009). Evidence: sim/systems/interface_check.out (78 checks, 78 PASS, 0 FAIL).",
   "sources": "requirements/SOURCES_SYSTEMS.md",
   "interfaces": [
     {
@@ -221,12 +221,13 @@
         "breadboard": {
           "bus": "Wire (i2c0)",
           "sda": "GP4 (pin 6)",
-          "scl": "GP5 (pin 7)"
+          "scl": "GP5 (pin 7)",
+          "pullups": "two 4.7 kOhm, SDA and SCL to 3V3 (ADR-009 D-11)"
         },
         "pcb": {
           "bus": "Wire1 (i2c1)",
-          "sda": "GP26 (pin 31)",
-          "scl": "GP27 (pin 32)",
+          "sda": "GP26 (pin 31) net SDA_PICO -> R16 220 Ohm -> bus net SDA",
+          "scl": "GP27 (pin 32) net SCL_PICO -> R15 220 Ohm -> bus net SCL",
           "build_flag": "FRUTAMIDI_PCB"
         },
         "atmega32u4": {
@@ -237,7 +238,7 @@
         }
       },
       "clock_hz": 400000,
-      "clock_note": "400 kHz retained (ADR-008). Rise time PCB: 103 ns @38 pF (EE) / 153 ns @60 pF (systems, CALCULATION). Breadboard without 4k7 pull-ups fails above 42.5 pF (REQ-041, D-11).",
+      "clock_note": "400 kHz (ADR-008). Rise time 156 ns @60 pF with 4k7 (PCB and documented breadboard); C_b limit 115.2 pF.",
       "addresses": [
         {
           "sensor": 0,
@@ -268,13 +269,32 @@
           12,
           6
         ],
-        "label": "SOURCE S-08"
+        "label": "SOURCE S-08",
+        "AUTOCONFIG1": "0x7C SCTS (D7) = 0, written explicitly by firmware (ADR-010/011, SOURCE S-006)",
+        "USL/TL/LSL_note": "design VDD 3.2 V (ADR-010), SOURCE S-006 formula"
       },
       "transactions": [
         "every loop, per sensor: touched() = readRegister16(0x00): write 1 B register, repeated start, read 2 B",
-        "aftertouch pass (every 15 ms if any pad active), per sensor: readRegisters(addr, 0x04, 24 B) and readRegisters(addr, 0x1E, 12 B) (M1 burst, fm_mpr121.h)",
+        "aftertouch pass (every 15 ms if any pad active), per sensor: for each run [lo, lo+n) of sounding electrodes (runs merged across gaps <= 1, fm::mpr121_next_run): readRegisters(addr, 0x04+2*lo, 2n B) and readRegisters(addr, 0x1E+lo, n B); worst case 42 bus bytes in 8 transactions (mask 0x925); all 12 pads = 24 B + 12 B",
         "debug only: filteredData(e) 2 B, baselineData(e) 1 B"
-      ]
+      ],
+      "series_resistors": {
+        "R15": "220 Ohm, SCL_PICO-SCL",
+        "R16": "220 Ohm, SDA_PICO-SDA",
+        "fault_current_mA": 15.5,
+        "label": "CALCULATION at 3.4 V; <= IIOVDD_MAX 50 mA (S-17)"
+      },
+      "levels": {
+        "rp2040": "VIH 2.0 V, VIL 0.8 V, VOH 2.62 V, VOL 0.5 V (S-17 Table 625)",
+        "mpr121": "VIH 0.7 VDD, VIL 0.3 VDD, VOL 0.5 V @ 6 mA (S-04 Table 5)",
+        "margins_V": {
+          "pico_low_at_mpr121": 0.138,
+          "mpr121_low_at_pico": 0.235,
+          "high_at_pico": 1.3,
+          "high_at_mpr121": ">=0.93"
+        },
+        "label": "CALCULATION sim/systems/budgets.out B5-B8"
+      }
     },
     {
       "id": "IF-PICO-PINS",
@@ -364,15 +384,17 @@
       "pcb": [
         {
           "signal": "SDA",
-          "net": "SDA",
+          "net": "SDA_PICO",
           "gp": 26,
-          "pin": 31
+          "pin": 31,
+          "series": "R16 220 Ohm to bus net SDA"
         },
         {
           "signal": "SCL",
-          "net": "SCL",
+          "net": "SCL_PICO",
           "gp": 27,
-          "pin": 32
+          "pin": 32,
+          "series": "R15 220 Ohm to bus net SCL"
         },
         {
           "signal": "BTN (SW1 to GND, active low)",
@@ -422,7 +444,7 @@
         "Pico W/Pico 2 W": "CYW43 WL_GPIO0 (LED_BUILTIN)",
         "label": "SOURCE S-02"
       },
-      "consistency": "PASS: firmware FRUTAMIDI_PCB pins == PCB A1 pad nets; firmware breadboard pins == README.md table (sim/systems/interface_check.out)"
+      "consistency": "PASS: firmware FRUTAMIDI_PCB pins == PCB A1 pad nets (incl. SDA_PICO/SCL_PICO via R16/R15); breadboard pins == README.md (sim/systems/interface_check.out)"
     },
     {
       "id": "IF-TERMINALS",
@@ -603,14 +625,19 @@
           "label": "SOURCE S-06 JP2 pads 7..1"
         }
       },
-      "consistency": "PASS: Eagle-derived S-row == gen_schematic.py labels; JP1 and J1 nets as above (interface_check). hardware/README.md still describes the old J1 3V3 wire (doc FAIL).",
+      "consistency": "PASS: Eagle-derived S-row == gen_schematic.py labels == hardware/README.md (JP1, SDA, SCL) table (interface_check)",
       "jp1_3v3_selector": {
         "pad1": "S1 (silk 'ORIG')",
         "pad2": "+3V3",
         "pad3": "S7 (silk 'QT')",
         "original": "bridge pad1-pad2 -> +3V3 to VIN",
         "stemma_qt": "bridge pad2-pad3 -> +3V3 to VCC",
-        "wrong_choice": "ORIG on QT -> +3V3 on ADDR; QT on original -> +3V3 on IRQ; never GND (REQ-039 PASS) but exceeds VDD+0.3 V on an unpowered module (REQ-040 FAIL, D-10)"
+        "wrong_choice": "ORIG on QT -> +3V3 on ADDR; QT on original -> +3V3 on IRQ; never GND (REQ-039 PASS); exceeds VDD+0.3 V on unpowered module (REQ-040 FAIL, residual risk R-007 accepted, ADR-009)",
+        "silkscreen_legend": [
+          "JP1 3V3 selector:",
+          "ORIG = no white connectors",
+          "QT = 2 white connectors"
+        ]
       },
       "data_wires_J1": {
         "J1 pad 1": "SCL",
@@ -623,7 +650,7 @@
           "SDA": "S3",
           "SCL": "S4"
         },
-        "hazard": "a data wire on S1/S7 (+3V3 via JP1) or S2/S6 (module 3.3 V out) ties an I2C line to a supply (REQ-024 FAIL, D-9)"
+        "hazard": "a data wire on a supply hole is current-limited by R15/R16 to 15.5 mA per line (REQ-024 PASS)"
       }
     },
     {
@@ -690,16 +717,23 @@
         "USE_POT": "false (breadboard) / true (PCB)",
         "SERIAL_DEBUG": false
       },
-      "note": "Firmware T-041 in progress (lock held): aftertouch/English changes may alter config_constants; re-check before freeze"
+      "note": "Firmware T-041..T-043 complete: reports/firmware/T-043/checks.log (268 host tests passed)."
     }
   ],
   "board": {
-    "revision_label": "FrutaMIDI v1.1 (ADR-008); PCB file at sha256 f4dbc5c9 still reads v1.0",
+    "revision_label": "FrutaMIDI v1.1 (present on PCB)",
     "outline_mm": [
       100,
       70
     ],
     "copper": "B.Cu only",
-    "fabrication_folder": "hardware/fabrication"
-  }
+    "fabrication_folder": "hardware/fabrication",
+    "resistors": {
+      "R1..R12": "3k3 electrode series",
+      "R13/R14": "4k7 I2C pull-ups (SCL/SDA)",
+      "R15/R16": "220 Ohm I2C series (SCL/SDA)"
+    }
+  },
+  "frozen_by": "manager",
+  "frozen_on": "2026-11-03"
 }

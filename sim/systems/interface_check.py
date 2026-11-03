@@ -110,6 +110,9 @@ hw_readme = open(P("hardware", "README.md"), encoding="utf-8").read()
 
 fw = fw_pins(ino)
 fps = footprints(pcb)
+VALUES = {}
+for _m in re.finditer(r'\(property "Reference" "([^"]+)".*?\(property "Value" "([^"]+)"', pcb, re.S):
+    VALUES.setdefault(_m.group(1), _m.group(2))
 print("firmware pins:", fw)
 print("footprints:", sorted(fps))
 
@@ -126,8 +129,16 @@ for const, net in pcb_expect.items():
     gp = "GP%d" % fw["pcb"][const]
     phys = GP_TO_PHYS[gp]
     got = fps["A1"].get(str(phys))
-    check("fw.pcb.%s_vs_pcb" % const, got == {net}, "%s -> Pico pin %d, PCB A1 pad %d net %s (expected %s)"
-          % (gp, phys, phys, got, net))
+    if net in ("SDA", "SCL") and got == {net + "_PICO"}:
+        # T-055 / ADR-012: Pico pad -> <net>_PICO -> 220 R series -> bus net <net>
+        rs = [r for r, pads in fps.items() if r.startswith("R") and r != "RV1"
+              and set().union(*pads.values()) == {net + "_PICO", net}]
+        val = [VALUES.get(r) for r in rs]
+        check("fw.pcb.%s_vs_pcb" % const, len(rs) == 1 and val == ["220"],
+              "%s -> Pico pin %d net %s_PICO -> %s %s -> %s" % (gp, phys, net, rs, val, net))
+    else:
+        check("fw.pcb.%s_vs_pcb" % const, got == {net}, "%s -> Pico pin %d, PCB A1 pad %d net %s (expected %s)"
+              % (gp, phys, phys, got, net))
 
 # Power pins on A1
 for phys, net in ((36, "+3V3"), (33, "AGND")):
@@ -196,6 +207,10 @@ if "JP1" in fps:
     print("INFO  JP1 wrong choice: original+QT side -> 3V3 on S7 = %s ; QT+ORIG side -> 3V3 on S1 = %s (no GND reachable)"
           % (so_[6], sq_[0]))
     check("pcb.JP1_no_gnd_reachable", "GND" not in (so_[0], so_[6], sq_[0], sq_[6]), "S1/S7 are never GND in either revision")
+    silk = set(re.findall(r'\(gr_text "([^"]*)"', pcb))
+    legend = {"ORIG = no white connectors", "QT = 2 white connectors"}
+    check("pcb.JP1_legend", legend <= silk and {"ORIG", "QT"} <= silk,
+          "silkscreen legend present: %s (ADR-009 D-10)" % sorted(w for w in silk if "ORIG" in w or "QT" in w))
     j1 = [fps["J1"].get(n) for n in "12"]
     check("pcb.J1", j1 == [{"SCL"}, {"SDA"}] and "3" not in fps["J1"], "J1 1/2 = %s" % j1)
 else:
@@ -216,16 +231,23 @@ for k in range(1, 8):
     check("sch.S%d_label" % k, o == so[k - 1] and q == sq[k - 1],
           "schematic '%s' vs Eagle-derived original=%s qt=%s" % (lab, so[k - 1], sq[k - 1]))
 
-# Wiring rule in hardware/README.md: 3V3 -> VIN/VCC, SDA -> SDA, SCL -> SCL
+# Wiring rule in hardware/README.md (T-035 table: version | how to recognise | JP1 bridge | SDA -> | SCL ->).
+# The 3V3 path is JP1: ORIG side = S1, QT side = S7 (derived from the S-row: VIN / VCC position).
 for rev, row_name in (("original", "Original"), ("stemma_qt", "STEMMA QT")):
     row = s_row(rev)
-    exp = ("S%d" % (row.index("VIN" if rev == "original" else "VCC") + 1),
-           "S%d" % (row.index("SDA") + 1), "S%d" % (row.index("SCL") + 1))
-    m = re.search(r"\| %s[^|]*\|[^|]*\| \*\*(S\d)\*\* \| \*\*(S\d)\*\* \| \*\*(S\d)\*\* \|" % re.escape(row_name), hw_readme)
+    supply = row.index("VIN" if rev == "original" else "VCC") + 1
+    jp_side = {1: "ORIG", 7: "QT"}.get(supply, "?")
+    exp = (jp_side, "S%d" % (row.index("SDA") + 1), "S%d" % (row.index("SCL") + 1))
+    m = re.search(r"\| %s[^|]*\|[^|]*\| \*\*(\w+)\*\* \| \*\*(S\d)\*\* \| \*\*(S\d)\*\* \|" % re.escape(row_name), hw_readme)
     got = m.groups() if m else None
-    check("doc.hw_readme.config_wires.%s" % rev, got == exp, "README (3V3,SDA,SCL)=%s, derived=%s" % (got, exp))
+    check("doc.hw_readme.jp1_and_wires.%s" % rev, got == exp, "README (JP1, SDA, SCL)=%s, derived=%s" % (got, exp))
     gnd_s = "S%d" % (row.index("GND") + 1)
-    print("INFO  %s: S-row = %s ; module GND at %s (3V3 wire there = short circuit)" % (rev, row, gnd_s))
+    print("INFO  %s: S-row = %s ; module GND at %s (not reachable by JP1)" % (rev, row, gnd_s))
+# Documentation of the 220 R I2C series resistors (ADR-012)
+if any(VALUES.get(r) == "220" for r in fps):
+    for name, txt in (("hardware/README.md", hw_readme),):
+        check("doc.hw_readme.R15_R16", "R15" in txt and "R16" in txt and "220" in txt,
+              "%s lists R15/R16 220 Ohm I2C series resistors" % name)
 
 # Board revision label (ADR-008: "FrutaMIDI v1.1")
 labels_pcb = set(re.findall(r'\(gr_text "(FrutaMIDI v[^"]*)"', pcb))

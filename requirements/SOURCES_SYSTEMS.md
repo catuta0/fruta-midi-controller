@@ -27,4 +27,6 @@ Repository inputs, all read-only, at e4668d4 with a dirty working tree; the SHA-
 - `hardware/scripts/gen_schematic.py`: 0b634d0e7b0c26d2fdb885c15b369dd32bb8ccd4ec86165927c70b0d638be036 when first read. It changed during the task to 0bdfe29bacd0ebe828781a478c55b785616d94443f064984c2d49b84668bf88f, and the final interface_check run used the newer version.
 - `hardware/frutamidi.kicad_pcb`: 7596344b7521c1170e9ce15f0f7ae6aee588530667f8b45865e9062e6e4ad52b
 
+| S-17 | Raspberry Pi RP2040 datasheet RP-008371-DS-1 (local copy `sim/systems/datasheets/rp2040-datasheet.pdf`, 5,301,205 B, sha256 be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c, git-ignored; extract `rp2040-datasheet-gpio-dc.txt`) | https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf | §5.5.3.4 Table 625 'Digital IO' (PDF pages 616–617) at IOVDD 3.3 V: VIH min 2 V (max IOVDD + 0.3 V); VIL max 0.8 V (min −0.3 V); VHYS 0.2 V (Schmitt); VOH min 2.62 V and VOL max 0.5 V at IOH/IOL = 2, 4, 8 or 12 mA drive setting; RPU 50–80 kΩ; IIOVDD_MAX 50 mA (sum of all IO) | **Read** (T-011) |
+
 T-010 note: the Pico W and Pico 2 W datasheets were not downloaded (not requested), so their board currents stay ASSUMPTIONs. PDF sizes for the git-ignore list: pico-datasheet.pdf 18.2 MB (over 5 MB), pico-2-datasheet.pdf 3.0 MB.

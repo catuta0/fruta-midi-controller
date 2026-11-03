@@ -73,3 +73,7 @@
 - Status: accepted (manager, ADR-001).
 - No 2.7–3.3 kΩ THT resistor with a datasheet-confirmed ≥3.64 kV pulse rating was found within the time box. MFR-12 3k3 kept; REQ-023 stays PARTIAL (pin current 1.10 A < 1.33 A at 4 kV, but the resistor may flash over: not rated). Vishay MBB 0207 (pulse chart unreadable, search extract "4 kV" unverified) is recorded as change candidate CR-001 for a later revision. Risk R-006 updated.
 - 220 Ω series resistors R15/R16 on the Pico side of SDA/SCL accepted (fault current ≤ 15.5 mA; levels and rise time PASS by CALCULATION). Net names SDA_PICO/SCL_PICO at the Pico pins.
+
+## ADR-013 — Interfaces frozen (frozen-1)
+- Date 2026-11-03. INTERFACES.json draft-3 frozen as "frozen-1". Changes from now on go through /engineering-change.
+- REQ-040 stays FAIL with accepted residual risk R-007 (not relabelled).

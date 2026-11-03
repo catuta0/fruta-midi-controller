@@ -1,3 +1,47 @@
+# Revision 3 (T-011, 2026-11-03)
+
+Script `sim/systems/budgets.py` (revision 3); output `sim/systems/budgets.out`, ending with `SUMMARY: 29 checks, 25 PASS, 4 FAIL`.
+
+## Aftertouch burst plan
+
+The plan is the run-based burst read in `fm_mpr121.h` (`mpr121_next_run`, MPR121_MERGE_GAP = 1), evaluated over all 4095 non-empty pad masks.
+
+| Case | Mask | Transactions | Bus bytes |
+| --- | --- | --- | --- |
+| Worst | 0x925 | 8 (6/3/2/1/2/1/2/1 data bytes) | 42 (asserted ≤ 42, as the header states) |
+| All 12 pads | 0xFFF | 2 (24 B + 12 B) | 42 |
+
+The old per-pad path took 45 B for the worst mask (CALCULATION).
+
+## Latency (CALCULATION, C ≤ 100 pF, 400 kHz)
+
+| Sensors | Worst | Jitter | Worst loop |
+| --- | --- | --- | --- |
+| 1 | 10.59 ms | 6.59 ms | 1.59 ms |
+| 2 | 12.07 ms | 8.07 ms | — |
+
+Both meet the ADR-007 targets. The remaining FAILs:
+- 100 kHz with 2 sensors (informative only; ADR-008 keeps 400 kHz).
+- A3b: the USB low-power port minimum of 4.40 V is below the Pico's recommended 4.50 V.
+- BOM: 20.42–30.40 EUR, now including R15/R16.
+
+## I2C with R15/R16 220 Ω
+
+Sources: S-17 RP2040 Table 625 and S-04 Table 5.
+
+| Case | Level | Limit | Margin |
+| --- | --- | --- | --- |
+| Pico drives low, MPR121 receives | bus ≤ 0.742 V + 0.05 V shifter | VIL 0.93 V | 0.138 V |
+| MPR121 drives low, Pico receives | pad ≤ 0.565 V | VIL 0.8 V | 0.235 V |
+| High at the Pico | 3.3 V | VIH 2.0 V | 1.30 V |
+| High at the MPR121 | VDD (module side) | VIH 0.7·VDD | ≥ 0.93 V |
+
+- Fault current: 15.5 mA per line, 30.9 mA for both lines, against the 50 mA IIOVDD limit.
+- Rise time: 156 ns at 60 pF. The RPU of 80 kΩ is SOURCE S-17, and 80 kΩ is the slowest-edge case.
+- Breadboard without the 4.7 kΩ pull-ups: 452 ns at 60 pF, failing 300 ns above 39.8 pF.
+
+---
+
 # FrutaMIDI system budgets, revision 2 (T-010, 2026-11-03)
 
 Revision 2 replaces the T-009 numbers below wherever the two differ. Script `sim/systems/budgets.py` (revision 2); raw output `sim/systems/budgets.out`, ending with `SUMMARY: 24 checks, 19 PASS, 5 FAIL`.

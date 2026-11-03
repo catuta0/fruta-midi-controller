@@ -1,6 +1,6 @@
 # FrutaMIDI — single-sided PCB (version 1.1)
 
-A 100 × 70 mm board with copper on the bottom side only, designed for chemical etching at home (toner transfer or photosensitive board). It takes a Raspberry Pi Pico and an Adafruit MPR121 module (1982), both socketed, plus 14 screw terminals, a button, a potentiometer, a 3.3 kΩ series resistor on each electrode and two I²C pull-up resistors.
+A 100 × 70 mm board with copper on the bottom side only, designed for chemical etching at home (toner transfer or photosensitive board). It takes a Raspberry Pi Pico and an Adafruit MPR121 module (1982), both socketed, plus 14 screw terminals, a button, a potentiometer, a 3.3 kΩ series resistor on each electrode, two I²C pull-up resistors and two 220 Ω I²C series resistors.
 
 ![Render of the assembled board](fabrication/images/board-3d.png)
 
@@ -46,6 +46,7 @@ A 100 × 70 mm board with copper on the bottom side only, designed for chemical 
 | A2 | Adafruit MPR121 12-key capacitive touch breakout (**product 1982**) | 1 | 9–12 € | Original or STEMMA QT: both work (see [section 5](#5-module-configuration-jp1-and-two-wires)). Comes with the male header to solder onto the module |
 | R1–R12 | Resistor 3.3 kΩ (3k3), axial, DIN0204 size, Yageo MFR-12FTF52-3K3 | 12 | — | One in series with each electrode; mounted vertically |
 | R13, R14 | Resistor 4.7 kΩ (4k7), axial, DIN0204 size, Yageo MFR-12FTF52-4K7 | 2 | — | I²C pull-ups (SCL, SDA); mounted vertically |
+| R15, R16 | Resistor 220 Ω, axial, DIN0204 size, Yageo MFR-12FTF52-220R | 2 | — | In series in SCL (R15) and SDA (R16) on the Pico side; they limit the current if a configuration wire goes to the wrong hole; mounted vertically |
 | — | Female header 1×20, 2.54 mm pitch | 2 | 1 € | Pico socket |
 | — | Female header 1×13, 2.54 mm pitch | 1 | 0.50 € | Module electrode row |
 | — | Female header 1×7, 2.54 mm pitch | 1 | 0.40 € | Module power/I²C row |
@@ -118,11 +119,11 @@ The small dots in the centre of the pads are left without copper after etching a
 
 ## 3. Drill
 
-Drill from the copper side, using the dots as a guide. There are 127 holes in total: 125 round holes and the 2 potentiometer slots.
+Drill from the copper side, using the dots as a guide. There are 131 holes in total: 129 round holes and the 2 potentiometer slots.
 
 | Bit | Holes | Where |
 | --- | --- | --- |
-| 0.8 mm | 31 | Resistors R1–R14 (28) and JP1 (3) |
+| 0.8 mm | 35 | Resistors R1–R16 (32) and JP1 (3) |
 | 0.9 mm | 9 | S1–S7 row (7) and J1 (2, configuration wires) |
 | 1.0 mm | 63 | Female headers for the Pico (40) and the module (20), potentiometer pins (3) |
 | 1.1 mm | 4 | Button |
@@ -139,7 +140,7 @@ Solder from the lowest component to the tallest, so the board sits flat on the t
 ![Top view](fabrication/images/board-top.png)
 
 1. **Resistors R1–R12 (3k3).** They stand vertically in a row under the module's electrode header, one per electrode. Do not mix them up with R13/R14.
-2. **Resistors R13 and R14 (4k7).** Also vertical, next to J1 (the I²C pull-ups).
+2. **Resistors R13 and R14 (4k7)**, the I²C pull-ups, vertical next to J1. Then **R15 and R16 (220 Ω)**, also vertical: R15 just below J1, R16 between the Pico and the SCALE button.
 3. **Button SW1** ("SCALE").
 4. **Pico female headers (2 × 1×20).** Trick: plug both headers onto the Pico, set the assembly on the board and solder. They end up parallel and at the right spacing. Then remove the Pico.
 5. **Module female headers (1×13 and 1×7).** Same trick: first solder the male header to the module, plug on the female headers, set it on the board and solder.
@@ -155,6 +156,8 @@ The Adafruit 1982 exists in two versions, with the 7 power/I²C pins in a differ
 
 - **ORIG** (pad 1 → S1): original version, 3V3 goes to **VIN**.
 - **QT** (pad 3 → S7): STEMMA QT version, 3V3 goes to **VCC**.
+
+The silkscreen legend to the right of the module repeats this: "JP1 3V3 selector: / ORIG = no white connectors / QT = 2 white connectors".
 
 **Step 2: I²C (two wires).** J1 has 2 holes, **SCL on the left and SDA on the right**. Connect:
 
@@ -180,7 +183,7 @@ With the multimeter, **without the Pico or the module plugged in**:
 - [ ] Resistance between each terminal 0…11 and the corresponding pin of the module's 1×13 header: about **3.3 kΩ** (the series resistor). It does not beep in continuity mode.
 - [ ] Continuity between neighbouring terminals (0–1, 1–2, …): it does **not** beep.
 - [ ] Continuity between the two GND terminals at the ends: it beeps.
-- [ ] Continuity between the module's SDA pin and pin 31 of the Pico socket (and SCL and pin 32): it beeps, with the configuration wires already soldered.
+- [ ] Resistance between the module's SDA pin and pin 31 of the Pico socket (and SCL and pin 32): about **220 Ω** (R16 / R15), with the configuration wires already soldered. It may not beep in continuity mode.
 - [ ] Continuity between the JP1 centre pad and the S hole for your version (S1 for ORIG, S7 for QT): it beeps, with JP1 bridged.
 
 ## 7. Firmware and first power-up

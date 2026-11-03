@@ -1,0 +1,195 @@
+=== PAGE 616 ===
+Parameter Symbol Maximum Units Comment
+Human Body Model
+Digital (FT) pins only
+HBM 4 kV Compliant with JEDEC
+specification JS-001-
+2012 (April 2012)
+Charged Device Model CDM 500 V Compliant with
+JESD22-C101E
+(December 2009)
+5.5.3.3. Thermal Performance
+Table 624. Thermal
+Performance
+Parameter Symbol Minimum Typical Maximum Units Comment
+Case
+Temperature
+TC -40 85 °C
+5.5.3.4. IO Electrical Characteristics
+Table 625. Digital IO
+characteristics -
+Standard and FT
+unless otherwise
+stated
+Parameter Symbol Minimum Maximum Units Comment
+Pin Input Leakage
+Current
+IIN 1 μA
+Input Voltage High
+@ IOVDD=1.8V
+VIH 0.65 * IOVDD IOVDD + 0.3 V
+Input Voltage High
+@ IOVDD=2.5V
+VIH 1.7 IOVDD + 0.3 V
+Input Voltage High
+@ IOVDD=3.3V
+VIH 2 IOVDD + 0.3 V
+Input Voltage Low
+@ IOVDD=1.8V
+VIL -0.3 0.35 * IOVDD V
+Input Voltage Low
+@ IOVDD=2.5V
+VIL -0.3 0.7 V
+Input Voltage Low
+@ IOVDD=3.3V
+VIL -0.3 0.8 V
+Input Hysteresis
+Voltage @
+IOVDD=1.8V
+VHYS 0.1 * IOVDD V Schmitt Trigger
+enabled
+Input Hysteresis
+Voltage @
+IOVDD=2.5V
+VHYS 0.2 V Schmitt Trigger
+enabled
+Input Hysteresis
+Voltage @
+IOVDD=3.3V
+VHYS 0.2 V Schmitt Trigger
+enabled
+Output Voltage
+High @
+IOVDD=1.8V
+VOH 1.24 IOVDD V IOH = 2, 4, 8 or
+12mA depending
+on setting
+RP2040 Datasheet
+5.5. Pinout 615
+=== PAGE 617 ===
+Parameter Symbol Minimum Maximum Units Comment
+Output Voltage
+High @
+IOVDD=2.5V
+VOH 1.78 IOVDD V IOH = 2, 4, 8 or
+12mA depending
+on setting
+Output Voltage
+High @
+IOVDD=3.3V
+VOH 2.62 IOVDD V IOH = 2, 4, 8 or
+12mA depending
+on setting
+Output Voltage
+Low @
+IOVDD=1.8V
+VOL 0 0.3 V IOL = 2, 4, 8 or
+12mA depending
+on setting
+Output Voltage
+Low @
+IOVDD=2.5V
+VOL 0 0.4 V IOL = 2, 4, 8 or
+12mA depending
+on setting
+Output Voltage
+Low @
+IOVDD=3.3V
+VOL 0 0.5 V IOL = 2, 4, 8 or
+12mA depending
+on setting
+Pull-Up Resistance RPU 50 80 kΩ
+Pull-Down
+Resistance
+RPD 50 80 kΩ
+Maximum Total
+IOVDD current
+IIOVDD_MAX 50 mA Sum of all current
+being sourced by
+GPIO and QSPI
+pins
+Maximum Total
+VSS current due to
+IO (IOVSS)
+IIOVSS_MAX 50 mA Sum of all current
+being sunk into
+GPIO and QSPI
+pins
+Table 626. USB IO
+characteristics
+Parameter Symbol Minimum Maximum Units Comment
+Pin Input Leakage
+Current
+IIN 1 μA
+Single Ended Input
+Voltage High
+VIHSE 2 V
+Single Ended Input
+Voltage Low
+VILSE 0.8 V
+Differential Input
+Voltage High
+VIHDIFF 0.2 V
+Differential Input
+Voltage Low
+VILDIFF -0.2 V
+Output Voltage
+High
+VOH 2.8 USB_VDD V
+Output Voltage
+Low
+VOL 0 0.3 V
+Pull-Up Resistance
+- RPU2
+RPU2 0.873 1.548 kΩ
+RP2040 Datasheet
+5.5. Pinout 616
+=== PAGE 618 ===
+Parameter Symbol Minimum Maximum Units Comment
+Pull-Up Resistance
+- RPU1&2
+RPU1&2 1.398 3.063 kΩ
+Pull-Down
+Resistance
+RPD 14.25 15.75 kΩ
+Table 627. ADC
+characteristics
+Parameter Symbol Minimum Maximum Units Comment
+ADC Input Voltage
+Range
+VPIN_ADC 0 ADC_AVDD V
+Effective Number
+of Bits
+ENOB 8.7 bits See Section 4.9.3
+Resolved Bits 12 bits
+ADC Input
+Impedance
+RIN_ADC 100 kΩ
+Table 628. Oscillator
+pin characteristics
+when using a Square
+Wave input
+Parameter Symbol Minimum Maximum Units Comment
+Input Voltage High VIH 0.65*IOVDD IOVDD + 0.3 V XIN only. XOUT
+floating
+Input Voltage Low VIL 0 0.35*IOVDD V XIN only. XOUT
+floating
+See Section 2.16 for more details on the Oscillator, and Minimal Design Example for information on crystal usage.
+5.5.3.5. Interpreting GPIO output voltage specifications
+The GPIOs on RP2040 have four different output drive strengths, which are nominally called 2, 4, 8 and 12mA modes.
+These are not hard limits, nor do they mean that they will always be sourcing (or sinking) the selected amount of
+milliamps. The amount of current a GPIO sources or sinks is dependent on the load attached to it. It will attempt to drive
+the output to the IOVDD level (or 0V in the case of a logic 0), but the amount of current it is able to source is limited,
+which will be dependent on the selected drive strength. Therefore the higher the current load is, the lower the voltage
+will be at the pin. At some point, the GPIO will be sourcing so much current, that the voltage is so low, it won’t be
+recognised as a logic 1 by the input of a connected device. The purpose of the output specifications in Table 625 are to
+try and quantify how much lower the voltage can be expected to be, when drawing specified amounts of current from
+the pin.
+The Output High Voltage (V OH) is defined as the lowest voltage the output pin can be when driven to a logic 1 with a
+particular selected drive strength; e.g., 4mA being sourced by the pin whilst in 4mA drive strength mode. The Output
+Low Voltage is similar, but with a logic 0 being driven.
+In addition to this, the sum of all the IO currents being sourced (i.e. when outputs are being driven high) from the IOVDD
+bank (essentially the GPIO and QSPI pins), must not exceed I IOVDD_MAX. Similarly, the sum of all the IO currents being sunk
+(i.e. when the outputs are being driven low) must not exceed IIOVSS_MAX.
+RP2040 Datasheet
+5.5. Pinout 617

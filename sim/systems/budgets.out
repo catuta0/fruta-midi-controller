@@ -7,9 +7,9 @@
   Module IRQ LED (10k)                       0.000 .. 0.150 mA      CALCULATION, worst case INT held low
   Module I2C pull-ups (4 x 10k, lines low)   0.000 .. 1.320 mA      CALCULATION, worst case (S-06/S-07)
   PCB I2C pull-ups R13/R14 4k7 (lines low)   0.000 .. 1.404 mA      CALCULATION; PCB build only (kicad_pcb R13/R14)
-  RP2040 I2C internal pull-ups               0.000 .. 0.132 mA      CALCULATION, R >= 50 kOhm ASSUMPTION (RP2040 datasheet not read)
+  RP2040 I2C internal pull-ups               0.000 .. 0.132 mA      CALCULATION, RPU 50..80 kOhm SOURCE S-17 Table 625
   Octave pot 10k +-20 %                      0.275 .. 0.412 mA      CALCULATION V/R
-  Button pull-up (pressed)                   0.000 .. 0.066 mA      CALCULATION, R ASSUMPTION
+  Button pull-up (pressed)                   0.000 .. 0.066 mA      CALCULATION, RPU >= 50 kOhm SOURCE S-17
   Electrode series R1..R12 3k3               0.000 .. 0.000 mA      CALCULATION: no DC path (MPR121 charge current only, inside IDD)
   External 3V3 load, 1 sensor                1.495 .. 6.085 mA  CALCULATION (sum)
   External 3V3 load, 2 sensors               2.715 .. 10.155 mA  CALCULATION (+ second module, breadboard)
@@ -29,49 +29,57 @@ PASS  A6 I2C on ADC-capable GP26/27: pull-up rail = IOVDD :: R13/R14 and module 
 ==========================================================================================
 (b) LATENCY BUDGET (firmware T-040: M1 burst read, non-blocking LED)
 ==========================================================================================
-  f_SCL = 400 kHz: touched() 130 .. 160 us, AT pass (24 B + 12 B) 980 .. 1040 us, loop idle 150 .. 260 us, loop with AT pass 1130 .. 1300 us  CALCULATION
-  f_SCL = 100 kHz: touched() 490 .. 520 us, AT pass (24 B + 12 B) 3860 .. 3920 us, loop idle 510 .. 620 us, loop with AT pass 4370 .. 4540 us  CALCULATION
+  AT burst plan worst mask 0x925 -> transactions [6, 3, 2, 1, 2, 1, 2, 1] (42 bus bytes incl. addr/reg; old per-pad path 45 B)  CALCULATION
+  f_SCL = 400 kHz: touched() 130 .. 160 us, AT pass worst plan 1085 .. 1325 us, loop idle 150 .. 260 us, loop with AT pass 1235 .. 1585 us  CALCULATION
+  f_SCL = 100 kHz: touched() 490 .. 520 us, AT pass worst plan 4100 .. 4340 us, loop idle 510 .. 620 us, loop with AT pass 4610 .. 4960 us  CALCULATION
 
   f_SCL   sens  C [pF]   CDT     best [ms]    worst [ms]   jitter [ms] 
-  400k    1     20       1us     4.00         10.30        6.30        
-  400k    1     100      4us     4.00         10.30        6.30        
-  400k    1     200      8us     4.61         11.52        6.91        
-  400k    1     300      16us    9.22         20.73        11.52       
-  400k    1     500      32us    18.43        39.16        20.73       
-  400k    2     20       1us     4.00         11.50        7.50        
-  400k    2     100      4us     4.00         11.50        7.50        
-  400k    2     200      8us     4.61         12.72        8.11        
-  400k    2     300      16us    9.22         21.93        12.72       
-  400k    2     500      32us    18.43        40.36        21.93       
-  100k    1     20       1us     4.00         13.54        9.54        
-  100k    1     100      4us     4.00         13.54        9.54        
-  100k    1     200      8us     4.61         14.76        10.15       
-  100k    1     300      16us    9.22         23.97        14.76       
-  100k    1     500      32us    18.43        42.40        23.97       
-  100k    2     20       1us     4.00         17.98        13.98       
-  100k    2     100      4us     4.00         17.98        13.98       
-  100k    2     200      8us     4.61         19.20        14.59       
-  100k    2     300      16us    9.22         28.41        19.20       
-  100k    2     500      32us    18.43        46.84        28.41       
-PASS  B1 worst <= 15 ms [400 kHz, 1 sensor, C <= 100 pF] :: worst 10.30 ms
-PASS  B2 jitter <= 10 ms [400 kHz, 1 sensor, C <= 100 pF] :: jitter 6.30 ms
-PASS  B1 worst <= 15 ms [400 kHz, 2 sensors, C <= 100 pF] :: worst 11.50 ms
-PASS  B2 jitter <= 10 ms [400 kHz, 2 sensors, C <= 100 pF] :: jitter 7.50 ms
-PASS  B1 worst <= 15 ms [100 kHz, 1 sensor, C <= 100 pF] :: worst 13.54 ms
-PASS  B2 jitter <= 10 ms [100 kHz, 1 sensor, C <= 100 pF] :: jitter 9.54 ms
-FAIL  B1 worst <= 15 ms [100 kHz, 2 sensors, C <= 100 pF] :: worst 17.98 ms
-FAIL  B2 jitter <= 10 ms [100 kHz, 2 sensors, C <= 100 pF] :: jitter 13.98 ms
+  400k    1     20       1us     4.00         10.59        6.59        
+  400k    1     100      4us     4.00         10.59        6.59        
+  400k    1     200      8us     4.61         11.80        7.19        
+  400k    1     300      16us    9.22         21.02        11.80       
+  400k    1     500      32us    18.43        39.45        21.02       
+  400k    2     20       1us     4.00         12.07        8.07        
+  400k    2     100      4us     4.00         12.07        8.07        
+  400k    2     200      8us     4.61         13.29        8.68        
+  400k    2     300      16us    9.22         22.50        13.29       
+  400k    2     500      32us    18.43        40.93        22.50       
+  100k    1     20       1us     4.00         13.96        9.96        
+  100k    1     100      4us     4.00         13.96        9.96        
+  100k    1     200      8us     4.61         15.18        10.57       
+  100k    1     300      16us    9.22         24.39        15.18       
+  100k    1     500      32us    18.43        42.82        24.39       
+  100k    2     20       1us     4.00         18.82        14.82       
+  100k    2     100      4us     4.00         18.82        14.82       
+  100k    2     200      8us     4.61         20.04        15.43       
+  100k    2     300      16us    9.22         29.25        20.04       
+  100k    2     500      32us    18.43        47.68        29.25       
+PASS  B1 worst <= 15 ms [400 kHz, 1 sensor, C <= 100 pF] :: worst 10.59 ms
+PASS  B2 jitter <= 10 ms [400 kHz, 1 sensor, C <= 100 pF] :: jitter 6.59 ms
+PASS  B1 worst <= 15 ms [400 kHz, 2 sensors, C <= 100 pF] :: worst 12.07 ms
+PASS  B2 jitter <= 10 ms [400 kHz, 2 sensors, C <= 100 pF] :: jitter 8.07 ms
+PASS  B1 worst <= 15 ms [100 kHz, 1 sensor, C <= 100 pF] :: worst 13.96 ms
+PASS  B2 jitter <= 10 ms [100 kHz, 1 sensor, C <= 100 pF] :: jitter 9.96 ms
+FAIL  B1 worst <= 15 ms [100 kHz, 2 sensors, C <= 100 pF] :: worst 18.82 ms
+FAIL  B2 jitter <= 10 ms [100 kHz, 2 sensors, C <= 100 pF] :: jitter 14.82 ms
   DESIGN LIMIT 400 kHz, 1 sensor: targets met for electrode C <= 210 pF  CALCULATION
   DESIGN LIMIT 100 kHz, 1 sensor: targets met for electrode C <= 100 pF  CALCULATION
   recalibrate() per sensor at 400 kHz: 178 transactions, 16.8 .. 22.1 ms (incl. 1 ms reset delay)  CALCULATION
   recalibrate() per sensor at 100 kHz: 178 transactions, 58.8 .. 64.2 ms (incl. 1 ms reset delay)  CALCULATION
-  I2C breadboard R_eff 8.33 kOhm: C_b max 42.5 pF @400 kHz, 141.6 pF @100 kHz  CALCULATION
-  I2C PCB        R_eff 3.01 kOhm: C_b max 117.8 pF @400 kHz, 392.7 pF @100 kHz  CALCULATION
-FAIL  B3 I2C rise time [breadboard, 400 kHz, C_b <= 60 pF] :: t_r 424 ns <= 300 ns
-PASS  B3 I2C rise time [breadboard, 100 kHz, C_b <= 60 pF] :: t_r 424 ns <= 1000 ns
-PASS  B3 I2C rise time [PCB, 400 kHz, C_b <= 60 pF] :: t_r 153 ns <= 300 ns
-PASS  B3 I2C rise time [PCB, 100 kHz, C_b <= 60 pF] :: t_r 153 ns <= 1000 ns
-PASS  B4 I2C low-level sink current <= 3 mA (S-13 fast-mode VOL spec) :: 1.43 mA
+  I2C breadboard R_eff 8.89 kOhm: C_b max 39.8 pF @400 kHz, 132.8 pF @100 kHz  CALCULATION
+  I2C PCB        R_eff 3.07 kOhm: C_b max 115.2 pF @400 kHz, 383.9 pF @100 kHz  CALCULATION
+  INFO breadboard without the ADR-009 pull-ups: t_r 452 ns at 60 pF (fails 300 ns above 39.8 pF)  CALCULATION
+PASS  B3 I2C rise time [breadboard + 4k7 (ADR-009), 400 kHz, C_b <= 60 pF] :: t_r 156 ns <= 300 ns
+PASS  B3 I2C rise time [breadboard + 4k7 (ADR-009), 100 kHz, C_b <= 60 pF] :: t_r 156 ns <= 1000 ns
+PASS  B3 I2C rise time [PCB, 400 kHz, C_b <= 60 pF] :: t_r 156 ns <= 300 ns
+PASS  B3 I2C rise time [PCB, 100 kHz, C_b <= 60 pF] :: t_r 156 ns <= 1000 ns
+PASS  B4 I2C low-level sink current <= 3 mA (S-13 fast-mode VOL spec) :: 1.40 mA
+PASS  B5 I2C low driven by Pico, seen by MPR121 (VIL 0.3*VDD_min) :: bus 0.742 V (+0.05 V shifter) vs VIL 0.930 V, margin 0.138 V
+PASS  B6 I2C low driven by MPR121, seen by RP2040 (VIL 0.8 V) :: pad 0.565 V vs 0.8 V, margin 0.235 V
+PASS  B7 I2C high seen by RP2040 (VIH 2.0 V) :: 3.30 V vs 2.0 V, margin 1.30 V
+PASS  B8 I2C high seen by MPR121 (VIH 0.7*VDD_max; module side pulled to its own VDD) :: module side high = VDD, margin 0.3*VDD >= 0.93 V (VIH up to 2.38 V)
+PASS  B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-17 IIOVDD_MAX) :: 15.5 mA per line at 3.4 V (2 lines 30.9 mA)
+  220 Ohm x 10 pF pad capacitance (ASSUMPTION) = 2.2 ns: negligible against 300 ns  CALCULATION
   series 3k3: C   20 pF, tau 0.07 us vs CDT 1 us (ratio 0.07); IR at 63 uA = 0.208 V  CALCULATION
   series 3k3: C  100 pF, tau 0.33 us vs CDT 4 us (ratio 0.08); IR at 63 uA = 0.208 V  CALCULATION
   series 3k3: C  500 pF, tau 1.65 us vs CDT 32 us (ratio 0.05); IR at 63 uA = 0.208 V  CALCULATION
@@ -88,13 +96,13 @@ PASS  B4 I2C low-level sink current <= 3 mA (S-13 fast-mode VOL spec) :: 1.43 mA
   J2 screw terminal 2-way 5.08 mm, interlocking        x7  2.00 .. 3.00 EUR   ASSUMPTION
   SW1 tactile switch 6x6 mm                            x1  0.20 .. 0.20 EUR   ASSUMPTION
   RV1 10k linear pot 9 mm + knob                       x1  1.00 .. 1.50 EUR   ASSUMPTION
-  R1..R12 3k3 + R13/R14 4k7, 0.25 W axial              x14 0.28 .. 0.70 EUR   ASSUMPTION
+  R1..R12 3k3, R13/R14 4k7, R15/R16 220R, 0.25 W axial x16 0.32 .. 0.80 EUR   ASSUMPTION
   Single-sided copper clad 100x70 mm                   x1  1.00 .. 3.00 EUR   ASSUMPTION (part of the assembled board)
-  Core BOM (ADR-007 definition)                            20.38 .. 30.30 EUR  CALCULATION
+  Core BOM (ADR-007 definition)                            20.42 .. 30.40 EUR  CALCULATION
   excluded: Etchant/toner consumables                      0.50 .. 2.00 EUR  ASSUMPTION
   excluded: Micro-USB data cable                           3.00 .. 3.00 EUR  ASSUMPTION
   excluded: Crocodile leads x12 (optional)                 5.00 .. 10.00 EUR  ASSUMPTION
   excluded: M3 hardware (optional)                         2.00 .. 2.00 EUR  ASSUMPTION
-FAIL  C1 core BOM upper bound <= 30 EUR :: core 20.38 .. 30.30 EUR
+FAIL  C1 core BOM upper bound <= 30 EUR :: core 20.42 .. 30.40 EUR
 
-SUMMARY: 24 checks, 19 PASS, 5 FAIL
+SUMMARY: 29 checks, 25 PASS, 4 FAIL

@@ -1,4 +1,4 @@
-PASS  REQ-027 tracks only on B.Cu :: 89 segments, layers ['B.Cu']
+PASS  REQ-027 tracks only on B.Cu :: 91 segments, layers ['B.Cu']
 PASS  REQ-027 no vias :: via objects: 0
 PASS  REQ-027 no copper zones (no ground pour) :: zones: 0
 PASS  REQ-027 through-hole only (no SMD pads) :: smd pads: 0

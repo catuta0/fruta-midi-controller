@@ -1,4 +1,8 @@
-"""System budgets for FrutaMIDI (systems-engineer). Revision 2 (T-010), replaces the T-009 version.
+"""System budgets for FrutaMIDI (systems-engineer). Revision 3 (T-011); revision 2 was T-010, revision 1 T-009.
+
+T-011 changes: aftertouch burst plan = run-based reads from fm_mpr121.h (worst case over all 4096 masks);
+RP2040 pull-up 50..80 kOhm and IO levels from SOURCE S-17 (RP2040 datasheet Table 625); I2C series
+resistors R15/R16 220 Ohm (ADR-012): level margins and fault current.
 
 Every input carries a label: SOURCE (id in requirements/SOURCES_SYSTEMS.md), ASSUMPTION (with the
 reason) or a CALCULATION from those. Ranges are carried as (low, high) and propagated as
@@ -58,9 +62,9 @@ load("Module power LED (R7 1k)", ((V33 - 2.2) / 1.0, (V33 - 1.8) / 1.0), "CALCUL
 load("Module IRQ LED (10k)", rng(0.0, (V33 - 1.8) / 10.0), "CALCULATION, worst case INT held low", True)
 load("Module I2C pull-ups (4 x 10k, lines low)", rng(0.0, 4 * V33 / 10.0), "CALCULATION, worst case (S-06/S-07)", True)
 load("PCB I2C pull-ups R13/R14 4k7 (lines low)", rng(0.0, 2 * V33 / 4.7), "CALCULATION; PCB build only (kicad_pcb R13/R14)")
-load("RP2040 I2C internal pull-ups", rng(0.0, 2 * V33 / 50.0), "CALCULATION, R >= 50 kOhm ASSUMPTION (RP2040 datasheet not read)")
+load("RP2040 I2C internal pull-ups", rng(0.0, 2 * V33 / 50.0), "CALCULATION, RPU 50..80 kOhm SOURCE S-17 Table 625")
 load("Octave pot 10k +-20 %", (V33 / 12.0, V33 / 8.0), "CALCULATION V/R")
-load("Button pull-up (pressed)", rng(0.0, V33 / 50.0), "CALCULATION, R ASSUMPTION")
+load("Button pull-up (pressed)", rng(0.0, V33 / 50.0), "CALCULATION, RPU >= 50 kOhm SOURCE S-17")
 load("Electrode series R1..R12 3k3", rng(0.0, 0.0), "CALCULATION: no DC path (MPR121 charge current only, inside IDD)")
 
 ext_1 = add(*[r for _, r, _, _ in loads])
@@ -160,8 +164,52 @@ def read_bits(n):
 #   aftertouch pass (every AT_INTERVAL_MS = 15 ms, only if a pad is active), per sensor:
 #       readRegisters(addr, 0x04, filt, 24) and readRegisters(addr, 0x1E, base, 12)
 TX_TOUCHED = [2]
-TX_AT_PASS = [24, 12]
+MERGE_GAP = 1      # fm_mpr121.h MPR121_MERGE_GAP
+
+
+def next_run(mask, start):
+    """Python copy of fm::mpr121_next_run (fm_mpr121.h)."""
+    e = start
+    while e < 12 and not (mask >> e) & 1:
+        e += 1
+    if e >= 12:
+        return None
+    lo = hi = e
+    gap = 0
+    for e in range(lo + 1, 12):
+        if (mask >> e) & 1:
+            hi, gap = e, 0
+        else:
+            gap += 1
+            if gap > MERGE_GAP:
+                break
+    return lo, hi - lo + 1
+
+
+def at_plan(mask):
+    tx, start = [], 0
+    while True:
+        r = next_run(mask, start)
+        if r is None:
+            return tx
+        lo, n = r
+        tx += [2 * n, n]                       # readSensorData: filtered 2n B, baseline n B
+        start = lo + n
+
+
+assert at_plan(0xFFF) == [24, 12] and at_plan(0b1) == [2, 1] and at_plan(0b101) == [6, 3]
+# worst-case aftertouch pass over all 4095 non-empty masks (bus bits + per-transaction overhead)
+def plan_cost_bits(tx):
+    return sum(read_bits(n) for n in tx)
+
+
+WORST_MASK = max(range(1, 4096), key=lambda m: (plan_cost_bits(at_plan(m)) + len(at_plan(m)) * 16))
+TX_AT_PASS = at_plan(WORST_MASK)
+_bytes_per_pad_old = 9 * bin(WORST_MASK).count("1")
+print("  AT burst plan worst mask 0x%03X -> transactions %s (%d bus bytes incl. addr/reg; old per-pad path %d B)  CALCULATION"
+      % (WORST_MASK, TX_AT_PASS, sum(3 + n for n in TX_AT_PASS), _bytes_per_pad_old))
 assert read_bits(2) == 48 and read_bits(24) == 246 and read_bits(12) == 138
+assert max(sum(3 + n for n in at_plan(m)) for m in range(1, 4096)) <= 42   # fm_mpr121.h: at most 42 bytes
 SW_OVH = rng(10.0, 40.0)        # us per transaction, ASSUMPTION (Wire/BusIO software + FIFO handling)
 T_MISC = rng(20.0, 100.0)       # us per loop, ASSUMPTION (midiTask, button, pot, LED, MIDI enqueue of up to 12 messages)
 T_USB = rng(0.0, 1.0)           # ms, ASSUMPTION: next 1 ms full-speed frame; tud_task is IRQ-driven (S-11)
@@ -193,8 +241,8 @@ def latency(c_pf, f, sensors):
 
 
 for f in (400e3, 100e3):
-    print("  f_SCL = %3.0f kHz: touched() %s, AT pass (24 B + 12 B) %s, loop idle %s, loop with AT pass %s  CALCULATION"
-          % (f / 1e3, fmt(tx_us(2, f), "us", 0), fmt(add(tx_us(24, f), tx_us(12, f)), "us", 0),
+    print("  f_SCL = %3.0f kHz: touched() %s, AT pass worst plan %s, loop idle %s, loop with AT pass %s  CALCULATION"
+          % (f / 1e3, fmt(tx_us(2, f), "us", 0), fmt((sum(tx_us(n, f)[0] for n in TX_AT_PASS), sum(tx_us(n, f)[1] for n in TX_AT_PASS)), "us", 0),
              fmt(loop_us(f, 1, False), "us", 0), fmt(loop_us(f, 1, True), "us", 0)))
 
 print()
@@ -235,20 +283,48 @@ for f in (400e3, 100e3):
     print("  recalibrate() per sensor at %.0f kHz: %d transactions, %s (incl. 1 ms reset delay)  CALCULATION" % (f / 1e3, recal_tx, fmt(t, "ms", 1)))
 
 # I2C rise time (S-13 not read: fast mode t_r <= 300 ns, standard mode <= 1000 ns, t_r = 0.8473 R C)
-R_INT = 50e3                                   # ASSUMPTION
+R_INT = 80e3                                   # SOURCE S-17 Table 625 RPU 50..80 kOhm; 80k = slowest edge
 R_BB = par(10e3, R_INT)                        # breadboard: module host-side 10k || RP2040 internal
 R_PCB = par(4.7e3, 10e3, R_INT)                # PCB: + R13/R14 4k7
+R_BB_DOC = R_PCB                               # breadboard with the two 4k7 pull-ups required by ADR-009 D-11
 for name, r in (("breadboard", R_BB), ("PCB", R_PCB)):
     print("  I2C %-10s R_eff %.2f kOhm: C_b max %.1f pF @400 kHz, %.1f pF @100 kHz  CALCULATION"
           % (name, r / 1e3, 300e-9 / (0.8473 * r) * 1e12, 1000e-9 / (0.8473 * r) * 1e12))
 CB = rng(20e-12, 60e-12)                       # ASSUMPTION
-for name, r in (("breadboard", R_BB), ("PCB", R_PCB)):
+print("  INFO breadboard without the ADR-009 pull-ups: t_r %.0f ns at 60 pF (fails 300 ns above %.1f pF)  CALCULATION"
+      % (0.8473 * R_BB * CB[1] * 1e9, 300e-9 / (0.8473 * R_BB) * 1e12))
+for name, r in (("breadboard + 4k7 (ADR-009)", R_BB_DOC), ("PCB", R_PCB)):
     for f, lim in ((400e3, 300.0), (100e3, 1000.0)):
         tr = 0.8473 * r * CB[1] * 1e9
         check("B3 I2C rise time [%s, %.0f kHz, C_b <= 60 pF]" % (name, f / 1e3), tr <= lim, "t_r %.0f ns <= %.0f ns" % (tr, lim))
 # Sink current with PCB pull-ups when the MPR121 side pulls low through the BSS138 (both sides' pull-ups):
 i_sink = V33 / R_PCB * 1e3 + V33 / 10e3 * 1e3
 check("B4 I2C low-level sink current <= 3 mA (S-13 fast-mode VOL spec)", i_sink <= 3.0, "%.2f mA" % i_sink)
+
+# I2C logic levels with R15/R16 220 Ohm in series at the Pico pads (ADR-012). SOURCE S-17 Table 625 @ IOVDD 3.3 V:
+# VIH min 2.0 V, VIL max 0.8 V, VOH min 2.62 V, VOL max 0.5 V (at IOL = drive setting, default 4 mA ASSUMPTION).
+# MPR121 (S-04 Table 5): VIL 0.3 VDD, VIH 0.7 VDD, VOL 0.5 V @ 6 mA. Level shifter BSS138 drop ASSUMPTION 0..0.05 V.
+RS_I2C = 220.0
+VDD_MPR = (3.10, 3.40)
+i_bus_low = V33 / par(4.7e3, 10e3) + V33 / 50e3                   # pull-ups on the bus net + Pico pad pull-up
+v_bus_low_pico = 0.5 + i_bus_low * RS_I2C                          # Pico drives low through 220 Ohm
+vil_mpr = 0.3 * VDD_MPR[0]
+m1 = vil_mpr - (v_bus_low_pico + 0.05)
+check("B5 I2C low driven by Pico, seen by MPR121 (VIL 0.3*VDD_min)", m1 > 0,
+      "bus %.3f V (+0.05 V shifter) vs VIL %.3f V, margin %.3f V" % (v_bus_low_pico, vil_mpr, m1))
+v_pad_low_mpr = 0.5 + 0.05 + (V33 / 50e3) * RS_I2C                 # MPR121 drives low; only the pad pull-up flows in 220 Ohm
+m2 = 0.8 - v_pad_low_mpr
+check("B6 I2C low driven by MPR121, seen by RP2040 (VIL 0.8 V)", m2 > 0, "pad %.3f V vs 0.8 V, margin %.3f V" % (v_pad_low_mpr, m2))
+v_high = V33 - 0.0                                                 # pull-ups idle the bus at 3V3; no DC current in 220 Ohm
+check("B7 I2C high seen by RP2040 (VIH 2.0 V)", v_high - 2.0 > 0, "%.2f V vs 2.0 V, margin %.2f V" % (v_high, v_high - 2.0))
+vih_mpr = 0.7 * VDD_MPR[1]
+check("B8 I2C high seen by MPR121 (VIH 0.7*VDD_max; module side pulled to its own VDD)", VDD_MPR[0] - 0.7 * VDD_MPR[0] > 0,
+      "module side high = VDD, margin 0.3*VDD >= %.2f V (VIH up to %.2f V)" % (0.3 * VDD_MPR[0], vih_mpr))
+i_fault = 3.4 / RS_I2C * 1e3
+check("B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-17 IIOVDD_MAX)", i_fault <= 50.0,
+      "%.1f mA per line at 3.4 V (2 lines %.1f mA)" % (i_fault, 2 * i_fault))
+tau_pad = RS_I2C * 10e-12 * 1e9
+print("  220 Ohm x 10 pF pad capacitance (ASSUMPTION) = %.1f ns: negligible against 300 ns  CALCULATION" % tau_pad)
 
 # Electrode series resistor 3k3 (T-050): RC and IR drop against the MPR121 charge (S-04 CDC/CDT)
 R_S = 3.3e3
@@ -274,7 +350,7 @@ BOM = [
     ("J2 screw terminal 2-way 5.08 mm, interlocking", 7, rng(2.0 / 7, 3.0 / 7), "ASSUMPTION"),
     ("SW1 tactile switch 6x6 mm", 1, rng(0.2, 0.2), "ASSUMPTION"),
     ("RV1 10k linear pot 9 mm + knob", 1, rng(1.0, 1.5), "ASSUMPTION"),
-    ("R1..R12 3k3 + R13/R14 4k7, 0.25 W axial", 14, rng(0.02, 0.05), "ASSUMPTION"),
+    ("R1..R12 3k3, R13/R14 4k7, R15/R16 220R, 0.25 W axial", 16, rng(0.02, 0.05), "ASSUMPTION"),
     ("Single-sided copper clad 100x70 mm", 1, rng(1.0, 3.0), "ASSUMPTION (part of the assembled board)"),
 ]
 EXCLUDED = [("Etchant/toner consumables", rng(0.5, 2.0)), ("Micro-USB data cable", rng(3.0, 3.0)),
