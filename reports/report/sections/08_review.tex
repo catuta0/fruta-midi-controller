@@ -1,9 +1,69 @@
 \section{Independent review findings}
 \label{sec:review}
 
-Review of \texttt{72f67f0} (task T-060): 16 findings (0 critical, 3 major, 9 minor,
-4 info). Dispositions are in \ev{reports/review/72f67f0/findings.md}; ADR-014 records
-13 FIX, 1 ACCEPTED and 2 info FIX. Re-review pending.
+An independent reviewer, who did not produce the work, reviewed revision
+\texttt{72f67f0} (task T-060) \ev{reports/review/72f67f0/findings.md} and then
+re-reviewed the fixes in \texttt{72f67f0..05a06a3} (task T-061)
+\ev{reports/review/05a06a3/findings.md}. Dispositions are recorded in ADR-014 and
+ADR-018 \ev{management/DECISIONS.md}.
 
-\tbf{Per-finding table (ID, severity, disposition, evidence) and the re-review
-result.}
+\paragraph{Summary.}
+\begin{itemize}[noitemsep]
+  \item First review: 16 findings (0 critical, 3 major, 9 minor, 4 info);
+        dispositions 13 FIX, 1 ACCEPTED, 2 info FIX (ADR-014).
+  \item Re-review: 14 CLOSED, 1 ACCEPTED (F-012), 1 NOT CLOSED at 05a06a3 (F-007,
+        fixed afterwards, ADR-018); 5 new findings (2 minor, 3 info).
+  \item Reviewer re-checks at 05a06a3: \texttt{run\_pytest tests/firmware}
+        ``295 passed in 1.93s''; ERC ``Found 0 violations''; DRC 0/0/0; status
+        counts 17/18/3/4 = 42 match (\lbl{MEASUREMENT}).
+\end{itemize}
+
+\paragraph{Highlight: defect found while fixing F-005.} On an I\textsuperscript{2}C
+NACK the Adafruit library's \texttt{touched()} returned 0x0FFF, i.e.\ all 12 pads
+touched, so a lost sensor would have sent 12 Note Ons. The firmware now reads the
+status registers itself and checks the transaction result (ADR-017). The re-review
+confirmed the fix (F-005 CLOSED).
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}p{0.23\linewidth}>{\raggedright\arraybackslash}p{0.17\linewidth}@{}}
+\caption{Review findings, dispositions and re-review verdicts.}\label{tab:review}\\
+\toprule
+ID & Sev. & Finding (one line) & Disposition & Re-review \\
+\midrule
+\endfirsthead
+\toprule
+ID & Sev. & Finding (one line) & Disposition & Re-review \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+F-001 & major & A wrong JP1 position was called harmless; it exceeds the MPR121 VDD + 0.3\,V absolute maximum and back-feeds the module. & FIX: README \S5/\S6 & CLOSED \\
+F-002 & major & The $\pm$4\,kV ``PASS'' compared peak current only; pin limit is an \lbl{ASSUMPTION}; resistor not pulse-rated. & FIX: REQ-023 is an estimate, not a pass & CLOSED \\
+F-010 & major & REQ-018 was PARTIAL although budget check A3b FAILs (4.40\,V $<$ 4.50\,V). & FIX: REQ-018 FAIL & CLOSED \\
+F-003 & minor & Pot hysteresis defined two ways; offset share misstated. & FIX: REQ-006 restated & CLOSED \\
+F-004 & minor & Two held pads can share a note; releasing one sent Note Off. & FIX: reference counting & CLOSED \\
+F-005 & minor & Sensor lost during play not detected; missing second sensor never retried. & FIX: sensor health & CLOSED \\
+F-006 & minor & Leonardo could run I\textsuperscript{2}C at 100\,kHz after \texttt{begin()}. & FIX: \texttt{setClock} after every \texttt{begin()} & CLOSED \\
+F-007 & minor & REQ-033 build logs not in the commit. & FIX: commit logs & NOT CLOSED at 05a06a3; fixed after (ADR-018) \\
+F-008 & minor & budgets.md stale; coverage.md ``USL 201''. & FIX: regenerate, reconcile & CLOSED (residue N-002) \\
+F-009 & minor & README named an ``aprender'' button. & FIX & CLOSED \\
+F-011 & minor & Latency model omitted the 15\,ms pad lockout. & FIX: REQ-014 scoped to first touch & CLOSED \\
+F-014 & minor & Terminal pin diagonal 1.27\,mm in a 1.3\,mm hole; pot slot drilling unclear. & FIX: 1.4\,mm drill, slot instruction & CLOSED \\
+F-012 & info & Latency rests on an assumed MPR121 status-update model. & ACCEPTED (plan P-2) & ACCEPTED \\
+F-013 & info & ERC ignored single-pin labels globally. & FIX at root (J3) & CLOSED \\
+F-015 & info & BOM lacked part numbers; strip count wrong. & FIX & CLOSED \\
+F-016 & info & AGND relied on the Pico's internal tie without citation. & FIX: cite S-01/S-02 & CLOSED \\
+N-001 & minor & Automatic restart of a self-reset sensor blocks the loop 16.8--22.1\,ms, beyond REQ-016's 10\,ms. & ACCEPTED as specified exception (ADR-018) & new \\
+N-002 & minor & REQ-016 evidence stale (worst loop $\approx$1.72\,ms incl.\ ECR poll). & FIXED (ADR-018) & new \\
+N-003 & info & INTERFACES had no J3/J4--J7. & FIXED (frozen-3, IF-PCB-AUX) & new \\
+N-004 & info & With 2 sensors configured and one absent the LED blinks fast permanently. & ACCEPTED (matches REQ-009) & new \\
+N-005 & info & A second pad on an already sounding note is silent (no retrigger). & ACCEPTED (matches REQ-042) & new \\
+\end{longtable}
+}
+
+\paragraph{What the review did not cover.} First review: INTERFACES.json field by
+field; visual check of the copper PDFs and mirroring; the sampler beyond its MIDI
+handler; 8 of 9 firmware targets; MPR121 power-on-reset timing. Re-review: compile
+runs (logs only); copper PDFs and silkscreen visually; this report's LaTeX; the
+individual test cases of \texttt{test\_notes\_health.py}. Neither review is a
+hardware test.

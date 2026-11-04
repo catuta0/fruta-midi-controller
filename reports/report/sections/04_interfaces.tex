@@ -1,8 +1,8 @@
 \section{Interfaces}
 \label{sec:interfaces}
 
-Source: \ev{management/INTERFACES.json}, revision \texttt{frozen-2} (frozen-1 of 2026-11-03, ADR-013, plus a
-documentation-only change request from T-012, ADR-016; frozen on 2026-11-04). Changes go through the engineering
+Source: \ev{management/INTERFACES.json}, revision \texttt{frozen-3} (frozen-1 of 2026-11-03, ADR-013; documentation-only
+changes from T-012, ADR-016, and from review N-003, ADR-018; frozen on 2026-11-04). Changes go through the engineering
 change process.
 
 {\small
@@ -17,6 +17,7 @@ IF-TERMINALS & J2: 14 terminals at 5.08\,mm: GND, E0--E11, GND. Terminal $k$ ($k
 IF-MPR121-MODULE & Socket A2: 1$\times$13 electrode row and 1$\times$7 power/I\textsuperscript{2}C row S1--S7. JP1: pad 1 S1 (ORIG), pad 2 +3V3, pad 3 S7 (QT); a wrong choice puts +3V3 on ADDR or IRQ, never GND (REQ-039 PASS, REQ-040 FAIL). J1: pad 1 SCL, pad 2 SDA; wires to S5/S6 (original) or S3/S4 (STEMMA QT). & REQ-024, 025 \\
 IF-CONTROLS & SW1 to GND with internal pull-up, sampled every \qty{10}{\milli\second}; long press $>$ \qty{800}{\milli\second} recalibrates, short press selects the next scale. RV1 \qty{10}{\kilo\ohm} linear: 10-bit ADC read every \qty{30}{\milli\second}, 5 zones of 0.66\,V, hysteresis 0.7 zone, dead band 0.132\,V against an error budget of 0.0364\,V (\lbl{CALCULATION}, budgets.md). & REQ-006, 007, 008 \\
 IF-FW-BUILD & arduino-cli 1.5.1, arduino-pico 6.3.1, Adafruit MPR121 1.2.1, BusIO 1.17.4, MIDI Library 5.0.2. FQBN \nolinkurl{rp2040:rp2040:<board>:usbstack=tinyusb} for Pico, Pico W, Pico 2, Pico 2 W; \nolinkurl{-DFRUTAMIDI_PCB} selects the PCB pin map; optional \nolinkurl{arduino:avr:leonardo}. Artifacts \texttt{FrutaMIDI-<board>.uf2} and \texttt{FrutaMIDI-pcb-<board>.uf2}. & REQ-033 \\
+IF-PCB-AUX & Documentation-only (review N-003): J3 = the S1--S7 wire holes (FrutaMIDI:WireHoles\_1x07\_P2.54mm), each joined to the module power/I\textsuperscript{2}C row; J4--J7 = BOM-only female headers (2$\times$1$\times$20 Pico, 1$\times$13 and 1$\times$7 module). & --- \\
 \bottomrule
 \end{longtable}
 }

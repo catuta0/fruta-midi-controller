@@ -1,0 +1,9 @@
+rpipico std exit=0 Sketch uses 90316 bytes (4%) of program storage space. Maximum is 2093056 bytes.
+rpipico pcb exit=0 Sketch uses 91196 bytes (4%) of program storage space. Maximum is 2093056 bytes.
+rpipicow std exit=0 Sketch uses 349048 bytes (16%) of program storage space. Maximum is 2093056 bytes.
+rpipicow pcb exit=0 Sketch uses 349848 bytes (16%) of program storage space. Maximum is 2093056 bytes.
+rpipico2 std exit=0 Sketch uses 88616 bytes (2%) of program storage space. Maximum is 4186112 bytes.
+rpipico2 pcb exit=0 Sketch uses 89184 bytes (2%) of program storage space. Maximum is 4186112 bytes.
+rpipico2w std exit=0 Sketch uses 346628 bytes (8%) of program storage space. Maximum is 4186112 bytes.
+rpipico2w pcb exit=0 Sketch uses 347196 bytes (8%) of program storage space. Maximum is 4186112 bytes.
+leonardo exit=0 Sketch uses 13638 bytes (47%) of program storage space. Maximum is 28672 bytes.

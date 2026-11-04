@@ -16,3 +16,5 @@ management/locks/*.lock
 hardware/frutamidi.*.rpt
 sim/systems/datasheets/*.pdf
 !reports/**/build/
+!releases/**/*.uf2
+!releases/**/*.hex

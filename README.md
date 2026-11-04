@@ -95,7 +95,7 @@ The firmware also compiles for the Arduino Pro Micro / Leonardo (ATmega32u4). In
 
 Physical pins are counted from 1 to 40 with the USB facing up: pin 1 is the top-left corner, you go down the left side to 20 and back up the right side to 40.
 
-**Second MPR121 (24 pads).** Connect it in parallel with the first, on the same 3V3, GND, SDA and SCL. To change its address to 0x5B, connect its **ADDR** pin to 3V3. On the clone, ADDR usually comes tied to GND by a trace or solder bridge that you must cut first. In the firmware, set `NUM_SENSORS = 2`; the `.uf2` files in Releases are for 1 sensor.
+**Second MPR121 (24 pads).** Connect it in parallel with the first, on the same 3V3, GND, SDA and SCL. To change its address to 0x5B, connect its **ADDR** pin to 3V3. On the clone, ADDR usually comes tied to GND by a trace or solder bridge that you must cut first. In the firmware, set `NUM_SENSORS = 2`; the `.uf2` files in Releases are for 1 sensor. With `NUM_SENSORS = 2`, an LED that keeps blinking fast means one of the two modules is not answering.
 
 **Pro Micro / Leonardo.** SDA = pin 2, SCL = pin 3, button on pin 7, potentiometer on A0.
 

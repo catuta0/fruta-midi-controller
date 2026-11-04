@@ -2,9 +2,9 @@
 
 | Field | Value |
 | --- | --- |
-| Current gate | Pre-G1 (setup) |
+| Current gate | G5 prepared — V1_BASELINE committed and tagged; GitHub release awaiting user approval |
 | Baseline under work | `main` @ d85b330 (v1.1 content; GitHub release v1.0.0 published; v1.1.0 release NOT published) |
-| Phase | B — workspace and specialist setup done; restart required to load agents |
+| Phase | B complete except the public GitHub release |
 | Last update | 2026-10-30 |
 
 ## Mapping of the generic structure to this repository

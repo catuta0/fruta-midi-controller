@@ -36,7 +36,10 @@ Sources: \ev{reports/firmware/coverage.md} and the T-040 to T-043 handoffs in
         notes, restarts sensors, 3 blinks); short press selects the next scale.
   \item LED patterns are non-blocking: pads stay live while the LED blinks (T-041).
         \texttt{startSensors()} still blocks the loop during a user-requested
-        recalibration (kept by decision; duration to be measured).
+        recalibration (kept by decision; duration to be measured). The automatic
+        restart of a lost sensor also blocks it for 16.8--22.1\,ms (\lbl{CALCULATION}),
+        at most once per $\ge$2\,s retry; REQ-016 lists this fault-path exception
+        (ADR-018, review N-001).
   \item MPR121 configuration: AUTOCONFIG with USL/TL/LSL = 200/180/130 at design
         VDD 3.2\,V and SCTS = 0 (ADR-010, ADR-011, \lbl{SOURCE} MPR121 datasheet
         S-006); I\textsuperscript{2}C stays at \qty{400}{\kilo\hertz}; run-based

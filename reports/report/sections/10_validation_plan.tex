@@ -34,7 +34,7 @@ V-09 & Electrode readings with and without $R$ & \texttt{SERIAL\_DEBUG} deltas p
 V-10 & ESD robustness & IEC 61000-4-2 contact discharge $\pm$4\,kV on each terminal, at a test lab & No permanent damage: all pads still detect touch afterwards & REQ-023 \\
 V-11 & Series resistor after ESD & Inspect and measure R1--R12 after V-10; watch for flashover & Value within tolerance; no flashover (CR-001 if it fails) & REQ-023 \\
 V-12 & JP1 bridge and etch gaps & Visual inspection with a magnifier and continuity after etching and bridging & Bridge only on the chosen side; 0.6\,mm gaps clear; no short to GND in any position & REQ-025, 039 \\
-V-13 & Real loop period & Toggle a spare GPIO each loop; oscilloscope & No blocking $>$ 10\,ms during play & REQ-016 \\
+V-13 & Real loop period & Toggle a spare GPIO each loop; oscilloscope & No blocking $>$ 10\,ms during play, except user recalibration and the lost-sensor restart (ADR-018) & REQ-016 \\
 V-14 & Recalibration duration & GPIO toggle around \texttt{recalibrate()} & Recorded per sensor; compare with 16.8--22.1\,ms (\lbl{CALCULATION}); no stuck notes afterwards & REQ-008, 002 \\
 V-15 & Pot ADC noise on the PCB & Log \texttt{analogRead} at each zone border for 10\,s & Peak-to-peak noise $<$ 41 counts & REQ-006 \\
 V-16 & Blink with live pads & Touch pads while the LED blinks scale 6; press again during a blink & Notes sent during the blink; pattern restarts with the new scale & REQ-007, 016 \\

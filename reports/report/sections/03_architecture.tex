@@ -28,7 +28,7 @@ Risk level & Low--medium & High & Medium \\
 20.42--30.40\,EUR (\lbl{CALCULATION}, REQ-032, Section~\ref{sec:requirements}).
 
 \subsection{Decisions}
-Summary of \ev{management/DECISIONS.md} (ADR-000 to ADR-017). Decisions taken by the manager under
+Summary of \ev{management/DECISIONS.md} (ADR-000 to ADR-018). Decisions taken by the manager under
 ADR-001 are flagged there for later user review.
 
 {\small
@@ -54,6 +54,7 @@ ADR-014 & All 16 review findings of 72f67f0 dispositioned (13 FIX, 1 ACCEPTED, 2
 ADR-015 & BOM part numbers: J2 Phoenix Contact 1715721 ($\times$7); RV1 named by series (RK09K, order code not sourced, PARTIAL accepted); female headers generic; SW1 Omron B3F-1000. & T-056 \\
 ADR-016 & REQ-018 stays FAIL with a documented deviation (low-power USB port 4.40\,V below the Pico's recommended 4.50\,V; guide recommends a standard port or powered hub); documentation-only interface change applied as frozen-2. & T-012 \\
 ADR-017 & Firmware review fixes: per-note reference counting (F-004), sensor health with loss detection and retry (F-005), \texttt{setClock} after every sensor \texttt{begin()} (F-006). & T-044 \\
+ADR-018 & Re-review dispositions: F-007 fixed (build logs committed); N-001 accepted as a REQ-016 exception (lost-sensor restart 16.8--22.1\,ms, fault path only); N-002 evidence refreshed; N-003 interfaces frozen-3 (IF-PCB-AUX). & T-061 \\
 \bottomrule
 \end{longtable}
 }

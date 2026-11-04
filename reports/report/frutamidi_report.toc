@@ -10,7 +10,7 @@
 \contentsline {paragraph}{Change candidate.}{12}{section*.3}%
 \contentsline {section}{\numberline {4}Interfaces}{12}{section.4}%
 \contentsline {section}{\numberline {5}Electronics analysis}{13}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Schematic and PCB checks}{13}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.1}Schematic and PCB checks}{14}{subsection.5.1}%
 \contentsline {subsection}{\numberline {5.2}Datasheet checks and budgets}{14}{subsection.5.2}%
 \contentsline {subsection}{\numberline {5.3}Bill of materials}{14}{subsection.5.3}%
 \contentsline {subsection}{\numberline {5.4}Electrode path and ESD (critical block)}{14}{subsection.5.4}%
@@ -20,18 +20,21 @@
 \contentsline {subsection}{\numberline {6.1}Design}{15}{subsection.6.1}%
 \contentsline {subsection}{\numberline {6.2}Latency budget}{16}{subsection.6.2}%
 \contentsline {subsection}{\numberline {6.3}Build and tests}{16}{subsection.6.3}%
-\contentsline {section}{\numberline {7}Host software and tests}{16}{section.7}%
+\contentsline {section}{\numberline {7}Host software and tests}{17}{section.7}%
 \contentsline {subsection}{\numberline {7.1}Design}{17}{subsection.7.1}%
 \contentsline {subsection}{\numberline {7.2}Tests}{17}{subsection.7.2}%
 \contentsline {section}{\numberline {8}Independent review findings}{17}{section.8}%
-\contentsline {section}{\numberline {9}Limitations}{17}{section.9}%
-\contentsline {paragraph}{No hardware tests.}{17}{section*.4}%
-\contentsline {paragraph}{Analysis-only results.}{17}{section*.5}%
-\contentsline {paragraph}{Open FAILs and accepted risks.}{17}{section*.6}%
-\contentsline {paragraph}{Main assumptions}{18}{section*.7}%
-\contentsline {paragraph}{Process limitations.}{18}{section*.8}%
-\contentsline {section}{\numberline {10}Physical validation plan}{18}{section.10}%
-\contentsline {section}{\numberline {11}Reproducibility}{19}{section.11}%
-\contentsline {subsection}{\numberline {11.1}Toolchain}{19}{subsection.11.1}%
-\contentsline {subsection}{\numberline {11.2}How to rebuild}{20}{subsection.11.2}%
-\contentsline {section}{\numberline {A}Sources}{20}{appendix.A}%
+\contentsline {paragraph}{Summary.}{17}{section*.4}%
+\contentsline {paragraph}{Highlight: defect found while fixing F-005.}{17}{section*.5}%
+\contentsline {paragraph}{What the review did not cover.}{18}{section*.6}%
+\contentsline {section}{\numberline {9}Limitations}{18}{section.9}%
+\contentsline {paragraph}{No hardware tests.}{18}{section*.7}%
+\contentsline {paragraph}{Analysis-only results.}{19}{section*.8}%
+\contentsline {paragraph}{Open FAILs and accepted risks.}{19}{section*.9}%
+\contentsline {paragraph}{Main assumptions}{19}{section*.10}%
+\contentsline {paragraph}{Process limitations.}{19}{section*.11}%
+\contentsline {section}{\numberline {10}Physical validation plan}{19}{section.10}%
+\contentsline {section}{\numberline {11}Reproducibility}{21}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Toolchain}{21}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}How to rebuild}{21}{subsection.11.2}%
+\contentsline {section}{\numberline {A}Sources}{22}{appendix.A}%
