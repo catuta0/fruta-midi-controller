@@ -98,6 +98,8 @@ class Sheet:
         self.items = []
         self.lib = {}
         self.pins = {}
+        self.rot = {}            # (lib key, x, y) -> rotation in degrees (counter-clockwise)
+        self.mirror = {}         # (lib key, x, y) -> mirrored about the horizontal axis
 
     def use(self, lib, name):
         key = "%s:%s" % (lib, name)
@@ -113,8 +115,11 @@ class Sheet:
         return key
 
     def symbol(self, lib, name, ref, value, x, y, footprint, fields=None, hide_ref=False, in_bom=True, ref_at=(0, -3.0),
-               on_board=True):
+               on_board=True, rot=0, mirror_x=False):
         key = self.use(lib, name)
+        self.rot[(key, x, y)] = rot
+        self.mirror[(key, x, y)] = mirror_x
+        mir = " (mirror x)" if mirror_x else ""
         sid = det_uuid("sym", ref)
         pin_uuids = "".join('\n\t\t(pin "%s" (uuid "%s"))' % (n, det_uuid("pin", ref, n)) for n in self.pins[key])
         ref_hide = " (hide yes)" if hide_ref else ""
@@ -123,11 +128,11 @@ class Sheet:
             extra += '\n\t\t(property "%s" "%s" (at %.2f %.2f 0) (effects (font (size 1.27 1.27)) (hide yes)))' % (k, v, x, y)
         self.items.append(f'''	(symbol
 		(lib_id "{key}")
-		(at {x:.2f} {y:.2f} 0)
+		(at {x:.2f} {y:.2f} {rot}){mir}
 		(unit 1)
 		(exclude_from_sim no) (in_bom {"yes" if in_bom else "no"}) (on_board {"yes" if on_board else "no"}) (dnp no)
 		(uuid "{sid}")
-		(property "Reference" "{ref}" (at {x + ref_at[0]:.2f} {y + ref_at[1]:.2f} 0) (effects (font (size 1.27 1.27)){ref_hide}))
+		(property "Reference" "{ref}" (at {x + ref_at[0]:.2f} {y + ref_at[1]:.2f} {rot}) (effects (font (size 1.27 1.27)){ref_hide}))
 		(property "Value" "{value}" (at {x:.2f} {y + 3.0:.2f} 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Footprint" "{footprint}" (at {x:.2f} {y:.2f} 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Datasheet" "" (at {x:.2f} {y:.2f} 0) (effects (font (size 1.27 1.27)) (hide yes)))
@@ -138,6 +143,11 @@ class Sheet:
 
     def pin_end(self, key, sx, sy, num):
         px, py, a, _ = self.pins[key][num]
+        r = self.rot.get((key, sx, sy), 0)
+        if self.mirror.get((key, sx, sy)):        # (mirror x): flip top and bottom
+            py, a = -py, {90: 270, 270: 90}.get(a, a)
+        for _ in range(r // 90):                 # rotate 90 deg counter-clockwise (library y axis points up)
+            px, py, a = -py, px, (a + 90) % 360
         return sx + px, sy - py, a
 
     def wire(self, x1, y1, x2, y2):
@@ -152,14 +162,14 @@ class Sheet:
     def no_connect(self, x, y):
         self.items.append('\t(no_connect (at %.2f %.2f) (uuid "%s"))' % (x, y, U()))
 
-    def power(self, name, x, y, ref):
+    def power(self, name, x, y, ref, rot=0):
         key = self.use("power", name)
         self.items.append(f'''	(symbol
-		(lib_id "{key}") (at {x:.2f} {y:.2f} 0) (unit 1)
+		(lib_id "{key}") (at {x:.2f} {y:.2f} {rot}) (unit 1)
 		(exclude_from_sim no) (in_bom yes) (on_board yes) (dnp no)
 		(uuid "{det_uuid('pwr', ref)}")
 		(property "Reference" "{ref}" (at {x:.2f} {y:.2f} 0) (effects (font (size 1.27 1.27)) (hide yes)))
-		(property "Value" "{name}" (at {x:.2f} {y + (3.81 if name == 'GND' else -3.81):.2f} 0) (effects (font (size 1.27 1.27))))
+		(property "Value" "{name}" (at {x:.2f} {y + (3.81 if name == 'GND' else -3.81) * (-1 if rot == 180 else 1):.2f} 0) (effects (font (size 1.27 1.27))))
 		(property "Footprint" "" (at {x:.2f} {y:.2f} 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Datasheet" "" (at {x:.2f} {y:.2f} 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Description" "" (at {x:.2f} {y:.2f} 0) (effects (font (size 1.27 1.27)) (hide yes)))
@@ -181,10 +191,18 @@ class Sheet:
         ex, ey = x + dx * stub, y + dy * stub
         self.wire(x, y, ex, ey)
         if net in ("GND", "+3V3"):
-            self.power(net, ex, ey, "#PWR%02d" % (len([i for i in self.items if "#PWR" in i]) + 1))
+            # turn the symbol over when the stub points against its natural direction (GND down, +3V3 up)
+            flip = (net == "+3V3" and dy == 1) or (net == "GND" and dy == -1)
+            self.power(net, ex, ey, "#PWR%02d" % (len([i for i in self.items if "#PWR" in i]) + 1), 180 if flip else 0)
         else:
             angle = {(-1, 0): 180, (1, 0): 0, (0, -1): 90, (0, 1): 270}[(dx, dy)]
             self.label(net, ex, ey, angle)
+
+    def frame(self, title, x1, y1, x2, y2):
+        """Dashed box around a functional block, with its title inside the top-left corner."""
+        self.items.append('\t(rectangle (start %.2f %.2f) (end %.2f %.2f) (stroke (width 0.254) (type dash)) '
+                          '(fill (type none)) (uuid "%s"))' % (x1, y1, x2, y2, U()))
+        self.text(title, x1 + 1.27, y1 + 1.27, size=2.0)
 
     def nc(self, key, sx, sy, num):
         x, y, _ = self.pin_end(key, sx, sy, num)
@@ -198,7 +216,7 @@ class Sheet:
 	(generator "frutamidi_gen")
 	(generator_version "1.0")
 	(uuid "{ROOT_UUID}")
-	(paper "A4")
+	(paper "A3")
 	(title_block
 		(title "{title}")
 		(date "2026-10-30")
@@ -220,12 +238,17 @@ class Sheet:
 # --------------------------------------------------------------------------- circuit
 
 def build():
+    """A3 sheet, one dashed frame per functional block. Signal flow left to right:
+    Pico -> I2C bus -> MPR121 module -> series resistors -> screw terminals."""
     s = Sheet()
 
-    # Raspberry Pi Pico (socketed)
-    PX, PY = 101.6, 101.6
+    # ------------------------------------------------------------------ Raspberry Pi Pico
+    s.frame("1. Microcontroller: Raspberry Pi Pico (socketed)", 30.48, 78.74, 124.46, 190.50)
+    s.text("I2C1: SDA = GP26, SCL = GP27 (Wire1).  Button = GP22.\n"
+           "Potentiometer = GP28 (ADC2).  Build the firmware with FRUTAMIDI_PCB.", 31.75, 83.82)
+    PX, PY = 76.20, 139.70
     pico = s.symbol("MCU_Module", "RaspberryPi_Pico", "A1", "RaspberryPi_Pico", PX, PY,
-                    "FrutaMIDI:RaspberryPi_Pico_Socket", ref_at=(-12.7, -40.64),
+                    "FrutaMIDI:RaspberryPi_Pico_Socket", ref_at=(-17.78, -40.64),
                     fields={"Manufacturer": "Raspberry Pi", "MPN": "SC0915"})
     used = {"31": "SDA_PICO", "32": "SCL_PICO", "34": "POT", "33": "AGND", "29": "BTN", "36": "+3V3", "3": "GND"}
     for num, net in used.items():
@@ -235,126 +258,123 @@ def build():
         if num not in used and num not in gnd_pins:
             s.nc(pico, PX, PY, num)
 
-    # MPR121 module (socketed): electrodes on the right, power/I2C row on the left
-    MX, MY = 190.5, 96.52
-    mod = s.symbol("FrutaMIDI", "Adafruit_MPR121_1982", "A2", "Adafruit_MPR121_1982", MX, MY,
-                   "FrutaMIDI:Adafruit_MPR121_1982_Socket", ref_at=(0, -22.86),
-                   fields={"Manufacturer": "Adafruit", "MPN": "1982"})
-    s.connect(mod, MX, MY, "1", "GND")
-    for i in range(12):
-        s.connect(mod, MX, MY, str(2 + i), "ELE%d" % i)       # MPR121 side of the series resistor
-
-    # T-050: series resistor per electrode (ESD current limit; value from sim/electronics/calc/sim_electrode.py
-    # and calc_esd_variants.py: 2.7 k <= R <= 3.3 k). Terminal side keeps the net names E0..E11.
-    R_FIELDS = {"Manufacturer": "Yageo", "MPN": "MFR-12FTF52-3K3"}
-    for i in range(12):
-        rx, ry = 165.10 + 7.62 * i, 40.64
-        r = s.symbol("Device", "R", "R%d" % (i + 1), "3k3", rx, ry,
-                     "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=R_FIELDS, ref_at=(2.54, -1.27))
-        s.connect(r, rx, ry, "1", "ELE%d" % i)
-        s.connect(r, rx, ry, "2", "E%d" % i)
-
-    # T-050: I2C pull-ups on the Pico side (in parallel with the module's 10k): rise time, calc_i2c.py
+    # ------------------------------------------------------------------ I2C bus
+    s.frame("2. I2C bus", 132.08, 35.56, 208.28, 91.44)
+    s.text("R13/R14: 4.7k pull-ups to 3V3 (rise time at 400 kHz, T-050).\n"
+           "R15/R16: 220R between the Pico pins and the bus (wrong-wire current limit, T-055).", 133.35, 40.64)
     PU_FIELDS = {"Manufacturer": "Yageo", "MPN": "MFR-12FTF52-4K7"}
     for k, net in enumerate(("SCL", "SDA")):
-        rx, ry = 134.62 + 7.62 * k, 40.64
+        rx, ry = 144.78 + 10.16 * k, 63.50
         r = s.symbol("Device", "R", "R%d" % (13 + k), "4k7", rx, ry,
                      "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=PU_FIELDS, ref_at=(2.54, -1.27))
         s.connect(r, rx, ry, "1", "+3V3")
         s.connect(r, rx, ry, "2", net)
-
-    # T-055 / ADR-009 D-9: 220R in series between each Pico I2C pin and the bus (J1 hole + pull-ups).
-    # A hand wire misplaced onto a supply pin then limits the Pico pin current to <= 15.5 mA (calc_i2c_series.py);
-    # the pull-ups stay on the bus side, so the module's low level reaches the Pico without an I*R drop.
     SR_FIELDS = {"Manufacturer": "Yageo", "MPN": "MFR-12FTF52-220R"}
     for k, net in enumerate(("SCL", "SDA")):
-        rx, ry = 149.86 + 7.62 * k, 40.64
+        rx, ry = 180.34, 58.42 + 12.70 * k
         r = s.symbol("Device", "R", "R%d" % (15 + k), "220", rx, ry,
-                     "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=SR_FIELDS, ref_at=(2.54, -1.27))
+                     "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=SR_FIELDS, ref_at=(0, -2.54), rot=90)
         s.connect(r, rx, ry, "1", net + "_PICO")
         s.connect(r, rx, ry, "2", net)
-    # T-056 / F-013: the Q-row wire holes are their own part (J3), so every S label joins two pins (no isolated labels)
-    QHX, QHY = 152.4, 96.52
-    jq = s.symbol("Connector_Generic", "Conn_01x07", "J3", "WIRE_HOLES_S1_S7", QHX, QHY,
-                  "FrutaMIDI:WireHoles_1x07_P2.54mm", in_bom=False, ref_at=(0, -11.43))
-    for k in range(7):
-        s.connect(jq, QHX, QHY, str(k + 1), "S%d" % (k + 1))
-    for k, num in enumerate(range(14, 21)):
-        s.connect(mod, MX, MY, str(num), "S%d" % (k + 1))   # S1/S7 via JP1; SDA/SCL by hand wire from J1 (see note)
-
-    # Configuration holes for the two I2C wires (T-052 / D-4: 3V3 is no longer a free wire)
-    JX, JY = 152.4, 63.5
-    j1 = s.symbol("Connector_Generic", "Conn_01x02", "J1", "CFG_SCL_SDA", JX, JY, "FrutaMIDI:Config_2pads")
+    JX, JY = 200.66, 81.28
+    j1 = s.symbol("Connector_Generic", "Conn_01x02", "J1", "CFG_SCL_SDA", JX, JY, "FrutaMIDI:Config_2pads",
+                  ref_at=(0, -3.81))
     for num, net in (("1", "SCL"), ("2", "SDA")):
         s.connect(j1, JX, JY, num, net)
+    s.text("J1: holes for the two configuration wires", 165.10, 86.36)
 
-    # 3V3 selector (T-052 / D-4): centre = +3V3, side A -> S1 (VIN, original), side B -> S7 (VCC, STEMMA QT).
-    # A wrong choice lands on ADDR (QT) or IRQ (original): no short circuit.
-    QX, QY = 165.1, 63.5
-    jp = s.symbol("Jumper", "SolderJumper_3_Open", "JP1", "3V3_ORIG_QT", QX, QY,
-                  "FrutaMIDI:SolderJumper_3_THT_P2.54mm", in_bom=False, ref_at=(0, -3.81))
-    s.connect(jp, QX, QY, "1", "S1")
-    s.connect(jp, QX, QY, "2", "+3V3")
-    s.connect(jp, QX, QY, "3", "S7")
+    # ------------------------------------------------------------------ MPR121 module, electrodes, terminals
+    s.frame("3. Touch sensing: MPR121 module, electrode resistors, screw terminals", 213.36, 93.98, 340.36, 187.96)
+    MX, MY = 264.16, 139.70
+    mod = s.symbol("FrutaMIDI", "Adafruit_MPR121_1982", "A2", "Adafruit_MPR121_1982", MX, MY,
+                   "FrutaMIDI:Adafruit_MPR121_1982_Socket", ref_at=(0, -22.86),
+                   fields={"Manufacturer": "Adafruit", "MPN": "1982"})
+    s.connect(mod, MX, MY, "1", "GND")
+    for k, num in enumerate(range(14, 21)):
+        s.connect(mod, MX, MY, str(num), "S%d" % (k + 1))   # S1/S7 via JP1; SDA/SCL by hand wire from J1
 
-    # Screw terminals (7 interlocked 2-way blocks): GND, E0..E11, GND
-    TX, TY = 262.89, 96.52
+    # T-050: series resistor per electrode (ESD current limit; 2.7 k <= R <= 3.3 k, sim/electronics/calc).
+    # Drawn on the wire between the module pin (net ELEx) and the terminal (net Ex).
+    R_FIELDS = {"Manufacturer": "Yageo", "MPN": "MFR-12FTF52-3K3"}
+    TX, TY = 325.12, MY - 2.54                              # terminal pin 2 (E0) level with module pin 2 (E0)
     t = s.symbol("Connector", "Screw_Terminal_01x14", "J2", "Screw terminals 5.08 mm (7x 2-way)", TX, TY,
                  "FrutaMIDI:TerminalBlock_5.08_1x14", ref_at=(0, -20.32),
                  fields={"Manufacturer": "Phoenix Contact", "MPN": "1715721 (MKDS 1,5/ 2-5,08) x7"})
     for i in range(12):
-        s.connect(t, TX, TY, str(2 + i), "E%d" % i)
-    (x1, y1, _), (x14, y14, _) = s.pin_end(t, TX, TY, "1"), s.pin_end(t, TX, TY, "14")
-    bus = x1 - 12.7
-    s.wire(x1, y1, bus, y1)
-    s.wire(x14, y14, bus, y14)
-    s.wire(bus, y1, bus, y14)
-    s.wire(bus, y14, bus, y14 + 2.54)
-    s.power("GND", bus, y14 + 2.54, "#PWR%02d" % 90)
+        mx, my, _ = s.pin_end(mod, MX, MY, str(2 + i))
+        rx = 297.18
+        r = s.symbol("Device", "R", "R%d" % (i + 1), "3k3", rx, my,
+                     "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=R_FIELDS, hide_ref=True,
+                     rot=90)              # rows are 2.54 mm apart: designators are given by the column title
+        r1x, r1y, _ = s.pin_end(r, rx, my, "1")
+        r2x, r2y, _ = s.pin_end(r, rx, my, "2")
+        tx, ty, _ = s.pin_end(t, TX, TY, str(2 + i))
+        assert abs(r1y - my) < 1e-6 and abs(ty - my) < 1e-6, "electrode row %d not aligned" % i
+        s.wire(mx, my, r1x, r1y)
+        s.label("ELE%d" % i, mx + 2.54, my, 0)
+        s.wire(r2x, r2y, tx, ty)
+        s.label("E%d" % i, r2x + 2.54, my, 0)
+    s.text("R1 (E0) ... R12 (E11)\n3k3, top to bottom", 289.56, 113.03)
+    # GND at both ends of the terminal strip. Pin 1 sits just above the E0 wire, so its GND symbol
+    # goes up and is turned over instead of hanging over that wire.
+    gx, gy, _ = s.pin_end(t, TX, TY, "1")
+    s.wire(gx, gy, gx - 2.54, gy)
+    s.wire(gx - 2.54, gy, gx - 2.54, gy - 2.54)
+    s.power("GND", gx - 2.54, gy - 2.54, "#PWR91", 180)
+    s.connect(t, TX, TY, "14", "GND")
 
-    # Button (scale / recalibrate)
-    BX, BY = 63.5, 160.02
+    # Q-row wire holes (J3) and the 3V3 selector (JP1)
+    QHX, QHY = 231.14, 139.70
+    jq = s.symbol("Connector_Generic", "Conn_01x07", "J3", "WIRE_HOLES_S1_S7", QHX, QHY,
+                  "FrutaMIDI:WireHoles_1x07_P2.54mm", in_bom=False, ref_at=(0, -11.43))
+    for k in range(7):
+        s.connect(jq, QHX, QHY, str(k + 1), "S%d" % (k + 1))
+    QX, QY = 233.68, 114.30
+    jp = s.symbol("Jumper", "SolderJumper_3_Open", "JP1", "3V3_ORIG_QT", QX, QY,          # turned over: 3V3 on top
+                  "FrutaMIDI:SolderJumper_3_THT_P2.54mm", in_bom=False, ref_at=(0, 3.81), mirror_x=True)
+    s.connect(jp, QX, QY, "1", "S1")
+    s.connect(jp, QX, QY, "2", "+3V3")
+    s.connect(jp, QX, QY, "3", "S7")
+    s.text("Module configuration (component side):\n"
+           "  Original module (no STEMMA QT):  JP1 bridge 'ORIG' (3V3 -> S1)   wires SDA -> S5   SCL -> S6\n"
+           "  STEMMA QT module (current):      JP1 bridge 'QT'   (3V3 -> S7)   wires SDA -> S3   SCL -> S4\n"
+           "Module GND enters through the electrode row (pin 1), the same on both revisions.",
+           215.90, 165.10)
+    s.text("R1-R12: 3.3k in series with each electrode (ESD current limit, T-050).", 215.90, 180.34)
+
+    # ------------------------------------------------------------------ user controls and mounting holes
+    s.frame("4. User controls and mounting holes", 30.48, 198.12, 124.46, 254.00)
+    BX, BY = 50.80, 218.44
     sw = s.symbol("Switch", "SW_Push", "SW1", "SW_Push_6mm", BX, BY, "FrutaMIDI:SW_PUSH_6mm",
                   fields={"Manufacturer": "Omron", "MPN": "B3F-1000"})
     s.connect(sw, BX, BY, "1", "BTN")
     s.connect(sw, BX, BY, "2", "GND")
+    s.text("SCALE button", 45.72, 226.06)
+    RX, RY = 96.52, 218.44
+    rv = s.symbol("Device", "R_Potentiometer", "RV1", "10k lin (B10K)", RX, RY, "FrutaMIDI:Potentiometer_RK09K_Vertical",
+                  ref_at=(-5.08, -1.27),
+                  fields={"Manufacturer": "Alps Alpine", "MPN": "RK09K series, 10k linear (B), vertical"})
+    s.connect(rv, RX, RY, "1", "+3V3")
+    s.connect(rv, RX, RY, "2", "POT")
+    s.connect(rv, RX, RY, "3", "AGND")
+    s.text("OCTAVE potentiometer", 101.60, 223.52)
+    for k in range(4):
+        s.symbol("Mechanical", "MountingHole", "H%d" % (k + 1), "M3", 43.18 + 12.70 * k, 243.84,
+                 "FrutaMIDI:MountingHole_3.2mm_M3", in_bom=False)
 
-    # Octave potentiometer
-    RX, RY = 101.6, 160.02
-    rv = s.symbol("Device", "R_Potentiometer", "RV1", "10k lin (B10K)", RX, RY, "FrutaMIDI:Potentiometer_RK09K_Vertical", ref_at=(-5.08, -1.27),
-                    fields={"Manufacturer": "Alps Alpine", "MPN": "RK09K series, 10k linear (B), vertical"})
-
-    # T-056 / F-015: BOM-only parts (no footprint): sockets for the Pico and the module. All pins no-connect.
+    # ------------------------------------------------------------------ BOM-only parts
+    # T-056 / F-015: sockets for the Pico and the module (no footprint). All pins no-connect.
+    s.frame("5. Sockets (bill of materials only, no PCB footprint)", 132.08, 198.12, 256.54, 271.78)
     for k, (ref, n, val) in enumerate((("J4", 20, "Female header 1x20 2.54 mm (Pico)"),
                                        ("J5", 20, "Female header 1x20 2.54 mm (Pico)"),
                                        ("J6", 13, "Female header 1x13 2.54 mm (MPR121 electrodes)"),
                                        ("J7", 7, "Female header 1x07 2.54 mm (MPR121 power/I2C)"))):
-        hx, hy = 152.4 + 25.4 * k, 172.72
+        hx, hy = 152.40 + 27.94 * k, 238.76
         h = s.symbol("Connector_Generic", "Conn_01x%02d" % n, ref, val, hx, hy, "",
                      fields={"Manufacturer": "generic", "MPN": "2.54 mm single-row female header, %d pins" % n},
                      on_board=False, ref_at=(0, -27.94))
         for pin in s.pins[h]:
             s.nc(h, hx, hy, pin)
-    s.connect(rv, RX, RY, "1", "+3V3")
-    s.connect(rv, RX, RY, "2", "POT")
-    s.connect(rv, RX, RY, "3", "AGND")
-
-    # M3 mounting holes
-    for k in range(4):
-        s.symbol("Mechanical", "MountingHole", "H%d" % (k + 1), "M3", 20.32 + 10.16 * k, 185.42,
-                 "FrutaMIDI:MountingHole_3.2mm_M3", in_bom=False)
-
-    s.text("Module configuration (component side):\n"
-           "  Original module (no STEMMA QT):  JP1 bridge 'ORIG' (3V3 -> S1)   wires SDA -> S5   SCL -> S6\n"
-           "  STEMMA QT module (current):      JP1 bridge 'QT'   (3V3 -> S7)   wires SDA -> S3   SCL -> S4\n"
-           "Module GND enters through the electrode row (pin 1), the same on both revisions.",
-           127.0, 135.0)
-    s.text("R1-R12: 3.3k in series with each electrode (ESD current limit, T-050).\n"
-           "R13/R14: 4.7k I2C pull-ups to 3V3 on the bus side (rise time at 400 kHz, T-050).\n"
-           "R15/R16: 220R between the Pico I2C pins and the bus (wrong-wire current limit, T-055).",
-           134.62, 50.8)
-    s.text("I2C1: SDA = GP26, SCL = GP27 (Wire1).  Button = GP22.  Potentiometer = GP28 (ADC2).\n"
-           "Firmware: build with FRUTAMIDI_PCB defined (see firmware/).", 20.32, 25.4)
 
     s.write(os.path.join(HW, PROJECT + ".kicad_sch"), "FrutaMIDI — capacitive MIDI controller")
 
