@@ -1,0 +1,22 @@
+........................................................................ [ 24%]
+...................................................................F
+=================================== FAILURES ===================================
+____________________ test_chip_reset_detected_by_ecr_check _____________________
+
+probe = <conftest.Probe object at 0x10a22cca0>
+
+    def test_chip_reset_detected_by_ecr_check(probe):
+        # chip resets at 1100 (still ACKs, ECR = 0, stop mode -> no touches, so the pad releases);
+        # the next 250 ms ECR check (1250) declares it lost; one Note Off only
+        ev = hs(probe, 1400, -1, -1, 1100)
+>       assert ev == ["0:START_OK", "15:ON", "1100:OFF", "1250:LOST", "1250:LED_ERR"]
+E       AssertionError: assert ['0:START_OK'...', '1100:OFF'] == ['0:START_OK'...1250:LED_ERR']
+E         
+E         Right contains 2 more items, first extra item: '1250:LOST'
+E         Use -v to get more diff
+
+tests/firmware/logic/test_notes_health.py:79: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_notes_health.py::test_chip_reset_detected_by_ecr_check
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 139 passed in 0.93s

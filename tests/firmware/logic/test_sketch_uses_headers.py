@@ -12,7 +12,7 @@ HEADERS = sorted(FW.glob("fm_*.h"))
 def test_headers_exist():
     assert {h.name for h in HEADERS} == {
         "fm_time.h", "fm_scales.h", "fm_debounce.h", "fm_aftertouch.h",
-        "fm_button.h", "fm_pot.h", "fm_midi.h", "fm_blink.h", "fm_mpr121.h"}
+        "fm_button.h", "fm_pot.h", "fm_midi.h", "fm_blink.h", "fm_mpr121.h", "fm_notes.h", "fm_sensor_health.h"}
 
 
 @pytest.mark.parametrize("h", HEADERS, ids=lambda p: p.name)
@@ -32,9 +32,9 @@ def test_headers_compile_standalone(tmp_path, std):
 
 @pytest.mark.parametrize("call", [
     "fm::note_for_pad(", "fm::next_scale_index(", "fm::pad_step(", "fm::pad_touched(",
-    "fm::pressure_from_delta(", "fm::pressure_should_send(", "fm::elapsed_at_least(",
-    "fm::elapsed_more_than(", "fm::ButtonClassifier", "fm::octave_from_adc(", "fm::channel_status(",
-    "fm::Blinker", "led.level_or(", "fm::pressure_reset_on_release(", "fm::BLINK_SCALE_MS", "fm::BLINK_RECAL_MS", "fm::BLINK_READY_MS",
+    "fm::pressure_from_delta(", "fm::PadNotes", "fm::SensorHealth", "fm::mpr121_touch_bits(", "fm::elapsed_at_least(",
+    "fm::ButtonClassifier", "fm::octave_from_adc(", "fm::channel_status(",
+    "fm::Blinker", "led.level_or(", "pads.press(", "pads.release(", "pads.update_pressure(", "fm::BLINK_SCALE_MS", "fm::BLINK_RECAL_MS", "fm::BLINK_READY_MS",
 ])
 def test_sketch_calls_tested_logic(call):
     assert call in INO.read_text(encoding="utf-8")

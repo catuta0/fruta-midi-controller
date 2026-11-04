@@ -1,0 +1,19 @@
+........................................................................ [ 24%]
+................................................................F
+=================================== FAILURES ===================================
+_______________________ test_healthy_bus_plays_normally ________________________
+
+probe = <conftest.Probe object at 0x10a1b32e0>
+
+    def test_healthy_bus_plays_normally(probe):
+>       assert hs(probe, 3000, -1, -1) == ["0:START_OK", "15:ON"]
+E       AssertionError: assert ['0:START_OK'...001:START_OK'] == ['0:START_OK', '15:ON']
+E         
+E         Left contains one more item: '2001:START_OK'
+E         Use -v to get more diff
+
+tests/firmware/logic/test_notes_health.py:58: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_notes_health.py::test_healthy_bus_plays_normally
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 136 passed in 0.93s

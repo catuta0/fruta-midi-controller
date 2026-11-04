@@ -198,6 +198,6 @@ def test_sketch_writes_config_in_stop_mode_after_begin():
              "writeRegister(fm::MPR121_REG_ECR, ecr)"]
     pos = [body.index(o) for o in order]
     assert pos == sorted(pos)
-    start = text[text.index("void startSensors("):]
+    start = text[text.index("void startSensor(uint8_t s)"):]
     assert start.index(".begin(") < start.index("configureSensor(s)")
     assert "AUTOCONFIG0" not in body                  # library value kept

@@ -1,0 +1,24 @@
+........................................................................ [ 24%]
+........................................................................ [ 48%]
+..F
+=================================== FAILURES ===================================
+________________________ test_touch_bits[255-255-4095] _________________________
+
+probe = <conftest.Probe object at 0x106b4e6a0>, lsb = 255, msb = 255
+expected = 4095
+
+    @pytest.mark.parametrize("lsb,msb,expected", [
+        (0x00, 0x00, 0), (0x01, 0x00, 1), (0xFF, 0x0F, 0x0FFF), (0xFF, 0xFF, 0x0FFF),  # bit 15 OVCF etc. masked
+        (0x00, 0x10, 0), (0x34, 0x82, 0x0234),
+    ])
+    def test_touch_bits(probe, lsb, msb, expected):
+>       assert probe.int(f"touchbits {lsb} {msb}") == expected
+E       AssertionError: assert 65535 == 4095
+E        +  where 65535 = int('touchbits 255 255')
+E        +    where int = <conftest.Probe object at 0x106b4e6a0>.int
+
+tests/firmware/logic/test_notes_health.py:110: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_notes_health.py::test_touch_bits[255-255-4095]
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 146 passed in 1.55s

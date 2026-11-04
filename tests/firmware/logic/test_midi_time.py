@@ -18,8 +18,8 @@ def test_usb_midi_cin(probe):
     assert (cin_on, cin_off, cin_pp) == (0x09, 0x08, 0x0A)
 
 
-def test_sensor_retry_strictly_greater(probe, cfg):
-    r = cfg["SENSOR_RETRY_MS"]
+def test_sensor_retry_strictly_greater(probe):
+    r = int(probe.one("healthconsts").split()[2])
     assert r == 2000
     assert probe.int(f"gt {r} 0 {r}") == 0
     assert probe.int(f"gt {r + 1} 0 {r}") == 1

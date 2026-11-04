@@ -1,0 +1,22 @@
+........................................................................ [ 24%]
+......................................................................F
+=================================== FAILURES ===================================
+_________________ test_intermittent_failures_never_accumulate __________________
+
+probe = <conftest.Probe object at 0x10a7ad490>
+
+    def test_intermittent_failures_never_accumulate(probe):
+        # fails must be consecutive: 2 fails, 1 success, 2 fails ... never lost; 3 in a row -> lost once
+>       assert probe.one("hreport 0 0 1 0 0 1 0 0 1") == "0 0 0 0 0 0 0 0 0"
+E       AssertionError: assert '0 0 0 1 0 0 0 0 0' == '0 0 0 0 0 0 0 0 0'
+E         
+E         - 0 0 0 0 0 0 0 0 0
+E         ?                --
+E         + 0 0 0 1 0 0 0 0 0
+E         ?       ++
+
+tests/firmware/logic/test_notes_health.py:101: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_notes_health.py::test_intermittent_failures_never_accumulate
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 142 passed in 1.08s

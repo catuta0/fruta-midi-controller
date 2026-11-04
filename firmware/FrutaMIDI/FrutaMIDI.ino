@@ -39,6 +39,8 @@
 #include "fm_midi.h"
 #include "fm_blink.h"
 #include "fm_mpr121.h"
+#include "fm_notes.h"
+#include "fm_sensor_health.h"
 
 // ============================ CONFIGURATION ============================
 
@@ -140,25 +142,35 @@ static_assert(AT_MAX_DELTA > TOUCH_THRESHOLD, "AT_MAX_DELTA must be above TOUCH_
 
 // ================================ STATE ================================
 
-const uint8_t NONE = 255;
-const uint16_t SENSOR_RETRY_MS = 2000;  // retry period while no MPR121 answers
 const uint8_t MAX_PADS = 24;
 const uint8_t NUM_PADS = NUM_SENSORS * 12;
 
 Adafruit_MPR121 sensors[2];
-bool     sensorOk[2]           = {false, false};
-uint8_t  activeNote[MAX_PADS];          // note sent by each pad (NONE = released)
-uint8_t  lastPressure[MAX_PADS];        // last aftertouch value sent for each pad
+fm::SensorHealth health[2];              // presence monitoring and retry per sensor (fm_sensor_health.h)
+fm::PadNotes<MAX_PADS> pads;             // note held by each pad, shared-note counting (fm_notes.h)
 uint32_t lastChangeMs[MAX_PADS];
 uint32_t lastPressureMs        = 0;
 uint8_t  scaleIdx              = 0;
 int8_t   octaveShift           = 0;
 fm::Blinker led;                         // non-blocking LED signalling, ticked from loop()
 
+// MIDI output used by the pad bookkeeping.
+struct MidiOut {
+  void noteOn(uint8_t note)                 { midiNoteOn(note, VELOCITY); }
+  void noteOff(uint8_t note)                { midiNoteOff(note); }
+  void pressure(uint8_t note, uint8_t p)    { midiPolyPressure(note, p); }
+};
+MidiOut midiOut;
+
 // =============================== HELPERS ===============================
 
 bool anySensorOk() {
-  for (uint8_t s = 0; s < NUM_SENSORS; s++) if (sensorOk[s]) return true;
+  for (uint8_t s = 0; s < NUM_SENSORS; s++) if (health[s].ok) return true;
+  return false;
+}
+
+bool anySensorLost() {
+  for (uint8_t s = 0; s < NUM_SENSORS; s++) if (!health[s].ok) return true;
   return false;
 }
 
@@ -167,19 +179,13 @@ uint8_t noteForPad(uint8_t pad) {
 }
 
 void pressPad(uint8_t pad) {
-  uint8_t note = noteForPad(pad);
-  activeNote[pad]   = note;
-  lastPressure[pad] = 0;
-  midiNoteOn(note, VELOCITY);
+  pads.press(pad, noteForPad(pad), midiOut);   // Note On only if no other pad holds the note
 }
 
 void releasePad(uint8_t pad) {
-  if (activeNote[pad] == NONE) return;
-  // Return pressure to 0 before Note Off so no DAW keeps a stuck aftertouch value.
-  if (fm::pressure_reset_on_release(lastPressure[pad])) midiPolyPressure(activeNote[pad], 0);
-  lastPressure[pad] = 0;
-  midiNoteOff(activeNote[pad]);      // always turn off the note that was turned on, even if the scale changed
-  activeNote[pad] = NONE;
+  // Always the note that was turned on, even if the scale changed; Note Off only when the
+  // last pad holding that note releases it (aftertouch 0 first if needed).
+  pads.release(pad, midiOut);
 }
 
 void releaseAll() {
@@ -201,17 +207,32 @@ void configureSensor(uint8_t s) {
   m.writeRegister(fm::MPR121_REG_ECR, ecr);
 }
 
-void startSensors() {
-  for (uint8_t s = 0; s < NUM_SENSORS; s++) {
-    // begin() resets the chip; with AUTOCONFIG the MPR121 measures each electrode's capacitance
-    // and picks the right charge current (a watermelon needs far more than a copper pad).
-    sensorOk[s] = sensors[s].begin(SENSOR_ADDR[s], &I2C_BUS, TOUCH_THRESHOLD, RELEASE_THRESHOLD, AUTOCONFIG);
-    if (sensorOk[s] && AUTOCONFIG) configureSensor(s);
-    if (SERIAL_DEBUG && Serial) {
-      Serial.print("MPR121 0x"); Serial.print(SENSOR_ADDR[s], HEX);
-      Serial.println(sensorOk[s] ? " OK" : " NOT FOUND");
-    }
+bool readRegisters(uint8_t addr, uint8_t reg, uint8_t* buf, uint8_t n);
+
+void startSensor(uint8_t s) {
+  // begin() resets the chip; with AUTOCONFIG the MPR121 measures each electrode's capacitance
+  // and picks the right charge current (a watermelon needs far more than a copper pad).
+  bool ok = sensors[s].begin(SENSOR_ADDR[s], &I2C_BUS, TOUCH_THRESHOLD, RELEASE_THRESHOLD, AUTOCONFIG);
+  // begin() calls Wire.begin(); on AVR that re-runs twi_init() = 100 kHz (review F-006).
+  I2C_BUS.setClock(400000);
+  if (ok && AUTOCONFIG) configureSensor(s);
+  uint8_t ecr = 0;
+  ok = ok && readRegisters(SENSOR_ADDR[s], fm::MPR121_REG_ECR, &ecr, 1);
+  health[s].started(ok, millis(), ecr);
+  if (SERIAL_DEBUG && Serial) {
+    Serial.print("MPR121 0x"); Serial.print(SENSOR_ADDR[s], HEX);
+    Serial.println(ok ? " OK" : " NOT FOUND");
   }
+}
+
+void startSensors() {
+  for (uint8_t s = 0; s < NUM_SENSORS; s++) startSensor(s);
+}
+
+// A sensor stopped answering (or reset itself): release its notes; it is retried every 2 s.
+void sensorLost(uint8_t s) {
+  for (uint8_t e = 0; e < 12; e++) releasePad(s * 12 + e);
+  if (SERIAL_DEBUG && Serial) { Serial.print("MPR121 0x"); Serial.print(SENSOR_ADDR[s], HEX); Serial.println(" LOST"); }
 }
 
 void recalibrate() {
@@ -274,11 +295,7 @@ bool readSensorData(uint8_t s, uint8_t lo, uint8_t n, uint8_t* filt, uint8_t* ba
 
 // delta = how far the capacitance rose above the baseline (closer hand / more skin = larger)
 void sendPressure(uint8_t pad, int delta) {
-  uint8_t p = fm::pressure_from_delta(delta, TOUCH_THRESHOLD, AT_MAX_DELTA);
-  if (fm::pressure_should_send(p, lastPressure[pad])) {
-    lastPressure[pad] = p;
-    midiPolyPressure(activeNote[pad], p);
-  }
+  pads.update_pressure(pad, fm::pressure_from_delta(delta, TOUCH_THRESHOLD, AT_MAX_DELTA), midiOut);
 }
 
 void debugPrint() {
@@ -287,7 +304,7 @@ void debugPrint() {
   last = millis();
   Serial.print("delta:");
   for (uint8_t s = 0; s < NUM_SENSORS; s++) {
-    if (!sensorOk[s]) continue;
+    if (!health[s].ok) continue;
     for (uint8_t e = 0; e < 12; e++) {
       Serial.print(' ');
       Serial.print((int)sensors[s].baselineData(e) - (int)sensors[s].filteredData(e));
@@ -312,11 +329,8 @@ void setup() {
   I2C_BUS.begin();
   I2C_BUS.setClock(400000);
 
-  for (uint8_t p = 0; p < MAX_PADS; p++) {
-    activeNote[p] = NONE;
-    lastPressure[p] = 0;
-    lastChangeMs[p] = 0;
-  }
+  pads.reset();
+  for (uint8_t p = 0; p < MAX_PADS; p++) lastChangeMs[p] = 0;
 
   startSensors();
   if (anySensorOk()) led.start(millis(), fm::BLINK_READY_TIMES, fm::BLINK_READY_MS);   // 2 slow blinks = ready
@@ -325,11 +339,12 @@ void setup() {
 void loop() {
   midiTask();
 
-  // No sensor: blink fast and retry every 2 s (the MPR121 can be connected while running).
+  // Lost or missing sensors are retried every 2 s (the MPR121 can be connected while running).
+  for (uint8_t s = 0; s < NUM_SENSORS; s++) if (health[s].retry_due(millis())) startSensor(s);
+
+  // No sensor: blink fast.
   if (!anySensorOk()) {
-    static uint32_t lastTry = 0;
     digitalWrite(LED_BUILTIN, led.level_or(millis(), (millis() / 100) % 2));
-    if (fm::elapsed_more_than(millis(), lastTry, SENSOR_RETRY_MS)) { lastTry = millis(); startSensors(); }
     return;
   }
 
@@ -342,20 +357,31 @@ void loop() {
   bool anyTouched = false;
 
   for (uint8_t s = 0; s < NUM_SENSORS; s++) {
-    if (!sensorOk[s]) continue;
-    uint16_t bits = sensors[s].touched();
+    if (!health[s].ok) continue;
+
+    // Touch status read with the transaction result (a NACK must not look like 12 touches).
+    uint8_t st[2];
+    bool readOk = readRegisters(SENSOR_ADDR[s], fm::MPR121_REG_TOUCHSTATUS, st, 2);
+    if (health[s].report(readOk)) { sensorLost(s); continue; }
+    if (!readOk) continue;                   // keep the pads as they are for this loop
+    if (health[s].check_due(now)) {
+      uint8_t ecr = 0;
+      bool ecrOk = readRegisters(SENSOR_ADDR[s], fm::MPR121_REG_ECR, &ecr, 1);
+      if (health[s].report_check(ecrOk, ecr)) { sensorLost(s); continue; }
+    }
+    uint16_t bits = fm::mpr121_touch_bits(st);
     uint16_t sounding = 0;                   // bit e = pad of electrode e has a note on
 
     for (uint8_t e = 0; e < 12; e++) {
       uint8_t pad = s * 12 + e;
       bool touched = fm::pad_touched(bits, e);
-      bool active  = activeNote[pad] != NONE;
+      bool active  = pads.sounding(pad);
 
       fm::PadAction action = fm::pad_step(touched, active, now, lastChangeMs[pad], DEBOUNCE_MS);
       if (action == fm::PadAction::Press) pressPad(pad);
       else if (action == fm::PadAction::Release) releasePad(pad);
       if (touched) anyTouched = true;
-      if (activeNote[pad] != NONE) sounding |= (uint16_t)(1u << e);
+      if (pads.sounding(pad)) sounding |= (uint16_t)(1u << e);
     }
 
     // Aftertouch: burst reads over runs of sounding pads (one run when they are adjacent,
@@ -363,13 +389,17 @@ void loop() {
     uint8_t lo, n;
     for (uint8_t from = 0; pressureDue && fm::mpr121_next_run(sounding, from, lo, n); from = lo + n) {
       uint8_t filt[fm::MPR121_FILT_BYTES], base[fm::MPR121_BASE_BYTES];
-      if (!readSensorData(s, lo, n, filt, base)) continue;
+      bool dataOk = readSensorData(s, lo, n, filt, base);
+      if (health[s].report(dataOk)) { sensorLost(s); break; }
+      if (!dataOk) continue;
       for (uint8_t e = lo; e < lo + n; e++) {
         if (sounding & (1u << e)) sendPressure(s * 12 + e, fm::mpr121_delta(filt, base, e - lo));
       }
     }
   }
 
-  digitalWrite(LED_BUILTIN, led.level_or(millis(), anyTouched));
+  // A lost sensor (or a missing second one) shows the fast error blink instead of touch.
+  bool idle = anySensorLost() ? ((millis() / 100) % 2) != 0 : anyTouched;
+  digitalWrite(LED_BUILTIN, led.level_or(millis(), idle));
   debugPrint();
 }

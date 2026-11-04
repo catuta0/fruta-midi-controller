@@ -87,3 +87,7 @@
 ## ADR-016 — T-012 decisions
 - REQ-018 stays FAIL with a documented deviation: on a USB low-power port (4.40 V min) VBUS is below the Pico's recommended 4.50 V; the user guide recommends a standard (high-power) port or powered hub. Not relabelled.
 - INTERFACES change request from systems (AGND citations; pot zone 0.660 V, dead band 0.132 V, error budget 0.0364 V) is documentation-only and is applied by the manager as frozen-2 together with any firmware T-044 interface notes.
+
+## ADR-017 — Firmware review fixes (T-044)
+- Accepted: per-note reference counting (F-004), sensor health with loss detection and retry (F-005), setClock after every sensor begin (F-006). Retry timing measured from the last start attempt (an old loss is retried on the next loop, then every > 2 s) — accepted.
+- Notable defect found while fixing F-005: on an I2C NACK the Adafruit library's touched() returned 0x0FFF (all 12 pads touched) — a lost sensor would have played 12 notes. The sketch now reads the status registers itself and checks the transaction result.

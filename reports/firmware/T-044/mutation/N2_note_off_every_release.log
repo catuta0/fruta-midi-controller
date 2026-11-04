@@ -1,0 +1,23 @@
+........................................................................ [ 24%]
+.........................................................F
+=================================== FAILURES ===================================
+_________________________ test_reviewer_sequence_f004 __________________________
+
+probe = <conftest.Probe object at 0x1061a9850>
+
+    def test_reviewer_sequence_f004(probe):
+        # Major scale, octave 0: pad 7 = 48 + 12 = 60. Octave +1: pad 0 = 48 + 12 = 60.
+        assert probe.int("note 3 0 7") == 60 and probe.int("note 3 1 0") == 60
+        assert notes(probe, ["P7:60"]) == ["ON:60"]
+        assert notes(probe, ["P7:60", "P0:60"]) == ["ON:60"]               # no second Note On
+>       assert notes(probe, ["P7:60", "P0:60", "R7"]) == ["ON:60"]         # no Note Off while pad 0 holds
+E       AssertionError: assert ['ON:60', 'OFF:60'] == ['ON:60']
+E         
+E         Left contains one more item: 'OFF:60'
+E         Use -v to get more diff
+
+tests/firmware/logic/test_notes_health.py:16: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_notes_health.py::test_reviewer_sequence_f004
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 129 passed in 0.88s

@@ -1,0 +1,21 @@
+........................................................................ [ 24%]
+...............................................................F
+=================================== FAILURES ===================================
+____________________________ test_health_constants _____________________________
+
+probe = <conftest.Probe object at 0x10acb12e0>
+
+    def test_health_constants(probe):
+>       assert probe.one("healthconsts") == "3 250 2000"
+E       AssertionError: assert '1 250 2000' == '3 250 2000'
+E         
+E         - 3 250 2000
+E         ? ^
+E         + 1 250 2000
+E         ? ^
+
+tests/firmware/logic/test_notes_health.py:50: AssertionError
+=========================== short test summary info ============================
+FAILED tests/firmware/logic/test_notes_health.py::test_health_constants - Ass...
+!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+1 failed, 135 passed in 1.10s

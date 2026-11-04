@@ -19,6 +19,8 @@
 #include "fm_midi.h"
 #include "fm_blink.h"
 #include "fm_mpr121.h"
+#include "fm_notes.h"
+#include "fm_sensor_health.h"
 
 static const char* ev_name(fm::ButtonEvent e) {
   switch (e) {
@@ -198,6 +200,68 @@ int main() {
     } else if (cmd == "mprconsts") {
       out << (int)fm::MPR121_REG_FILTDATA_0 << ' ' << (int)fm::MPR121_REG_BASELINE_0 << ' '
           << (int)fm::MPR121_FILT_BYTES << ' ' << (int)fm::MPR121_BASE_BYTES;
+    } else if (cmd == "notes") {                 // notes P<pad>:<note> R<pad> U<pad>:<v> A ...
+      struct Rec { std::ostringstream* o; bool first = true;
+        void put(const char* w, int n, int v) { *o << (first ? "" : " ") << w << ':' << n; if (v >= 0) *o << ':' << v; first = false; }
+        void noteOn(uint8_t n) { put("ON", n, -1); }
+        void noteOff(uint8_t n) { put("OFF", n, -1); }
+        void pressure(uint8_t n, uint8_t v) { put("AT", n, v); } } rec; rec.o = &out;
+      fm::PadNotes<24> pn; pn.reset(); std::string tok;
+      while (in >> tok) {
+        char op = tok[0]; size_t c = tok.find(':');
+        int a = std::atoi(tok.substr(1, c == std::string::npos ? std::string::npos : c - 1).c_str());
+        int b = c == std::string::npos ? 0 : std::atoi(tok.substr(c + 1).c_str());
+        if (op == 'P') pn.press((uint8_t)a, (uint8_t)b, rec);
+        else if (op == 'R') pn.release((uint8_t)a, rec);
+        else if (op == 'U') pn.update_pressure((uint8_t)a, (uint8_t)b, rec);
+        else if (op == 'A') for (uint8_t p = 0; p < 24; p++) pn.release(p, rec);
+      }
+      if (rec.first) out << "none";
+    } else if (cmd == "touchbits") {             // touchbits <lsb> <msb>
+      unsigned a, b; in >> a >> b; uint8_t st[2] = {(uint8_t)a, (uint8_t)b};
+      out << fm::mpr121_touch_bits(st);
+    } else if (cmd == "hreport") {               // hreport <1|0>...: started OK, then reports -> lost flags
+      fm::SensorHealth h; h.started(true, 0, 0x8C); int v; bool first = true;
+      while (in >> v) { out << (first ? "" : " ") << (h.report(v != 0) ? 1 : 0); first = false; }
+    } else if (cmd == "healthconsts") {
+      out << (int)fm::SENSOR_FAIL_LIMIT << ' ' << fm::SENSOR_CHECK_MS << ' ' << fm::SENSOR_RETRY_MS;
+    } else if (cmd == "healthsim") {
+      // healthsim <T> <fail_from> <fail_to> <reset_at>: one sensor, pad 0 held all the time,
+      // 1 ms loop mirroring loop(): retry_due -> start; status read -> report; ECR check;
+      // pad_step; LED error flag. Failing-bus stub: every transaction fails in
+      // [fail_from, fail_to); at reset_at the chip resets (ECR reads 0, still ACKs).
+      long T, ff, ft, ra; in >> T >> ff >> ft >> ra;
+      fm::SensorHealth h; fm::PadNotes<12> pn; pn.reset();
+      struct Rec { std::ostringstream* o; uint32_t t = 0; bool first = true;
+        void put(const char* w) { *o << (first ? "" : " ") << t << ':' << w; first = false; }
+        void noteOn(uint8_t) { put("ON"); } void noteOff(uint8_t) { put("OFF"); }
+        void pressure(uint8_t, uint8_t) {} } rec; rec.o = &out;
+      uint8_t chipEcr = 0; uint32_t lastChange = 0; bool err = false;
+      auto bus = [&](uint32_t t) { return !(t >= (uint32_t)ff && t < (uint32_t)ft); };
+      auto start = [&](uint32_t t) {
+        bool ok = bus(t); if (ok) chipEcr = 0x8C;
+        h.started(ok, t, chipEcr); rec.put(ok ? "START_OK" : "START_FAIL");
+      };
+      rec.t = 0; start(0);
+      for (uint32_t t = 1; t < (uint32_t)T; t++) {
+        rec.t = t;
+        if ((long)t == ra) chipEcr = 0;
+        if (h.retry_due(t)) start(t);
+        if (h.ok) {
+          bool rd = bus(t);
+          if (h.report(rd)) { rec.put("LOST"); pn.release(0, rec); }
+          else if (rd) {
+            bool lost = false;
+            if (h.check_due(t) && h.report_check(bus(t), chipEcr)) { rec.put("LOST"); pn.release(0, rec); lost = true; }
+            if (!lost) {
+              fm::PadAction a = fm::pad_step(chipEcr != 0, pn.sounding(0), t, lastChange, 15);
+              if (a == fm::PadAction::Press) pn.press(0, 60, rec);
+              else if (a == fm::PadAction::Release) pn.release(0, rec);
+            }
+          }
+        }
+        if (err != !h.ok) { err = !h.ok; rec.put(err ? "LED_ERR" : "LED_OK"); }
+      }
     } else if (cmd == "blinkconsts") {
       out << (int)fm::BLINK_READY_TIMES << ' ' << fm::BLINK_READY_MS << ' ' << (int)fm::BLINK_RECAL_TIMES
           << ' ' << fm::BLINK_RECAL_MS << ' ' << fm::BLINK_SCALE_MS;

@@ -75,4 +75,4 @@ def ino_const(name):
 def cfg():
     return {n: ino_const(n) for n in
             ("DEBOUNCE_MS", "TOUCH_THRESHOLD", "RELEASE_THRESHOLD", "AT_MAX_DELTA",
-             "AT_INTERVAL_MS", "MIDI_CHANNEL", "SENSOR_RETRY_MS")}
+             "AT_INTERVAL_MS", "MIDI_CHANNEL")}

@@ -15,6 +15,7 @@
 namespace fm {
 
 const uint8_t MPR121_ELECTRODES     = 12;
+const uint8_t MPR121_REG_TOUCHSTATUS = 0x00;   // 2 bytes, LSB first; bits 11..0 = E11..E0
 const uint8_t MPR121_REG_FILTDATA_0 = 0x04;
 const uint8_t MPR121_REG_BASELINE_0 = 0x1E;
 const uint8_t MPR121_FILT_BYTES     = 2 * MPR121_ELECTRODES;   // 24
@@ -41,6 +42,11 @@ inline bool mpr121_next_run(uint16_t mask, uint8_t from, uint8_t& lo, uint8_t& n
   }
   n = (uint8_t)(hi - lo + 1);
   return true;
+}
+
+// Touch bits E0..E11 from the 2-byte touch status block (same mask as Adafruit touched()).
+inline uint16_t mpr121_touch_bits(const uint8_t* st) {
+  return (uint16_t)((st[0] | ((uint16_t)st[1] << 8)) & 0x0FFFu);
 }
 
 // Values below index a block that starts at electrode `lo`; pass (e - lo) as the index.
