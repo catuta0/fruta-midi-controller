@@ -1,6 +1,6 @@
 #!/bin/sh
 # Build the FrutaMIDI report: regenerate the requirements table from the CSV,
-# then run two pdflatex passes with the project-local TinyTeX.
+# then run three pdflatex passes (longtable widths settle on the third) with the project-local TinyTeX.
 # Usage: sh reports/report/build.sh
 # The MCP eng-tools latex_build also works (it uses the last generated table).
 set -e
@@ -10,6 +10,7 @@ PDFLATEX="$ROOT/tools/TinyTeX/bin/universal-darwin/pdflatex"
 
 python3 -I "$HERE/scripts/csv_to_table.py"
 cd "$HERE"
+"$PDFLATEX" -interaction=nonstopmode -halt-on-error frutamidi_report.tex > /dev/null
 "$PDFLATEX" -interaction=nonstopmode -halt-on-error frutamidi_report.tex > /dev/null
 "$PDFLATEX" -interaction=nonstopmode -halt-on-error frutamidi_report.tex > /dev/null
 

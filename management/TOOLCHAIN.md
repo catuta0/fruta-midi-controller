@@ -18,3 +18,5 @@ Measured on 2026-10-30 (MEASUREMENT by command, see logs/setup-environment.md).
 Not used: PlatformIO (not installed; arduino-cli covers the route), FreeCAD, OpenFOAM, Yosys (out of scope).
 
 Disk after installs: tools/ 2.2 GiB, .venv 17 MiB (MEASUREMENT, du).
+
+Updates 2026-11-03/04: tlmgr self-updated (revision 80687; call by absolute path); TinyTeX packages added: siunitx, enumitem, caption (lm already present). pypdf 6.21.4 in .venv. playwright-core 1.64.1 (tests/host/browser, no browser download) driving installed Google Chrome 156. Report build: reports/report/build.sh.

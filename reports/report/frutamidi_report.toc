@@ -1,23 +1,35 @@
-\contentsline {section}{\numberline {1}Introduction and scope}{2}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Scope}{2}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Document conventions}{2}{subsection.1.2}%
-\contentsline {section}{\numberline {2}Requirements and verification status}{2}{section.2}%
-\contentsline {section}{\numberline {3}Architecture and decisions}{8}{section.3}%
-\contentsline {subsection}{\numberline {3.1}System overview}{8}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Decisions}{8}{subsection.3.2}%
-\contentsline {section}{\numberline {4}Interfaces}{8}{section.4}%
-\contentsline {section}{\numberline {5}Electronics analysis}{9}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Schematic and PCB}{9}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Analyses}{9}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Safety statement}{9}{subsection.5.3}%
-\contentsline {section}{\numberline {6}Firmware design and tests}{9}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Design}{9}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Build and tests}{9}{subsection.6.2}%
-\contentsline {section}{\numberline {7}Host software and tests}{9}{section.7}%
-\contentsline {section}{\numberline {8}Independent review findings}{9}{section.8}%
-\contentsline {section}{\numberline {9}Limitations}{9}{section.9}%
-\contentsline {section}{\numberline {10}Physical validation plan}{10}{section.10}%
-\contentsline {section}{\numberline {11}Reproducibility}{10}{section.11}%
-\contentsline {subsection}{\numberline {11.1}Toolchain}{10}{subsection.11.1}%
-\contentsline {subsection}{\numberline {11.2}How to rebuild}{10}{subsection.11.2}%
-\contentsline {section}{\numberline {A}Sources}{10}{appendix.A}%
+\contentsline {section}{\numberline {1}Introduction and scope}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Scope}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Document conventions}{3}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Requirements and verification status}{3}{section.2}%
+\contentsline {paragraph}{Summary.}{3}{section*.2}%
+\contentsline {section}{\numberline {3}Architecture and decisions}{10}{section.3}%
+\contentsline {subsection}{\numberline {3.1}System overview}{10}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Architecture options}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Decisions}{10}{subsection.3.3}%
+\contentsline {paragraph}{Change candidate.}{11}{section*.3}%
+\contentsline {section}{\numberline {4}Interfaces}{11}{section.4}%
+\contentsline {section}{\numberline {5}Electronics analysis}{12}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Schematic and PCB checks}{12}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Datasheet checks and budgets}{13}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Electrode path and ESD (critical block)}{13}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}I\textsuperscript {2}C bus}{13}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Safety statement}{14}{subsection.5.5}%
+\contentsline {section}{\numberline {6}Firmware design and tests}{14}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Design}{14}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Build and tests}{14}{subsection.6.2}%
+\contentsline {section}{\numberline {7}Host software and tests}{15}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Design}{15}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Tests}{15}{subsection.7.2}%
+\contentsline {section}{\numberline {8}Independent review findings}{15}{section.8}%
+\contentsline {section}{\numberline {9}Limitations}{15}{section.9}%
+\contentsline {paragraph}{No hardware tests.}{15}{section*.4}%
+\contentsline {paragraph}{Analysis-only results.}{15}{section*.5}%
+\contentsline {paragraph}{Open FAILs and accepted risks.}{16}{section*.6}%
+\contentsline {paragraph}{Main assumptions}{16}{section*.7}%
+\contentsline {paragraph}{Process limitations.}{16}{section*.8}%
+\contentsline {section}{\numberline {10}Physical validation plan}{16}{section.10}%
+\contentsline {section}{\numberline {11}Reproducibility}{18}{section.11}%
+\contentsline {subsection}{\numberline {11.1}Toolchain}{18}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}How to rebuild}{18}{subsection.11.2}%
+\contentsline {section}{\numberline {A}Sources}{18}{appendix.A}%

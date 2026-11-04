@@ -1,14 +1,47 @@
 \section{Physical validation plan}
 \label{sec:validation}
 
-No part of the hardware has been measured. Each row below defines a physical
-test still to run. Pass criteria come from the requirements, not from this report.
+No part of the hardware has been measured. Each row is a physical test still to
+run. Pass criteria are the requirement thresholds in \ev{management/REQUIREMENTS.md};
+where a requirement gives no threshold, the analysis prediction is the criterion
+and is labelled. Items P-1 to P-6 are the systems plan
+\ev{management/handoffs/systems-engineer/T-011.md}; hardware items from firmware are
+in \ev{reports/firmware/coverage.md}; electronics next tests are in the
+T-050 to T-055 handoffs. All rows are NOT RUN.
 
-\begin{longtable}{p{0.22\linewidth}p{0.34\linewidth}p{0.20\linewidth}p{0.12\linewidth}}
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}>{\raggedright\arraybackslash}p{0.10\linewidth}@{}}
+\caption{Physical validation plan (all NOT RUN).}\label{tab:validation}\\
 \toprule
-What to measure & How (instrument, setup) & Pass criterion & Status \\
+ID & What to measure & How / instrument & Pass criterion & REQ \\
+\midrule
+\endfirsthead
+\toprule
+ID & What to measure & How / instrument & Pass criterion & REQ \\
 \midrule
 \endhead
-\multicolumn{3}{l}{\textcolor{red}{TO BE FILLED FROM EVIDENCE}} & NOT RUN \\
 \bottomrule
+\endlastfoot
+V-01 (P-1) & Object plus lead capacitance & LCR meter on typical objects (bare pad, fruit, glass of water) with 20--50\,cm leads & Touch detected after recalibration from about 20\,pF to about 500\,pF (\lbl{ASSUMPTION} range in REQ-037) & REQ-037 \\
+V-02 (P-2) & Touch-to-USB latency and jitter & Logic analyser on a test electrode, SDA/SCL and USB & Worst case $\le$ 15\,ms; jitter $\le$ 10\,ms, for $C \le 100$\,pF & REQ-014, 015 \\
+V-03 (P-3) & VBUS current per Pico variant & USB inline current meter; Pico, Pico W, Pico 2, Pico 2 W & $\le$ 100\,mA & REQ-019 \\
+V-04 & VBUS range & Adjustable bench supply at 4.40\,V and 5.50\,V at the connector & Device enumerates and plays at both ends & REQ-018 \\
+V-05 (P-4) & I\textsuperscript{2}C rise time and low levels, PCB and breadboard & Oscilloscope on SDA/SCL at the Pico and at the module & Rise $\le$ 300\,ns at 400\,kHz; low levels below VIL (0.93\,V at the MPR121, 0.8\,V at the Pico) & REQ-026, 041 \\
+V-06 & Misplaced data wire current & Wire J1 SDA/SCL to a supply hole; current meter in series & $\le$ 15.5\,mA per line (\lbl{CALCULATION}); within RP2040 IO limits & REQ-024 \\
+V-07 (P-5) & Host enumeration & Windows 10, Windows 11, macOS 12 or later; MIDI monitor & No vendor driver; name ``FrutaMIDI''; Note On/Off and poly aftertouch on channel 1 only & REQ-011, 012, 013 \\
+V-08 (P-6) & False triggers and crosstalk & 10\,min idle with all 12 electrodes on objects; then touch each pad and watch neighbours & No false Note On; no crosstalk & REQ-038 \\
+V-09 & Electrode readings with and without $R$ & \texttt{SERIAL\_DEBUG} deltas per object, with the 3.3\,k$\Omega$ resistor and with it bridged & Touch detected on every object; delta ratio $\ge$ 0.904 (\lbl{SIMULATION} prediction) & REQ-037 \\
+V-10 & ESD robustness & IEC 61000-4-2 contact discharge $\pm$4\,kV on each terminal, at a test lab & No permanent damage: all pads still detect touch afterwards & REQ-023 \\
+V-11 & Series resistor after ESD & Inspect and measure R1--R12 after V-10; watch for flashover & Value within tolerance; no flashover (CR-001 if it fails) & REQ-023 \\
+V-12 & JP1 bridge and etch gaps & Visual inspection with a magnifier and continuity after etching and bridging & Bridge only on the chosen side; 0.6\,mm gaps clear; no short to GND in any position & REQ-025, 039 \\
+V-13 & Real loop period & Toggle a spare GPIO each loop; oscilloscope & No blocking $>$ 10\,ms during play & REQ-016 \\
+V-14 & Recalibration duration & GPIO toggle around \texttt{recalibrate()} & Recorded per sensor; compare with 16.8--22.1\,ms (\lbl{CALCULATION}); no stuck notes afterwards & REQ-008, 002 \\
+V-15 & Pot ADC noise on the PCB & Log \texttt{analogRead} at each zone border for 10\,s & Peak-to-peak noise $<$ 41 counts & REQ-006 \\
+V-16 & Blink with live pads & Touch pads while the LED blinks scale 6; press again during a blink & Notes sent during the blink; pattern restarts with the new scale & REQ-007, 016 \\
+V-17 & Button bounce and long press & Oscilloscope on the button pin; press tests & Bounce $<$ 10\,ms (\lbl{ASSUMPTION}); long press acts after $>$ 800\,ms & REQ-007, 008 \\
+V-18 & Sensor-absent behaviour and LED & Power without the module; then with it; every Pico board & No MIDI, LED at 5\,Hz, retry every 2\,s; 2 slow blinks when found; LED lit while touched (W boards via CYW43) & REQ-009, 010 \\
+V-19 & MPR121 configuration and burst reads & Read back 0x7B--0x7F after start-up; logic analyser during play & Values as configured; 2 transactions per sensor per aftertouch pass; burst data equal to per-electrode reads & REQ-004, 037 \\
+V-20 & Sampler in real browsers & Chrome and Edge on Windows and macOS with the device & Pads 36--47 sound; velocity 0 acts as Note Off; learn swaps notes & REQ-034 \\
+V-21 & Sampler with a busy device & Open the device in a DAW on Windows first, then the sampler & Sampler reports the device as busy & REQ-034 \\
 \end{longtable}
+}

@@ -1,12 +1,49 @@
 \section{Firmware design and tests}
 \label{sec:firmware}
 
-Source: \texttt{firmware/FrutaMIDI/}.
+Sources: \ev{reports/firmware/coverage.md} and the T-040 to T-043 handoffs in
+\ev{management/handoffs/firmware-engineer/}.
 
 \subsection{Design}
-\tbf{Module structure, main loop, touch/release handling, scales, octave,
-aftertouch, recalibration.}
+\begin{itemize}[noitemsep]
+  \item One sketch \nolinkurl{firmware/FrutaMIDI/FrutaMIDI.ino} with host-testable
+        header-only logic \texttt{fm\_*.h}: scales (\texttt{fm\_scales.h}, English
+        names), button (\texttt{fm\_button.h}), debounce, aftertouch, potentiometer,
+        non-blocking LED blinker (\texttt{fm\_blink.h}), MPR121 burst reads
+        (\texttt{fm\_mpr121.h}).
+  \item Pads: Note On at velocity 100 on channel 1 by default; Note Off always
+        carries the stored note; debounce is a \qty{15}{\milli\second} lockout per
+        pad.
+  \item Aftertouch: Polyphonic Key Pressure 0--127 from delta 12--120; one 0 is
+        sent before Note Off and on a fall to the floor (T-041).
+  \item Scales: 6, Drum Rack (36--47, octave ignored) default; octave $-2..+2$ by
+        potentiometer with 0.7-zone hysteresis.
+  \item Button: long press $>$ \qty{800}{\milli\second} recalibrates (releases all
+        notes, restarts sensors, 3 blinks); short press selects the next scale.
+  \item LED patterns are non-blocking: pads stay live while the LED blinks (T-041).
+        \texttt{startSensors()} still blocks the loop during a user-requested
+        recalibration (kept by decision; duration to be measured).
+  \item MPR121 configuration: AUTOCONFIG with USL/TL/LSL = 200/180/130 at design
+        VDD 3.2\,V and SCTS = 0 (ADR-010, ADR-011, \lbl{SOURCE} MPR121 datasheet
+        S-006); I\textsuperscript{2}C stays at \qty{400}{\kilo\hertz}; run-based
+        burst reads (worst mask 42 bus bytes in 8 transactions, \lbl{CALCULATION})
+        \ev{reports/systems/budgets.md}.
+\end{itemize}
 
 \subsection{Build and tests}
-\tbf{Compile results per board (tool version, result line), host unit tests
-(command, pass count), with log paths and revision.}
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.12\linewidth}>{\raggedright\arraybackslash}p{0.50\linewidth}>{\raggedright\arraybackslash}p{0.12\linewidth}>{\raggedright\arraybackslash}p{0.20\linewidth}@{}}
+\toprule
+Task & Result line (\lbl{MEASUREMENT}) & Status & Evidence \\
+\midrule\endhead
+T-040 & Host tests ``213 passed in 1.33s''; 14/14 mutants fail the suite; compile matrix 9/9 & PASS & \nolinkurl{reports/firmware/T-040/} \\
+T-041 & Host tests ``267 passed in 1.79s''; compile matrix 9/9 & PASS & \nolinkurl{reports/firmware/T-041/} \\
+T-042 & Host tests ``268 passed in 1.61s''; datasheet check BLOCKED, later closed by ADR-011 & PARTIAL & \nolinkurl{reports/firmware/T-042/} \\
+T-043 & Host tests ``268 passed in 1.97s''; rpipico PCB ``Sketch uses 90700 bytes (4\%) of program storage space'', ``Global variables use 17632 bytes (6\%)'' & PASS & \nolinkurl{reports/firmware/T-043/checks.log} \\
+\bottomrule
+\end{longtable}
+}
+\noindent A clean compile and host tests are not hardware validation. The host
+loop harness copies the call order of \texttt{loop()} and does not run the sketch
+itself; the timing granularity on target depends on the loop period, which has not
+been measured \ev{reports/firmware/coverage.md}.

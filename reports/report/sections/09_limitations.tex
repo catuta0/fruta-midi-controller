@@ -1,5 +1,50 @@
 \section{Limitations}
 \label{sec:limitations}
 
-\tbf{Known limitations, untraced claims, assumptions not yet checked and open
-risks from management/RISKS.md.}
+\paragraph{No hardware tests.} Nothing has been built, flashed, powered or
+measured. Building and measuring hardware is out of scope for this project
+(risk R-004, ``Certain'', ``High'') \ev{management/RISKS.md}. Every
+\lbl{[PHYSICAL]} requirement is therefore PARTIAL or NOT RUN, and no statement in
+this report means that the hardware works.
+
+\paragraph{Analysis-only results.} The following results rest only on
+calculation, simulation, design-rule checks or host tests:
+latency and jitter (REQ-014/015); VBUS range and current (REQ-018/019); I\textsuperscript{2}C
+rise time and logic levels (REQ-026/041, REQ-024); electrode ESD (REQ-023);
+sensitivity with the series resistors (\lbl{SIMULATION}); ERC/DRC/parity and
+home-etch rules; firmware behaviour (host tests on a copy of the loop order);
+sampler behaviour (headless Chrome with a stubbed Web MIDI API).
+
+\paragraph{Open FAILs and accepted risks.} REQ-032 (BOM upper bound
+30.40\,EUR $>$ 30\,EUR, prices mostly \lbl{ASSUMPTION}); REQ-040 (wrong JP1
+position exceeds MPR121 input ratings on an unpowered module; accepted risk R-007);
+R-006 (8\,kV contact exceeds the inferred pin limit by 1.65$\times$, accepted);
+the electrode resistor is not datasheet-rated for the ESD pulse voltage (ADR-012).
+
+\paragraph{Main assumptions} (each to be retired by the plan in
+Section~\ref{sec:validation}):
+\begin{itemize}[noitemsep]
+  \item Component prices (BOM, REQ-032) \ev{reports/systems/budgets.md}.
+  \item Electrode capacitance: objects up to about 500\,pF (REQ-037); 1\,m lead
+        30--50\,pF; hand 100--300\,pF \ev{reports/electronics/analysis.md}.
+  \item ESD: $\pm$4\,kV target following IEC 61000-4-2 level 2 (the standard was not
+        read); MPR121 pin limit 1.33\,A inferred from HBM 2\,kV; electrode discharge
+        model; flashover at about 3\,kV/mm; a 1.2/50\,\textmu s rating taken as
+        conservative for the $\approx$0.5\,\textmu s pulse.
+  \item Board currents (upper bounds), Schottky diode drop and regulator
+        efficiency \ev{reports/systems/budgets.md}.
+  \item I\textsuperscript{2}C bus capacitance; Pico pin capacitance; in the
+        electronics calculation, RP2040 VIL 0.8\,V and VOL 0.4\,V and BSS138
+        $R_{DS(on)} \le 10\,\Omega$ (T-055).
+  \item MIC5225 typical dropout from a search extract only
+        \ev{reports/electronics/analysis.md}.
+  \item Firmware timing: loop period ``well under 15\,ms'', button bounce
+        $<$ 10\,ms, header and pot pin sizes for the 1.0\,mm holes
+        \ev{reports/firmware/coverage.md}.
+\end{itemize}
+
+\paragraph{Process limitations.} Requirements are draft-3, not baselined. The
+independent review is still running (Section~\ref{sec:review}). The interface
+check reports two expected FAILs that systems must update (T-055). Some
+user-documentation statements (prices, OS behaviour, etching process values) are
+not traced to a source (documentation handoffs T-030 to T-035).

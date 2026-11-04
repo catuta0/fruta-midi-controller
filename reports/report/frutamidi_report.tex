@@ -20,23 +20,38 @@
 \usepackage[hidelinks]{hyperref}
 
 \graphicspath{{../figures/}}
+\setlength{\tabcolsep}{3pt}
+\setlength{\emergencystretch}{3em}
+% Let paths and commands typeset with \nolinkurl break at - _ : = as well as /.
+\makeatletter
+\g@addto@macro\UrlBreaks{\do\-\do\_\do\:\do\=\do\.}
+\makeatother
 
 % Placeholder marker. Search the source for \tbf to find every open item.
 \newcommand{\tbf}[1]{\noindent\fcolorbox{red}{red!5}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{%
   \textbf{\textcolor{red}{TO BE FILLED FROM EVIDENCE.}} #1}}\par\medskip}
 % Evidence label, e.g. \lbl{MEASUREMENT}
 \newcommand{\lbl}[1]{\textsc{\small #1}}
+% Evidence citation: repository path of the report, analysis or raw output.
+\newcommand{\ev}[1]{{\small[\nolinkurl{#1}]}}
 
 \title{FrutaMIDI: capacitive USB MIDI controller\\[2pt]\large Engineering report}
 \author{FrutaMIDI engineering project}
-\date{Revision: \texttt{TO BE FILLED FROM EVIDENCE}}
+\date{Repository revision \texttt{72f67f0} (interfaces frozen-1)}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-\tbf{One-paragraph summary of scope, verification status and open risks, written
-last from the gate summaries.}
+FrutaMIDI is a USB MIDI controller that sends notes when a user touches conductive
+objects wired to a Raspberry Pi Pico and an Adafruit MPR121 capacitive sensor
+module, built on a breadboard or on a single-sided home-etched PCB (v1.1).
+This report collects the requirements, decisions, interfaces, analyses and host
+tests at revision \texttt{72f67f0}. Every number is copied from a cited project
+file with its label. \textbf{No part of the hardware has been built or measured}:
+analyses, simulations, design-rule checks and host tests are not hardware
+validation, and the physical validation plan in Section~\ref{sec:validation}
+lists what remains to be measured.
 \end{abstract}
 
 \tableofcontents

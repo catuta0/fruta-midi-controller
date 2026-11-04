@@ -1,7 +1,31 @@
 \section{Host software and tests}
 \label{sec:host}
 
-Source: \texttt{docs/index.html} (browser sampler).
+Source: \nolinkurl{docs/index.html} (browser sampler, GitHub Pages), handoffs T-020
+and T-021 in \ev{management/handoffs/software-engineer/}, raw outputs in
+\ev{reports/software/}.
 
-\tbf{Sampler design, MIDI handling, tests performed (command, result line), browser
-compatibility evidence.}
+\subsection{Design}
+\begin{itemize}[noitemsep]
+  \item Web MIDI input, omni channel; 12 pads mapped to notes 36--47 by default;
+        Note On with velocity 0 is treated as Note Off (REQ-034).
+  \item Learning a note already used by another pad swaps the two pads' notes;
+        notes received before audio is enabled flash the pad and emphasise the
+        enable-sound button (ADR-005). All UI strings are in English
+        (\texttt{lang="en"}).
+\end{itemize}
+
+\subsection{Tests}
+\begin{itemize}[noitemsep]
+  \item T-020: \nolinkurl{run_pytest} \nolinkurl{tests/host} with Python 3.9.6, pytest 8.4.2,
+        node v26.4.0, playwright-core 1.64.1, Google Chrome 156.0.8078.74:
+        ``37 passed in 69.20s'' (\lbl{MEASUREMENT})
+        \ev{reports/software/T-020/pytest_tests_host_verbose.txt}.
+  \item T-021: same tools, Chrome headless: ``102 passed in 56.45s''
+        (\lbl{MEASUREMENT}), including the ADR-005 behaviour tests, a rendered
+        language test over 8 states and mutation checks
+        \ev{reports/software/T-021/pytest_tests_host_verbose.txt}.
+\end{itemize}
+\noindent The tests use a stubbed Web MIDI API in headless Chrome. No real MIDI
+device, no audible output and no person looking at the page in a real browser
+have been tested (T-020, T-021).

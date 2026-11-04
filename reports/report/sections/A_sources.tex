@@ -1,7 +1,28 @@
 \section{Sources}
 \label{app:sources}
 
-Source list: \texttt{management/SOURCES.md}.
+Source registers: \ev{management/SOURCES.md} (S-0xx),
+\ev{requirements/SOURCES_SYSTEMS.md} (S-xx) and
+\ev{reports/electronics/SOURCES_EE.md} (EE-Sxx, marked ``Read'' or ``Search'').
+The registers hold the full entries, access notes and checksums. Sources cited in
+this report:
 
-\tbf{Datasheets, standards and external references cited in this report, with
-identifier and access date.}
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.10\linewidth}>{\raggedright\arraybackslash}p{0.85\linewidth}@{}}
+\toprule
+ID & Source \\
+\midrule\endhead
+S-01 & Raspberry Pi Pico datasheet RP-008307-DS-2 (local copy, sha256 in the register). \\
+S-02 & Raspberry Pi documentation, ``Pico-series microcontrollers'', pin functions. \url{https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html} \\
+S-04, S-006, EE-S01 & NXP/Freescale MPR121 datasheet, Rev.~4, 02/2013. \url{https://www.nxp.com/docs/en/data-sheet/MPR121.pdf} \\
+S-06 & Adafruit Eagle board files for the MPR121 breakout (STEMMA QT revision). \url{https://github.com/adafruit/Adafruit-MPR121-PCB} \\
+S-11 & Adafruit TinyUSB Arduino (in arduino-pico 6.3.1), device and MIDI sources. \\
+S-14 & USB Device Class Definition for MIDI Devices, Release 1.0 (1999-11-01). \url{https://www.usb.org/sites/default/files/midi10.pdf} \\
+S-16 & Raspberry Pi Pico 2 datasheet RP-008299-DS-3 (local copy). \\
+S-17 & Raspberry Pi RP2040 datasheet RP-008371-DS-1 (local copy). \\
+EE-S08 & Raspberry Pi Pico pinout. \url{https://pico.pinout.xyz/} \\
+EE-S14b & Yageo leaded resistors datasheet (MFR series). \\
+EE-S17 & Vishay Beyschlag MBA/MBB/MBE professional thin-film resistors, doc 28766. \url{https://www.vishay.com/docs/28766/mbxsma.pdf} \\
+\bottomrule
+\end{longtable}
+}

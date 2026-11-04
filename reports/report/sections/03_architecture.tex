@@ -2,9 +2,60 @@
 \label{sec:architecture}
 
 \subsection{System overview}
-\tbf{Block diagram and description: electrodes, MPR121, Pico, USB MIDI, host
-sampler/DAW. Figure from reports/figures/.}
+Touch path: electrode object $\rightarrow$ lead $\rightarrow$ screw terminal
+$\rightarrow$ \qty{3.3}{\kilo\ohm} series resistor (PCB) $\rightarrow$ MPR121
+electrode pin; the MPR121 reports touch bits and filtered/baseline data over
+I\textsuperscript{2}C at \qty{400}{\kilo\hertz} to the Pico, which sends USB MIDI 1.0
+messages to the host (browser sampler or DAW)
+\ev{management/INTERFACES.json} \ev{reports/systems/architecture_options.md}.
+
+\subsection{Architecture options}
+Three options were compared on the same criteria
+\ev{reports/systems/architecture_options.md}; option A was chosen (ADR-006).
+
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}>{\raggedright\arraybackslash}p{0.25\linewidth}@{}}
+\toprule
+Criterion & A: Pico + MPR121 (chosen) & B: Pico native sensing & C: Pro Micro + MPR121 \\
+\midrule\endhead
+Core BOM cost & 23.60--34.60\,EUR (\lbl{CALCULATION}, budgets.out, revision~1) & 14.20--22.20\,EUR (\lbl{CALCULATION} from \lbl{ASSUMPTION} prices) & 22.60--34.60\,EUR (\lbl{ASSUMPTION} clone price) \\
+Sensing with fruit/water & Good; hardware autoconfiguration and baseline filter & Unproven; filtering in firmware & Same as A \\
+Latency floor & \qty{4}{\milli\second} at the sensor & Potentially below \qty{1}{\milli\second} (\lbl{ASSUMPTION}) & Same as A \\
+Constraint compliance & Uses the fixed bought-in parts & Drops the Adafruit 1982 (definition change) & Drops the Pico family (definition change) \\
+Risk level & Low--medium & High & Medium \\
+\bottomrule
+\end{longtable}
+\noindent The BOM figure for A above is the T-008 value; the current core BOM is
+20.42--30.40\,EUR (\lbl{CALCULATION}, REQ-032, Section~\ref{sec:requirements}).
 
 \subsection{Decisions}
-\tbf{Summary of each ADR in management/DECISIONS.md: context, decision,
-consequences, status.}
+Summary of \ev{management/DECISIONS.md}. Decisions taken by the manager under
+ADR-001 are flagged there for later user review.
+
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.09\linewidth}>{\raggedright\arraybackslash}p{0.62\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}@{}}
+\toprule
+ADR & Decision & Basis / evidence \\
+\midrule\endhead
+ADR-000 & Project folder, all files in English, existing paths kept, commit rules. & User, Phase A \\
+ADR-001 & Run gates G1--G4 end to end; publishing a release still needs explicit user approval. & User \\
+ADR-002 & Firmware is the source of truth for the long press: docs state 0.8\,s (firmware \texttt{> 800}\,ms). & T-030 handoff \\
+ADR-003 & No ``safe to touch'' claim without evidence; wording follows the electronics analysis. & T-050 \\
+ADR-004 & English file and folder names (\nolinkurl{hardware/fabrication/}, \texttt{images/}). & T-051 \\
+ADR-005 & Sampler: learning a used note swaps the two pads; notes flash before audio is enabled; omni channel; English UI and silkscreen. & T-020 \\
+ADR-006 & Architecture option A (Pico + Adafruit MPR121 breakout); MPR121 sets a $\ge$\,\qty{4}{\milli\second} sensing floor. & architecture\_options.md \\
+ADR-007 & Latency $\le$ \qty{15}{\milli\second} worst case and jitter $\le$ \qty{10}{\milli\second} (relaxed, flagged); burst read M1; 24 pads breadboard only; JP1 3-pad selector replaces the 3V3 wire; hosts; BOM target $\le$ 30\,EUR; English. & T-008 \\
+ADR-008 & \qty{3.3}{\kilo\ohm} series resistor per electrode (PASS $\pm$4\,kV, PARTIAL 8\,kV, risk R-006); keep \qty{400}{\kilo\hertz} with \qty{4.7}{\kilo\ohm} pull-ups; label v1.1. & analysis.md \\
+ADR-009 & PARTIAL policy; \qty{220}{\ohm} I\textsuperscript{2}C series resistors (fault current $\le$ \qty{15}{\milli\ampere}); JP1 silkscreen and warnings (R-007); breadboard \qty{4.7}{\kilo\ohm} pull-ups. & T-010 \\
+ADR-010 & Run-based burst reads (12 pads \qty{945}{\micro\second} vs \qty{2430}{\micro\second}, \lbl{CALCULATION}); AUTOCONFIG limits 200/180/130 at design VDD 3.2\,V; SCTS = 0. & T-041 \\
+ADR-011 & MPR121 register facts confirmed from the datasheet (S-006); three firmware \lbl{ASSUMPTION}s become \lbl{SOURCE}. & T-042, manager \\
+ADR-012 & No datasheet-rated pulse resistor found; MFR-12 3k3 kept, REQ-023 PARTIAL, candidate CR-001; R15/R16 \qty{220}{\ohm} accepted. & T-054, T-055 \\
+ADR-013 & Interfaces frozen as frozen-1; REQ-040 stays FAIL with accepted risk R-007. & Manager \\
+\bottomrule
+\end{longtable}
+}
+
+\paragraph{Change candidate.} CR-001 (not opened): replace the MFR-12 3k3 by a
+pulse-rated resistor, for example Vishay MBB 0207, if its datasheet confirms
+$\ge$\,3.64\,kV at \qty{3.3}{\kilo\ohm}; the \qty{4}{\kilo\volt} case puts about
+3.6\,kV across the resistor (\lbl{CALCULATION})
+\ev{changes/CR-001-candidate.md} \ev{sim/electronics/calc/calc_pulse.out}.

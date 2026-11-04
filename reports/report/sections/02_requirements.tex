@@ -1,13 +1,28 @@
 \section{Requirements and verification status}
 \label{sec:requirements}
 
-Source: \texttt{management/REQUIREMENTS.md}. The table below is generated from a
-CSV export into \texttt{generated/requirements\_table.tex}; do not edit it by hand.
+Source: \ev{management/REQUIREMENTS.md}, revision draft-3 (T-011), proposed and
+not yet baselined. Methods: A analysis, S simulation, I inspection, T test.
+By the project rule, a requirement whose analysis or inspection passes while its
+physical test is NOT RUN is PARTIAL (ADR-009).
+
+\paragraph{Summary.} Of 41 requirements: PASS 17, PARTIAL 17, FAIL 2, NOT RUN 5
+\ev{management/REQUIREMENTS.md}.
+\begin{itemize}[noitemsep]
+  \item FAIL: REQ-032 core BOM cost, 20.42--30.40\,EUR against $\le$ 30\,EUR
+        (\lbl{CALCULATION}, nearly all prices \lbl{ASSUMPTION}); REQ-040 JP1
+        wrong-position tolerance, kept FAIL with accepted residual risk R-007
+        (ADR-013) \ev{requirements/requirements.csv}.
+  \item NOT RUN (physical only): REQ-009 sensor-absent behaviour, REQ-010 status
+        LED, REQ-011 USB MIDI class compliance, REQ-037 sensing range, REQ-038
+        false triggers and crosstalk.
+\end{itemize}
+
+The table below is generated from \nolinkurl{requirements/requirements.csv} by
+\nolinkurl{reports/report/scripts/csv_to_table.py}; do not edit it by hand.
 
 \IfFileExists{generated/requirements_table.tex}{%
   \input{generated/requirements_table}%
 }{%
-  \tbf{Requirements table (ID, statement, verification method, status, evidence
-  path). Generated from the requirements CSV; the file
-  \texttt{generated/requirements\_table.tex} does not exist yet.}%
+  \tbf{Requirements table: run \nolinkurl{sh} \nolinkurl{reports/report/build.sh}.}%
 }

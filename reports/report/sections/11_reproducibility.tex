@@ -2,15 +2,41 @@
 \label{sec:repro}
 
 \subsection{Toolchain}
-\tbf{Tool versions from management/TOOLCHAIN.md (KiCad, arduino-cli and cores,
-Python, Node, TinyTeX and installed packages).}
+From \ev{management/TOOLCHAIN.md} (\lbl{MEASUREMENT} by command, 2026-10-30) and
+the task handoffs:
+\begin{itemize}[noitemsep]
+  \item Host: macOS 26.5.2, arm64, Apple M4.
+  \item KiCad 10.0.4 (kicad-cli and pcbnew Python 3.9.13).
+  \item arduino-cli 1.5.1; arduino-pico core rp2040 6.3.1; AVR core 1.8.8;
+        Adafruit MPR121 1.2.1, BusIO 1.17.4, MIDI Library 5.0.2, MIDIUSB 1.0.5.
+  \item Python 3.9.6 with pytest 8.4.2 (project \texttt{.venv}); node v26.4.0;
+        playwright-core 1.64.1 and Google Chrome 156.0.8078.74 (T-020).
+  \item TinyTeX-1 v2026.10, pdfTeX 1.40.29 (TeX Live 2026), with siunitx, enumitem
+        and caption added (documentation handoff T-006-DOC/T-031).
+  \item MCP adapter \texttt{eng-tools} (\nolinkurl{scripts/mcp/server.mjs},
+        @modelcontextprotocol/sdk 1.32.2).
+\end{itemize}
 
 \subsection{How to rebuild}
 \begin{itemize}[noitemsep]
-  \item Hardware: \texttt{sh hardware/scripts/build\_all.sh} (regenerates, runs
-        ERC/DRC, exports fabrication files).
-  \item Report: MCP \texttt{eng-tools} \texttt{latex\_build} with
-        \texttt{reports/report/frutamidi\_report.tex}.
+  \item Hardware: \nolinkurl{sh} \nolinkurl{hardware/scripts/build_all.sh} regenerates the
+        schematic and PCB, runs ERC and DRC with schematic parity (fails on
+        violations) and exports \nolinkurl{hardware/fabrication/}.
+  \item Firmware build matrix: eng-tools \nolinkurl{firmware_compile}, or
+        \texttt{arduino-cli compile} with the FQBN
+        \nolinkurl{rp2040:rp2040:<board>:usbstack=tinyusb} for rpipico, rpipicow,
+        rpipico2, rpipico2w, each without and with
+        \nolinkurl{--build-property} \nolinkurl{compiler.cpp.extra_flags=-DFRUTAMIDI_PCB}, plus
+        \nolinkurl{arduino:avr:leonardo} \ev{management/INTERFACES.json}.
+  \item Host tests: eng-tools \texttt{run\_pytest} with \texttt{tests/firmware}
+        and \texttt{tests/host}.
+  \item Systems checks: \nolinkurl{sim/systems/budgets.py},
+        \nolinkurl{interface_check.py}, \nolinkurl{pcb_rules_check.py}; electronics
+        calculations \nolinkurl{sh} \nolinkurl{sim/electronics/calc/run_all.sh}.
+  \item Report: \nolinkurl{sh} \nolinkurl{reports/report/build.sh} (regenerates the requirements
+        table from the CSV, then three pdflatex passes), or eng-tools
+        \texttt{latex\_build} with \nolinkurl{reports/report/frutamidi_report.tex}.
 \end{itemize}
-\tbf{Firmware compile and test commands, released file checksums
-(releases/V1\_BASELINE/).}
+
+\tbf{Released file checksums (\nolinkurl{releases/V1_BASELINE/}), when the release
+exists.}
