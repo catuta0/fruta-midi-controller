@@ -1,0 +1,5 @@
+tool: eng-tools firmware_compile (arduino-cli 1.5.1), final T-041 code
+command: arduino-cli --config-file /Users/rod/fruta-midi-controller/tools/arduino/cli.yaml compile -b arduino:avr:leonardo /Users/rod/fruta-midi-controller/firmware/FrutaMIDI
+exit_code: 0
+Sketch uses 13108 bytes (45%) of program storage space. Maximum is 28672 bytes.
+Global variables use 1034 bytes (40%) of dynamic memory, leaving 1526 bytes for local variables. Maximum is 2560 bytes.

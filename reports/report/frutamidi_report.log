@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.1)  4 NOV 2026 10:42
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.1)  4 NOV 2026 10:44
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -525,28 +525,20 @@ Underfull \hbox (badness 1067) in paragraph at lines 18--23
 []\T1/lmr/m/n/10.95 Interface check at \T1/lmtt/m/n/10.95 72f67f0\T1/lmr/m/n/10.95 : ``SUM-MARY: 78 checks, 78 PASS, 0 FAIL'' (hard-
  []
 
-[13]
-Overfull \hbox (87.59567pt too wide) in alignment at lines 49--52
- [] [] [] [] [] 
- []
-
-
-Overfull \hbox (87.59567pt too wide) in alignment at lines 52--59
- [] [] [] [] [] 
- []
-
+[13] [14]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 78.
+(Font)              <12> on input line 87.
+
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\@textsuperscript' on input line 78.
+(hyperref)                removing `\@textsuperscript' on input line 87.
 
-) (./sections/06_firmware.tex [14]
+) (./sections/06_firmware.tex [15]
 Underfull \hbox (badness 1742) in paragraph at lines 37--40
 []\T1/lmr/m/n/10.95 LED pat-terns are non-blocking: pads stay live while the LED blinks (T-041).
  []
 
-[15]) (./sections/07_host_software.tex) (./sections/08_review.tex) (./sections/09_limitations.tex [16]) (./sections/10_validation_plan.tex [17] [18]) (./sections/11_reproducibility.tex
+) (./sections/07_host_software.tex [16]) (./sections/08_review.tex) (./sections/09_limitations.tex [17]) (./sections/10_validation_plan.tex [18]) (./sections/11_reproducibility.tex [19]
 Underfull \hbox (badness 7151) in paragraph at lines 16--18
 []\T1/lmr/m/n/10.95 MCP adapter \T1/lmtt/m/n/10.95 eng-tools \T1/lmr/m/n/10.95 ($\T1/lmtt/m/n/10.95 scripts / mcp / server . mjs$\T1/lmr/m/n/10.95 , @mod-el-con-textpro-to-col/sdk
  []
@@ -556,27 +548,27 @@ Underfull \hbox (badness 2799) in paragraph at lines 42--42
 [][]\T1/lmr/bx/n/10.95 TO BE FILLED FROM EV-I-DENCE.[] \T1/lmr/m/n/10.95 Re-leased file check-sums ($\T1/lmtt/m/n/10.95 releases / V1 _
  []
 
-) (./sections/A_sources.tex [19]) [20] (./frutamidi_report.aux)
+) (./sections/A_sources.tex) [20] (./frutamidi_report.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-09-09>
  ***********
 Package rerunfilecheck Info: File `frutamidi_report.out' has not changed.
-(rerunfilecheck)             Checksum: AA5A744DA2305B248C319908EB49FD4F;3994.
+(rerunfilecheck)             Checksum: 8C3CF488B7D7B40BA37122D112DA9506;4274.
  ) 
 Here is how much of TeX's memory you used:
- 15584 strings out of 469040
- 302290 string characters out of 5456350
+ 15588 strings out of 469040
+ 302350 string characters out of 5456350
  790012 words of memory out of 5000000
- 44415 multiletter control sequences out of 15000+600000
+ 44417 multiletter control sequences out of 15000+600000
  717996 words of font info for 95 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  74i,10n,79p,1312b,1220s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on frutamidi_report.pdf (20 pages, 476769 bytes).
+Output written on frutamidi_report.pdf (20 pages, 480274 bytes).
 PDF statistics:
- 397 PDF objects out of 1000 (max. 8388607)
- 326 compressed objects within 4 object streams
- 65 named destinations out of 1000 (max. 500000)
- 225 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 408 PDF objects out of 1000 (max. 8388607)
+ 337 compressed objects within 4 object streams
+ 67 named destinations out of 1000 (max. 500000)
+ 241 words of extra memory for PDF output out of 10000 (max. 10000000)
 

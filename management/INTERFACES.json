@@ -1,5 +1,5 @@
 {
-  "revision": "frozen-2 (documentation-only CR from T-012, ADR-016)",
+  "revision": "frozen-3 (documentation-only CR from review N-003, ADR-018)",
   "frozen": true,
   "owner": "systems-engineer",
   "status_note": "PROPOSED by systems-engineer (T-011, 2026-11-03), input 5f59c9e plus working tree. Not frozen; the manager freezes. Changes from draft-2: Pico I2C pads go through R15/R16 220 Ohm (nets SDA_PICO/SCL_PICO, ADR-012); JP1 silkscreen legend; board label v1.1 present; run-based aftertouch burst plan (fm_mpr121.h); AUTOCONFIG limits and SCTS now SOURCE (ADR-010/011); breadboard 4k7 pull-ups (ADR-009). Evidence: sim/systems/interface_check.out (78 checks, 78 PASS, 0 FAIL).",
@@ -724,6 +724,24 @@
         "SERIAL_DEBUG": false
       },
       "note": "Firmware T-041..T-043 complete: reports/firmware/T-043/checks.log (268 host tests passed)."
+    },
+    {
+      "id": "IF-PCB-AUX",
+      "name": "PCB auxiliary parts (documentation-only, review N-003)",
+      "J3": {
+        "footprint": "FrutaMIDI:WireHoles_1x07_P2.54mm",
+        "pads": {
+          "1": "S1",
+          "2": "S2",
+          "3": "S3",
+          "4": "S4",
+          "5": "S5",
+          "6": "S6",
+          "7": "S7"
+        },
+        "note": "S1..S7 wire holes, each joined to A2 pads 14\u201320 (module power/I2C row); excluded from BOM"
+      },
+      "J4_J7": "BOM-only female headers (J4, J5 1\u00d720 for the Pico; J6 1\u00d713, J7 1\u00d77 for the module); no footprint, all pins no-connect"
     }
   ],
   "board": {

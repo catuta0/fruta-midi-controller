@@ -40,13 +40,22 @@ These are design-rule results, not hardware validation.
         upper bounds \lbl{ASSUMPTION}) \ev{reports/systems/budgets.md}.
 \end{itemize}
 
+\subsection{Bill of materials}
+Part numbers from \ev{hardware/fabrication/bom-kicad.csv} (ADR-015): A1 Raspberry Pi
+SC0915; A2 Adafruit 1982; R1--R12 Yageo MFR-12FTF52-3K3; R13/R14 MFR-12FTF52-4K7;
+R15/R16 MFR-12FTF52-220R; J2 Phoenix Contact 1715721 ($\times$7); RV1 Alps Alpine RK09K
+series, \qty{10}{\kilo\ohm} linear, vertical (order code not sourced); SW1 Omron
+B3F-1000; female headers J4--J7 generic. Core BOM cost 20.42--30.40\,EUR against
+$\le$ 30\,EUR: FAIL (REQ-032, \lbl{CALCULATION} on mostly \lbl{ASSUMPTION} prices)
+\ev{reports/systems/budgets.md}.
+
 \subsection{Electrode path and ESD (critical block)}
 Model \nolinkurl{sim_electrode.py} (\lbl{SIMULATION}): constant-current charge into
 a 17\,pF pin plus series $R$ plus external $C$, swept over $R$ = 0--100\,k$\Omega$
 and $C$ = 10--2000\,pF; the discharge model is an \lbl{ASSUMPTION}
 \ev{reports/electronics/analysis.md}.
 
-\begin{longtable}{@{}lrrrl@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.28\linewidth}rrr>{\raggedright\arraybackslash}p{0.28\linewidth}@{}}
 \toprule
 Variant & Peak 4\,kV & Peak 8\,kV & Sensitivity & Verdict \\
 \midrule\endhead

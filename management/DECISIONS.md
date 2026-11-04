@@ -91,3 +91,11 @@
 ## ADR-017 — Firmware review fixes (T-044)
 - Accepted: per-note reference counting (F-004), sensor health with loss detection and retry (F-005), setClock after every sensor begin (F-006). Retry timing measured from the last start attempt (an old loss is retried on the next loop, then every > 2 s) — accepted.
 - Notable defect found while fixing F-005: on an I2C NACK the Adafruit library's touched() returned 0x0FFF (all 12 pads touched) — a lost sensor would have played 12 notes. The sketch now reads the status registers itself and checks the transaction result.
+
+## ADR-018 — Re-review (T-061) dispositions
+- F-007 NOT CLOSED → fixed: `.gitignore` exception `!reports/**/build/`; firmware build logs T-040/T-041/T-044 committed.
+- N-001 (minor): accepted as a specified exception in REQ-016 — automatic restart of a lost sensor (16.8–22.1 ms, once per ≥2 s retry, fault path only). Splitting the restart across loops is left for a later revision.
+- N-002 (minor): REQ-016 evidence refreshed (function reference, worst loop ≈1.72 ms).
+- N-003 (info): INTERFACES frozen-3 adds IF-PCB-AUX (J3 wire holes, J4–J7 BOM-only headers); documentation-only.
+- N-004, N-005 (info): accepted; behaviour matches REQ-009/REQ-042 and the manual.
+- Manager edited REQUIREMENTS.md, requirements.csv and INTERFACES.json under locks for these items.

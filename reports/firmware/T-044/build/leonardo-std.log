@@ -1,0 +1,4 @@
+tool: eng-tools firmware_compile (arduino-cli 1.5.1), T-044 final code, exit_code 0
+board: leonardo-std
+Sketch uses 13638 bytes (47%) of program storage space. Maximum is 28672 bytes.
+Global variables use 1074 bytes (41%) of dynamic memory, leaving 1486 bytes for local variables. Maximum is 2560 bytes.

@@ -39,9 +39,10 @@ V-14 & Recalibration duration & GPIO toggle around \texttt{recalibrate()} & Reco
 V-15 & Pot ADC noise on the PCB & Log \texttt{analogRead} at each zone border for 10\,s & Peak-to-peak noise $<$ 41 counts & REQ-006 \\
 V-16 & Blink with live pads & Touch pads while the LED blinks scale 6; press again during a blink & Notes sent during the blink; pattern restarts with the new scale & REQ-007, 016 \\
 V-17 & Button bounce and long press & Oscilloscope on the button pin; press tests & Bounce $<$ 10\,ms (\lbl{ASSUMPTION}); long press acts after $>$ 800\,ms & REQ-007, 008 \\
-V-18 & Sensor-absent behaviour and LED & Power without the module; then with it; every Pico board & No MIDI, LED at 5\,Hz, retry every 2\,s; 2 slow blinks when found; LED lit while touched (W boards via CYW43) & REQ-009, 010 \\
+V-18 & Sensor absent or lost, and LED & Power without the module; then with it; unplug the module during play; every Pico board & No MIDI from the missing sensor, its notes released, LED at 5\,Hz, retry every 2\,s; 2 slow blinks when found; LED lit while touched (W boards via CYW43) & REQ-009, 010 \\
 V-19 & MPR121 configuration and burst reads & Read back 0x7B--0x7F after start-up; logic analyser during play & Values as configured; 2 transactions per sensor per aftertouch pass; burst data equal to per-electrode reads & REQ-004, 037 \\
 V-20 & Sampler in real browsers & Chrome and Edge on Windows and macOS with the device & Pads 36--47 sound; velocity 0 acts as Note Off; learn swaps notes & REQ-034 \\
 V-21 & Sampler with a busy device & Open the device in a DAW on Windows first, then the sampler & Sampler reports the device as busy & REQ-034 \\
+V-22 & Shared notes & Set an octave so two pads share a note; touch both, release one, then the other & One Note On; Note Off only after the last release; aftertouch = the stronger pad & REQ-042 \\
 \end{longtable}
 }

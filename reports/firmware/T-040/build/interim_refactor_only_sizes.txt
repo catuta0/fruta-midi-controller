@@ -1,0 +1,11 @@
+Interim build matrix after the pure refactor and BEFORE the DOC-1 (non-blocking LED) change.
+Transcribed from eng-tools firmware_compile output in the T-040 session (raw tool output was not saved as separate files).
+rpipico   std  Sketch uses 89388 bytes  Global 17552
+rpipico   pcb  Sketch uses 90276 bytes  Global 17624
+rpipicow  std  Sketch uses 348128 bytes Global 78212
+rpipicow  pcb  Sketch uses 348920 bytes Global 78280
+rpipico2  std  Sketch uses 87704 bytes  Global 16732
+rpipico2  pcb  Sketch uses 88280 bytes  Global 16836
+rpipico2w std  Sketch uses 345716 bytes Global 77508
+rpipico2w pcb  Sketch uses 346284 bytes Global 77600
+leonardo  std  Sketch uses 12370 bytes  Global 1028

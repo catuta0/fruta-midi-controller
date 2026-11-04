@@ -1,0 +1,5 @@
+tool: eng-tools firmware_compile (arduino-cli 1.5.1)
+command: arduino-cli --config-file /Users/rod/fruta-midi-controller/tools/arduino/cli.yaml compile -b rp2040:rp2040:rpipico2:usbstack=tinyusb --build-property compiler.cpp.extra_flags=-DFRUTAMIDI_PCB /Users/rod/fruta-midi-controller/firmware/FrutaMIDI
+exit_code: 0
+Sketch uses 88344 bytes (2%) of program storage space. Maximum is 4186112 bytes.
+Global variables use 16844 bytes (3%) of dynamic memory, leaving 507444 bytes for local variables. Maximum is 524288 bytes.

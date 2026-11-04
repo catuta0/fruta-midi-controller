@@ -1,0 +1,4 @@
+tool: eng-tools firmware_compile (arduino-cli 1.5.1), T-044 final code, exit_code 0
+board: rpipico-pcb
+Sketch uses 91196 bytes (4%) of program storage space. Maximum is 2093056 bytes.
+Global variables use 17672 bytes (6%) of dynamic memory, leaving 244472 bytes for local variables. Maximum is 262144 bytes.
