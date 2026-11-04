@@ -18,6 +18,20 @@ Sources: \ev{reports/firmware/coverage.md} and the T-040 to T-043 handoffs in
         sent before Note Off and on a fall to the floor (T-041).
   \item Scales: 6, Drum Rack (36--47, octave ignored) default; octave $-2..+2$ by
         potentiometer with 0.7-zone hysteresis.
+  \item Shared notes (T-044, ADR-017): a reference count per note; Note On when the
+        first pad takes a note, Note Off only when the last pad releases it,
+        aftertouch is the maximum of the holders.
+  \item Sensor health (T-044): 3 consecutive failed transactions, or a changed ECR
+        read-back (every \qty{250}{\milli\second}), mark a sensor lost; its pads are
+        released, the LED shows the fast error blink, and the sensor is restarted
+        after more than \qty{2000}{\milli\second} (\lbl{SOURCE}
+        \nolinkurl{fm_sensor_health.h}). \texttt{setClock(400000)} now follows every
+        sensor \texttt{begin()} (F-006).
+  \item Defect found (ADR-017): on an I\textsuperscript{2}C NACK the Adafruit
+        library's \texttt{touched()} returns 0x0FFF, i.e.\ all 12 pads touched, so a
+        lost sensor would have sent 12 Note Ons. The sketch now reads the status
+        registers itself and checks the transaction result
+        \ev{management/handoffs/firmware-engineer/T-044.md}.
   \item Button: long press $>$ \qty{800}{\milli\second} recalibrates (releases all
         notes, restarts sensors, 3 blinks); short press selects the next scale.
   \item LED patterns are non-blocking: pads stay live while the LED blinks (T-041).
@@ -39,6 +53,7 @@ Task & Result line (\lbl{MEASUREMENT}) & Status & Evidence \\
 T-040 & Host tests ``213 passed in 1.33s''; 14/14 mutants fail the suite; compile matrix 9/9 & PASS & \nolinkurl{reports/firmware/T-040/} \\
 T-041 & Host tests ``267 passed in 1.79s''; compile matrix 9/9 & PASS & \nolinkurl{reports/firmware/T-041/} \\
 T-042 & Host tests ``268 passed in 1.61s''; datasheet check BLOCKED, later closed by ADR-011 & PARTIAL & \nolinkurl{reports/firmware/T-042/} \\
+T-044 & Host tests ``295 passed in 1.40s''; mutation check 10/10 killed; 9/9 builds exit 0 (rpipico PCB ``Sketch uses 91196 bytes (4\%)'') & PASS & \nolinkurl{reports/firmware/T-044/} \\
 T-043 & Host tests ``268 passed in 1.97s''; rpipico PCB ``Sketch uses 90700 bytes (4\%) of program storage space'', ``Global variables use 17632 bytes (6\%)'' & PASS & \nolinkurl{reports/firmware/T-043/checks.log} \\
 \bottomrule
 \end{longtable}

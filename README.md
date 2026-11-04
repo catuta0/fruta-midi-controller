@@ -110,10 +110,10 @@ The code is in [`firmware/FrutaMIDI/FrutaMIDI.ino`](firmware/FrutaMIDI/FrutaMIDI
 **What it does**
 
 - Each touched pad sends Note On; when you let go, it sends Note Off for the same note, even if you have changed scale in the meantime.
-- While you touch, it sends Polyphonic Aftertouch (0–127): more skin, or the hand closer, gives a higher value. When you let go, it sends aftertouch 0 before the Note Off, so the pressure never stays stuck.
+- While you touch, it sends Polyphonic Aftertouch (0–127): more skin, or the hand closer, gives a higher value. When you let go, it sends aftertouch 0 before the Note Off, so the pressure never stays stuck. After an octave change two pads can play the same note: it sounds until the last of them is released.
 - It has 6 scales. It starts in Drum Rack mode (notes 36–47, for triggering samples); the others are melodic.
 - Button: a short press moves to the next scale and the LED blinks its number (1 Drum Rack · 2 Major pentatonic · 3 Minor pentatonic · 4 Major · 5 Natural minor · 6 Chromatic). Held for 0.8 s, it recalibrates.
-- LED: 2 slow blinks at startup = sensor OK; blinking fast = MPR121 not found (it retries every 2 s); on = pad touched. The pads keep playing while the LED blinks; while a blink pattern runs, the LED shows the pattern instead of touches.
+- LED: 2 slow blinks at startup = sensor OK; blinking fast = MPR121 not found or lost during play (its notes are released and it retries about every 2 s); on = pad touched. The pads keep playing while the LED blinks; while a blink pattern runs, the LED shows the pattern instead of touches.
 
 **Compiling (Arduino IDE 2, same on Windows and Mac)**
 

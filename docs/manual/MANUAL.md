@@ -2,7 +2,7 @@
 
 > **Draft — not yet validated on hardware.**
 
-This manual describes the firmware after task T-041 (`firmware/FrutaMIDI/FrutaMIDI.ino` and its `fm_*.h` headers). Every behaviour below is traced to that source or to the project README; see [Traceability](#traceability) at the end. The complete build has not been tested on hardware, so this manual describes what the firmware is written to do, not measured behaviour.
+This manual describes the firmware after task T-044 (commit `a208a30`) (`firmware/FrutaMIDI/FrutaMIDI.ino` and its `fm_*.h` headers). Every behaviour below is traced to that source or to the project README; see [Traceability](#traceability) at the end. The complete build has not been tested on hardware, so this manual describes what the firmware is written to do, not measured behaviour.
 
 ## Contents
 
@@ -34,7 +34,8 @@ FrutaMIDI is a USB MIDI device. Each of its 12 pads (24 with a second sensor) se
 - **Let go:** FrutaMIDI sends a Note Off for the same note. This holds even if you changed scale or octave while touching, so notes do not get stuck.
 - **Press harder / touch more:** while you touch, FrutaMIDI sends Polyphonic Aftertouch from 0 to 127. A larger change in the sensor reading gives a higher value. If the value falls back to the bottom of the range while you are still touching, FrutaMIDI sends 0. When you let go, it sends aftertouch 0 just before the Note Off, so a program never keeps a leftover pressure value. Programs that use aftertouch respond to it; according to the README, the sampler opens a filter with it.
 - **The LED** stays on while any pad is touched, except while a blink pattern is running (see [LED signals](#led-signals)).
-- **Several pads at once** work: each pad has its own note.
+- **Several pads at once** work. Normally each pad has its own note, but after an octave change two pads can play the same note. That note then keeps sounding until the last pad holding it is released, and its aftertouch is the stronger of the pads' values.
+- **If the sensor stops answering during play**, FrutaMIDI releases that sensor's notes, the LED blinks fast, and it tries to restart the sensor about every 2 s. When the sensor answers again, the pads play again.
 
 ## Scales
 
@@ -82,7 +83,7 @@ Unplugging and replugging the USB has the same effect, and also resets the scale
 | LED | Meaning |
 | --- | --- |
 | 2 slow blinks after power-up | Sensor found, ready |
-| Blinking fast, continuously | Sensor not found. FrutaMIDI tries again every 2 s |
+| Blinking fast, continuously | Sensor not found, or lost during play. FrutaMIDI tries again about every 2 s |
 | On | A pad is being touched |
 | 1–6 blinks after a short button press | Number of the scale just selected |
 | 3 quick blinks after a long button press | Recalibration done |
@@ -98,24 +99,30 @@ While one of the blink patterns is running, the LED shows the pattern rather tha
 | Notes trigger without touching | Recalibrate. Keep cables apart. See [Design notes](../../README.md#design-notes) for threshold settings. |
 | A pad does not react | Check the clip connection (use a nail or needle pushed into the fruit). Recalibrate. |
 | The octave knob does nothing | You are in Drum Rack (scale 1), or the breadboard firmware has the knob disabled (see [Octave](#octave)). |
+| A note keeps sounding after I let go of a pad | Another pad may hold the same note (possible after an octave change); release that pad too. |
 | A note is stuck in the program | Touch and release the same pad again: the Note Off releases it. |
 | The LED does not light when I touch a pad | A blink pattern may still be running; the pads still play. Wait for it to finish. |
 | The computer does not see FrutaMIDI | See [Troubleshooting](../../README.md#troubleshooting) in the main README (cable, USB stack, program settings). |
 
 ## Traceability
 
-The firmware source is the working tree after T-041. It is not committed yet. sha256 values:
-- `FrutaMIDI.ino` f460ec8361b586591d227a778710d00a55a35458c62c38f32fbf68e69a67b02c
+The firmware source is commit `a208a30` (T-044). sha256 values:
+- `FrutaMIDI.ino` 84f798203a116f1f2d21835a6e04dee9715d28a97cb695bf7abc08eb8c77e73c
+- `fm_aftertouch.h` 1068ecd62b38f8b40ee8f1a4c8ac4aaceab83d0039b19784a1f9566f4c9a1297
 - `fm_blink.h` f181d70f7dcd74b7cddf15f14b2e9c2fa67ee1e3a9b1387170e3f853692b675a
 - `fm_button.h` 32bd40cd9bb316e67d0a67fb2025085fdd57f1fcdfd2cce132bbc3024d62de63
-- `fm_scales.h` 3ca6dca471699192abfad0872c77b67c08822ccb67e37351022ea9db710e7150
-- `fm_aftertouch.h` 1068ecd62b38f8b40ee8f1a4c8ac4aaceab83d0039b19784a1f9566f4c9a1297
+- `fm_mpr121.h` 98c28d469b62d0892c08331c5f9d538ec7ff8466a905140c0db73b7ecda3993b
+- `fm_notes.h` 8038e2ee0c870766e925ec3d94053bb39a47fd96f0c5d11279e2fef516f04041
 - `fm_pot.h` 99d889881f53c227530add5c31cdff377cb85fe0a04b3a44fc2792eb7596c7db
+- `fm_scales.h` 3ca6dca471699192abfad0872c77b67c08822ccb67e37351022ea9db710e7150
+- `fm_sensor_health.h` 10924a7bf487723505ffba81886887ce3be98f8ed337e8d1e3220de3ae5b2ffe
 
 | Claim | Value | Label | Evidence |
 | --- | --- | --- | --- |
 | Fixed velocity, channel | 100, 1 | SOURCE | `VELOCITY`, `MIDI_CHANNEL` (FrutaMIDI.ino) |
-| Note Off of the stored note | — | SOURCE | `releasePad()` uses `activeNote[pad]` |
+| Note Off of the stored note | — | SOURCE | `fm_notes.h` `PadNotes`: each pad stores its note; Note Off is sent for that note |
+| Shared note: one Note On, Note Off on the last release, aftertouch = max | — | SOURCE | `fm_notes.h`: reference count per note, Note On on 0 → 1, Note Off on 1 → 0 (after AT 0), shared aftertouch = max of holders (ADR-017) |
+| Sensor lost during play: release, fast blink, retry | 3 failed transactions or ECR changed; retry > 2000 ms | SOURCE | `fm_sensor_health.h`: `SENSOR_FAIL_LIMIT = 3`, `SENSOR_CHECK_MS = 250`, `SENSOR_RETRY_MS = 2000`; `sensorLost()` releases the sensor's pads (ADR-017) |
 | Aftertouch range | 0–127 | SOURCE | `fm::pressure_from_delta()` with `TOUCH_THRESHOLD = 12`, `AT_MAX_DELTA = 120` |
 | Aftertouch 0 on a fall to the floor and before Note Off | — | SOURCE | `pressure_should_send()`: `if (p == 0) return lastSent > 0;` and `releasePad()`: `pressure_reset_on_release()` then `midiPolyPressure(note, 0)` |
 | LED on while touched, pattern has priority | — | SOURCE | `digitalWrite(LED_BUILTIN, led.level_or(millis(), anyTouched))`; `Blinker::level_or()` returns the pattern while it is active |

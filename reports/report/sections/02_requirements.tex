@@ -1,19 +1,19 @@
 \section{Requirements and verification status}
 \label{sec:requirements}
 
-Source: \ev{management/REQUIREMENTS.md}, revision draft-3 (T-011), proposed and
+Source: \ev{management/REQUIREMENTS.md}, revision draft-5 (T-013), proposed and
 not yet baselined. Methods: A analysis, S simulation, I inspection, T test.
 By the project rule, a requirement whose analysis or inspection passes while its
 physical test is NOT RUN is PARTIAL (ADR-009).
 
-\paragraph{Summary.} Of 41 requirements: PASS 17, PARTIAL 16, FAIL 3, NOT RUN 5
+\paragraph{Summary.} Of 42 requirements: PASS 17, PARTIAL 18, FAIL 3, NOT RUN 4
 \ev{management/REQUIREMENTS.md}.
 \begin{itemize}[noitemsep]
   \item FAIL: REQ-018 VBUS range (the USB low-power-port minimum of 4.40\,V is below the Pico's recommended 4.50\,V, \lbl{SOURCE} S-01, S-10); REQ-032 core BOM cost, 20.42--30.40\,EUR against $\le$ 30\,EUR
         (\lbl{CALCULATION}, nearly all prices \lbl{ASSUMPTION}); REQ-040 JP1
         wrong-position tolerance, kept FAIL with accepted residual risk R-007
         (ADR-013) \ev{requirements/requirements.csv}.
-  \item NOT RUN (physical only): REQ-009 sensor-absent behaviour, REQ-010 status
+  \item NOT RUN (physical only): REQ-010 status
         LED, REQ-011 USB MIDI class compliance, REQ-037 sensing range, REQ-038
         false triggers and crosstalk.
 \end{itemize}

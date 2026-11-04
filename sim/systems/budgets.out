@@ -36,37 +36,38 @@ PASS  A6 I2C on ADC-capable GP26/27: pull-up rail = IOVDD :: R13/R14 and module 
   f_SCL = 100 kHz: touched() 490 .. 520 us, AT pass worst plan 4100 .. 4340 us, loop idle 510 .. 620 us, loop with AT pass 4610 .. 4960 us  CALCULATION
 
   f_SCL   sens  C [pF]   CDT     best [ms]    worst [ms]   jitter [ms] 
-  400k    1     20       1us     4.00         10.59        6.59        
-  400k    1     100      4us     4.00         10.59        6.59        
-  400k    1     200      8us     4.61         11.80        7.19        
-  400k    1     300      16us    9.22         21.02        11.80       
-  400k    1     500      32us    18.43        39.45        21.02       
-  400k    2     20       1us     4.00         12.07        8.07        
-  400k    2     100      4us     4.00         12.07        8.07        
-  400k    2     200      8us     4.61         13.29        8.68        
-  400k    2     300      16us    9.22         22.50        13.29       
-  400k    2     500      32us    18.43        40.93        22.50       
-  100k    1     20       1us     4.00         13.96        9.96        
-  100k    1     100      4us     4.00         13.96        9.96        
-  100k    1     200      8us     4.61         15.18        10.57       
-  100k    1     300      16us    9.22         24.39        15.18       
-  100k    1     500      32us    18.43        42.82        24.39       
-  100k    2     20       1us     4.00         18.82        14.82       
-  100k    2     100      4us     4.00         18.82        14.82       
-  100k    2     200      8us     4.61         20.04        15.43       
-  100k    2     300      16us    9.22         29.25        20.04       
-  100k    2     500      32us    18.43        47.68        29.25       
-PASS  B1 worst <= 15 ms [400 kHz, 1 sensor, C <= 100 pF] :: worst 10.59 ms
-PASS  B2 jitter <= 10 ms [400 kHz, 1 sensor, C <= 100 pF] :: jitter 6.59 ms
-PASS  B1 worst <= 15 ms [400 kHz, 2 sensors, C <= 100 pF] :: worst 12.07 ms
-PASS  B2 jitter <= 10 ms [400 kHz, 2 sensors, C <= 100 pF] :: jitter 8.07 ms
-PASS  B1 worst <= 15 ms [100 kHz, 1 sensor, C <= 100 pF] :: worst 13.96 ms
-PASS  B2 jitter <= 10 ms [100 kHz, 1 sensor, C <= 100 pF] :: jitter 9.96 ms
-FAIL  B1 worst <= 15 ms [100 kHz, 2 sensors, C <= 100 pF] :: worst 18.82 ms
-FAIL  B2 jitter <= 10 ms [100 kHz, 2 sensors, C <= 100 pF] :: jitter 14.82 ms
-  LOCKOUT: re-touch within 15 ms of the previous change of the same pad adds 0..15 ms -> worst 25.59 ms (400 kHz, 1 sensor, C <= 100 pF)  CALCULATION
+  400k    1     20       1us     4.00         10.72        6.72        
+  400k    1     100      4us     4.00         10.72        6.72        
+  400k    1     200      8us     4.61         11.94        7.33        
+  400k    1     300      16us    9.22         21.15        11.94       
+  400k    1     500      32us    18.43        39.59        21.15       
+  400k    2     20       1us     4.00         12.35        8.35        
+  400k    2     100      4us     4.00         12.35        8.35        
+  400k    2     200      8us     4.61         13.56        8.95        
+  400k    2     300      16us    9.22         22.78        13.56       
+  400k    2     500      32us    18.43        41.21        22.78       
+  100k    1     20       1us     4.00         14.39        10.39       
+  100k    1     100      4us     4.00         14.39        10.39       
+  100k    1     200      8us     4.61         15.61        11.00       
+  100k    1     300      16us    9.22         24.82        15.61       
+  100k    1     500      32us    18.43        43.25        24.82       
+  100k    2     20       1us     4.00         19.68        15.68       
+  100k    2     100      4us     4.00         19.68        15.68       
+  100k    2     200      8us     4.61         20.90        16.29       
+  100k    2     300      16us    9.22         30.11        20.90       
+  100k    2     500      32us    18.43        48.54        30.11       
+PASS  B1 worst <= 15 ms [400 kHz, 1 sensor, C <= 100 pF] :: worst 10.72 ms
+PASS  B2 jitter <= 10 ms [400 kHz, 1 sensor, C <= 100 pF] :: jitter 6.72 ms
+PASS  B1 worst <= 15 ms [400 kHz, 2 sensors, C <= 100 pF] :: worst 12.35 ms
+PASS  B2 jitter <= 10 ms [400 kHz, 2 sensors, C <= 100 pF] :: jitter 8.35 ms
+PASS  B1 worst <= 15 ms [100 kHz, 1 sensor, C <= 100 pF] :: worst 14.39 ms
+FAIL  B2 jitter <= 10 ms [100 kHz, 1 sensor, C <= 100 pF] :: jitter 10.39 ms
+FAIL  B1 worst <= 15 ms [100 kHz, 2 sensors, C <= 100 pF] :: worst 19.68 ms
+FAIL  B2 jitter <= 10 ms [100 kHz, 2 sensors, C <= 100 pF] :: jitter 15.68 ms
+  ECR poll (T-044): 108 .. 138 us per sensor every 250 ms, included in the worst loop  CALCULATION
+  LOCKOUT: re-touch within 15 ms of the previous change of the same pad adds 0..15 ms -> worst 25.72 ms (400 kHz, 1 sensor, C <= 100 pF)  CALCULATION
   DESIGN LIMIT 400 kHz, 1 sensor: targets met for electrode C <= 210 pF  CALCULATION
-  DESIGN LIMIT 100 kHz, 1 sensor: targets met for electrode C <= 100 pF  CALCULATION
+  DESIGN LIMIT 100 kHz, 1 sensor: targets not met at any C (jitter)  CALCULATION
   recalibrate() per sensor at 400 kHz: 178 transactions, 16.8 .. 22.1 ms (incl. 1 ms reset delay)  CALCULATION
   recalibrate() per sensor at 100 kHz: 178 transactions, 58.8 .. 64.2 ms (incl. 1 ms reset delay)  CALCULATION
   I2C breadboard R_eff 8.89 kOhm: C_b max 39.8 pF @400 kHz, 132.8 pF @100 kHz  CALCULATION
@@ -108,5 +109,5 @@ PASS  B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-1
   excluded: M3 hardware (optional)                         2.00 .. 2.00 EUR  ASSUMPTION
 FAIL  C1 core BOM upper bound <= 30 EUR :: core 20.42 .. 30.40 EUR
 
-SUMMARY: 29 checks, 25 PASS, 4 FAIL
+SUMMARY: 29 checks, 24 PASS, 5 FAIL
 wrote reports/systems/budgets.md
