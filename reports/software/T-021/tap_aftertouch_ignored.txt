@@ -3,73 +3,73 @@ TAP version 13
 # Subtest: connected device is auto-selected and shown
 ok 1 - connected device is auto-selected and shown
   ---
-  duration_ms: 560.983459
+  duration_ms: 742.796916
   type: 'test'
   ...
 # Subtest: port open statechange does not re-open the port
 ok 2 - port open statechange does not re-open the port
   ---
-  duration_ms: 280.87575
+  duration_ms: 314.474875
   type: 'test'
   ...
 # Subtest: each pad plays on its default note 36..47
 ok 3 - each pad plays on its default note 36..47
   ---
-  duration_ms: 173.483958
+  duration_ms: 220.932417
   type: 'test'
   ...
 # Subtest: note on is logged with name, velocity and channel
 ok 4 - note on is logged with name, velocity and channel
   ---
-  duration_ms: 173.711583
+  duration_ms: 230.554875
   type: 'test'
   ...
 # Subtest: pad velocity scales output gain as (v/127)^1.5
 ok 5 - pad velocity scales output gain as (v/127)^1.5
   ---
-  duration_ms: 191.148042
+  duration_ms: 274.963209
   type: 'test'
   ...
 # Subtest: kick pad (note 36) starts a sine oscillator
 ok 6 - kick pad (note 36) starts a sine oscillator
   ---
-  duration_ms: 166.230625
+  duration_ms: 230.107708
   type: 'test'
   ...
 # Subtest: unmapped note starts a two-oscillator synth voice at equal-tempered pitch
 ok 7 - unmapped note starts a two-oscillator synth voice at equal-tempered pitch
   ---
-  duration_ms: 184.066833
+  duration_ms: 228.46925
   type: 'test'
   ...
 # Subtest: synth checkbox off silences unmapped notes
 ok 8 - synth checkbox off silences unmapped notes
   ---
-  duration_ms: 224.027709
+  duration_ms: 265.97025
   type: 'test'
   ...
 # Subtest: note off (0x80) stops the synth voice
 ok 9 - note off (0x80) stops the synth voice
   ---
-  duration_ms: 162.349833
+  duration_ms: 221.419959
   type: 'test'
   ...
 # Subtest: note on velocity 0 acts as note off
 ok 10 - note on velocity 0 acts as note off
   ---
-  duration_ms: 186.484333
+  duration_ms: 243.705917
   type: 'test'
   ...
 # Subtest: retriggering a held synth note replaces the old voice
 ok 11 - retriggering a held synth note replaces the old voice
   ---
-  duration_ms: 153.299583
+  duration_ms: 188.757
   type: 'test'
   ...
 # Subtest: poly aftertouch opens the synth filter
 not ok 12 - poly aftertouch opens the synth filter
   ---
-  duration_ms: 174.134958
+  duration_ms: 169.420625
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:177:1'
   failureType: 'testCodeFailure'
@@ -86,7 +86,7 @@ not ok 12 - poly aftertouch opens the synth filter
 # Subtest: poly aftertouch on a pad note drives the pad bar; note off resets it
 not ok 13 - poly aftertouch on a pad note drives the pad bar; note off resets it
   ---
-  duration_ms: 184.674583
+  duration_ms: 209.577375
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:189:1'
   failureType: 'testCodeFailure'
@@ -108,79 +108,79 @@ not ok 13 - poly aftertouch on a pad note drives the pad bar; note off resets it
 # Subtest: notes on any channel are accepted (omni)
 ok 14 - notes on any channel are accepted (omni)
   ---
-  duration_ms: 172.922584
+  duration_ms: 217.02425
   type: 'test'
   ...
 # Subtest: non-note messages are ignored without errors
 ok 15 - non-note messages are ignored without errors
   ---
-  duration_ms: 168.744125
+  duration_ms: 207.025709
   type: 'test'
   ...
 # Subtest: MIDI access rejected shows the permission error
 ok 16 - MIDI access rejected shows the permission error
   ---
-  duration_ms: 140.790834
+  duration_ms: 158.879834
   type: 'test'
   ...
 # Subtest: browser without Web MIDI shows the unsupported error
 ok 17 - browser without Web MIDI shows the unsupported error
   ---
-  duration_ms: 140.264375
+  duration_ms: 158.785625
   type: 'test'
   ...
 # Subtest: busy device shows the busy error
 ok 18 - busy device shows the busy error
   ---
-  duration_ms: 142.887666
+  duration_ms: 177.389375
   type: 'test'
   ...
 # Subtest: busy device next to a free one is listed as busy
 ok 19 - busy device next to a free one is listed as busy
   ---
-  duration_ms: 132.9885
+  duration_ms: 161.461167
   type: 'test'
   ...
 # Subtest: no device shows the plug-in hint; hot-plug connects; unplug reverts
 ok 20 - no device shows the plug-in hint; hot-plug connects; unplug reverts
   ---
-  duration_ms: 175.576833
+  duration_ms: 167.37725
   type: 'test'
   ...
 # Subtest: learn mode assigns the next note and persists it
 ok 21 - learn mode assigns the next note and persists it
   ---
-  duration_ms: 302.000458
+  duration_ms: 315.831958
   type: 'test'
   ...
 # Subtest: learn button pressed twice cancels learning
 ok 22 - learn button pressed twice cancels learning
   ---
-  duration_ms: 248.755375
+  duration_ms: 246.426042
   type: 'test'
   ...
 # Subtest: keyboard fallback plays pads (no MIDI needed)
 ok 23 - keyboard fallback plays pads (no MIDI needed)
   ---
-  duration_ms: 158.223084
+  duration_ms: 186.620083
   type: 'test'
   ...
 # Subtest: notes before the audio gate click flash the pad and emphasise the enable-sound hint
 ok 24 - notes before the audio gate click flash the pad and emphasise the enable-sound hint
   ---
-  duration_ms: 1075.620083
+  duration_ms: 209.903125
   type: 'test'
   ...
 # Subtest: learning a note already used by another pad swaps the two pads notes
 ok 25 - learning a note already used by another pad swaps the two pads notes
   ---
-  duration_ms: 251.911958
+  duration_ms: 267.318292
   type: 'test'
   ...
 # Subtest: no Portuguese UI strings in any rendered state
 ok 26 - no Portuguese UI strings in any rendered state
   ---
-  duration_ms: 751.029666
+  duration_ms: 980.394083
   type: 'test'
   ...
 1..26
@@ -191,6 +191,6 @@ ok 26 - no Portuguese UI strings in any rendered state
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 6939.07675
+# duration_ms 7310.355208
 
 # --- stderr ---

@@ -42,23 +42,24 @@ A 100 × 70 mm board with copper on the bottom side only, designed for chemical 
 
 | Ref. | Part | Qty | Approx. price | Notes |
 | --- | --- | --- | --- | --- |
-| A1 | Raspberry Pi Pico **H** (or Pico, Pico W, Pico 2, Pico 2 W with male headers soldered) | 1 | 5–8 € | The "H" comes with the pins already fitted |
-| A2 | Adafruit MPR121 12-key capacitive touch breakout (**product 1982**) | 1 | 9–12 € | Original or STEMMA QT: both work (see [section 5](#5-module-configuration-jp1-and-two-wires)). Comes with the male header to solder onto the module |
+| A1 | Raspberry Pi Pico, Raspberry Pi **SC0915** (or Pico H, Pico W, Pico 2, Pico 2 W) | 1 | 5–8 € | The SC0915 has no headers: solder 2 × 1×20 male 2.54 mm headers to it. The "H" version comes with them fitted |
+| — | Male header 1×20, 2.54 mm pitch | 2 | — | For the SC0915 only |
+| A2 | Adafruit MPR121 12-key capacitive touch breakout, Adafruit **1982** | 1 | 9–12 € | Original or STEMMA QT: both work (see [section 5](#5-module-configuration-jp1-and-two-wires)). Comes with the male header to solder onto the module |
 | R1–R12 | Resistor 3.3 kΩ (3k3), axial, DIN0204 size, Yageo MFR-12FTF52-3K3 | 12 | — | One in series with each electrode; mounted vertically |
 | R13, R14 | Resistor 4.7 kΩ (4k7), axial, DIN0204 size, Yageo MFR-12FTF52-4K7 | 2 | — | I²C pull-ups (SCL, SDA); mounted vertically |
 | R15, R16 | Resistor 220 Ω, axial, DIN0204 size, Yageo MFR-12FTF52-220R | 2 | — | In series in SCL (R15) and SDA (R16) on the Pico side; they limit the current if a configuration wire goes to the wrong hole; mounted vertically |
-| — | Female header 1×20, 2.54 mm pitch | 2 | 1 € | Pico socket |
-| — | Female header 1×13, 2.54 mm pitch | 1 | 0.50 € | Module electrode row |
-| — | Female header 1×7, 2.54 mm pitch | 1 | 0.40 € | Module power/I²C row |
-| J2 | 2-way screw terminal block, **5.08 mm** pitch, interlocking (KF301-2P, Phoenix MKDS 1,5/2-5,08 or equivalent) | 7 | 2–3 € | They lock together to form the 14-way strip |
-| SW1 | 6 × 6 mm push button, 4 legs | 1 | 0.20 € | Choose the height to suit the enclosure |
-| RV1 | 10 kΩ linear potentiometer (B10K), 9 mm, vertical, Alps RK09K type | 1 | 1 € | Plus a knob |
+| J4, J5 | Female header 1×20, 2.54 mm pitch (generic) | 2 | 1 € | Pico socket |
+| J6 | Female header 1×13, 2.54 mm pitch (generic) | 1 | 0.50 € | Module electrode row |
+| J7 | Female header 1×7, 2.54 mm pitch (generic) | 1 | 0.40 € | Module power/I²C row |
+| J2 | 2-way screw terminal block, **5.08 mm** pitch, interlocking, Phoenix Contact **1715721** (MKDS 1,5/ 2-5,08) or equivalent | 7 | 2–3 € | They lock together to form the 14-way strip |
+| SW1 | 6 × 6 mm push button, 4 legs, Omron **B3F-1000** | 1 | 0.20 € | Choose the height to suit the enclosure |
+| RV1 | 10 kΩ linear potentiometer (B10K), 9 mm, vertical, Alps Alpine RK09K series | 1 | 1 € | Plus a knob |
 | JP1 | Solder bridge (no part) | — | — | Bridged with solder or a resistor lead off-cut; see section 5 |
 | — | Thin insulated solid wire (from network cable, for example) | ~10 cm | — | 2 configuration wires (SDA, SCL) |
 | H1–H4 | M3 screws + spacers | 4 | 2 € | Optional |
 | — | Micro-USB **data** cable | 1 | 3 € | |
 
-If you cut 40-way female header to length, you lose one pin at each cut: 3 strips of 1×40 are just enough for 20 + 20 + 13 + 7.
+If you cut 40-way female header to length, you lose one pin at each cut: 2 strips of 1×40 are enough: one for 20 + 13, the other for 20 + 7.
 
 ### Fabrication materials
 
@@ -71,7 +72,7 @@ If you cut 40-way female header to length, you lose one pin at each cut: 3 strip
 | Plastic container, nitrile gloves, goggles | — | Nothing metal |
 | Acetone or thinner, fine steel wool, isopropyl alcohol | — | Cleaning |
 | Fine permanent marker | 1 | Touching up toner gaps |
-| Drill bits of 0.8 · 0.9 · 1.0 · 1.1 · 1.3 · 1.8 · 3.2 mm | 1 each | Mini drill, preferably on a stand |
+| Drill bits of 0.8 · 0.9 · 1.0 · 1.1 · 1.4 · 1.8 · 3.2 mm, plus a round needle file | 1 each | Mini drill, preferably on a stand |
 | Soldering iron, flux-core solder (0.8 mm), multimeter | — | |
 
 ## Design rules for home etching
@@ -124,12 +125,14 @@ Drill from the copper side, using the dots as a guide. There are 131 holes in to
 | Bit | Holes | Where |
 | --- | --- | --- |
 | 0.8 mm | 35 | Resistors R1–R16 (32) and JP1 (3) |
-| 0.9 mm | 9 | S1–S7 row (7) and J1 (2, configuration wires) |
+| 0.9 mm | 9 | J3, the S1–S7 wire holes (7), and J1 (2, configuration wires) |
 | 1.0 mm | 63 | Female headers for the Pico (40) and the module (20), potentiometer pins (3) |
 | 1.1 mm | 4 | Button |
-| 1.3 mm | 14 | Screw terminals |
-| 1.8 mm | 2 | Potentiometer mounting tabs (slots of 2.1 × 1.8 mm in the design) |
+| 1.4 mm | 14 | Screw terminals |
+| 1.8 mm, then widen | 2 | Potentiometer mounting tabs (slots of 2.1 × 1.8 mm in the design; see below) |
 | 3.2 mm | 4 | M3 mounting (optional; not plated) |
+
+**Potentiometer tab slots.** Drill the two potentiometer tab holes with a 1.8 mm bit, then widen each one along the long side of its pad (left-right, the 4 mm direction) to about 2.1 mm with a round needle file or by rocking the 1.8 mm bit sideways. Test-fit the pot before soldering; the tabs must drop in without force.
 
 If you like, apply flux or protective lacquer to the copper after drilling. You can also tin the tracks with the iron so they do not oxidise.
 
@@ -150,7 +153,7 @@ Solder from the lowest component to the tallest, so the board sits flat on the t
 
 ## 5. Module configuration: JP1 and two wires
 
-The Adafruit 1982 exists in two versions, with the 7 power/I²C pins in a different order. That is why the board does not connect them directly. Above the 7 module pins there are 7 holes **S1–S7**, each one directly above a module pin. You configure the board for your module in two steps.
+The Adafruit 1982 exists in two versions, with the 7 power/I²C pins in a different order. That is why the board does not connect them directly. Above the 7 module pins there are 7 holes **S1–S7** (J3), each one directly above a module pin. You configure the board for your module in two steps.
 
 **Step 1: power (JP1).** JP1 is a 3-pad solder bridge. The centre pad is 3V3. Bridge it to **one** side with solder or a resistor lead off-cut:
 
@@ -173,7 +176,7 @@ To confirm, read the letters printed on the module next to the 7-pin row, and ch
 
 Use insulated solid wire and run it on the component side. Solder the two wires underneath, on the copper. The other S holes stay empty. The module's GND needs no wire: it comes in through the electrode row and is the same in both versions.
 
-> If JP1 is bridged to the wrong side, 3V3 lands on ADDR (QT module) or IRQ (original module) instead of the supply pin. That does not cause a short circuit, but the module is not powered, the sensor does not respond and the Pico LED blinks fast. Remove the solder and bridge the other side. Never bridge all three pads.
+> **A wrong JP1 position can damage the sensor.** ORIG on a STEMMA QT module puts 3V3 on the module's ADDR pin; QT on an original module puts it on IRQ. The MPR121 chip is then unpowered, so 3V3 on that pin is above its absolute maximum rating (VDD + 0.3 V), and it can back-feed the module through its 10 kΩ pull-ups. There is no direct short to GND, but the module is not supplied correctly, the sensor does not respond and the Pico LED blinks fast. Check JP1 against the table above **before** inserting the module (section 6). Never bridge all three pads.
 
 ## 6. Test before powering
 
@@ -184,7 +187,7 @@ With the multimeter, **without the Pico or the module plugged in**:
 - [ ] Continuity between neighbouring terminals (0–1, 1–2, …): it does **not** beep.
 - [ ] Continuity between the two GND terminals at the ends: it beeps.
 - [ ] Resistance between the module's SDA pin and pin 31 of the Pico socket (and SCL and pin 32): about **220 Ω** (R16 / R15), with the configuration wires already soldered. It may not beep in continuity mode.
-- [ ] Continuity between the JP1 centre pad and the S hole for your version (S1 for ORIG, S7 for QT): it beeps, with JP1 bridged.
+- [ ] **Before inserting the module:** continuity between the JP1 centre pad and the S hole for your version (S1 for ORIG, S7 for QT): it beeps. The other side (S7 or S1) must **not** beep.
 
 ## 7. Firmware and first power-up
 
@@ -231,7 +234,7 @@ Sensitivity problems (fruit, cables, ground) are the same as on the breadboard: 
 
 ## Electrical safety
 
-Each electrode has a 3.3 kΩ series resistor (R1–R12) between the screw terminal and the sensor. This was analysed against IEC 61000-4-2 contact discharge at ±4 kV. That result is a calculation and has not been tested. The board has not been evaluated beyond that: not for higher discharge levels, and not for touching while it is connected to mains-powered equipment. <!-- EVIDENCE --> See the [electronics analysis](../reports/electronics/analysis.md). Never connect the electrodes to anything plugged into mains power.
+Each electrode has a 3.3 kΩ series resistor (R1–R12) between the screw terminal and the sensor. Its protection against IEC 61000-4-2 contact discharge at ±4 kV is an estimate that rests on assumptions (the sensor pin's surge limit is inferred, not specified), not a pass. The resistor is not rated for the pulse voltage across it. Only an ESD-gun test, ideally with a pulse-rated resistor, can confirm it. The board has not been evaluated for higher discharge levels or for touching while it is connected to mains-powered equipment. <!-- EVIDENCE --> See the [electronics analysis](../reports/electronics/analysis.md). Never connect the electrodes to anything plugged into mains power.
 
 ## Modifying the board
 

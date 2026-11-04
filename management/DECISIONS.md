@@ -77,3 +77,13 @@
 ## ADR-013 — Interfaces frozen (frozen-1)
 - Date 2026-11-03. INTERFACES.json draft-3 frozen as "frozen-1". Changes from now on go through /engineering-change.
 - REQ-040 stays FAIL with accepted residual risk R-007 (not relabelled).
+
+## ADR-014 — Review fix batch before baseline
+- All 16 findings of reports/review/72f67f0/findings.md dispositioned there (13 FIX, 1 ACCEPTED, 2 info FIX). The baseline is not yet released, so fixes are made on main before V1_BASELINE; none changes a frozen interface (MIDI message formats, pins and nets unchanged). A re-review of the changed outputs follows.
+
+## ADR-015 — BOM part numbers (T-056)
+- J2 = Phoenix Contact 1715721 (MKDS 1,5/2-5,08, ×7), matching the footprint basis; 1729128 (MKDSN) rejected. RV1 named by series (RK09K, 10k linear, vertical) — exact order code not sourced (PARTIAL, accepted). Female headers generic. SW1 Omron B3F-1000 drawing match to be confirmed against the official PDF (follow-up, info).
+
+## ADR-016 — T-012 decisions
+- REQ-018 stays FAIL with a documented deviation: on a USB low-power port (4.40 V min) VBUS is below the Pico's recommended 4.50 V; the user guide recommends a standard (high-power) port or powered hub. Not relabelled.
+- INTERFACES change request from systems (AGND citations; pot zone 0.660 V, dead band 0.132 V, error budget 0.0364 V) is documentation-only and is applied by the manager as frozen-2 together with any firmware T-044 interface notes.

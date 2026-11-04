@@ -16,6 +16,7 @@ PINS = {  # footprint name -> (pin description, max pin cross-dimension mm, labe
                                 "ASSUMPTION: generic 2.54 mm female header, datasheet not read"),
     "Adafruit_MPR121_1982_Socket": ("female header tail 0.64 mm square (diag 0.91); Q-row: AWG24 wire 0.51 mm",
                                     0.64 * math.sqrt(2), "ASSUMPTION"),
+    "WireHoles_1x07_P2.54mm": ("Q-row wire hole, AWG24 solid wire 0.51 mm", 0.51, "ASSUMPTION (wire gauge chosen by builder)"),
     "Config_2pads": ("AWG24 solid wire 0.51 mm", 0.51, "ASSUMPTION (wire gauge chosen by builder)"),
     "SolderJumper_3_THT_P2.54mm": ("resistor lead off-cut 0.45-0.50 mm as link (or solder bridge)", 0.50,
                                    "SOURCE Yageo MFR lead (EE-S14)"),
@@ -52,7 +53,7 @@ for (name, d, s, npth), n in sorted(rows.items()):
     gap = d - pin
     # fit: PASS gap >= 0.2 mm (or the maker's own hole for the terminal block); PARTIAL 0 <= gap < 0.2 (fits, tight);
     # FAIL gap < 0. Ring: FAIL if < 0.4 mm (home-etch rule).
-    maker_hole = name == "TerminalBlock_5.08_1x14" and abs(d - 1.3) < 1e-6
+    maker_hole = False   # T-056: 1.4 mm drill judged on the gap like every other hole
     fit = "PASS" if (gap >= 0.2 - 1e-9 or maker_hole) else ("PARTIAL" if gap >= 0 else "FAIL")
     ok_ring = npth or ring >= 0.4 - 1e-9
     verdict = fit if ok_ring else "FAIL(ring)"

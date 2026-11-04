@@ -44,7 +44,7 @@ ADR-004 & English file and folder names (\nolinkurl{hardware/fabrication/}, \tex
 ADR-005 & Sampler: learning a used note swaps the two pads; notes flash before audio is enabled; omni channel; English UI and silkscreen. & T-020 \\
 ADR-006 & Architecture option A (Pico + Adafruit MPR121 breakout); MPR121 sets a $\ge$\,\qty{4}{\milli\second} sensing floor. & architecture\_options.md \\
 ADR-007 & Latency $\le$ \qty{15}{\milli\second} worst case and jitter $\le$ \qty{10}{\milli\second} (relaxed, flagged); burst read M1; 24 pads breadboard only; JP1 3-pad selector replaces the 3V3 wire; hosts; BOM target $\le$ 30\,EUR; English. & T-008 \\
-ADR-008 & \qty{3.3}{\kilo\ohm} series resistor per electrode (PASS $\pm$4\,kV, PARTIAL 8\,kV, risk R-006); keep \qty{400}{\kilo\hertz} with \qty{4.7}{\kilo\ohm} pull-ups; label v1.1. & analysis.md \\
+ADR-008 & \qty{3.3}{\kilo\ohm} series resistor per electrode (recorded as PASS $\pm$4\,kV, later downgraded to an estimate by review F-002; PARTIAL 8\,kV, risk R-006); keep \qty{400}{\kilo\hertz} with \qty{4.7}{\kilo\ohm} pull-ups; label v1.1. & analysis.md \\
 ADR-009 & PARTIAL policy; \qty{220}{\ohm} I\textsuperscript{2}C series resistors (fault current $\le$ \qty{15}{\milli\ampere}); JP1 silkscreen and warnings (R-007); breadboard \qty{4.7}{\kilo\ohm} pull-ups. & T-010 \\
 ADR-010 & Run-based burst reads (12 pads \qty{945}{\micro\second} vs \qty{2430}{\micro\second}, \lbl{CALCULATION}); AUTOCONFIG limits 200/180/130 at design VDD 3.2\,V; SCTS = 0. & T-041 \\
 ADR-011 & MPR121 register facts confirmed from the datasheet (S-006); three firmware \lbl{ASSUMPTION}s become \lbl{SOURCE}. & T-042, manager \\

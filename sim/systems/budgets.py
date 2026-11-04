@@ -18,10 +18,12 @@ recomputed from the I2C transactions the current firmware actually makes (M1 bur
 import sys
 
 checks = []
+RESULTS = []
 
 
 def check(name, ok, detail):
     checks.append(ok)
+    RESULTS.append(("PASS" if ok else "FAIL", "%s: %s" % (name, detail)))
     print("%s  %s :: %s" % ("PASS" if ok else "FAIL", name, detail))
 
 
@@ -112,13 +114,31 @@ check("A3b USB VBUS range inside Pico recommended VBUS 4.5..5.5 V", VBUS_USB[0] 
 vdd = (V33 * 0.97 - 0.10, V33 * 1.03)
 check("A4 MPR121 VDD inside 2.0..3.6 V (S-04 Table 5)", vdd[0] >= 2.0 and vdd[1] <= 3.6, "VDD %s (rail +-3 %%, LDO dropout <= 0.1 V ASSUMPTION)" % fmt(vdd, "V", 2))
 
-# ADC / octave pot (S-01 sec. 4.3: ADC_AVDD from 3V3 through 201 Ohm into 2.2 uF; ~150 uA draw -> ~30 mV offset)
-adc_offset_v = 150e-6 * 200.0
+# ADC / octave pot. Hysteresis definition (fm_pot.h octave_from_adc): 5 zones of V33/5; the octave changes only
+# when |pos - zone centre| > 0.7 zone, i.e. 0.2 zone beyond the zone border -> dead band 0.2 zone each side.
+# A static offset shifts all switch points together and does not consume the dead band (review F-003).
 zone_v = V33 / 5
-hyst_v = 0.7 * zone_v
-print("  ADC: offset %.3f V (SOURCE S-01 4.3), zone %.3f V, hysteresis %.3f V, offset = %.1f %% of hysteresis  CALCULATION"
-      % (adc_offset_v, zone_v, hyst_v, 100 * adc_offset_v / hyst_v))
-check("A5 ADC offset < 25 % of the pot hysteresis band", adc_offset_v < 0.25 * hyst_v, "%.3f V vs %.3f V" % (adc_offset_v, 0.25 * hyst_v))
+dead_v = (0.7 - 0.5) * zone_v
+adc_offset_v = 150e-6 * 200.0                       # SOURCE S-01 sec. 4.3 (static; reported, not budgeted)
+ENOB = 8.7                                          # SOURCE S-17 Table 627 / sec. 4.9.3 (ENOB 8.6..8.8, typ 8.7)
+lsb_eff = V33 / 2 ** ENOB
+noise_pp = 6.6 * lsb_eff / 12 ** 0.5                # CALCULATION: ENOB-equivalent rms noise, +-3.3 sigma peak-to-peak
+DNL_LSB12 = rng(1.0, 10.0)                          # SOURCE S-17 sec. 4.9.4 / RP2040-E11: < 1 LSB except peaks at codes 512,
+                                                    # 1536, 2560, 3584; peak height only in Figure 117 -> 10 LSB ASSUMPTION
+dnl_v = DNL_LSB12[1] * V33 / 4096
+q10_v = V33 / 1024                                  # firmware reads 10 bits (S-09)
+ripple_v = 0.010                                    # ASSUMPTION: SMPS ripple on ADC_AVDD after 201 Ohm / 2.2 uF (S-01 4.3)
+err_v = noise_pp + dnl_v + q10_v + ripple_v
+print("  POT: zone %.3f V, dead band 0.2 zone = %.3f V; static ADC offset %.3f V (shifts thresholds, not budgeted)  CALCULATION"
+      % (zone_v, dead_v, adc_offset_v))
+print("  POT: noise p-p %.4f V (ENOB %.1f) + DNL peak %.4f V (10 LSB12 ASSUMPTION) + 10-bit step %.4f V + ripple %.3f V = %.4f V  CALCULATION"
+      % (noise_pp, ENOB, dnl_v, q10_v, ripple_v, err_v))
+codes_v = [c * V33 / 4096 for c in (512, 1536, 2560, 3584)]
+switch_v = sorted([k * zone_v + d * dead_v for k in range(1, 5) for d in (-1, 1)])
+near = min(abs(a - b) for a in codes_v for b in switch_v)
+print("  POT: DNL peak codes at %s V; nearest switch point %.3f V away  CALCULATION" % (["%.3f" % v for v in codes_v], near))
+check("A5 pot: ADC noise + DNL + quantisation + ripple < dead band (no octave chatter)", err_v < dead_v,
+      "%.4f V < %.3f V, margin %.3f V" % (err_v, dead_v, dead_v - err_v))
 # GP26/GP27 are ADC-capable pins with a reverse diode to IOVDD (S-01 sec. 4.2): input <= IOVDD + 0.3 V.
 # PCB pull-ups (R13/R14, module host side) go to the same +3V3 rail -> no over-voltage, no back-feed. CALCULATION.
 check("A6 I2C on ADC-capable GP26/27: pull-up rail = IOVDD", True, "R13/R14 and module VIN/VCC are on +3V3 (Pico pin 36)")
@@ -263,6 +283,15 @@ for f in (400e3, 100e3):
         check("B1 worst <= 15 ms [%s]" % tag, w <= TARGET_WORST_MS, "worst %.2f ms" % w)
         check("B2 jitter <= 10 ms [%s]" % tag, w - b <= TARGET_JITTER_MS, "jitter %.2f ms" % (w - b))
 
+# Firmware pad lockout (fm_debounce.h, DEBOUNCE_MS = 15): a change of the same pad within 15 ms of its previous
+# accepted change waits until the lockout ends (it is applied, not lost, because the state is re-evaluated each loop).
+# REQ-014 is scoped to the first touch after the pad was idle >= 15 ms; the re-touch case is reported separately.
+DEBOUNCE_MS = 15.0
+b, w = table[(400e3, 1, 100)]
+retouch_worst = w + DEBOUNCE_MS
+print("  LOCKOUT: re-touch within 15 ms of the previous change of the same pad adds 0..%.0f ms -> worst %.2f ms (400 kHz, 1 sensor, C <= 100 pF)  CALCULATION"
+      % (DEBOUNCE_MS, retouch_worst))
+
 # Largest electrode capacitance that still meets both targets (1 sensor), per clock
 for f in (400e3, 100e3):
     ok_c = [c for c in range(10, 1201, 10) if cdt_for(c) is not None
@@ -367,3 +396,71 @@ check("C1 core BOM upper bound <= 30 EUR", core[1] <= 30.0, "core %s" % fmt(core
 
 print()
 print("SUMMARY: %d checks, %d PASS, %d FAIL" % (len(checks), checks.count(True), checks.count(False)))
+
+# ---------------------------------------------------------------------------------------------
+# Generated report (review F-008): every number in reports/systems/budgets.md comes from this run.
+import os
+OUT_MD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "reports", "systems", "budgets.md")
+L = []
+L.append("# FrutaMIDI system budgets")
+L.append("")
+L.append("Generated by `sim/systems/budgets.py` (revision 4, T-012). Do not edit by hand: re-run the script. Raw output: `sim/systems/budgets.out`.")
+L.append("Labels: SOURCE ids refer to `requirements/SOURCES_SYSTEMS.md`. Everything here is CALCULATION unless marked; nothing is MEASURED.")
+L.append("")
+L.append("**Checks:** %d PASS, %d FAIL." % (checks.count(True), checks.count(False)))
+L.append("")
+L.append("## Check results")
+L.append("")
+L.append("| Check | Result |")
+L.append("| --- | --- |")
+for line in RESULTS:
+    L.append("| %s | %s |" % (line[1].replace("|", "/"), line[0]))
+L.append("")
+L.append("## Current (3V3 external load)")
+L.append("")
+L.append("| Load | mA | Label |")
+L.append("| --- | --- | --- |")
+for n, r, lab, _ in loads:
+    L.append("| %s | %.3f–%.3f | %s |" % (n, r[0], r[1], lab))
+L.append("| **Total, 1 sensor** | **%.2f–%.2f** | CALCULATION |" % ext_1)
+L.append("| **Total, 2 sensors** | **%.2f–%.2f** | CALCULATION |" % ext_2)
+L.append("")
+L.append("VSYS %.2f–%.2f V (CALCULATION).  VBUS limit 100 mA declared (SOURCE S-11).  3V3 limit 300 mA (SOURCE S-01).  "
+         "Board-current upper bounds are ASSUMPTIONs; lower bounds are SOURCE (S-01 Table 3, S-16 Table 2)." % vsys)
+L.append("")
+L.append("## Latency (device side; first touch after the pad was idle >= 15 ms)")
+L.append("")
+L.append("Model: sensing is 1 to 2 MPR121 update periods of SFI x ESIeff (ASSUMPTION on the filter model). Then up to one "
+         "worst loop, with the aftertouch burst plan from `fm_mpr121.h` (worst mask 0x%03X: %s data bytes). USB adds 0–1 ms (ASSUMPTION)." % (WORST_MASK, TX_AT_PASS))
+L.append("")
+L.append("| f_SCL | Sensors | C [pF] | Best [ms] | Worst [ms] | Jitter [ms] |")
+L.append("| --- | --- | --- | --- | --- | --- |")
+for (f, sn, c), (b_, w_) in sorted(table.items()):
+    L.append("| %.0f kHz | %d | %d | %.2f | %.2f | %.2f |" % (f / 1e3, sn, c, b_, w_, w_ - b_))
+L.append("")
+L.append("Targets (ADR-007): worst case <= 15 ms, jitter <= 10 ms. Pad lockout (separate term, not in the table): "
+         "a re-touch of the same pad within 15 ms of its previous change adds up to 15 ms, giving a worst case of %.2f ms (400 kHz, 1 sensor, C <= 100 pF)." % retouch_worst)
+L.append("")
+L.append("## I2C")
+L.append("")
+L.append("R_eff: PCB %.2f kOhm, breadboard without the ADR-009 pull-ups %.2f kOhm (RPU 80 kOhm, SOURCE S-17)." % (R_PCB / 1e3, R_BB / 1e3))
+L.append("Rise time at 60 pF: PCB or breadboard with 4.7 kOhm %.0f ns; bare breadboard %.0f ns. Bus-capacitance limit at 400 kHz: %.1f pF (PCB) and %.1f pF (bare breadboard)."
+         % (0.8473 * R_PCB * 60e-12 * 1e9, 0.8473 * R_BB * 60e-12 * 1e9, 300e-9 / (0.8473 * R_PCB) * 1e12, 300e-9 / (0.8473 * R_BB) * 1e12))
+L.append("Level margins with 220 Ohm (S-17 Table 625, S-04 Table 5): Pico low at MPR121 %.3f V; MPR121 low at Pico %.3f V; fault current %.1f mA per line." % (m1, m2, i_fault))
+L.append("")
+L.append("## Octave potentiometer")
+L.append("")
+L.append("The zone is %.3f V wide. The dead band is 0.2 zone = %.3f V each side of a border. The error budget is noise p-p %.4f V (ENOB %.1f, S-17), plus DNL peak %.4f V (ASSUMPTION 10 LSB12; peaks at codes 512/1536/2560/3584, S-17 RP2040-E11), plus the 10-bit step %.4f V, plus ripple %.3f V (ASSUMPTION), for a total of %.4f V. "
+         "The static offset of %.3f V (S-01 §4.3) moves every threshold together and is not budgeted. The nearest DNL-peak code is %.3f V from a switch point."
+         % (zone_v, dead_v, noise_pp, ENOB, dnl_v, q10_v, ripple_v, err_v, adc_offset_v, near))
+L.append("")
+L.append("## BOM (ADR-007 core definition)")
+L.append("")
+L.append("| Item | Qty | EUR | Label |")
+L.append("| --- | --- | --- | --- |")
+for name, q, (lo, hi), lab in BOM:
+    L.append("| %s | %d | %.2f–%.2f | %s |" % (name, q, q * lo, q * hi, lab))
+L.append("| **Core total** | | **%.2f–%.2f** | CALCULATION |" % core)
+L.append("")
+open(OUT_MD, "w").write("\n".join(L) + "\n")
+print("wrote reports/systems/budgets.md")

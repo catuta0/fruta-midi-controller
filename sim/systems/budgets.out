@@ -22,8 +22,10 @@ PASS  A2 VBUS current <= 100 mA declared [Pico 2 W] :: 13.8 .. 75.6 mA (board 12
 PASS  A3 VSYS within 1.8..5.5 V over USB VBUS 4.40..5.50 V :: VSYS 3.95 .. 5.25 V
 FAIL  A3b USB VBUS range inside Pico recommended VBUS 4.5..5.5 V :: USB low-power port min 4.40 V < Pico recommended 4.50 V (VSYS margin above 1.8 V stays 2.15 V)
 PASS  A4 MPR121 VDD inside 2.0..3.6 V (S-04 Table 5) :: VDD 3.10 .. 3.40 V (rail +-3 %, LDO dropout <= 0.1 V ASSUMPTION)
-  ADC: offset 0.030 V (SOURCE S-01 4.3), zone 0.660 V, hysteresis 0.462 V, offset = 6.5 % of hysteresis  CALCULATION
-PASS  A5 ADC offset < 25 % of the pot hysteresis band :: 0.030 V vs 0.115 V
+  POT: zone 0.660 V, dead band 0.2 zone = 0.132 V; static ADC offset 0.030 V (shifts thresholds, not budgeted)  CALCULATION
+  POT: noise p-p 0.0151 V (ENOB 8.7) + DNL peak 0.0081 V (10 LSB12 ASSUMPTION) + 10-bit step 0.0032 V + ripple 0.010 V = 0.0364 V  CALCULATION
+  POT: DNL peak codes at ['0.412', '1.237', '2.062', '2.887'] V; nearest switch point 0.049 V away  CALCULATION
+PASS  A5 pot: ADC noise + DNL + quantisation + ripple < dead band (no octave chatter) :: 0.0364 V < 0.132 V, margin 0.096 V
 PASS  A6 I2C on ADC-capable GP26/27: pull-up rail = IOVDD :: R13/R14 and module VIN/VCC are on +3V3 (Pico pin 36)
 
 ==========================================================================================
@@ -62,6 +64,7 @@ PASS  B1 worst <= 15 ms [100 kHz, 1 sensor, C <= 100 pF] :: worst 13.96 ms
 PASS  B2 jitter <= 10 ms [100 kHz, 1 sensor, C <= 100 pF] :: jitter 9.96 ms
 FAIL  B1 worst <= 15 ms [100 kHz, 2 sensors, C <= 100 pF] :: worst 18.82 ms
 FAIL  B2 jitter <= 10 ms [100 kHz, 2 sensors, C <= 100 pF] :: jitter 14.82 ms
+  LOCKOUT: re-touch within 15 ms of the previous change of the same pad adds 0..15 ms -> worst 25.59 ms (400 kHz, 1 sensor, C <= 100 pF)  CALCULATION
   DESIGN LIMIT 400 kHz, 1 sensor: targets met for electrode C <= 210 pF  CALCULATION
   DESIGN LIMIT 100 kHz, 1 sensor: targets met for electrode C <= 100 pF  CALCULATION
   recalibrate() per sensor at 400 kHz: 178 transactions, 16.8 .. 22.1 ms (incl. 1 ms reset delay)  CALCULATION
@@ -106,3 +109,4 @@ PASS  B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-1
 FAIL  C1 core BOM upper bound <= 30 EUR :: core 20.42 .. 30.40 EUR
 
 SUMMARY: 29 checks, 25 PASS, 4 FAIL
+wrote reports/systems/budgets.md

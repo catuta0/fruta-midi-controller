@@ -51,7 +51,7 @@ and $C$ = 10--2000\,pF; the discharge model is an \lbl{ASSUMPTION}
 Variant & Peak 4\,kV & Peak 8\,kV & Sensitivity & Verdict \\
 \midrule\endhead
 a) none & 15.0\,A & 30.0\,A & 1.000 & FAIL (11$\times$ over) \\
-\textbf{b) 3.3\,k$\Omega$ series (selected)} & 1.10\,A & 2.20\,A & 0.904 & PASS 4\,kV, PARTIAL 8\,kV \\
+\textbf{b) 3.3\,k$\Omega$ series (selected)} & 1.10\,A & 2.20\,A & 0.904 & Estimate at 4\,kV (review F-002), PARTIAL 8\,kV \\
 b') 10\,k$\Omega$ series & 0.39\,A & 0.77\,A & 0.679 & FAIL (sensitivity) \\
 c) 3.3\,k$\Omega$ + TPD4E05U06 & 1.10\,A & 2.20\,A & $\approx$0.90 & FAIL (SMD constraint) \\
 d) 3.3\,k$\Omega$ + 2$\times$1N4148 & 1.10\,A & 2.20\,A & $\approx$0.90 & PARTIAL (12 jumpers) \\
@@ -95,8 +95,11 @@ d) 3.3\,k$\Omega$ + 2$\times$1N4148 & 1.10\,A & 2.20\,A & $\approx$0.90 & PARTIA
 \end{itemize}
 
 \subsection{Safety statement}
-Each PCB electrode has a \qty{3.3}{\kilo\ohm} series resistor, analysed against
-IEC 61000-4-2 contact discharge at $\pm$4\,kV (\lbl{CALCULATION}, not tested); the
-resistor itself is not pulse-rated for the resulting voltage. The design is not
+Each PCB electrode has a \qty{3.3}{\kilo\ohm} series resistor. Its protection
+against IEC 61000-4-2 contact discharge at $\pm$4\,kV is an estimate resting on
+\lbl{ASSUMPTION}s (the pin limit is inferred from HBM 2\,kV), not a pass; it compares
+peak current only, and the resistor itself is not pulse-rated for the resulting
+voltage (review finding F-002 \ev{reports/review/72f67f0/findings.md}). Only an
+ESD-gun test, with a pulse-rated resistor (CR-001), can close it. The design is not
 evaluated beyond that, and not for touching while connected to mains-powered
 equipment (ADR-003, ADR-012).

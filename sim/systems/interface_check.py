@@ -151,7 +151,7 @@ used = {str(GP_TO_PHYS["GP%d" % fw["pcb"][c]]) for c in pcb_expect} | {"36", "33
 others = {p: n for p, n in fps["A1"].items() if p not in used and n != {None} and not any(x and x.startswith("unconnected") for x in n)}
 check("pcb.A1.no_other_nets", not others, "other connected pads: %s" % others)
 check("pcb.A1.AGND_isolated", "AGND" not in set().union(*[n for r, f in fps.items() for p, n in f.items() if r != "A1" and r != "RV1"]),
-      "AGND net only on A1 pin 33 and RV1 (relies on the Pico module's internal AGND-GND link, SOURCE S-02 'also a GND pin')")
+      "AGND net only on A1 pin 33 and RV1 (relies on the Pico-internal AGND-GND link: S-02 'also a GND pin'; S-01 sec. 2.1 'separate analog ground plane ... terminating at this pin')")
 
 # Controls: RV1 (octave pot) and SW1 (button)
 check("pcb.RV1", [fps["RV1"].get(n) for n in "123"] == [{"+3V3"}, {"POT"}, {"AGND"}],

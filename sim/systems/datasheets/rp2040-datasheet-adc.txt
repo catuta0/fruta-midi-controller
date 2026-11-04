@@ -1,0 +1,291 @@
+=== PAGE 7 ===
+4.6.4. Programmer’s Model. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  536
+4.6.5. List of Registers. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  539
+4.7. Watchdog. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  544
+4.7.1. Overview . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  544
+4.7.2. Tick generation . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  544
+4.7.3. Watchdog Counter. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  545
+4.7.4. Scratch Registers. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  545
+4.7.5. Programmer’s Model. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  545
+4.7.6. List of Registers. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  547
+4.8. RTC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  548
+4.8.1. Storage Format . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  548
+4.8.2. Leap year . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  549
+4.8.3. Interrupts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  549
+4.8.4. Reference clock . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  549
+4.8.5. Programmer’s Model. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  550
+4.8.6. List of Registers. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  553
+4.9. ADC and Temperature Sensor. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  557
+4.9.1. ADC controller . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  558
+4.9.2. SAR ADC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  559
+4.9.3. ADC ENOB . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  561
+4.9.4. INL and DNL . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  562
+4.9.5. Temperature Sensor . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  563
+4.9.6. List of Registers. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  564
+4.10. SSI . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  567
+4.10.1. Overview . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  568
+4.10.2. Features . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  568
+4.10.3. IP Modifications. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  569
+4.10.4. Clock Ratios . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  570
+4.10.5. Transmit and Receive FIFO Buffers. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  571
+4.10.6. 32-Bit Frame Size Support . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  572
+4.10.7. SSI Interrupts . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  572
+4.10.8. Transfer Modes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  573
+4.10.9. Operation Modes . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  574
+4.10.10. Partner Connection Interfaces. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  579
+4.10.11. DMA Controller Interface . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  595
+4.10.12. APB Interface. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  597
+4.10.13. List of Registers. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  598
+5. Electrical and Mechanical. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  607
+5.1. Package . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  607
+5.1.1. Thermal characteristics . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  608
+5.1.2. Recommended PCB Footprint . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  608
+5.1.3. Package markings . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  608
+5.2. Storage conditions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  609
+5.3. Solder profile . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  609
+5.4. Compliance . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  611
+5.5. Pinout . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  611
+5.5.1. Pin Locations . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  611
+5.5.2. Pin Definitions . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  612
+5.5.3. Pin Specifications . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  614
+5.6. Power Supplies . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  622
+5.7. Power Consumption. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  622
+5.7.1. Peripheral power consumption . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  622
+5.7.2. Power consumption for typical user cases . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  623
+Appendix A: Register Field Types. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  625
+Standard types . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  625
+RW: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  625
+RO: . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  625
+WO:. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  625
+Clear types . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  625
+SC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .  625
+RP2040 Datasheet
+Table of contents 6
+=== PAGE 558 ===
+Description
+Raw Interrupts
+Table 561. INTR
+Register
+Bits Description Type Reset
+31:1 Reserved. - -
+0 RTC RO 0x0
+RTC: INTE Register
+Offset: 0x24
+Description
+Interrupt Enable
+Table 562. INTE
+Register
+Bits Description Type Reset
+31:1 Reserved. - -
+0 RTC RW 0x0
+RTC: INTF Register
+Offset: 0x28
+Description
+Interrupt Force
+Table 563. INTF
+Register
+Bits Description Type Reset
+31:1 Reserved. - -
+0 RTC RW 0x0
+RTC: INTS Register
+Offset: 0x2c
+Description
+Interrupt status after masking & forcing
+Table 564. INTS
+Register
+Bits Description Type Reset
+31:1 Reserved. - -
+0 RTC RO 0x0
+4.9. ADC and Temperature Sensor
+RP2040 has an internal analogue-digital converter (ADC) with the following features:
+• SAR ADC (see Section 4.9.2)
+• 500ksps (using an independent 48MHz clock)
+• 12-bit with 8.7 ENOB (see Section 4.9.3)
+• Five input mux:
+◦ Four inputs that are available on package pins shared with GPIO[29:26]
+RP2040 Datasheet
+4.9. ADC and Temperature Sensor 557
+=== PAGE 562 ===
+CAUTION
+Conversion errors produce undefined results, and the corresponding sample should be discarded. They indicate that
+the comparison of one or more bits failed to complete in the time allowed. Normally this is caused by comparator
+metastability, i.e. the closer to the comparator threshold the input signal is, the longer it will take to make a decision.
+The high gain of the comparator reduces the probability that no decision is made.
+4.9.2.5. DMA
+The RP2040 DMA (Section 2.5) can fetch ADC samples from the sample FIFO, by performing a normal memory-mapped
+read on the FIFO register, paced by the ADC_DREQ system data request signal. The following must be considered:
+• The sample FIFO must be enabled (FCS.EN) so that samples are written to it; the FIFO is disabled by default so
+that it does not inadvertently fill when the ADC is used for one-shot conversions.
+• The ADC’s data request handshake (DREQ) must be enabled, via FCS.DREQ_EN.
+• The DMA channel used for the transfer must select the DREQ_ADC data request signal (Section 2.5.3.1).
+• The threshold for DREQ assertion (FCS.THRESH) should be set to 1, so that the DMA transfers as soon as a single
+sample is present in the FIFO. Note this is also the threshold used for IRQ assertion, so non-DMA use cases might
+prefer a higher value for less frequent interrupts.
+• If the DMA transfer size is set to 8 bits, so that the DMA transfers to a byte array in memory, FCS.SHIFT must also
+be set, to pre-shift the FIFO samples to 8 bits of significance.
+• If multiple input channels are to be sampled, CS.RROBIN contains a 5-bit mask of those channels (4 external inputs
+plus temperature sensor). Additionally CS.AINSEL must select the channel for the first sample.
+• The ADC sample rate (Section 4.9.2.2) should be configured before starting the ADC.
+Once the ADC is suitably configured, the DMA channel should be started first, and the ADC conversion should be started
+second, via CS.START_MANY. Once the DMA completes, the ADC can be halted, or a new DMA transfer promptly
+started. After clearing CS.START_MANY to halt the ADC, software should also poll CS.READY to make sure the last
+conversion has finished, and then drain any stray samples from the FIFO.
+4.9.2.6. Interrupts
+An interrupt can be generated when the FIFO level reaches a configurable threshold FCS.THRESH. The interrupt output
+must be enabled via INTE.
+Status can be read from INTS. The interrupt is cleared by draining the FIFO to a level lower than FCS.THRESH.
+4.9.2.7. Supply
+The ADC supply is separated out on its own pin to allow noise filtering.
+4.9.3. ADC ENOB
+The ADC was characterised and the ENOB of the ADC was measured. Testing was carried out at room temperature
+across silicon lots, with tests being done on 3 typical ( tt) as well as 3 fast ( ff) and 3 slow ( ss) corner RP2040 devices.
+The typical, minimum, and maximum values in Table 566 reflect the silicon used in the testing.
+Table 565. Parameters
+used during the
+testing.
+Parameter Value
+Sample rate 250ksps
+RP2040 Datasheet
+4.9. ADC and Temperature Sensor 561
+=== PAGE 563 ===
+Parameter Value
+FFT window 5 term Blackman-Harris
+FFT bins 4,096
+FFT averaging none
+Input level min 1
+Input level max 4,094
+Input frequency 997Hz
+It should be noted that THD is normally calculated using the first 5 or 6 harmonics. However as INL/DNL errors (see
+Section 4.9.4) create more than this, the first 30 peaks are used. This makes the THD value slightly worse, but more
+representative of reality.
+Table 566. Results for
+various parts tested
+(fast, slow, and
+typical).
+Min Typical Max
+THD1 -55.6dB 55dB -54.4dB
+SNR 60.9dB 61.5dB 62.0dB
+SFDR 59.2dB 59.9dB 60.5dB
+SINAD 53.6dB 54.0dB 54.6dB
+ENOB 8.6 8.7 8.8
+1 As the INL creates a large number of harmonics, the highest 30 peaks were used. This is different from conventional
+calculations of THD.
+IMPORTANT
+Testing was carried out using a board with a low-noise on-board voltage reference as, when characterising the ADC,
+it is important that there are no other noise sources affecting the measurements.
+4.9.4. INL and DNL
+Integral Non-Linearity (INL) and Differential Non-Linearity (DNL) are used to measure the error of the quantisation of the
+incoming signal that the ADC generates. In an ideal ADC the input-to-output transfer function should have a linear
+quantised transfer between the analogue input signal and the digitised output signal. The RP2040 ADC INL values for
+each binary result are shown in Figure 116, illustrating that the error is a sawtooth rather than the expected curve.
+RP2040 Datasheet
+4.9. ADC and Temperature Sensor 562
+=== PAGE 564 ===
+Figure 116. ATE
+machine results for
+INL (RP2040).
+Nominally an ADC moves from one digital value to the next digital value, colloquially expressed as “no missing codes”.
+However, if the ADC skips a value bin this would cause a spike in the Differential Non-Linearity (DNL) error. These types
+of error often only occur at specific codes due to the design of the ADC.
+The RP2040 ADC has a DNL which is mostly flat, and below 1 LSB. However at four values — 512, 1,536, 2,560, and
+3,584 — the ADC’s DNL error peaks, see Figure 117
+Figure 117. ATE
+machine results for
+DNL (RP2040).
+The INL and DNL errors come from an error in the scaling of some internal capacitors of the ADC. These capacitors are
+small in value (only tens of femto Farads) and at these very small values, chip simulation of these capacitors can
+deviate slightly from reality. If these capacitors had matched correctly, the ADCs performance could have been better.
+These INL and DNL errors will somewhat limit the performance of the ADC dependent on use case (See Errata RP2040-
+E11).
+4.9.5. Temperature Sensor
+The temperature sensor measures the Vbe voltage of a biased bipolar diode, connected to the fifth ADC channel
+(AINSEL=4). Typically, Vbe = 0.706V at 27 degrees C, with a slope of -1.721mV per degree. Therefore the temperature
+can be approximated as follows:
+T = 27 - (ADC_voltage - 0.706)/0.001721
+As the Vbe and the Vbe slope can vary over the temperature range, and from device to device, some user calibration
+may be required if accurate measurements are required.
+RP2040 Datasheet
+4.9. ADC and Temperature Sensor 563
+=== PAGE 618 ===
+Parameter Symbol Minimum Maximum Units Comment
+Pull-Up Resistance
+- RPU1&2
+RPU1&2 1.398 3.063 kΩ
+Pull-Down
+Resistance
+RPD 14.25 15.75 kΩ
+Table 627. ADC
+characteristics
+Parameter Symbol Minimum Maximum Units Comment
+ADC Input Voltage
+Range
+VPIN_ADC 0 ADC_AVDD V
+Effective Number
+of Bits
+ENOB 8.7 bits See Section 4.9.3
+Resolved Bits 12 bits
+ADC Input
+Impedance
+RIN_ADC 100 kΩ
+Table 628. Oscillator
+pin characteristics
+when using a Square
+Wave input
+Parameter Symbol Minimum Maximum Units Comment
+Input Voltage High VIH 0.65*IOVDD IOVDD + 0.3 V XIN only. XOUT
+floating
+Input Voltage Low VIL 0 0.35*IOVDD V XIN only. XOUT
+floating
+See Section 2.16 for more details on the Oscillator, and Minimal Design Example for information on crystal usage.
+5.5.3.5. Interpreting GPIO output voltage specifications
+The GPIOs on RP2040 have four different output drive strengths, which are nominally called 2, 4, 8 and 12mA modes.
+These are not hard limits, nor do they mean that they will always be sourcing (or sinking) the selected amount of
+milliamps. The amount of current a GPIO sources or sinks is dependent on the load attached to it. It will attempt to drive
+the output to the IOVDD level (or 0V in the case of a logic 0), but the amount of current it is able to source is limited,
+which will be dependent on the selected drive strength. Therefore the higher the current load is, the lower the voltage
+will be at the pin. At some point, the GPIO will be sourcing so much current, that the voltage is so low, it won’t be
+recognised as a logic 1 by the input of a connected device. The purpose of the output specifications in Table 625 are to
+try and quantify how much lower the voltage can be expected to be, when drawing specified amounts of current from
+the pin.
+The Output High Voltage (V OH) is defined as the lowest voltage the output pin can be when driven to a logic 1 with a
+particular selected drive strength; e.g., 4mA being sourced by the pin whilst in 4mA drive strength mode. The Output
+Low Voltage is similar, but with a logic 0 being driven.
+In addition to this, the sum of all the IO currents being sourced (i.e. when outputs are being driven high) from the IOVDD
+bank (essentially the GPIO and QSPI pins), must not exceed I IOVDD_MAX. Similarly, the sum of all the IO currents being sunk
+(i.e. when the outputs are being driven low) must not exceed IIOVSS_MAX.
+RP2040 Datasheet
+5.5. Pinout 617
+=== PAGE 631 ===
+Workaround Before aborting a channel, clear its interrupt enable. After aborting a channel, poll the CTRL.BUSY bit to wait
+for completion (not the ABORT bit), clear the spurious IRQ, and restore the interrupt enable.
+Affects RP2040B0, RP2040B1, RP2040B2
+Fixed by Software
+GPIO / ADC
+RP2040-E6
+Reference RP2040-E6
+Summary GPIO digital inputs not disabled for ADC pins by default
+Description GPIO26-29 are shared with ADC inputs AIN0-3. The GPIO digital input is enabled after RUN is released. If
+the pins are connected to an analogue signal to measure, there could be unexpected signal levels on
+these pads. This is unlikely to cause a problem as the digital inputs have hysteresis enabled by default.
+Workaround If analogue inputs are used, the digital input should be disabled as early as possible after startup. This is
+done in the RP2040B2 bootrom and early on in SDK platform setup code on RP2040B0 and RP2040B1. If
+user wishes to use digital inputs, they must be enabled.
+Affects RP2040B0, RP2040B1
+Fixed by RP2040B2 bootrom. Fixed on RP2040B0 and RP2040B1 in SDK. Custom user code should disable these
+inputs early on.
+RP2040-E11
+Reference RP2040-E11
+Summary DNL error peaks in ADC
+Description The RP2040 ADC has a DNL that is mostly flat, and below 1 LSB. However at four values — 512, 1,536,
+2,560, and 3,584 — the ADC’s DNL error peaks above this value. The ENOB for the ADC has been reduced
+from 9-bits (simulated) to 8.7-bits (measured), see Section 4.9.3. The DNL errors will somewhat limit the
+performance of the ADC dependent on use case.
+Workaround None
+Affects RP2040B0, RP2040B1, RP2040B2
+Fixed by Not fixed.
+USB
+RP2040-E2
+Reference RP2040-E2
+Summary USB device endpoint abort is not cleared.
+RP2040 Datasheet
+GPIO / ADC 630

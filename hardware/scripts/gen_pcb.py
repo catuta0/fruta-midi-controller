@@ -140,18 +140,25 @@ def build_footprints():
     for k in range(7):
         x = -7.62 + 2.54 * k
         add_pad(fp, str(14 + k), x, -6.985, OVAL, 1.8, 2.4, 1.0)
-        add_pad(fp, str(14 + k), x, -12.065, CIRC, 1.8, 1.8, 0.9)
-        add_text(fp, "S%d" % (k + 1), x, -14.4, size=0.9)
+
     add_rect(fp, pcbnew.F_SilkS, -16.51, -9.525, 16.51, 10.0)
     add_text(fp, "MPR121 (Adafruit 1982)", 0, 0.6, size=1.2)
     add_text(fp, "GND E0 ... E11", 0, 3.4, size=0.9)
-    replace_courtyard(fp, [(-17.0, -9.9), (-8.6, -9.9), (-8.6, -13.2), (8.6, -13.2), (8.6, -9.9),
-                           (17.0, -9.9), (17.0, 10.0), (-17.0, 10.0)])
+    replace_courtyard(fp, [(-17.0, -9.9), (17.0, -9.9), (17.0, 10.0), (-17.0, 10.0)])
     add_rect(fp, pcbnew.F_Fab, -16.51, -9.525, 16.51, 9.525, 0.1)
     sock = "${KICAD10_3DMODEL_DIR}/Connector_PinSocket_2.54mm.3dshapes/PinSocket_1x%02d_P2.54mm_Vertical.wrl"
     add_model(fp, sock % 13, offset=(-15.24, -8.255, 0), rot=(0, 0, -90))
     add_model(fp, sock % 7, offset=(-7.62, 6.985, 0), rot=(0, 0, -90))
     out["Adafruit_MPR121_1982_Socket"] = fp
+
+    # --- Q-row wire holes S1..S7 (T-056 / F-013: separate part J3, formerly duplicate pads 14-20 of the module)
+    fp = new_fp("WireHoles_1x07_P2.54mm", "7 wire holes S1..S7 above the MPR121 power/I2C row")
+    for k in range(7):
+        add_pad(fp, str(k + 1), 2.54 * k, 0, CIRC, 1.8, 1.8, 0.9)
+        add_text(fp, "S%d" % (k + 1), 2.54 * k, -2.335, size=0.9)
+    add_rect(fp, pcbnew.F_CrtYd, -1.2, -3.0, 16.44, 1.2, 0.05)
+    fp.SetExcludedFromBOM(True)                    # holes only (matches the symbol)
+    out["WireHoles_1x07_P2.54mm"] = fp
 
     # --- 2 holes for the I2C configuration wires (T-052: 3V3 moved to the JP1 solder jumper)
     fp = new_fp("Config_2pads", "2 holes for the configuration wires: SCL (pad 1), SDA (pad 2)")
@@ -177,7 +184,7 @@ def build_footprints():
     fp = lib_fp("TerminalBlock_Phoenix", "TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal")
     fp.SetFPID(pcbnew.LIB_ID("FrutaMIDI", "TerminalBlock_5.08_1x02"))
     for p in fp.Pads():
-        set_pad(p, RECT if p.GetNumber() == "1" else CIRC, 3.0, 3.0, 1.3)
+        set_pad(p, RECT if p.GetNumber() == "1" else CIRC, 3.0, 3.0, 1.4)    # T-056 / F-014: 1.4 mm drill
     # blocks butt against each other (continuous 5.08 pitch): courtyard = exact block width
     replace_courtyard(fp, [(-2.52, -5.7), (7.6, -5.7), (7.6, 5.0), (-2.52, 5.0)])
     replace_layer(fp, pcbnew.F_SilkS)
@@ -188,7 +195,7 @@ def build_footprints():
     # --- 14 ways = 7 interlocked 2-way blocks (pin 1 on the left)
     fp = new_fp("TerminalBlock_5.08_1x14", "7 interlocked 2-way screw terminal blocks, 5.08 mm pitch")
     for i in range(14):
-        add_pad(fp, str(i + 1), 5.08 * i, 0, RECT if i == 0 else CIRC, 3.0, 3.0, 1.3)
+        add_pad(fp, str(i + 1), 5.08 * i, 0, RECT if i == 0 else CIRC, 3.0, 3.0, 1.4)   # F-014: pin diag 1.27 mm
     for b in range(7):
         x0 = 10.16 * b
         add_rect(fp, pcbnew.F_SilkS, x0 - 2.3, -5.4, x0 + 7.38, 4.4)
@@ -408,6 +415,7 @@ def build_board():
     place(bd, None, comps, pin_net, "A1", *PICO, ref_at=(8.89, 24.0))
     place(bd, None, comps, pin_net, "A2", *MOD_C, ref_at=(-13.0, -2.5))
     place(bd, None, comps, pin_net, "J1", *CFG, ref_at=(3.81, -4.0))
+    place(bd, None, comps, pin_net, "J3", *mod_q(1), ref_at="hide")
     place(bd, None, comps, pin_net, "RV1", *POT)
     place(bd, None, comps, pin_net, "SW1", *BTN)
     place(bd, None, comps, pin_net, "J2", *term(0), ref_at="hide")

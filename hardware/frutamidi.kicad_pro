@@ -265,7 +265,7 @@
   },
   "erc": {
     "rule_severities": {
-      "isolated_pin_label": "ignore"
+      "isolated_pin_label": "warning"
     }
   },
   "libraries": {

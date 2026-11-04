@@ -3,19 +3,19 @@ TAP version 13
 # Subtest: connected device is auto-selected and shown
 ok 1 - connected device is auto-selected and shown
   ---
-  duration_ms: 532.4705
+  duration_ms: 590.441291
   type: 'test'
   ...
 # Subtest: port open statechange does not re-open the port
 ok 2 - port open statechange does not re-open the port
   ---
-  duration_ms: 269.189875
+  duration_ms: 283.544916
   type: 'test'
   ...
 # Subtest: each pad plays on its default note 36..47
 not ok 3 - each pad plays on its default note 36..47
   ---
-  duration_ms: 172.267125
+  duration_ms: 188.692625
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:88:1'
   failureType: 'testCodeFailure'
@@ -43,19 +43,19 @@ not ok 3 - each pad plays on its default note 36..47
 # Subtest: note on is logged with name, velocity and channel
 ok 4 - note on is logged with name, velocity and channel
   ---
-  duration_ms: 185.89425
+  duration_ms: 211.38675
   type: 'test'
   ...
 # Subtest: pad velocity scales output gain as (v/127)^1.5
 ok 5 - pad velocity scales output gain as (v/127)^1.5
   ---
-  duration_ms: 173.09375
+  duration_ms: 199.660458
   type: 'test'
   ...
 # Subtest: kick pad (note 36) starts a sine oscillator
 not ok 6 - kick pad (note 36) starts a sine oscillator
   ---
-  duration_ms: 181.320375
+  duration_ms: 192.384584
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:118:1'
   failureType: 'testCodeFailure'
@@ -97,43 +97,43 @@ not ok 6 - kick pad (note 36) starts a sine oscillator
 # Subtest: unmapped note starts a two-oscillator synth voice at equal-tempered pitch
 ok 7 - unmapped note starts a two-oscillator synth voice at equal-tempered pitch
   ---
-  duration_ms: 169.930291
+  duration_ms: 192.729042
   type: 'test'
   ...
 # Subtest: synth checkbox off silences unmapped notes
 ok 8 - synth checkbox off silences unmapped notes
   ---
-  duration_ms: 201.744166
+  duration_ms: 225.870167
   type: 'test'
   ...
 # Subtest: note off (0x80) stops the synth voice
 ok 9 - note off (0x80) stops the synth voice
   ---
-  duration_ms: 164.566375
+  duration_ms: 255.888833
   type: 'test'
   ...
 # Subtest: note on velocity 0 acts as note off
 ok 10 - note on velocity 0 acts as note off
   ---
-  duration_ms: 180.381917
+  duration_ms: 191.445708
   type: 'test'
   ...
 # Subtest: retriggering a held synth note replaces the old voice
 ok 11 - retriggering a held synth note replaces the old voice
   ---
-  duration_ms: 169.62475
+  duration_ms: 191.74475
   type: 'test'
   ...
 # Subtest: poly aftertouch opens the synth filter
 ok 12 - poly aftertouch opens the synth filter
   ---
-  duration_ms: 175.257459
+  duration_ms: 205.223875
   type: 'test'
   ...
 # Subtest: poly aftertouch on a pad note drives the pad bar; note off resets it
 not ok 13 - poly aftertouch on a pad note drives the pad bar; note off resets it
   ---
-  duration_ms: 170.586333
+  duration_ms: 221.988083
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:189:1'
   failureType: 'testCodeFailure'
@@ -155,7 +155,7 @@ not ok 13 - poly aftertouch on a pad note drives the pad bar; note off resets it
 # Subtest: notes on any channel are accepted (omni)
 not ok 14 - notes on any channel are accepted (omni)
   ---
-  duration_ms: 181.820791
+  duration_ms: 203.905375
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:203:1'
   failureType: 'testCodeFailure'
@@ -183,37 +183,37 @@ not ok 14 - notes on any channel are accepted (omni)
 # Subtest: non-note messages are ignored without errors
 ok 15 - non-note messages are ignored without errors
   ---
-  duration_ms: 171.308458
+  duration_ms: 192.39375
   type: 'test'
   ...
 # Subtest: MIDI access rejected shows the permission error
 ok 16 - MIDI access rejected shows the permission error
   ---
-  duration_ms: 157.610584
+  duration_ms: 174.859542
   type: 'test'
   ...
 # Subtest: browser without Web MIDI shows the unsupported error
 ok 17 - browser without Web MIDI shows the unsupported error
   ---
-  duration_ms: 136.176958
+  duration_ms: 178.138375
   type: 'test'
   ...
 # Subtest: busy device shows the busy error
 ok 18 - busy device shows the busy error
   ---
-  duration_ms: 132.529625
+  duration_ms: 147.705625
   type: 'test'
   ...
 # Subtest: busy device next to a free one is listed as busy
 ok 19 - busy device next to a free one is listed as busy
   ---
-  duration_ms: 131.696583
+  duration_ms: 163.591584
   type: 'test'
   ...
 # Subtest: no device shows the plug-in hint; hot-plug connects; unplug reverts
 not ok 20 - no device shows the plug-in hint; hot-plug connects; unplug reverts
   ---
-  duration_ms: 170.183375
+  duration_ms: 202.788875
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:257:1'
   failureType: 'testCodeFailure'
@@ -241,7 +241,7 @@ not ok 20 - no device shows the plug-in hint; hot-plug connects; unplug reverts
 # Subtest: learn mode assigns the next note and persists it
 not ok 21 - learn mode assigns the next note and persists it
   ---
-  duration_ms: 241.92975
+  duration_ms: 259.28275
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:270:1'
   failureType: 'testCodeFailure'
@@ -303,7 +303,7 @@ not ok 21 - learn mode assigns the next note and persists it
 # Subtest: learn button pressed twice cancels learning
 not ok 22 - learn button pressed twice cancels learning
   ---
-  duration_ms: 222.773625
+  duration_ms: 275.179708
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:297:1'
   failureType: 'testCodeFailure'
@@ -329,13 +329,13 @@ not ok 22 - learn button pressed twice cancels learning
 # Subtest: keyboard fallback plays pads (no MIDI needed)
 ok 23 - keyboard fallback plays pads (no MIDI needed)
   ---
-  duration_ms: 163.449917
+  duration_ms: 192.405416
   type: 'test'
   ...
 # Subtest: notes before the audio gate click flash the pad and emphasise the enable-sound hint
 not ok 24 - notes before the audio gate click flash the pad and emphasise the enable-sound hint
   ---
-  duration_ms: 146.871292
+  duration_ms: 149.964625
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:321:1'
   failureType: 'testCodeFailure'
@@ -363,7 +363,7 @@ not ok 24 - notes before the audio gate click flash the pad and emphasise the en
 # Subtest: learning a note already used by another pad swaps the two pads notes
 not ok 25 - learning a note already used by another pad swaps the two pads notes
   ---
-  duration_ms: 190.042667
+  duration_ms: 236.086084
   type: 'test'
   location: '/Users/rod/fruta-midi-controller/tests/host/browser/sampler.test.mjs:343:1'
   failureType: 'testCodeFailure'
@@ -423,7 +423,7 @@ not ok 25 - learning a note already used by another pad swaps the two pads notes
 # Subtest: no Portuguese UI strings in any rendered state
 ok 26 - no Portuguese UI strings in any rendered state
   ---
-  duration_ms: 809.710334
+  duration_ms: 1143.257125
   type: 'test'
   ...
 1..26
@@ -434,6 +434,6 @@ ok 26 - no Portuguese UI strings in any rendered state
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 6009.078208
+# duration_ms 7124.248708
 
 # --- stderr ---

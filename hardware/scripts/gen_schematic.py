@@ -112,7 +112,8 @@ class Sheet:
             self.lib[key] = text
         return key
 
-    def symbol(self, lib, name, ref, value, x, y, footprint, fields=None, hide_ref=False, in_bom=True, ref_at=(0, -3.0)):
+    def symbol(self, lib, name, ref, value, x, y, footprint, fields=None, hide_ref=False, in_bom=True, ref_at=(0, -3.0),
+               on_board=True):
         key = self.use(lib, name)
         sid = det_uuid("sym", ref)
         pin_uuids = "".join('\n\t\t(pin "%s" (uuid "%s"))' % (n, det_uuid("pin", ref, n)) for n in self.pins[key])
@@ -124,7 +125,7 @@ class Sheet:
 		(lib_id "{key}")
 		(at {x:.2f} {y:.2f} 0)
 		(unit 1)
-		(exclude_from_sim no) (in_bom {"yes" if in_bom else "no"}) (on_board yes) (dnp no)
+		(exclude_from_sim no) (in_bom {"yes" if in_bom else "no"}) (on_board {"yes" if on_board else "no"}) (dnp no)
 		(uuid "{sid}")
 		(property "Reference" "{ref}" (at {x + ref_at[0]:.2f} {y + ref_at[1]:.2f} 0) (effects (font (size 1.27 1.27)){ref_hide}))
 		(property "Value" "{value}" (at {x:.2f} {y + 3.0:.2f} 0) (effects (font (size 1.27 1.27)) (hide yes)))
@@ -224,7 +225,8 @@ def build():
     # Raspberry Pi Pico (socketed)
     PX, PY = 101.6, 101.6
     pico = s.symbol("MCU_Module", "RaspberryPi_Pico", "A1", "RaspberryPi_Pico", PX, PY,
-                    "FrutaMIDI:RaspberryPi_Pico_Socket", ref_at=(-12.7, -40.64))
+                    "FrutaMIDI:RaspberryPi_Pico_Socket", ref_at=(-12.7, -40.64),
+                    fields={"Manufacturer": "Raspberry Pi", "MPN": "SC0915"})
     used = {"31": "SDA_PICO", "32": "SCL_PICO", "34": "POT", "33": "AGND", "29": "BTN", "36": "+3V3", "3": "GND"}
     for num, net in used.items():
         s.connect(pico, PX, PY, num, net)
@@ -236,7 +238,8 @@ def build():
     # MPR121 module (socketed): electrodes on the right, power/I2C row on the left
     MX, MY = 190.5, 96.52
     mod = s.symbol("FrutaMIDI", "Adafruit_MPR121_1982", "A2", "Adafruit_MPR121_1982", MX, MY,
-                   "FrutaMIDI:Adafruit_MPR121_1982_Socket", ref_at=(0, -22.86))
+                   "FrutaMIDI:Adafruit_MPR121_1982_Socket", ref_at=(0, -22.86),
+                   fields={"Manufacturer": "Adafruit", "MPN": "1982"})
     s.connect(mod, MX, MY, "1", "GND")
     for i in range(12):
         s.connect(mod, MX, MY, str(2 + i), "ELE%d" % i)       # MPR121 side of the series resistor
@@ -270,6 +273,12 @@ def build():
                      "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=SR_FIELDS, ref_at=(2.54, -1.27))
         s.connect(r, rx, ry, "1", net + "_PICO")
         s.connect(r, rx, ry, "2", net)
+    # T-056 / F-013: the Q-row wire holes are their own part (J3), so every S label joins two pins (no isolated labels)
+    QHX, QHY = 152.4, 96.52
+    jq = s.symbol("Connector_Generic", "Conn_01x07", "J3", "WIRE_HOLES_S1_S7", QHX, QHY,
+                  "FrutaMIDI:WireHoles_1x07_P2.54mm", in_bom=False, ref_at=(0, -11.43))
+    for k in range(7):
+        s.connect(jq, QHX, QHY, str(k + 1), "S%d" % (k + 1))
     for k, num in enumerate(range(14, 21)):
         s.connect(mod, MX, MY, str(num), "S%d" % (k + 1))   # S1/S7 via JP1; SDA/SCL by hand wire from J1 (see note)
 
@@ -291,7 +300,8 @@ def build():
     # Screw terminals (7 interlocked 2-way blocks): GND, E0..E11, GND
     TX, TY = 262.89, 96.52
     t = s.symbol("Connector", "Screw_Terminal_01x14", "J2", "Screw terminals 5.08 mm (7x 2-way)", TX, TY,
-                 "FrutaMIDI:TerminalBlock_5.08_1x14", ref_at=(0, -20.32))
+                 "FrutaMIDI:TerminalBlock_5.08_1x14", ref_at=(0, -20.32),
+                 fields={"Manufacturer": "Phoenix Contact", "MPN": "1715721 (MKDS 1,5/ 2-5,08) x7"})
     for i in range(12):
         s.connect(t, TX, TY, str(2 + i), "E%d" % i)
     (x1, y1, _), (x14, y14, _) = s.pin_end(t, TX, TY, "1"), s.pin_end(t, TX, TY, "14")
@@ -304,13 +314,27 @@ def build():
 
     # Button (scale / recalibrate)
     BX, BY = 63.5, 160.02
-    sw = s.symbol("Switch", "SW_Push", "SW1", "SW_Push_6mm", BX, BY, "FrutaMIDI:SW_PUSH_6mm")
+    sw = s.symbol("Switch", "SW_Push", "SW1", "SW_Push_6mm", BX, BY, "FrutaMIDI:SW_PUSH_6mm",
+                  fields={"Manufacturer": "Omron", "MPN": "B3F-1000"})
     s.connect(sw, BX, BY, "1", "BTN")
     s.connect(sw, BX, BY, "2", "GND")
 
     # Octave potentiometer
     RX, RY = 101.6, 160.02
-    rv = s.symbol("Device", "R_Potentiometer", "RV1", "10k lin (B10K)", RX, RY, "FrutaMIDI:Potentiometer_RK09K_Vertical", ref_at=(-5.08, -1.27))
+    rv = s.symbol("Device", "R_Potentiometer", "RV1", "10k lin (B10K)", RX, RY, "FrutaMIDI:Potentiometer_RK09K_Vertical", ref_at=(-5.08, -1.27),
+                    fields={"Manufacturer": "Alps Alpine", "MPN": "RK09K series, 10k linear (B), vertical"})
+
+    # T-056 / F-015: BOM-only parts (no footprint): sockets for the Pico and the module. All pins no-connect.
+    for k, (ref, n, val) in enumerate((("J4", 20, "Female header 1x20 2.54 mm (Pico)"),
+                                       ("J5", 20, "Female header 1x20 2.54 mm (Pico)"),
+                                       ("J6", 13, "Female header 1x13 2.54 mm (MPR121 electrodes)"),
+                                       ("J7", 7, "Female header 1x07 2.54 mm (MPR121 power/I2C)"))):
+        hx, hy = 152.4 + 25.4 * k, 172.72
+        h = s.symbol("Connector_Generic", "Conn_01x%02d" % n, ref, val, hx, hy, "",
+                     fields={"Manufacturer": "generic", "MPN": "2.54 mm single-row female header, %d pins" % n},
+                     on_board=False, ref_at=(0, -27.94))
+        for pin in s.pins[h]:
+            s.nc(h, hx, hy, pin)
     s.connect(rv, RX, RY, "1", "+3V3")
     s.connect(rv, RX, RY, "2", "POT")
     s.connect(rv, RX, RY, "3", "AGND")

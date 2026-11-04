@@ -148,7 +148,7 @@ FrutaMIDI does not make sound: it sends notes. Choose a program to turn them int
 
 - 12 pads with synthesised drum sounds, mapped to notes 36–47 (the firmware's Drum Rack mode).
 - Drag a wav, mp3 or ogg onto a pad to replace its sound.
-- The **"aprender"** (learn) button changes a pad's note: click it and touch the fruit.
+- The **"learn"** button changes a pad's note: click it and touch the fruit.
 - Notes without a pad (melodic scales) play on a synthesiser, and aftertouch opens the filter.
 - Without hardware, the keys 1–4 / Q–R / A–F play the pads.
 
@@ -210,7 +210,7 @@ What matters most for the result is not the code: it is the objects, the cables 
 - Terminal strip or 4 mm binding posts on the lid, numbered 0–11, and holes for the USB and the button.
 - Use a plastic or wooden box: metal near the electrodes takes away sensitivity.
 
-**Safety.** FrutaMIDI is USB-powered with 3.3 V logic. On the [PCB v1.1](hardware/README.md#electrical-safety), each electrode has a 3.3 kΩ series resistor. This was analysed against IEC 61000-4-2 contact discharge at ±4 kV; that result is a calculation and has not been tested. The PCB has not been evaluated beyond that. The breadboard build has no ESD protection on the electrodes beyond the MPR121's internal protection (HBM ±2 kV): the module connects its electrode pins straight to its header. The recommended 3.3 kΩ series resistors (see [Wiring](#wiring)) are the PCB's protection, but they have not been evaluated in a breadboard layout. Neither build has been evaluated for touching while connected to mains-powered equipment. <!-- EVIDENCE --> Never connect the electrodes to anything plugged into mains power.
+**Safety.** FrutaMIDI is USB-powered with 3.3 V logic. On the [PCB v1.1](hardware/README.md#electrical-safety), each electrode has a 3.3 kΩ series resistor. Its protection against IEC 61000-4-2 contact discharge at ±4 kV is an estimate resting on assumptions, not a pass, and has not been tested; the resistor is not pulse-rated. The PCB has not been evaluated beyond that. The breadboard build has no ESD protection on the electrodes beyond the MPR121's internal protection (HBM ±2 kV): the module connects its electrode pins straight to its header. The recommended 3.3 kΩ series resistors (see [Wiring](#wiring)) are the PCB's protection, but they have not been evaluated in a breadboard layout. Neither build has been evaluated for touching while connected to mains-powered equipment. <!-- EVIDENCE --> Never connect the electrodes to anything plugged into mains power.
 
 ## Step-by-step assembly
 

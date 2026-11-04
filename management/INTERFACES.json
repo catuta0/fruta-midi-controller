@@ -1,5 +1,5 @@
 {
-  "revision": "frozen-1 (from draft-3)",
+  "revision": "frozen-2 (documentation-only CR from T-012, ADR-016)",
   "frozen": true,
   "owner": "systems-engineer",
   "status_note": "PROPOSED by systems-engineer (T-011, 2026-11-03), input 5f59c9e plus working tree. Not frozen; the manager freezes. Changes from draft-2: Pico I2C pads go through R15/R16 220 Ohm (nets SDA_PICO/SCL_PICO, ADR-012); JP1 silkscreen legend; board label v1.1 present; run-based aftertouch burst plan (fm_mpr121.h); AUTOCONFIG limits and SCTS now SOURCE (ADR-010/011); breadboard 4k7 pull-ups (ADR-009). Evidence: sim/systems/interface_check.out (78 checks, 78 PASS, 0 FAIL).",
@@ -444,7 +444,8 @@
         "Pico W/Pico 2 W": "CYW43 WL_GPIO0 (LED_BUILTIN)",
         "label": "SOURCE S-02"
       },
-      "consistency": "PASS: firmware FRUTAMIDI_PCB pins == PCB A1 pad nets (incl. SDA_PICO/SCL_PICO via R16/R15); breadboard pins == README.md (sim/systems/interface_check.out)"
+      "consistency": "PASS: firmware FRUTAMIDI_PCB pins == PCB A1 pad nets (incl. SDA_PICO/SCL_PICO via R16/R15); breadboard pins == README.md (sim/systems/interface_check.out)",
+      "agnd_note": "AGND (pin 33) is the end of a separate analogue ground plane and may be tied to digital ground (SOURCE S-01 \u00a72.1); the internal AGND\u2013GND tie is stated only by S-02 ('also a GND pin')."
     },
     {
       "id": "IF-TERMINALS",
@@ -674,7 +675,12 @@
         "adc_bits": 10,
         "read_ms": 30,
         "zones": 5,
-        "hysteresis_zone": 0.7
+        "hysteresis_zone": 0.7,
+        "zone_V": 0.66,
+        "dead_band_zone": 0.2,
+        "dead_band_V": 0.132,
+        "error_budget_V": 0.0364,
+        "error_budget_label": "CALCULATION (reports/systems/budgets.md)"
       }
     },
     {
@@ -735,5 +741,5 @@
     }
   },
   "frozen_by": "manager",
-  "frozen_on": "2026-11-03"
+  "frozen_on": "2026-11-04"
 }

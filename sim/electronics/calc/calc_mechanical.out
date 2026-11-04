@@ -1,14 +1,14 @@
 # calc_mechanical.py  drill (MEASUREMENT of design file) vs pin (SOURCE/ASSUMPTION)
 footprint                                   drill pad_min  count    ring  pin_max     gap  verdict / pin data
-Adafruit_MPR121_1982_Socket                  0.90    1.80      7    0.45     0.51    0.39  PASS: Q-row wire hole, AWG24 solid wire 0.51 mm [ASSUMPTION (wire gauge chosen by builder)]
 Adafruit_MPR121_1982_Socket                  1.00    1.80     20    0.40     0.91    0.09  PARTIAL: female header tail 0.64 mm square (diag 0.91); Q-row: AWG24 wire 0.51 mm [ASSUMPTION]
 Config_2pads                                 0.90    2.20      2    0.65     0.51    0.39  PASS: AWG24 solid wire 0.51 mm [ASSUMPTION (wire gauge chosen by builder)]
 MountingHole_3.2mm_M3                        3.20    3.20      4     nan     3.00    0.20  PASS: M3 screw 3.0 mm [SOURCE ISO 273 fine clearance 3.2 mm]
 Potentiometer_RK09K_Vertical                 1.00    1.80      3    0.40     0.94    0.06  PARTIAL: Alps RK09K terminal ~0.8 x 0.5 mm (diag 0.94) [ASSUMPTION (Alps drawing is an image, not read)]
 Potentiometer_RK09K_Vertical                 2.10    3.00      2    0.45     0.94    1.16  PASS: Alps RK09K terminal ~0.8 x 0.5 mm (diag 0.94) [ASSUMPTION (Alps drawing is an image, not read)]
-R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch    0.80    1.60     28    0.40     0.50    0.30  PASS: Yageo MFR-12 lead 0.45..0.50 mm [SOURCE Yageo MFR datasheet (via search)]
+R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch    0.80    1.60     32    0.40     0.50    0.30  PASS: Yageo MFR-12 lead 0.45..0.50 mm [SOURCE Yageo MFR datasheet (via search)]
 RaspberryPi_Pico_Socket                      1.00    1.80     40    0.40     0.91    0.09  PARTIAL: female header tail 0.64 mm square (diag 0.91) [ASSUMPTION: generic 2.54 mm female header, datasheet not read]
 SW_PUSH_6mm                                  1.10    2.40      4    0.65     0.76    0.34  PASS: 6x6 mm tact switch leg ~0.7 x 0.3 mm (diag 0.76) [ASSUMPTION]
 SolderJumper_3_THT_P2.54mm                   0.80    1.94      3    0.57     0.50    0.30  PASS: resistor lead off-cut 0.45-0.50 mm as link (or solder bridge) [SOURCE Yageo MFR lead (EE-S14)]
-TerminalBlock_5.08_1x14                      1.30    3.00     14    0.85     1.27    0.03  PASS: Phoenix MKDS 1,5/2-5,08 pin 0.9 x 0.9 mm (diag 1.27); maker hole 1.3 mm [SOURCE Phoenix Contact 1715721 data (via search)]
+TerminalBlock_5.08_1x14                      1.40    3.00     14    0.80     1.27    0.13  PARTIAL: Phoenix MKDS 1,5/2-5,08 pin 0.9 x 0.9 mm (diag 1.27); maker hole 1.3 mm [SOURCE Phoenix Contact 1715721 data (via search)]
+WireHoles_1x07_P2.54mm                       0.90    1.80      7    0.45     0.51    0.39  PASS: Q-row wire hole, AWG24 solid wire 0.51 mm [ASSUMPTION (wire gauge chosen by builder)]
 # rows FAIL: 0
