@@ -249,7 +249,8 @@ def build():
     PX, PY = 76.20, 139.70
     pico = s.symbol("MCU_Module", "RaspberryPi_Pico", "A1", "RaspberryPi_Pico", PX, PY,
                     "FrutaMIDI:RaspberryPi_Pico_Socket", ref_at=(-17.78, -40.64),
-                    fields={"Manufacturer": "Raspberry Pi", "MPN": "SC0915"})
+                    fields={"Manufacturer": "Raspberry Pi", "MPN": "SC0915",
+                            "Socket": "2x female header 1x20, 2.54 mm (generic)"})
     used = {"31": "SDA_PICO", "32": "SCL_PICO", "34": "POT", "33": "AGND", "29": "BTN", "36": "+3V3", "3": "GND"}
     for num, net in used.items():
         s.connect(pico, PX, PY, num, net)
@@ -288,7 +289,8 @@ def build():
     MX, MY = 264.16, 139.70
     mod = s.symbol("FrutaMIDI", "Adafruit_MPR121_1982", "A2", "Adafruit_MPR121_1982", MX, MY,
                    "FrutaMIDI:Adafruit_MPR121_1982_Socket", ref_at=(0, -22.86),
-                   fields={"Manufacturer": "Adafruit", "MPN": "1982"})
+                   fields={"Manufacturer": "Adafruit", "MPN": "1982",
+                           "Socket": "female header 1x13 + 1x07, 2.54 mm (generic)"})
     s.connect(mod, MX, MY, "1", "GND")
     for k, num in enumerate(range(14, 21)):
         s.connect(mod, MX, MY, str(num), "S%d" % (k + 1))   # S1/S7 via JP1; SDA/SCL by hand wire from J1
@@ -362,19 +364,8 @@ def build():
         s.symbol("Mechanical", "MountingHole", "H%d" % (k + 1), "M3", 43.18 + 12.70 * k, 243.84,
                  "FrutaMIDI:MountingHole_3.2mm_M3", in_bom=False)
 
-    # ------------------------------------------------------------------ BOM-only parts
-    # T-056 / F-015: sockets for the Pico and the module (no footprint). All pins no-connect.
-    s.frame("5. Sockets (bill of materials only, no PCB footprint)", 132.08, 198.12, 256.54, 271.78)
-    for k, (ref, n, val) in enumerate((("J4", 20, "Female header 1x20 2.54 mm (Pico)"),
-                                       ("J5", 20, "Female header 1x20 2.54 mm (Pico)"),
-                                       ("J6", 13, "Female header 1x13 2.54 mm (MPR121 electrodes)"),
-                                       ("J7", 7, "Female header 1x07 2.54 mm (MPR121 power/I2C)"))):
-        hx, hy = 152.40 + 27.94 * k, 238.76
-        h = s.symbol("Connector_Generic", "Conn_01x%02d" % n, ref, val, hx, hy, "",
-                     fields={"Manufacturer": "generic", "MPN": "2.54 mm single-row female header, %d pins" % n},
-                     on_board=False, ref_at=(0, -27.94))
-        for pin in s.pins[h]:
-            s.nc(h, hx, hy, pin)
+    # The female-header sockets are part of how A1 and A2 are mounted, so they are recorded in the
+    # "Socket" field of those two symbols (exported as a BOM column), not drawn as unconnected symbols.
 
     s.write(os.path.join(HW, PROJECT + ".kicad_sch"), "FrutaMIDI — capacitive MIDI controller")
 

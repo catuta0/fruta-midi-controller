@@ -48,9 +48,9 @@ A 100 × 70 mm board with copper on the bottom side only, designed for chemical 
 | R1–R12 | Resistor 3.3 kΩ (3k3), axial, DIN0204 size, Yageo MFR-12FTF52-3K3 | 12 | — | One in series with each electrode; mounted vertically |
 | R13, R14 | Resistor 4.7 kΩ (4k7), axial, DIN0204 size, Yageo MFR-12FTF52-4K7 | 2 | — | I²C pull-ups (SCL, SDA); mounted vertically |
 | R15, R16 | Resistor 220 Ω, axial, DIN0204 size, Yageo MFR-12FTF52-220R | 2 | — | In series in SCL (R15) and SDA (R16) on the Pico side; they limit the current if a configuration wire goes to the wrong hole; mounted vertically |
-| J4, J5 | Female header 1×20, 2.54 mm pitch (generic) | 2 | 1 € | Pico socket |
-| J6 | Female header 1×13, 2.54 mm pitch (generic) | 1 | 0.50 € | Module electrode row |
-| J7 | Female header 1×7, 2.54 mm pitch (generic) | 1 | 0.40 € | Module power/I²C row |
+| A1 socket | Female header 1×20, 2.54 mm pitch (generic) | 2 | 1 € | Pico socket |
+| A2 socket | Female header 1×13, 2.54 mm pitch (generic) | 1 | 0.50 € | Module electrode row |
+| A2 socket | Female header 1×7, 2.54 mm pitch (generic) | 1 | 0.40 € | Module power/I²C row |
 | J2 | 2-way screw terminal block, **5.08 mm** pitch, interlocking, Phoenix Contact **1715721** (MKDS 1,5/ 2-5,08) or equivalent | 7 | 2–3 € | They lock together to form the 14-way strip |
 | SW1 | 6 × 6 mm push button, 4 legs, Omron **B3F-1000** | 1 | 0.20 € | Choose the height to suit the enclosure |
 | RV1 | 10 kΩ linear potentiometer (B10K), 9 mm, vertical, Alps Alpine RK09K series | 1 | 1 € | Plus a knob |

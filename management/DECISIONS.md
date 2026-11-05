@@ -99,3 +99,5 @@
 - N-003 (info): INTERFACES frozen-3 adds IF-PCB-AUX (J3 wire holes, J4–J7 BOM-only headers); documentation-only.
 - N-004, N-005 (info): accepted; behaviour matches REQ-009/REQ-042 and the manual.
 - Manager edited REQUIREMENTS.md, requirements.csv and INTERFACES.json under locks for these items.
+
+- N-004 (2026-11-05, user request): the BOM-only socket symbols J4–J7 (unconnected headers drawn only to appear in the BOM) are removed. Sockets are a "Socket" field of A1/A2, exported as a BOM column. Netlist otherwise unchanged; PCB copper identical (91 tracks, 131 pads compared). Schematic relaid out on A3 in framed blocks (commit 21a4919).

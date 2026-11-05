@@ -741,7 +741,7 @@
         },
         "note": "S1..S7 wire holes, each joined to A2 pads 14\u201320 (module power/I2C row); excluded from BOM"
       },
-      "J4_J7": "BOM-only female headers (J4, J5 1\u00d720 for the Pico; J6 1\u00d713, J7 1\u00d77 for the module); no footprint, all pins no-connect"
+      "sockets": "Female headers for A1 (2\u00d7 1\u00d720) and A2 (1\u00d713 + 1\u00d77) are recorded in the Socket field of A1/A2 and the BOM Socket column; the former BOM-only symbols J4\u2013J7 were removed (2026-11-05)"
     }
   ],
   "board": {

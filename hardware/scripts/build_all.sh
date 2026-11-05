@@ -25,8 +25,8 @@ $PDF --layers F.SilkS,F.Fab,Edge.Cuts --drill-shape-opt 2 --sp -o "$F/2-assembly
 $PDF --layers F.SilkS,Edge.Cuts --drill-shape-opt 0 --mirror -o "$F/3-silkscreen-optional-mirrored.pdf" frutamidi.kicad_pcb
 "$K" pcb export gerbers --layers B.Cu,F.SilkS,Edge.Cuts,B.Mask --use-drill-file-origin -o "$F/gerbers/" frutamidi.kicad_pcb
 "$K" pcb export drill --format excellon --drill-origin plot --excellon-units mm --generate-map --map-format pdf -o "$F/gerbers/" frutamidi.kicad_pcb
-"$K" sch export bom --fields 'Reference,Value,Footprint,Manufacturer,MPN,${QUANTITY}' \
-     --labels 'Ref,Value,Footprint,Manufacturer,MPN,Qty' \
+"$K" sch export bom --fields 'Reference,Value,Footprint,Manufacturer,MPN,Socket,${QUANTITY}' \
+     --labels 'Ref,Value,Footprint,Manufacturer,MPN,Socket,Qty' \
      --group-by Value,Footprint -o "$F/bom-kicad.csv" frutamidi.kicad_sch
 "$K" pcb render --side top --width 1600 --height 1120 --background opaque -o "$F/images/board-top.png" frutamidi.kicad_pcb
 "$K" pcb render --rotate "-50,0,20" --perspective --zoom 0.9 --width 1600 --height 1100 --background opaque -o "$F/images/board-3d.png" frutamidi.kicad_pcb
