@@ -219,8 +219,8 @@ class Sheet:
 	(paper "A3")
 	(title_block
 		(title "{title}")
-		(date "2026-10-30")
-		(rev "1.1")
+		(date "2026-11-07")
+		(rev "1.2")
 		(company "github.com/catuta0/fruta-midi-controller")
 		(comment 1 "Raspberry Pi Pico + Adafruit MPR121 (1982), single-sided PCB")
 	)

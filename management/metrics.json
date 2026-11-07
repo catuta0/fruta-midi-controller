@@ -64,6 +64,38 @@
       "label": "CALCULATION",
       "revision": "T-052",
       "evidence": "sim/electronics/calc/calc_esd_variants.out"
+    },
+    {
+      "name": "bom_core_range",
+      "value": "23.78-37.72",
+      "unit": "EUR",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-070",
+      "evidence": "reports/systems/budgets.md"
+    },
+    {
+      "name": "esd_gap_ele_e_min",
+      "value": 13.04,
+      "unit": "mm",
+      "label": "MEASUREMENT (design file)",
+      "revision": "CR-002 T-060",
+      "evidence": "sim/electronics/calc/check_gap.out"
+    },
+    {
+      "name": "esd_gap_e_other_min",
+      "value": 10.92,
+      "unit": "mm",
+      "label": "MEASUREMENT (design file)",
+      "revision": "CR-002 T-060",
+      "evidence": "sim/electronics/calc/check_gap.out"
+    },
+    {
+      "name": "electrode_R_pulse_rating_3k3",
+      "value": 4.08,
+      "unit": "kV",
+      "label": "SOURCE",
+      "revision": "CR-002 T-060",
+      "evidence": "sim/electronics/calc/calc_pulse_rated.out"
     }
   ]
 }

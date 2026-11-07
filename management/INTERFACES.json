@@ -1,8 +1,8 @@
 {
-  "revision": "frozen-3 (documentation-only CR from review N-003, ADR-018)",
+  "revision": "frozen-4 (CR-002, FrutaMIDI v1.2, ADR-019)",
   "frozen": true,
   "owner": "systems-engineer",
-  "status_note": "PROPOSED by systems-engineer (T-011, 2026-11-03), input 5f59c9e plus working tree. Not frozen; the manager freezes. Changes from draft-2: Pico I2C pads go through R15/R16 220 Ohm (nets SDA_PICO/SCL_PICO, ADR-012); JP1 silkscreen legend; board label v1.1 present; run-based aftertouch burst plan (fm_mpr121.h); AUTOCONFIG limits and SCTS now SOURCE (ADR-010/011); breadboard 4k7 pull-ups (ADR-009). Evidence: sim/systems/interface_check.out (78 checks, 78 PASS, 0 FAIL).",
+  "status_note": "frozen-4 prepared by systems-engineer (T-070, 2026-11-07) on manager assignment under ADR-019, input 3a3684b. Changes from frozen-3: R1..R12 part and footprint (Vishay MBE04140C3301FC100, DIN0414 lying flat, 15.24 mm pitch), board placement of A2/J1/JP1/R13..R15/H4 recorded (ADR-019 D-4), revision label FrutaMIDI v1.2 (ADR-019 D-2). Nets, pinout, terminal map, I2C, USB MIDI and build flags unchanged. Evidence: sim/systems/interface_check.out (80 checks, 79 PASS, 1 FAIL: pcb.label_v1.2, the PCB still reads 'FrutaMIDI v1.1' until the generator text is changed).",
   "sources": "requirements/SOURCES_SYSTEMS.md",
   "interfaces": [
     {
@@ -470,7 +470,8 @@
           "module_net": "ELE0",
           "mpr121": "ELE0",
           "module_row_pin": 2,
-          "firmware_pad": 0
+          "firmware_pad": 0,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 3,
@@ -480,7 +481,8 @@
           "module_net": "ELE1",
           "mpr121": "ELE1",
           "module_row_pin": 3,
-          "firmware_pad": 1
+          "firmware_pad": 1,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 4,
@@ -490,7 +492,8 @@
           "module_net": "ELE2",
           "mpr121": "ELE2",
           "module_row_pin": 4,
-          "firmware_pad": 2
+          "firmware_pad": 2,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 5,
@@ -500,7 +503,8 @@
           "module_net": "ELE3",
           "mpr121": "ELE3",
           "module_row_pin": 5,
-          "firmware_pad": 3
+          "firmware_pad": 3,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 6,
@@ -510,7 +514,8 @@
           "module_net": "ELE4",
           "mpr121": "ELE4",
           "module_row_pin": 6,
-          "firmware_pad": 4
+          "firmware_pad": 4,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 7,
@@ -520,7 +525,8 @@
           "module_net": "ELE5",
           "mpr121": "ELE5",
           "module_row_pin": 7,
-          "firmware_pad": 5
+          "firmware_pad": 5,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 8,
@@ -530,7 +536,8 @@
           "module_net": "ELE6",
           "mpr121": "ELE6",
           "module_row_pin": 8,
-          "firmware_pad": 6
+          "firmware_pad": 6,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 9,
@@ -540,7 +547,8 @@
           "module_net": "ELE7",
           "mpr121": "ELE7",
           "module_row_pin": 9,
-          "firmware_pad": 7
+          "firmware_pad": 7,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 10,
@@ -550,7 +558,8 @@
           "module_net": "ELE8",
           "mpr121": "ELE8",
           "module_row_pin": 10,
-          "firmware_pad": 8
+          "firmware_pad": 8,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 11,
@@ -560,7 +569,8 @@
           "module_net": "ELE9",
           "mpr121": "ELE9",
           "module_row_pin": 11,
-          "firmware_pad": 9
+          "firmware_pad": 9,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 12,
@@ -570,7 +580,8 @@
           "module_net": "ELE10",
           "mpr121": "ELE10",
           "module_row_pin": 12,
-          "firmware_pad": 10
+          "firmware_pad": 10,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 13,
@@ -580,7 +591,8 @@
           "module_net": "ELE11",
           "mpr121": "ELE11",
           "module_row_pin": 13,
-          "firmware_pad": 11
+          "firmware_pad": 11,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 14,
@@ -589,7 +601,7 @@
           "mpr121": null
         }
       ],
-      "protection": "3.3 kOhm series resistor per electrode (ADR-008): PASS at +-4 kV by analysis, PARTIAL at 8 kV (risk R-006)"
+      "protection": "3.3 kOhm series resistor per electrode (ADR-008), pulse-rated Vishay MBE04140C3301FC100, 4.08 kV 1.2/50 us at 3k3 (SOURCE EE-S17b), margin 1.12 at 4 kV (CALCULATION); gap ELEx-Ex 13.04 mm, Ex-other net 10.92 mm vs 3.5 mm rule (MEASUREMENT on the design file, sim/electronics/calc/check_gap.out). Analysis PASS at +-4 kV, test NOT RUN (REQ-023 PARTIAL); 8 kV: resistor rating FAIL (4.08 < 7.27 kV), risk R-006 (ADR-019 D-1)."
     },
     {
       "id": "IF-MPR121-MODULE",
@@ -745,7 +757,7 @@
     }
   ],
   "board": {
-    "revision_label": "FrutaMIDI v1.1 (present on PCB)",
+    "revision_label": "FrutaMIDI v1.2 (ADR-019 D-2; PCB at 3a3684b still reads 'FrutaMIDI v1.1' until the generator text is changed)",
     "outline_mm": [
       100,
       70
@@ -753,11 +765,74 @@
     "copper": "B.Cu only",
     "fabrication_folder": "hardware/fabrication",
     "resistors": {
-      "R1..R12": "3k3 electrode series",
-      "R13/R14": "4k7 I2C pull-ups (SCL/SDA)",
-      "R15/R16": "220 Ohm I2C series (SCL/SDA)"
+      "R1..R12": "3k3 electrode series, Vishay MBE04140C3301FC100 (1 %, DIN0414), footprint FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch (lying flat, 15.24 mm pitch, pad 2.2 mm, drill 1.0 mm)",
+      "R13/R14": "4k7 I2C pull-ups (SCL/SDA), Yageo MFR-12, FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch",
+      "R15/R16": "220 Ohm I2C series (SCL/SDA), Yageo MFR-12, FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch"
+    },
+    "placement_mm": {
+      "frame": "board coordinates, origin at the top-left outline corner (KiCad page coordinates minus (50, 50)); footprint anchor (at) as in hardware/frutamidi.kicad_pcb @ 3a3684b",
+      "A1": [
+        4.5,
+        2.0
+      ],
+      "A2": [
+        60.02,
+        17.645
+      ],
+      "A2_note": "moved 15.1 mm up and 2.54 mm right from (57.48, 32.745) (ADR-019 D-4)",
+      "J1": [
+        85.0,
+        12.5
+      ],
+      "JP1": {
+        "at": [
+          79.5,
+          15.74
+        ],
+        "rotation_deg": 90,
+        "note": "upright: QT top, ORIG bottom (ADR-019 D-4)"
+      },
+      "R13": [
+        85.0,
+        5.5
+      ],
+      "R14": [
+        88.81,
+        5.5
+      ],
+      "R15": [
+        85.0,
+        18.5
+      ],
+      "R16": [
+        27.0,
+        24.86
+      ],
+      "R1..R12": "one row, R1 at (33.35, 42.15) to R12 at (89.23, 42.15), rotation -90 deg, 5.08 mm pitch",
+      "J2": [
+        27.0,
+        64.5
+      ],
+      "H1": [
+        8.0,
+        64.0
+      ],
+      "H2": [
+        95.0,
+        5.0
+      ],
+      "H3": [
+        95.0,
+        48.0
+      ],
+      "H4": [
+        88.5,
+        30.5
+      ],
+      "H4_note": "moved from (70, 6) (ADR-019 D-4)",
+      "label": "MEASUREMENT: read from the design file by the systems-engineer (T-070); not a frozen mechanical interface, recorded for traceability"
     }
   },
   "frozen_by": "manager",
-  "frozen_on": "2026-11-04"
+  "frozen_on": "2026-11-07"
 }

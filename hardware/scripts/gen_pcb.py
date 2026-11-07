@@ -544,9 +544,9 @@ def build_board():
     bd.track([a, (a[0], H - 2.0), (z[0], H - 2.0), z], GND, W_PWR)
 
     # --- Texts ----------------------------------------------------------------------------------
-    bd.text("FrutaMIDI v1.1", 13.4, 55.0, pcbnew.B_Cu, 2.0, mirror=True)
+    bd.text("FrutaMIDI v1.2", 13.4, 55.0, pcbnew.B_Cu, 2.0, mirror=True)
     bd.text("copper: bottom side", 13.4, 58.4, pcbnew.B_Cu, 1.2, mirror=True)
-    bd.text("FrutaMIDI v1.1", 13.4, 55.0, pcbnew.F_SilkS, 2.0)
+    bd.text("FrutaMIDI v1.2", 13.4, 55.0, pcbnew.F_SilkS, 2.0)
     bd.text("github.com/catuta0/fruta-midi-controller", 60.0, 1.0, pcbnew.F_SilkS, 0.8)
     labels = ["GND"] + [str(i) for i in range(12)] + ["GND"]
     for i, lab in enumerate(labels):

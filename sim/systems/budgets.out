@@ -100,14 +100,15 @@ PASS  B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-1
   J2 screw terminal 2-way 5.08 mm, interlocking        x7  2.00 .. 3.00 EUR   ASSUMPTION
   SW1 tactile switch 6x6 mm                            x1  0.20 .. 0.20 EUR   ASSUMPTION
   RV1 10k linear pot 9 mm + knob                       x1  1.00 .. 1.50 EUR   ASSUMPTION
-  R1..R12 3k3, R13/R14 4k7, R15/R16 220R, 0.25 W axial x16 0.32 .. 0.80 EUR   ASSUMPTION
+  R1..R12 3k3 1 % pulse-rated Vishay MBE04140C3301FC100 (DIN0414) x12 3.60 .. 7.92 EUR   SOURCE EE-S26 in reports/electronics/SOURCES_EE.md (sibling values 330R/330k: RS GBP 0.26, LCSC USD 0.30, qty 1-24); 3k3 equal price ASSUMPTION (CR-002, T-060)
+  R13/R14 4k7, R15/R16 220R, 0.25 W axial (Yageo MFR-12) x4  0.08 .. 0.20 EUR   ASSUMPTION
   Single-sided copper clad 100x70 mm                   x1  1.00 .. 3.00 EUR   ASSUMPTION (part of the assembled board)
-  Core BOM (ADR-007 definition)                            20.42 .. 30.40 EUR  CALCULATION
+  Core BOM (ADR-007 definition)                            23.78 .. 37.72 EUR  CALCULATION
   excluded: Etchant/toner consumables                      0.50 .. 2.00 EUR  ASSUMPTION
   excluded: Micro-USB data cable                           3.00 .. 3.00 EUR  ASSUMPTION
   excluded: Crocodile leads x12 (optional)                 5.00 .. 10.00 EUR  ASSUMPTION
   excluded: M3 hardware (optional)                         2.00 .. 2.00 EUR  ASSUMPTION
-FAIL  C1 core BOM upper bound <= 30 EUR :: core 20.42 .. 30.40 EUR
+FAIL  C1 core BOM upper bound <= 30 EUR :: core 23.78 .. 37.72 EUR
 
 SUMMARY: 29 checks, 24 PASS, 5 FAIL
 wrote reports/systems/budgets.md

@@ -249,9 +249,25 @@ if any(VALUES.get(r) == "220" for r in fps):
         check("doc.hw_readme.R15_R16", "R15" in txt and "R16" in txt and "220" in txt,
               "%s lists R15/R16 220 Ohm I2C series resistors" % name)
 
-# Board revision label (ADR-008: "FrutaMIDI v1.1")
+# Board revision label (ADR-008 set "FrutaMIDI v1.1"; ADR-019 D-2 (CR-002) supersedes it with "FrutaMIDI v1.2")
+BOARD_LABEL = "FrutaMIDI v1.2"
 labels_pcb = set(re.findall(r'\(gr_text "(FrutaMIDI v[^"]*)"', pcb))
-check("pcb.label_v1.1", labels_pcb == {"FrutaMIDI v1.1"}, "board label texts %s (ADR-008 expects 'FrutaMIDI v1.1')" % sorted(labels_pcb))
+check("pcb.label_v1.2", labels_pcb == {BOARD_LABEL}, "board label texts %s (ADR-019 D-2 expects '%s')" % (sorted(labels_pcb), BOARD_LABEL))
+
+# Electrode series resistors R1..R12 (CR-002 / ADR-019 D-1): pulse-rated DIN0414 lying flat, 15.24 mm pitch
+R_EL_FP = "FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch"
+R_EL_MPN = "MBE04140C3301FC100"
+fp_info = {}
+for blk in re.split(r"\n\t\(footprint ", pcb)[1:]:
+    ref = re.search(r'\(property "Reference" "([^"]+)"', blk)
+    mpn = re.search(r'\(property "MPN" "([^"]*)"', blk)
+    fp_info[ref.group(1) if ref else None] = (blk.split('"')[1], mpn.group(1) if mpn else None)
+r_el = ["R%d" % i for i in range(1, 13)]
+bad_fp = {r: fp_info.get(r, (None,))[0] for r in r_el if fp_info.get(r, (None,))[0] != R_EL_FP}
+check("pcb.R1_R12_footprint", not bad_fp, "R1..R12 footprint %s (mismatches: %s)" % (R_EL_FP, bad_fp))
+bad_mpn = {r: fp_info.get(r, (None, None))[1] for r in r_el if fp_info.get(r, (None, None))[1] != R_EL_MPN}
+check("pcb.R1_R12_MPN", R_EL_MPN in sch_py and not bad_mpn,
+      "R1..R12 MPN Vishay %s in gen_schematic.py and on the PCB (mismatches: %s)" % (R_EL_MPN, bad_mpn))
 
 # Documentation vs the current PCB topology (T-010)
 if "JP1" in fps:

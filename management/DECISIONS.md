@@ -43,7 +43,7 @@
 - D-8 language: English (ADR-005).
 - Tooling: pypdf may be installed into .venv to read datasheets.
 
-## ADR-008 — Electrode protection, I2C speed, board revision (from T-050/T-052)
+## ADR-008 — Electrode protection, I2C speed, board revision (from T-050/T-052) (label superseded by ADR-019 D-2: "FrutaMIDI v1.2")
 - Status: accepted (manager, ADR-001). Evidence: reports/electronics/analysis.md.
 - Electrode protection: variant b (3.3 kΩ series per electrode). PASS vs the ±4 kV target (REQ-023), PARTIAL at 8 kV accepted as a documented risk (R-006); clamps rejected (SMD breaks THT-only; diode variant needs 12 jumpers).
 - I2C: keep 400 kHz; rise-time FAIL fixed at the root cause by 4.7 kΩ pull-ups R13/R14 (D-5 closed).
