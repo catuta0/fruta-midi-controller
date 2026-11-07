@@ -2,7 +2,7 @@
 
 > **Draft — not yet validated on hardware.**
 
-This manual describes the firmware after task T-044 (commit `a208a30`) (`firmware/FrutaMIDI/FrutaMIDI.ino` and its `fm_*.h` headers) and the PCB at version 1.2 (change request CR-002; the firmware did not change in v1.2). Every behaviour below is traced to that source or to the project README; see [Traceability](#traceability) at the end. The complete build has not been tested on hardware, so this manual describes what the firmware is written to do, not measured behaviour.
+This manual describes the firmware after task T-044 (commit `a208a30`) (`firmware/FrutaMIDI/FrutaMIDI.ino` and its `fm_*.h` headers) and the PCB at version 1.2 (change request CR-002, including the review fixes of T-073 in commit `c901ad8`; the firmware did not change in v1.2). Every behaviour below is traced to that source or to the project README; see [Traceability](#traceability) at the end. The complete build has not been tested on hardware, so this manual describes what the firmware is written to do, not measured behaviour.
 
 ## Contents
 
@@ -34,9 +34,10 @@ FrutaMIDI is a USB MIDI device. Each of its 12 pads (24 with a second sensor) se
 The [PCB guide](../../hardware/README.md) is the full assembly procedure. These are the points that changed in version 1.2 of the board (silkscreen "FrutaMIDI v1.2"):
 
 - **Electrode resistors R1–R12.** Use 12 × 3.3 kΩ 1 % pulse-rated resistors, Vishay **MBE04140C3301FC100** (DIN0414 size, the large body). Do not use small DIN0204/0207 resistors: they are not rated for the voltage of an electrostatic spark ([PCB guide, Electrical safety](../../hardware/README.md#electrical-safety)).
-- **They lie flat.** All 12 sit in one row between the module and the screw terminals, leads 15.24 mm apart. Bend each lead at least 1.5 mm from the body so the body is centred between its two holes, press it onto the board and solder. Do not stand them up: lying flat keeps the two ends of each resistor about 13 mm apart, which a spark cannot jump.
+- **They lie flat.** All 12 sit in one row between the module and the screw terminals, leads 15.24 mm apart, so there is only about 1.7 mm of straight lead between the body and each hole. Hold each lead with pliers next to the body and bend beyond the pliers (not at the body end itself). Form the leads on a lead-bending gauge, or on a strip of stripboard using holes 1 and 7 (15.24 mm), so the body is centred and the two straight lengths are equal within about 0.25 mm. Form one resistor first and check that it drops into its holes without force, then the rest. Press each body onto the board and solder. Do not stand them up: lying flat keeps the copper pads of each resistor 13 mm apart and its metal end caps several millimetres apart, which is what the ±4 kV protection estimate relies on. That estimate is not a test result and does not cover 8 kV ([PCB guide, Electrical safety](../../hardware/README.md#electrical-safety)).
+- **Drill R1–R12 with 1.1 mm.** Their 0.8 mm leads need the 1.1 mm bit; the full drill table is in [PCB guide, section 3](../../hardware/README.md#3-drill).
 - **Assembly order.** Solder from the lowest part to the tallest: R1–R12 first, then R13–R14 (4.7 kΩ) and R15–R16 (220 Ω), the button, the Pico headers, the module headers, the potentiometer, the screw terminals, and last JP1 and the two configuration wires ([PCB guide, section 4](../../hardware/README.md#4-solder)).
-- **JP1 stands upright** to the right of the module: **QT** at the top, **ORIG** at the bottom, 3V3 in the middle. Bridge the middle pad to **one** side only: ORIG for the original module (no white connectors), QT for the STEMMA QT module (two small white connectors). A wrong position can damage the sensor; check it before you insert the module ([PCB guide, section 5](../../hardware/README.md#5-module-configuration-jp1-and-two-wires)).
+- **JP1 stands upright** to the right of the module: **QT** at the top, **ORIG** at the bottom, 3V3 in the middle. Bridge the middle pad to **one** side only, with solder or an off-cut of an **R13–R16** lead (0.5 mm); the 0.8 mm leads of R1–R12 do not fit the 0.8 mm JP1 holes. ORIG for the original module (no white connectors), QT for the STEMMA QT module (two small white connectors). A wrong position can damage the sensor; check it before you insert the module ([PCB guide, section 5](../../hardware/README.md#5-module-configuration-jp1-and-two-wires)).
 - **Two configuration wires.** J1, to the right of JP1, has two holes: SCL on the left, SDA on the right. Wire them to the S holes above the module's 7-pin row:
 
   | Module | JP1 | J1 SDA → | J1 SCL → |
@@ -45,6 +46,7 @@ The [PCB guide](../../hardware/README.md) is the full assembly procedure. These 
   | STEMMA QT (two white connectors) | QT | S3 | S4 |
 
   In v1.2 the wires are longer than before (about 25–35 mm). Use insulated solid wire, keep each wire flat against the board and no longer than needed, so it cannot be pushed onto the wrong hole or strain its joint.
+- **Mounting screws.** H3 now sits at the right edge above the right end of the resistor row, and H4 to the right of the module. Nylon screws and spacers are preferred: they keep loose metal away from the electrode resistors ([PCB guide, bill of materials](../../hardware/README.md#bill-of-materials)).
 - **Test before powering.** Follow the checklist in [section 6 of the PCB guide](../../hardware/README.md#6-test-before-powering): each terminal should read about 3.3 kΩ to its module pin, and the JP1 centre pad must reach only the S hole for your module (S1 for ORIG, S7 for QT).
 
 The board has not been built or tested. These steps describe the design, not a verified build.
@@ -165,7 +167,11 @@ The firmware source is commit `a208a30` (T-044). sha256 values:
 | Sampler pads on notes 36–47; aftertouch opens filter | — | README | README "Sound"; not traced to `docs/index.html` |
 | Flashing procedure, BOOTSEL, `.uf2` names | — | README | README "Quick start" |
 | R1–R12 part, size, lying flat | Vishay MBE04140C3301FC100, 3.3 kΩ 1 %, DIN0414, 15.24 mm lead pitch | SOURCE | hardware/README.md (BOM, section 4 step 1); management/INTERFACES.json frozen-4 `board.resistors`; ADR-019 D-1 |
-| Distance between the two ends of each resistor | about 13 mm (13.04 mm copper gap) | MEASUREMENT (design file) | sim/electronics/calc/check_gap.out; reports/electronics/analysis.md §5 |
+| Distance between the copper pads of each resistor | about 13 mm (13.04 mm copper gap) | MEASUREMENT (design file) | sim/electronics/calc/check_gap.out; reports/electronics/analysis.md §5 |
+| Straight lead between body and hole; lead forming | about 1.7 mm; straight lengths equal within about 0.25 mm on a gauge | CALCULATION (15.24 − 11.9)/2; ASSUMPTION (placement error, T-073) | hardware/README.md section 4 step 1; management/handoffs/electronics-engineer/T-073.md (C2-001, C2-002); ADR-020 |
+| R1–R12 drill | 1.1 mm (0.8 mm lead) | SOURCE (design file) | hardware/README.md section 3; sim/electronics/calc/calc_mechanical.out; review finding C2-008 |
+| JP1 bridge material | solder or an R13–R16 lead off-cut (0.5 mm) | SOURCE | hardware/README.md BOM and section 5; review finding C2-007 |
+| H3 position; nylon hardware preferred | H3 at (96, 38) mm, above the right end of the resistor row | MEASUREMENT (design file) | hardware/README.md BOM; sim/electronics/calc/check_gap.out (e); review finding C2-009; ADR-020 |
 | Assembly order | lowest to tallest, R1–R12 first, JP1 and wires last | SOURCE | hardware/README.md section 4 |
 | JP1 upright, QT top / ORIG bottom | — | SOURCE | hardware/README.md section 5; INTERFACES.json frozen-4 `board.placement_mm.JP1` (rotation 90°); ADR-019 D-4 |
 | J1 SCL left / SDA right; S holes per module | S5/S6 original, S3/S4 STEMMA QT | SOURCE | hardware/README.md section 5 table; INTERFACES.json IF-MPR121-MODULE |

@@ -67,7 +67,7 @@ INFO  original: S-row = ['VIN', '3V3', 'GND', 'ADDR', 'SDA', 'SCL', 'IRQ'] ; mod
 PASS  doc.hw_readme.jp1_and_wires.stemma_qt :: README (JP1, SDA, SCL)=('QT', 'S3', 'S4'), derived=('QT', 'S3', 'S4')
 INFO  stemma_qt: S-row = ['ADDR', 'INT', 'SDA', 'SCL', 'GND', '3V3', 'VCC'] ; module GND at S5 (not reachable by JP1)
 PASS  doc.hw_readme.R15_R16 :: hardware/README.md lists R15/R16 220 Ohm I2C series resistors
-FAIL  pcb.label_v1.2 :: board label texts ['FrutaMIDI v1.1'] (ADR-019 D-2 expects 'FrutaMIDI v1.2')
+PASS  pcb.label_v1.2 :: board label texts ['FrutaMIDI v1.2'] (ADR-019 D-2 expects 'FrutaMIDI v1.2')
 PASS  pcb.R1_R12_footprint :: R1..R12 footprint FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch (mismatches: {})
 PASS  pcb.R1_R12_MPN :: R1..R12 MPN Vishay MBE04140C3301FC100 in gen_schematic.py and on the PCB (mismatches: {})
 PASS  doc.hw_readme.mentions_JP1 :: hardware/README.md describes the JP1 3V3 selector
@@ -84,6 +84,6 @@ PASS  doc.hw_readme.SDA :: SDA pin 31 GP26
 PASS  doc.hw_readme.SCL :: SCL pin 32 GP27
 PASS  doc.hw_readme.Button :: Button pin 29 GP22
 PASS  doc.hw_readme.Potentiometer :: Potentiometer pin 34 GP28
-SUMMARY hardware/firmware: 63 checks, 62 PASS, 1 FAIL
+SUMMARY hardware/firmware: 63 checks, 63 PASS, 0 FAIL
 SUMMARY documentation: 17 checks, 17 PASS, 0 FAIL
-SUMMARY: 80 checks, 79 PASS, 1 FAIL
+SUMMARY: 80 checks, 80 PASS, 0 FAIL

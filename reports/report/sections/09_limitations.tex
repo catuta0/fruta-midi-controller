@@ -21,12 +21,18 @@ accepted for ESD safety, ADR-019 D-3); REQ-040 (wrong JP1
 position exceeds MPR121 input ratings on an unpowered module; accepted risk R-007);
 R-006 (at 8\,kV contact the 7.27\,kV across each resistor exceeds its 4.08\,kV
 rating, and the pin current exceeds the inferred limit by 1.65$\times$; accepted,
-ADR-019 D-1).
+ADR-019 D-1). CR-002 re-review (ADR-020): end-cap gap at 4\,kV PARTIAL, resting on
+an assumed cap length (C2-002); E$x$ $\leftrightarrow$ GND spark gap with an
+estimated 87--339\,V ground bounce for $\approx$1\,ns and no confirmed HBM rating for
+GP26/GP27 (C2-005).
 
 \paragraph{Main assumptions} (each to be retired by the plan in
 Section~\ref{sec:validation}):
 \begin{itemize}[noitemsep]
   \item Component prices (BOM, REQ-032) \ev{reports/systems/budgets.md}.
+  \item Resistor end-cap length 1.5--3.5\,mm, body length $\ge$ 11.0\,mm, placement
+        error $\le\pm$0.5\,mm; track inductance 0.7--1.0\,nH/mm and socket plus pin
+        3--10\,nH \ev{management/handoffs/electronics-engineer/T-073.md}.
   \item Electrode capacitance: objects up to about 500\,pF (REQ-037); 1\,m lead
         30--50\,pF; hand 100--300\,pF \ev{reports/electronics/analysis.md}.
   \item ESD: $\pm$4\,kV target following IEC 61000-4-2 level 2 (the standard was not
@@ -48,12 +54,13 @@ Section~\ref{sec:validation}):
         \ev{reports/firmware/coverage.md}.
 \end{itemize}
 
-\paragraph{Process limitations.} Requirements are draft-6 (T-070), not baselined.
+\paragraph{Process limitations.} Requirements are draft-7 (T-074), not baselined.
 The independent re-review of the CR-002 changes is reported in
-Section~\ref{sec:cr002-review}. The committed interface-check output predates the v1.2
-board label (1 expected FAIL, \texttt{pcb.label\_v1.2}); a re-run on 8394b41 gives
-80/80 PASS but is recorded only in the T-072 handoff folder
-(Section~\ref{sec:electronics}). Some
+Section~\ref{sec:cr002-review}. At c901ad8 the committed interface-check output
+predates the v1.2 board label (1 expected FAIL, \texttt{pcb.label\_v1.2}); the
+re-run on the T-073 board gives 80/80 PASS and is recorded in
+\nolinkurl{reports/electronics/evidence/T-073/} (Section~\ref{sec:electronics});
+refreshing the committed file is assigned to systems (T-074, finding C2-006). Some
 user-documentation statements (prices, OS behaviour, etching process values) are
 not traced to a source (documentation handoffs T-030 to T-035).
 
@@ -71,7 +78,7 @@ R-002 & Large conductive objects may exceed the MPR121 range or be unstable & M 
 R-003 & Home-etch defects (bridges between 2.54\,mm pads) & M / M & 0.6\,mm clearance rule; continuity checklist & OPEN \\
 R-004 & Nothing tested on real hardware (out of scope) & Certain / H & Physical validation plan; no readiness claims & OPEN \\
 R-005 & Limited disk space on the host & M / M & Install only what is needed & OPEN \\
-R-006 & ESD at 8\,kV: 7.27\,kV across each 3k3 (\lbl{CALCULATION}) exceeds the 4.08\,kV rating of the MBE 0414 (\lbl{SOURCE} EE-S17b); pin current 2.20\,A vs inferred 1.33\,A (1.65$\times$). Gaps already meet the 8\,kV 7.5\,mm rule & L / M & Scope stays $\pm$4\,kV (ADR-008, ADR-019 D-1); later option Vishay LSR37 (same footprint, 12\,kV), deferred for tolerance and drift; IEC test in the plan & ACCEPTED \\
+R-006 & ESD at 8\,kV: 7.27\,kV across each 3k3 (\lbl{CALCULATION}) exceeds the 4.08\,kV rating of the MBE 0414 (\lbl{SOURCE} EE-S17b); pin current 2.20\,A vs inferred 1.33\,A (1.65$\times$). Copper gaps meet the 8\,kV 7.5\,mm rule; the end caps do not (T-073, finding C2-002) & L / M & Scope stays $\pm$4\,kV (ADR-008, ADR-019 D-1); later option Vishay LSR37 (same footprint, 12\,kV), deferred for tolerance and drift; IEC test in the plan & ACCEPTED \\
 R-007 & Wrong JP1 position puts +3V3 on ADDR (QT) or IRQ (original) of an unpowered module & L / L--M & Silkscreen, manual warning, LED error pattern (ADR-009) & ACCEPTED \\
 R-008 & v1.2 relayout lengthens the two J1 $\rightarrow$ S configuration wires to about 25--35\,mm: a loose wire can be pushed onto the wrong S hole or strain its joint. About 1.8\,pF per line (\lbl{CALCULATION}, 50\,pF/m \lbl{ASSUMPTION}) vs the 115.2\,pF limit; a wrong hole is limited to 15.5\,mA by R15/R16 & L / L & Wiring table, pre-power inspection; documentation says to route the wires flat and short; physical check in the plan & OPEN \\
 \bottomrule

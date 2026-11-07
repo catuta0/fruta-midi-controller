@@ -1,8 +1,8 @@
 {
-  "revision": "frozen-4 (CR-002, FrutaMIDI v1.2, ADR-019)",
+  "revision": "frozen-5 (CR-002 re-review fixes, FrutaMIDI v1.2, ADR-020)",
   "frozen": true,
   "owner": "systems-engineer",
-  "status_note": "frozen-4 prepared by systems-engineer (T-070, 2026-11-07) on manager assignment under ADR-019, input 3a3684b. Changes from frozen-3: R1..R12 part and footprint (Vishay MBE04140C3301FC100, DIN0414 lying flat, 15.24 mm pitch), board placement of A2/J1/JP1/R13..R15/H4 recorded (ADR-019 D-4), revision label FrutaMIDI v1.2 (ADR-019 D-2). Nets, pinout, terminal map, I2C, USB MIDI and build flags unchanged. Evidence: sim/systems/interface_check.out (80 checks, 79 PASS, 1 FAIL: pcb.label_v1.2, the PCB still reads 'FrutaMIDI v1.1' until the generator text is changed).",
+  "status_note": "frozen-5 prepared by systems-engineer (T-074, 2026-11-07) on manager assignment under ADR-020, input c901ad8. Changes from frozen-4: H3 moved from (95, 48) to (96, 38) (C2-009); R1..R12 drill 1.0 -> 1.1 mm, ring 0.55 mm (C2-008); placement frame now refers to c901ad8. Nets, pinout, terminal map, I2C, USB MIDI, build flags and the R1..R12 part are unchanged. Evidence on c901ad8: sim/systems/interface_check.out 'SUMMARY: 80 checks, 80 PASS, 0 FAIL' (pcb.label_v1.2 PASS, the board reads 'FrutaMIDI v1.2'); sim/systems/pcb_rules_check.out 'SUMMARY: 16 checks, 16 PASS, 0 FAIL'; sim/systems/budgets.out byte-identical to T-070. These are design-file checks, not hardware validation.",
   "sources": "requirements/SOURCES_SYSTEMS.md",
   "interfaces": [
     {
@@ -757,7 +757,7 @@
     }
   ],
   "board": {
-    "revision_label": "FrutaMIDI v1.2 (ADR-019 D-2; PCB at 3a3684b still reads 'FrutaMIDI v1.1' until the generator text is changed)",
+    "revision_label": "FrutaMIDI v1.2 (ADR-019 D-2; present on the PCB at c901ad8, interface_check pcb.label_v1.2 PASS)",
     "outline_mm": [
       100,
       70
@@ -765,12 +765,12 @@
     "copper": "B.Cu only",
     "fabrication_folder": "hardware/fabrication",
     "resistors": {
-      "R1..R12": "3k3 electrode series, Vishay MBE04140C3301FC100 (1 %, DIN0414), footprint FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch (lying flat, 15.24 mm pitch, pad 2.2 mm, drill 1.0 mm)",
+      "R1..R12": "3k3 electrode series, Vishay MBE04140C3301FC100 (1 %, DIN0414), footprint FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch (lying flat, 15.24 mm pitch, pad 2.2 mm, drill 1.1 mm, ring 0.55 mm, C2-008)",
       "R13/R14": "4k7 I2C pull-ups (SCL/SDA), Yageo MFR-12, FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch",
       "R15/R16": "220 Ohm I2C series (SCL/SDA), Yageo MFR-12, FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch"
     },
     "placement_mm": {
-      "frame": "board coordinates, origin at the top-left outline corner (KiCad page coordinates minus (50, 50)); footprint anchor (at) as in hardware/frutamidi.kicad_pcb @ 3a3684b",
+      "frame": "board coordinates, origin at the top-left outline corner (KiCad page coordinates minus (50, 50)); footprint anchor (at) as in hardware/frutamidi.kicad_pcb @ c901ad8",
       "A1": [
         4.5,
         2.0
@@ -822,15 +822,16 @@
         5.0
       ],
       "H3": [
-        95.0,
-        48.0
+        96.0,
+        38.0
       ],
+      "H3_note": "moved from (95, 48) (C2-009, ADR-020): a metal screw at the old position bypassed R12 (1.94 mm); new worst bypass 15.36 mm (sim/electronics/calc/check_gap.out (e)); nylon hardware recommended",
       "H4": [
         88.5,
         30.5
       ],
       "H4_note": "moved from (70, 6) (ADR-019 D-4)",
-      "label": "MEASUREMENT: read from the design file by the systems-engineer (T-070); not a frozen mechanical interface, recorded for traceability"
+      "label": "MEASUREMENT: read from the design file by the systems-engineer (T-070, H3 and frame updated in T-074 at c901ad8); not a frozen mechanical interface, recorded for traceability"
     }
   },
   "frozen_by": "manager",

@@ -1,7 +1,7 @@
 \section{Interfaces}
 \label{sec:interfaces}
 
-Source: \ev{management/INTERFACES.json}, revision \texttt{frozen-4} (CR-002,
+Source: \ev{management/INTERFACES.json}, revision \texttt{frozen-5} (CR-002,
 FrutaMIDI v1.2, ADR-019; frozen on 2026-11-07). History: frozen-1 of 2026-11-03
 (ADR-013); documentation-only changes from T-012 (ADR-016) and review N-003
 (ADR-018) gave frozen-3 of 2026-11-04. Frozen-4 changes the R1--R12 part and
@@ -30,6 +30,9 @@ IF-PCB-AUX & Documentation-only (review N-003): J3 = the S1--S7 wire holes (Frut
 \noindent Board: outline 100 $\times$ 70\,mm, copper on B.Cu only, label
 ``FrutaMIDI v1.2'' (ADR-019 D-2; text in \nolinkurl{hardware/scripts/gen_pcb.py}
 and \nolinkurl{hardware/frutamidi.kicad_pcb}), fabrication folder
-\nolinkurl{hardware/fabrication}. The placement recorded in frozen-4 (for
+\nolinkurl{hardware/fabrication}. The placement recorded in frozen-5 (for
 example A2 at (60.02, 17.645)\,mm, H4 at (88.5, 30.5)\,mm, \lbl{MEASUREMENT} on the
-design file) is for traceability and is not a frozen mechanical interface.
+design file) is for traceability and is not a frozen mechanical interface. Mounting
+hole H3 moved from (95, 48) to (96, 38)\,mm in T-073 (review finding C2-009); the
+placement record in \nolinkurl{management/INTERFACES.json} is updated by systems
+(T-074).

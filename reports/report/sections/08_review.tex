@@ -70,9 +70,84 @@ hardware test.
 
 \subsection{CR-002 independent re-review}
 \label{sec:cr002-review}
-\tbf{Placeholder for the manager. CR-002 acceptance criteria require an independent
-re-review of the changed outputs (R1--R12 part and footprint, relayout, gap check,
-pulse-rating calculation, budgets revision~6, REQUIREMENTS draft-6, INTERFACES
-frozen-4, documentation). To be filled from the reviewer's findings file: revision
-reviewed, findings with severity, dispositions (ADR), re-checks with proof lines,
-and what the re-review did not cover.}
+An independent reviewer re-reviewed the CR-002 outputs at \texttt{8394b41} on branch
+\texttt{change/CR-002} (task T-071): R1--R12 part and footprint, relayout, gap
+check, pulse-rating calculation, budgets revision~6, REQUIREMENTS draft-6,
+INTERFACES frozen-4 and the documentation. The harness refused the reviewer's write
+of the findings file; the manager recorded the findings from the reviewer's
+hand-back report without changing their substance
+\ev{reports/review/CR-002/findings.md}. The electronics fixes were made in T-073
+(committed in c901ad8) \ev{management/handoffs/electronics-engineer/T-073.md};
+dispositions are recorded in ADR-020 \ev{management/DECISIONS.md}.
+
+\paragraph{Summary.}
+\begin{itemize}[noitemsep]
+  \item 13 findings: 0 critical, 0 major, 6 minor, 7 info.
+  \item Dispositions: 8 fixed (C2-006 by systems in T-074, not yet in c901ad8),
+        1 partly fixed with a residual accepted risk (C2-002), 1 accepted risk
+        (C2-005), 2 accepted (C2-012 with a test added, C2-013), 1 no action
+        (C2-004).
+  \item Reviewer re-checks at 8394b41, all PASS (recorded in the findings file;
+        raw outputs in \nolinkurl{reports/review/CR-002/}): ERC 0; DRC 0,
+        unconnected 0, parity 0; \nolinkurl{check_gap.py} PASS (copper only);
+        \nolinkurl{calc_flashover} and \nolinkurl{calc_pulse_rated} outputs
+        byte-identical; interface check 80/80 (committed output stale, 79/80);
+        \nolinkurl{pcb_rules_check} 16/16; budgets byte-identical
+        (23.78--37.72\,EUR); independent chart readings at 3.3\,k$\Omega$ 4086 /
+        1740 / 1469\,V for 0414 / 0207 / 0204; drill count 131 equal to the
+        assembly guide; configuration wires 21.1--32.1\,mm (\lbl{MEASUREMENT},
+        design file).
+  \item Reviewer's requirement cross-check: REQ-023 PARTIAL (agreed); REQ-027
+        PASS; REQ-028/029 PASS with stale evidence text (C2-006); REQ-032 FAIL;
+        REQ-036 should be PARTIAL until C2-001 and C2-007 are fixed (both fixed
+        in T-073).
+\end{itemize}
+
+\paragraph{Highlights.} The closest metal of a flat resistor is its end caps, not
+the copper (C2-002): the 8\,kV gap claims now apply to copper only, and the 4\,kV
+end-cap result is PARTIAL on an assumed cap length (Section~\ref{sec:esd}). The
+pulse energy had been overstated about twice (C2-003): 182\,mJ, not 364\,mJ, with
+the verdicts unchanged. A metal screw at the old H3 position could bypass R12
+(1.94\,mm bypass sum, FAIL); H3 moved to (96, 38)\,mm (15.36\,mm, PASS)
+(\lbl{CALCULATION}, \nolinkurl{check_gap.out}).
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.06\linewidth}>{\raggedright\arraybackslash}p{0.45\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}@{}}
+\caption{CR-002 re-review findings and dispositions (ADR-020).}\label{tab:review-cr002}\\
+\toprule
+ID & Sev. & Finding (one line) & Disposition \\
+\midrule
+\endfirsthead
+\toprule
+ID & Sev. & Finding (one line) & Disposition \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+C2-001 & minor & Assembly guide asked for a lead bend $\ge$1.5\,mm from the body; at 15.24\,mm pitch the lead centre is 1.67\,mm from the body end (\lbl{CALCULATION}). & Fixed: reworded (Vishay $M_\mathrm{min}$ 15.0\,mm $\le$ 15.24\,mm pitch; hold the lead next to the body, test-fit one part). \\
+C2-002 & minor & Closest metal of a flat resistor is cap to cap, not the 13\,mm copper gap; \nolinkurl{check_gap.py} measures copper only; 8\,kV gap claims overreach. & Partly fixed, residual accepted risk: cap-to-cap check added; 4\,kV PASS for placement error $\le\pm$0.25\,mm (worst 3.61\,mm), FAIL corner 3.13\,mm at $\pm$0.5\,mm; 8\,kV caps FAIL; leads formed on a gauge, caliper check in the plan; 8\,kV statements limited to copper. \\
+C2-003 & minor & Pulse energy overstated about 2$\times$ ($\int V\,dt$ form); rating energy-limited at 3.3\,k$\Omega$. & Fixed: 182\,mJ ($\int V^2\,dt$); energy-limited below the 5073\,$\Omega$ knee, plateau 5054\,V; verdicts unchanged. \\
+C2-004 & info & Independent chart reading confirms 4086 / 1740 / 1469\,V; dimensions, LSR37 data and part number agree. & No action. \\
+C2-005 & minor & Every E terminal pad is 1.40\,mm from the GND edge track, so a strike most likely arcs to GND; the current through the GND trunk to Pico, module and USB was not analysed. & Accepted risk: intentional spark gap; ground bounce 87--339\,V for $\approx$1\,ns, $\le$1.53\,A and $\le$0.92\,nC per 220\,$\Omega$ I\textsuperscript{2}C resistor (\lbl{CALCULATION} on \lbl{ASSUMPTION}ed inductances); arc to GND added to the ESD test; GP26/GP27 HBM rating not confirmed (open). \\
+C2-006 & minor & Stale evidence: committed \nolinkurl{interface_check.out} 79/80; REQ-028/029, requirements.csv and INTERFACES frozen-4 notes describe 3a3684b. & Fixed by systems (T-074): \nolinkurl{sim/systems/*.out}, REQUIREMENTS, INTERFACES frozen-5 (committed after c901ad8). \\
+C2-007 & minor & Assembly guide offered any resistor lead off-cut for JP1 (0.8\,mm holes); R1--R12 leads are 0.8\,mm. & Fixed: solder or an off-cut of an R13--R16 lead (0.5\,mm) only. \\
+C2-008 & info & 1.0\,mm drill for a 0.8\,mm lead sits exactly on the 0.2\,mm fit threshold; generator comment wrong. & Fixed: R1--R12 drill 1.1\,mm (ring 0.55\,mm); comment corrected. \\
+C2-009 & info & Courtyard gaps 0.06\,mm (R row to J2) and 0.09\,mm (R12 to H3); M3 head about 0.5--0.9\,mm from R12. & Fixed: H3 moved (95, 48) $\rightarrow$ (96, 38)\,mm; bypass 1.94\,mm FAIL $\rightarrow$ 15.36\,mm PASS; nylon hardware recommended. \\
+C2-010 & info & Terminal labels ``10'' and ``11'' touch R10/R11 pad 2 (about 0.1\,mm). & Fixed: worst silkscreen-to-pad gap 0.43\,mm. \\
+C2-011 & info & \nolinkurl{check_gap.py} worst-pair name not deterministic on ties. & Fixed: tie-break by reference, then pad. \\
+C2-012 & info & I\textsuperscript{2}C relayout under the module (SDA 3.2\,mm from electrode pads over about 31\,mm) not analysed. & Accepted, test added: I\textsuperscript{2}C traffic against baseline noise (V-27). \\
+C2-013 & info & IEC 60664-1 F.2 values recalled; the 3.5\,mm rule comes from model M4 ($\eta$ = 0.3). & Accepted: F.2 kept as a cross-check marked ``recalled'' (EE-S25). \\
+\end{longtable}
+}
+
+\paragraph{Re-checks after the fixes (T-073, c901ad8).} ERC ``ERC messages: 0
+Errors 0 Warnings 0''; DRC ``Found 0 DRC violations'', ``Found 0 unconnected
+pads''; ``SUMMARY: 16 checks, 16 PASS, 0 FAIL'' (home-etch rules); ``SUMMARY: 80
+checks, 80 PASS, 0 FAIL'' (interfaces) \ev{reports/electronics/evidence/T-073/};
+\nolinkurl{check_gap.out} ``SUMMARY: copper PASS (4 kV rule, (a) and (b)); end caps
+PARTIAL at 4 kV over the swept ASSUMPTIONS; mounting metal PASS''. These fixes were
+not re-reviewed independently.
+
+\paragraph{What the re-review did not cover.} The findings file does not list
+exclusions. It is a design-file and document review: nothing in it is a hardware
+measurement, and it did not see the T-073 fixes or the systems update T-074.

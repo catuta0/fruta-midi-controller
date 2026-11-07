@@ -3,10 +3,11 @@
 
 Baseline: release V1\_BASELINE, git tag \texttt{v1.1.0-baseline} (048023c,
 2026-11-04), board label ``FrutaMIDI v1.1'', interfaces frozen-3. Current: FrutaMIDI
-v1.2 on branch \texttt{change/CR-002} at 8394b41, interfaces frozen-4, to be
-released as V1.2 (git tag \texttt{v1.2.0}) after the CR-002 re-review and user
-approval. Sources: \texttt{git log v1.1.0-baseline..8394b41}, the commit messages
-quoted below, \ev{changes/CR-002.md} and ADR-019 \ev{management/DECISIONS.md}.
+v1.2 on branch \texttt{change/CR-002} at c901ad8 (CR-002 re-review fixes; the
+systems update T-074 to interfaces frozen-5 is not yet committed), to be released
+as V1.2 (git tag \texttt{v1.2.0}) after user approval. Sources:
+\texttt{git log v1.1.0-baseline..c901ad8}, the commit messages
+quoted below, \ev{changes/CR-002.md} ADR-019 and ADR-020 \ev{management/DECISIONS.md}.
 
 {\small
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.10\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}@{}}
@@ -18,7 +19,10 @@ b1e4bf5 & The unconnected BOM-only socket symbols J4--J7 are removed; the female
 130e754 & CR-002 opened: electrode resistor flashover and pulse rating; supersedes candidate CR-001. & Documents only. \\
 3a3684b & CR-002 T-060: R1--R12 become Vishay MBE04140C3301FC100 (DIN0414, lying flat, 15.24\,mm pitch); relayout (module A2 15.1\,mm up and 2.54\,mm right; J1, JP1 upright, R13--R15 right of the module; H4 moved); analysis.md \S5; ADR-019. & ELE--E gap 0.94 $\rightarrow$ 13.04\,mm, E--other net 1.99 $\rightarrow$ 10.92\,mm (\lbl{MEASUREMENT}, design file); nets and pinout unchanged; ERC 0, DRC 0, parity 0; pcb\_rules\_check 16/16. \\
 8394b41 & CR-002 T-070: REQUIREMENTS draft-6, INTERFACES frozen-4, budgets revision~6 (core BOM 23.78--37.72\,EUR, \lbl{CALCULATION}), risks R-006 rewritten and R-008 added; board label ``FrutaMIDI v1.2''. & Label text only on the board; gap check unchanged (re-run in T-072). \\
-(T-072) & This report, the user manual and figures updated for v1.2. & Documents only. \\
+dcdb1fc & CR-002 T-072: this report, the user manual and figures updated for v1.2. & Documents only. \\
+1247c44 & CR-002 T-071: independent re-review findings C2-001 to C2-013 recorded (Section~\ref{sec:cr002-review}). & Documents only. \\
+c901ad8 & CR-002 T-073: review fixes. End-cap (cap-to-cap) and mounting-metal checks added to \nolinkurl{check_gap.py}; pulse energy corrected to 182\,mJ; R1--R12 drill 1.0 $\rightarrow$ 1.1\,mm; H3 moved (95, 48) $\rightarrow$ (96, 38)\,mm; terminal labels moved off the pads; E$x$--GND gap kept as a spark gap with a ground-bounce estimate (\nolinkurl{calc_gnd_bounce.py}); assembly guide reworded (lead forming on a gauge, JP1 off-cut, nylon screw at H3, flat configuration wires); ADR-020. & Nets and pinout unchanged; copper gaps 13.04 / 10.92\,mm unchanged; end caps 4\,kV PARTIAL (worst 3.61\,mm at $\pm$0.25\,mm); ERC 0, DRC 0, unconnected 0; pcb\_rules\_check 16/16; interface check 80/80 (\lbl{MEASUREMENT} / \lbl{CALCULATION}, T-073 handoff). \\
+(T-075) & This report (CR-002 re-review section, ESD section, validation rows V-25 to V-27), README, user manual and figures updated after T-073. & Documents only. \\
 \bottomrule
 \end{longtable}
 }
@@ -29,7 +33,8 @@ interfaces apart from the R1--R12 part; the resistor value
 (\qty{3.3}{\kilo\ohm} 1\,\%) and therefore the electrode sensitivity analysis; the
 home-etch design rules (ADR-019 D-4, \ev{management/INTERFACES.json}).
 
-\paragraph{Requirement status after CR-002.} Unchanged counts (PASS 17, PARTIAL 18,
-FAIL 3, NOT RUN 4). REQ-023 stays PARTIAL (no ESD-gun test); REQ-032 stays FAIL with
+\paragraph{Requirement status after CR-002.} Unchanged counts in REQUIREMENTS draft-7 at
+c901ad8 (PASS 17, PARTIAL 18, FAIL 3, NOT RUN 4); the systems update T-074 was in
+progress when this report was built. REQ-023 stays PARTIAL (no ESD-gun test); REQ-032 stays FAIL with
 a larger overrun (7.72\,EUR instead of 0.40\,EUR, \lbl{CALCULATION})
 \ev{management/REQUIREMENTS.md}.
