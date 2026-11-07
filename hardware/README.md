@@ -1,4 +1,4 @@
-# FrutaMIDI — single-sided PCB (version 1.1)
+# FrutaMIDI — single-sided PCB (version 1.2)
 
 A 100 × 70 mm board with copper on the bottom side only, designed for chemical etching at home (toner transfer or photosensitive board). It takes a Raspberry Pi Pico and an Adafruit MPR121 module (1982), both socketed, plus 14 screw terminals, a button, a potentiometer, a 3.3 kΩ series resistor on each electrode, two I²C pull-up resistors and two 220 Ω I²C series resistors.
 
@@ -54,9 +54,9 @@ A 100 × 70 mm board with copper on the bottom side only, designed for chemical 
 | J2 | 2-way screw terminal block, **5.08 mm** pitch, interlocking, Phoenix Contact **1715721** (MKDS 1,5/ 2-5,08) or equivalent | 7 | 2–3 € | They lock together to form the 14-way strip |
 | SW1 | 6 × 6 mm push button, 4 legs, Omron **B3F-1000** | 1 | 0.20 € | Choose the height to suit the enclosure |
 | RV1 | 10 kΩ linear potentiometer (B10K), 9 mm, vertical, Alps Alpine RK09K series | 1 | 1 € | Plus a knob |
-| JP1 | Solder bridge (no part) | — | — | Bridged with solder or a resistor lead off-cut; see section 5 |
+| JP1 | Solder bridge (no part) | — | — | Bridged with solder or an off-cut of an R13–R16 lead (0.5 mm); see section 5 |
 | — | Thin insulated solid wire (from network cable, for example) | ~10 cm | — | 2 configuration wires (SDA, SCL) |
-| H1–H4 | M3 screws + spacers | 4 | 2 € | Optional. H4 is right of the module (moved in v1.2 layout, CR-002) |
+| H1–H4 | M3 screws + spacers, **nylon** preferred | 4 | 2 € | Optional. H4 is right of the module and H3 above the right end of the resistor row (both moved in the v1.2 layout, CR-002). Nylon screws and spacers keep loose metal away from the electrode resistors; metal ones are acceptable at the new H3/H4 positions |
 | — | Micro-USB **data** cable | 1 | 3 € | |
 
 If you cut 40-way female header to length, you lose one pin at each cut: 2 strips of 1×40 are enough: one for 20 + 13, the other for 20 + 7.
@@ -90,7 +90,7 @@ If you cut 40-way female header to length, you lose one pin at each cut: 2 strip
 
 1. Open [`1-copper-for-transfer.pdf`](fabrication/1-copper-for-transfer.pdf) and print at **actual size / 100 %**, without "fit to page".
 2. Measure the printed outline: it must be **100 × 70 mm**. If it is not, the printer scale is wrong.
-3. Check that the text **"FrutaMIDI v1.1" appears reversed (mirrored) on the paper**. That is intended: once transferred to the copper it reads correctly.
+3. Check that the text **"FrutaMIDI v1.2" appears reversed (mirrored) on the paper**. That is intended: once transferred to the copper it reads correctly.
 4. For toner: laser printer, maximum density, transfer paper. For photosensitive board: transparency film, preferably two copies stacked so it is fully opaque.
 
 The small dots in the centre of the pads are left without copper after etching and act as a guide for the drill.
@@ -126,8 +126,8 @@ Drill from the copper side, using the dots as a guide. There are 131 holes in to
 | --- | --- | --- |
 | 0.8 mm | 11 | Resistors R13–R16 (8) and JP1 (3) |
 | 0.9 mm | 9 | J3, the S1–S7 wire holes (7), and J1 (2, configuration wires) |
-| 1.0 mm | 87 | Female headers for the Pico (40) and the module (20), potentiometer pins (3), resistors R1–R12 (24, 0.8 mm leads) |
-| 1.1 mm | 4 | Button |
+| 1.0 mm | 63 | Female headers for the Pico (40) and the module (20), potentiometer pins (3) |
+| 1.1 mm | 28 | Resistors R1–R12 (24, 0.8 mm leads) and the button (4) |
 | 1.4 mm | 14 | Screw terminals |
 | 1.8 mm, then widen | 2 | Potentiometer mounting tabs (slots of 2.1 × 1.8 mm in the design; see below) |
 | 3.2 mm | 4 | M3 mounting (optional; not plated) |
@@ -142,7 +142,7 @@ Solder from the lowest component to the tallest, so the board sits flat on the t
 
 ![Top view](fabrication/images/board-top.png)
 
-1. **Resistors R1–R12 (3k3, the large DIN0414 ones).** They lie flat in one row between the module and the screw terminals, one per electrode. Bend both leads at least 1.5 mm from the body so that the body sits centred between the two holes (15.24 mm apart), press it onto the board and solder. Do not stand them up: the lying position keeps the two ends of each resistor about 13 mm apart, which an electrostatic spark cannot jump.
+1. **Resistors R1–R12 (3k3, the large DIN0414 ones).** They lie flat in one row between the module and the screw terminals, one per electrode. The holes are 15.24 mm apart and Vishay allows a lead spacing down to 15.0 mm for this part, so there is only about 1.7 mm of straight lead between the body and each hole: bend each lead as close to the body as the datasheet allows (do not bend at the body end itself: hold the lead with pliers next to the body and bend beyond the pliers). Form one resistor first and check that it drops into its holes without forcing the leads, then form the rest the same way. Keep the body centred between the two holes: form the leads on a lead-bending gauge, or on a strip of stripboard using holes 1 and 7 (15.24 mm), so that the two straight lengths are equal within about 0.25 mm; press the body onto the board and solder. Do not stand them up: lying flat keeps the copper pads of each resistor 13 mm apart and its two metal end caps several millimetres apart (at least 4 mm with the dimensions assumed in the analysis), which is what the ±4 kV protection estimate relies on.
 2. **Resistors R13 and R14 (4k7)**, the I²C pull-ups, vertical above J1 (right of the module). Then **R15 and R16 (220 Ω)**, also vertical: R15 just below J1, R16 between the Pico and the SCALE button.
 3. **Button SW1** ("SCALE").
 4. **Pico female headers (2 × 1×20).** Trick: plug both headers onto the Pico, set the assembly on the board and solder. They end up parallel and at the right spacing. Then remove the Pico.
@@ -155,7 +155,7 @@ Solder from the lowest component to the tallest, so the board sits flat on the t
 
 The Adafruit 1982 exists in two versions, with the 7 power/I²C pins in a different order. That is why the board does not connect them directly. Above the 7 module pins there are 7 holes **S1–S7** (J3), each one directly above a module pin. You configure the board for your module in two steps.
 
-**Step 1: power (JP1).** JP1 is a 3-pad solder bridge standing upright to the right of the module (**QT** at the top, **ORIG** at the bottom). The centre pad is 3V3. Bridge it to **one** side with solder or a resistor lead off-cut:
+**Step 1: power (JP1).** JP1 is a 3-pad solder bridge standing upright to the right of the module (**QT** at the top, **ORIG** at the bottom). The centre pad is 3V3. Bridge it to **one** side with solder or an off-cut of an **R13–R16** lead (0.5 mm; the 0.8 mm leads of R1–R12 do not fit the 0.8 mm JP1 holes):
 
 - **ORIG** (pad 1 → S1): original version, 3V3 goes to **VIN**.
 - **QT** (pad 3 → S7): STEMMA QT version, 3V3 goes to **VCC**.
@@ -174,7 +174,7 @@ To confirm, read the letters printed on the module next to the 7-pin row, and ch
 | Original | No small white connectors | **ORIG** | **S5** | **S6** |
 | STEMMA QT (current) | Two small white 4-pin connectors (STEMMA QT / Qwiic) | **QT** | **S3** | **S4** |
 
-Use insulated solid wire and run it on the component side. Solder the two wires underneath, on the copper. The other S holes stay empty. The module's GND needs no wire: it comes in through the electrode row and is the same in both versions.
+Use insulated solid wire and run it on the component side, **flat on the board and as short as the route allows** (about 25–35 mm each): a long loose loop can be pushed onto the wrong S hole or strain its joint. Solder the two wires underneath, on the copper. The other S holes stay empty. The module's GND needs no wire: it comes in through the electrode row and is the same in both versions.
 
 > **A wrong JP1 position can damage the sensor.** ORIG on a STEMMA QT module puts 3V3 on the module's ADDR pin; QT on an original module puts it on IRQ. The MPR121 chip is then unpowered, so 3V3 on that pin is above its absolute maximum rating (VDD + 0.3 V), and it can back-feed the module through its 10 kΩ pull-ups. There is no direct short to GND, but the module is not supplied correctly, the sensor does not respond and the Pico LED blinks fast. Check JP1 against the table above **before** inserting the module (section 6). Never bridge all three pads.
 
@@ -234,7 +234,7 @@ Sensitivity problems (fruit, cables, ground) are the same as on the breadboard: 
 
 ## Electrical safety
 
-Each electrode has a 3.3 kΩ series resistor (R1–R12) between the screw terminal and the sensor. Its protection against IEC 61000-4-2 contact discharge at ±4 kV is an estimate that rests on assumptions (the sensor pin's surge limit is inferred, not specified), not a pass. The resistor is a pulse-rated DIN0414 part whose 1.2/50 µs rating at 3.3 kΩ (about 4.1 kV, read from the maker's chart) covers the about 3.6 kV across it at 4 kV, but not the about 7.3 kV at 8 kV; the copper on its two sides is at least 13 mm apart, so a spark cannot bypass it. Only an ESD-gun test can confirm the protection. The board has not been evaluated for higher discharge levels or for touching while it is connected to mains-powered equipment. <!-- EVIDENCE --> See the [electronics analysis](../reports/electronics/analysis.md). Never connect the electrodes to anything plugged into mains power.
+Each electrode has a 3.3 kΩ series resistor (R1–R12) between the screw terminal and the sensor. Its protection against IEC 61000-4-2 contact discharge at ±4 kV is an estimate that rests on assumptions (the sensor pin's surge limit is inferred, not specified), not a pass. The resistor is a pulse-rated DIN0414 part whose 1.2/50 µs rating at 3.3 kΩ (about 4.1 kV, read from the maker's chart) covers the about 3.6 kV across it at 4 kV, but not the about 7.3 kV at 8 kV. A spark could also try to jump around the resistor: its copper pads are 13 mm apart and its metal end caps at least 4 mm apart with the dimensions assumed in the analysis, above the 3.5 mm estimated for 4 kV; that is an estimate, not a guarantee, and it is not enough for 8 kV. Each terminal pad is 1.4 mm from the GND track along the board edge, so a strong discharge will most likely jump to GND there instead of reaching the sensor. Only an ESD-gun test can confirm the protection. The board has not been evaluated for higher discharge levels or for touching while it is connected to mains-powered equipment. <!-- EVIDENCE --> See the [electronics analysis](../reports/electronics/analysis.md). Never connect the electrodes to anything plugged into mains power.
 
 ## Modifying the board
 

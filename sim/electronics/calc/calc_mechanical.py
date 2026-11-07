@@ -3,7 +3,8 @@
 
 Drill and pad sizes are MEASUREMENT of the design file (hardware/frutamidi.kicad_pcb).
 Pin sizes are SOURCE where a datasheet was read, otherwise ASSUMPTION (stated per row).
-Rule of thumb used (ASSUMPTION, common THT practice): drill >= pin max diagonal (square) or diameter + 0.2 mm,
+Rule of thumb used (ASSUMPTION, common THT practice): drill >= pin max diagonal (square) or diameter + 0.2 mm
+(the "gap" column is diametral, drill - pin; the radial clearance is half of it; T-073 / C2-008),
 and annular ring (pad - drill)/2 >= 0.4 mm (home-etch rule, management/TOOLCHAIN / kicad-workflow skill).
 """
 import math, os, sys

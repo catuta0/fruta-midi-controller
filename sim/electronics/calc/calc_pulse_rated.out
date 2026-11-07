@@ -11,7 +11,10 @@ Yageo MFR-12     max overload voltage                400 V      FAIL      FAIL  
 
 MBE/SMA 0414 3k3: margin at 4 kV = 1.12 (rating / V_R); with -5 % reading error 1.07
 HBM equivalence (100 pF / 1500 ohm on R alone): 0414 6 kV -> 4125 V across 3k3; 0207 4 kV -> 2750 V
-Energy check: the 1.2/50 us test pulse at the 0414 rating puts about 364 mJ into 3k3 (V^2/R * 1.44 * 50 us),
-  vs 1.09 mJ for one IEC 4 kV strike -> the IEC pulse is far inside the energy limit; voltage is the binding limit.
+Rating pulse energy: integral (V/Vpk)^2 dt = 36.06 us (double exp.; single exp. 36.07 us) -> 182 mJ into 3k3 at 4083 V
+MBE/SMA 0414 chart: log-log slope below the knee 0.496 (0.5 = constant V^2/R, energy-limited); knee at 5073 ohm; plateau 5054 V (voltage-limited above the knee)
+  energy at the knee 182 mJ (same constant as at 3k3 -> 3k3 lies on the energy-limited branch)
+  one IEC 4 kV strike puts 1.09 mJ into R (167x less than the rating pulse) and 3636 V across it, below the 5054 V plateau (1.39x); the 3k3 chart value 4083 V is used as the acceptance limit (conservative: it is an energy limit for a pulse whose tail T = 72 us is 132x the IEC tau 0.54 us)
+  8 kV: 7273 V across R exceeds both the 3k3 chart value and the 5054 V plateau -> FAIL either way
 SELECTED: Vishay MBE/SMA 0414, 3k3 1 % (MBE04140C3301FC100): 4083 V >= 3636 V at 4 kV (PASS), < 7273 V at 8 kV (FAIL)
 ALTERNATIVE for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to +-20 % drift after 100 strikes

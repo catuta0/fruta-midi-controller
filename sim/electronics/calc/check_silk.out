@@ -1,0 +1,26 @@
+# check_silk.py  MEASUREMENT on hardware/frutamidi.kicad_pcb (KiCad 10.0.4); criterion >= 0.2 mm (ASSUMPTION)
+  'github.com/catuta0/fruta-midi-controller'              size 0.80  bbox (46.85,0.28)-(73.15,1.72)  nearest J3 pad 1    2.96 mm  PASS
+  'QT'                                                    size 0.80  bbox (78.64,7.67)-(80.36,9.11)  nearest JP1 pad 3   0.58 mm  PASS
+  'ORIG'                                                  size 0.80  bbox (77.95,17.17)-(81.05,18.61)  nearest JP1 pad 1   0.46 mm  PASS
+  'JP1 3V3 selector:'                                     size 0.80  bbox (82.47,22.18)-(93.53,23.62)  nearest R15 pad 1   2.88 mm  PASS
+  'ORIG = no white connectors'                            size 0.80  bbox (79.20,23.58)-(96.80,25.02)  nearest A2 pad 13   3.08 mm  PASS
+  'QT = 2 white connectors'                               size 0.80  bbox (80.23,24.98)-(95.77,26.42)  nearest H4 pad      2.48 mm  PASS
+  '10'                                                    size 0.90  bbox (80.60,56.79)-(82.62,58.41)  nearest R10 pad 2   0.43 mm  PASS
+  '11'                                                    size 0.90  bbox (85.68,56.79)-(87.70,58.41)  nearest R11 pad 2   0.43 mm  PASS
+  'SCALE'                                                 size 1.00  bbox (27.82,36.64)-(32.68,38.44)  nearest SW1 pad 2   1.15 mm  PASS
+  'OCTAVE'                                                size 1.00  bbox (32.12,23.10)-(37.88,24.90)  nearest R16 pad 2   1.78 mm  PASS
+  'R1 ... R12 = 3k3 pulse-rated, lying flat (E0 ... E11)' size 1.00  bbox (40.33,38.10)-(81.67,39.90)  nearest R10 pad 1   1.15 mm  PASS
+  'GND'                                                   size 1.10  bbox (25.14,56.61)-(28.86,58.59)  nearest R1 pad 2    3.39 mm  PASS
+  '0'                                                     size 1.10  bbox (30.10,56.61)-(31.52,58.59)  nearest R1 pad 2    0.73 mm  PASS
+  '1'                                                     size 1.10  bbox (35.18,56.61)-(36.60,58.59)  nearest R1 pad 2    0.73 mm  PASS
+  '2'                                                     size 1.10  bbox (40.26,56.61)-(41.68,58.59)  nearest R2 pad 2    0.73 mm  PASS
+  '3'                                                     size 1.10  bbox (45.34,56.61)-(46.76,58.59)  nearest R3 pad 2    0.73 mm  PASS
+  '4'                                                     size 1.10  bbox (50.42,56.61)-(51.84,58.59)  nearest R4 pad 2    0.73 mm  PASS
+  '5'                                                     size 1.10  bbox (55.50,56.61)-(56.92,58.59)  nearest R5 pad 2    0.73 mm  PASS
+  '6'                                                     size 1.10  bbox (60.58,56.61)-(62.00,58.59)  nearest R6 pad 2    0.73 mm  PASS
+  '7'                                                     size 1.10  bbox (65.66,56.61)-(67.08,58.59)  nearest R7 pad 2    0.73 mm  PASS
+  '8'                                                     size 1.10  bbox (70.74,56.61)-(72.16,58.59)  nearest R8 pad 2    0.73 mm  PASS
+  '9'                                                     size 1.10  bbox (75.82,56.61)-(77.24,58.59)  nearest R10 pad 2   0.73 mm  PASS
+  'GND'                                                   size 1.10  bbox (91.18,56.61)-(94.90,58.59)  nearest R12 pad 2   0.85 mm  PASS
+  'FrutaMIDI v1.2'                                        size 2.00  bbox (2.20,53.20)-(24.60,56.80)  nearest A1 pad 20   2.04 mm  PASS
+PASS worst silkscreen-text to pad gap 0.43 mm ('10' <-> R10 pad 2), 24 texts

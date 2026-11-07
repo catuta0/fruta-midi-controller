@@ -233,13 +233,14 @@ def build_footprints():
 
     # --- Resistor DIN0414 lying flat, 15.24 mm pitch (T-060 / CR-002: electrode series R1-R12, pulse-rated).
     # Vishay MBE/SMA 0414: D <= 4.2 mm, L <= 11.9 mm, lead 0.8 mm, min. pitch 15.0 mm (SOURCE EE-S17).
-    # Pads 2.2 mm, drill 1.0 mm (ring 0.6 mm, 0.2 mm around the lead). Copper gap pad-to-pad 13.04 mm
+    # Pads 2.2 mm, drill 1.1 mm (T-073 / C2-008: ring (2.2 - 1.1)/2 = 0.55 mm; hole - lead = 0.3 mm diametral,
+    # 0.15 mm radial, above the 0.2 mm diametral fit rule of calc_mechanical.py). Copper gap pad-to-pad 13.04 mm
     # >= flashover rule 3.5 mm (sim/electronics/calc/calc_flashover.py). Courtyard = body 4.2 mm + 0.05 mm
     # each side (the 4.5 mm library outline is the generic DIN size; the real part is 4.2 mm max).
     fp = lib_fp("Resistor_THT", "R_Axial_DIN0414_L11.9mm_D4.5mm_P15.24mm_Horizontal")
     fp.SetFPID(pcbnew.LIB_ID("FrutaMIDI", "R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch"))
     for p in fp.Pads():
-        set_pad(p, CIRC, 2.2, 2.2, 1.0)
+        set_pad(p, CIRC, 2.2, 2.2, 1.1)
     replace_courtyard(fp, [(-1.35, -2.15), (16.59, -2.15), (16.59, 2.15), (-1.35, 2.15)])
     out["R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch"] = fp
 
@@ -293,7 +294,10 @@ BTN = (27.0, 29.94)               # pad 1 (top-left corner)
 MOD_C = (60.02, 17.645)           # module centre (electrode row at y = 25.9, power/I2C S row at y = 10.66)
 CFG = (85.0, 12.5)                # J1 pad 1 (SCL); pad 2 (SDA) at +3.81 mm (right of the module)
 T0, TY = 27.0, 64.5               # first terminal (GND), terminal row
-HOLES = [(8.0, 64.0), (95.0, 5.0), (95.0, 48.0), (88.5, 30.5)]   # T-060: H4 moved from (70, 6) (module row)
+# T-060: H4 moved from (70, 6) (module row). T-073 / C2-009: H3 moved from (95, 48) to (96, 38): at (95, 48) a metal
+# screw head or washer (ASSUMED 5.6-7.0 mm) lay 0.2-0.9 mm from the R12 body and level with both of its end caps, a
+# floating-metal bypass of R12 (check_gap.py section (e)); at (96, 38) it faces only the ELE11 end cap.
+HOLES = [(8.0, 64.0), (95.0, 5.0), (96.0, 38.0), (88.5, 30.5)]
 
 W_SIG, W_PWR, W_STUB = 1.0, 1.2, 0.8
 
@@ -551,8 +555,13 @@ def build_board():
     labels = ["GND"] + [str(i) for i in range(12)] + ["GND"]
     for i, lab in enumerate(labels):
         x, _ = term(i)
-        # numbers sit left of the E diagonal / resistor pad 2 (pads at x + R_DX)
-        bd.text(lab, x if lab == "GND" else x - 1.6, 57.6, pcbnew.F_SilkS, 1.1)
+        # numbers sit midway between pad 2 of the previous resistor (x - 5.08 + R_DX) and of their own (x + R_DX),
+        # i.e. at x + R_DX - 2.54; two-digit labels are smaller so they keep >= 0.2 mm from both pads (T-073 / C2-010,
+        # measured by check_silk.py)
+        if lab == "GND":
+            bd.text(lab, x, 57.6, pcbnew.F_SilkS, 1.1)
+        else:
+            bd.text(lab, x + R_DX - 2.54, 57.6, pcbnew.F_SilkS, 1.1 if len(lab) == 1 else 0.9)
     bd.text("OCTAVE", POT[0] + 7.0, 24.0, pcbnew.F_SilkS, 1.0)
     bd.text("SCALE", BTN[0] + 3.25, BTN[1] + 7.6, pcbnew.F_SilkS, 1.0)
     bd.text("R1 ... R12 = 3k3 pulse-rated, lying flat (E0 ... E11)", 61.0, 39.0, pcbnew.F_SilkS, 1.0)

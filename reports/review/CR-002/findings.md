@@ -29,3 +29,20 @@ REQ-023 PARTIAL (agree; 8 kV gap unproven C2-002; GND path C2-005). REQ-027 PASS
 
 ## Dispositions (manager)
 Filled in after the fixes; see section "Dispositions" appended below.
+
+## Dispositions (manager, after T-073)
+| ID | Disposition | Evidence |
+|---|---|---|
+| C2-001 | Fixed (README reworded; Vishay Mmin 15.0 ≤ 15.24 mm pitch; test-fit one part) | hardware/README.md, handoff T-073 |
+| C2-002 | Partly fixed, residual accepted risk: cap-to-cap check added (swept cap 1.5–3.5 mm, body 11.0–11.9 mm ASSUMPTIONS). 4 kV PASS for placement error ≤ ±0.25 mm (worst 3.61 mm); FAIL corner 3.13 mm at ±0.5 mm; 8 kV caps FAIL. Controlled by forming leads on a gauge (README) and caliper check of cap length in the physical test plan. 8 kV statements limited to copper. | sim/electronics/calc/check_gap.out; ADR-020 |
+| C2-003 | Fixed: rating energy 182 mJ (∫V² dt); energy-limited below 5073 Ω knee, plateau 5054 V; verdicts unchanged | calc_pulse_rated.out |
+| C2-004 | No action | — |
+| C2-005 | Accepted risk: the E-pad ↔ GND edge track acts as an intentional spark gap that keeps the strike off the sensor pin; ground bounce 87–339 V for ≈1 ns, ≤ 1.53 A / 0.92 nC through each 220 Ω I2C resistor (CALCULATION on ASSUMED inductances). Added to the ESD test. RP2040 GP26/GP27 ESD rating not confirmed (open). | calc_gnd_bounce.py/.out; analysis.md §5 |
+| C2-006 | Fixed by systems (T-074) | sim/systems/*.out, REQUIREMENTS, INTERFACES frozen-5 |
+| C2-007 | Fixed (only R13–R16 off-cuts or solder) | hardware/README.md |
+| C2-008 | Fixed: R1–R12 drill 1.1 mm (ring 0.55 mm) | gen_pcb.py, drill table |
+| C2-009 | Fixed: H3 moved (95, 48) → (96, 38); old position allowed a metal screw to bypass R12 (1.94 mm, FAIL), new 15.36 mm PASS; nylon hardware recommended | check_gap.out (e) |
+| C2-010 | Fixed: worst silk-to-pad 0.43 mm | check_silk.py |
+| C2-011 | Fixed: deterministic tie-break | check_gap.py |
+| C2-012 | Accepted, test added: I2C traffic vs baseline noise in the physical plan (systems/documentation T-074/T-075) | — |
+| C2-013 | Accepted: rule comes from model M4; F.2 kept as a cross-check marked "recalled" | EE-S25 |

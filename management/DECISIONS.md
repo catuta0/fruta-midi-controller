@@ -107,3 +107,6 @@
 - D-2 Board label becomes "FrutaMIDI v1.2": the layout changed beyond the resistor row. Systems updates ADR-008 / interface_check; the generator text is changed after that.
 - D-3 Cost: the +3.4…+7.3 € for R1–R12 is accepted for safety (ESD protection that cannot be bypassed outweighs the 30 € target); systems re-runs budgets.py and records the cost requirement status honestly (it may move from FAIL by 0.40 € to a larger FAIL).
 - D-4 Layout escalation accepted: A2 15.1 mm up / 2.54 mm right; J1, JP1 (upright, QT top / ORIG bottom), R13–R15 right of the module; H4 to (88.5, 30.5). Nets and pinout unchanged; no firmware change.
+
+## ADR-020 — CR-002 re-review dispositions, 2026-11-07
+- See reports/review/CR-002/findings.md "Dispositions". Key choices: end-cap gap risk (C2-002) controlled by forming leads on a gauge (±0.25 mm) and a caliper check in the physical plan, not by relayout; the E-pad ↔ GND edge track stays as an intentional spark gap (C2-005); H3 moved to (96, 38).

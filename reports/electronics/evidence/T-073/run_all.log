@@ -1,0 +1,2 @@
+outputs: calc_esd_variants.out calc_flashover.out calc_gnd_bounce.out calc_i2c.out calc_i2c_series.out calc_mechanical.out calc_power.out calc_pulse.out calc_pulse_rated.out check_gap.out check_gap_old_1247c44.out check_gap_old_86866be.out check_silk.out sim_electrode.out 
+exit 0

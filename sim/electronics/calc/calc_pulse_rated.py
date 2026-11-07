@@ -74,10 +74,35 @@ print("MBE/SMA 0414 3k3: margin at 4 kV = %.2f (rating / V_R); with -5 %% readin
       (u0414 / need[4000.0], 0.95 * u0414 / need[4000.0]))
 print("HBM equivalence (100 pF / 1500 ohm on R alone): 0414 6 kV -> %.0f V across 3k3; 0207 4 kV -> %.0f V"
       % (6000 * R / (R + 1500), 4000 * R / (R + 1500)))
-print("Energy check: the 1.2/50 us test pulse at the 0414 rating puts about %.0f mJ into 3k3 (V^2/R * 1.44 * 50 us),"
-      % (u0414 ** 2 / R * 1.44 * 50e-6 * 1e3))
-print("  vs %.2f mJ for one IEC 4 kV strike -> the IEC pulse is far inside the energy limit; voltage is the binding limit."
-      % (0.5 * C_IEC * 4000 ** 2 * R / (R + R_IEC) * 1e3))
+# T-073 / C2-003: energy of the rating pulse = (1/R) * integral V(t)^2 dt (the T-060 version used the integral of V,
+# 1.44 * 50 us, which overstated the energy about 2x). Standard 1.2/50 us double exponential (IEC 60060-1 form,
+# ASSUMPTION for the generator used by Vishay): V(t) = k * Vpk * (exp(-t/T2) - exp(-t/T1)), T1 = 0.4074 us,
+# T2 = 68.22 us, k = 1/max(...) (CALCULATION below). Single-exponential cross-check: tail T = 50 us / ln 2,
+# integral V^2 dt = Vpk^2 * T / 2.
+T1, T2 = 0.4074e-6, 68.22e-6
+tpk = math.log(T2 / T1) * T1 * T2 / (T2 - T1)
+k = 1.0 / (math.exp(-tpk / T2) - math.exp(-tpk / T1))
+i_v2 = k ** 2 * (T2 / 2 + T1 / 2 - 2 * T1 * T2 / (T1 + T2))          # integral of (V/Vpk)^2 dt, s
+i_v2_exp = 50e-6 / math.log(2) / 2
+e_rate = u0414 ** 2 / R * i_v2
+print("Rating pulse energy: integral (V/Vpk)^2 dt = %.2f us (double exp.; single exp. %.2f us) -> %.0f mJ into 3k3 at %.0f V"
+      % (i_v2 * 1e6, i_v2_exp * 1e6, e_rate * 1e3, u0414))
+c = CURVES["MBE/SMA 0414"]
+slope = ((c[1][1] - c[0][1]) / YDEC) / ((c[1][0] - c[0][0]) / XDEC)
+r_knee = 10.0 * 10 ** ((c[1][0] - X10) / XDEC)
+v_plat = v_of(c[1][1])
+print("MBE/SMA 0414 chart: log-log slope below the knee %.3f (0.5 = constant V^2/R, energy-limited); knee at %.0f ohm;"
+      " plateau %.0f V (voltage-limited above the knee)" % (slope, r_knee, v_plat))
+print("  energy at the knee %.0f mJ (same constant as at 3k3 -> 3k3 lies on the energy-limited branch)"
+      % (v_plat ** 2 / r_knee * i_v2 * 1e3))
+e4 = 0.5 * C_IEC * 4000 ** 2 * R / (R + R_IEC)
+print("  one IEC 4 kV strike puts %.2f mJ into R (%.0fx less than the rating pulse) and %.0f V across it, below the"
+      " %.0f V plateau (%.2fx); the 3k3 chart value %.0f V is used as the acceptance limit (conservative: it is an"
+      " energy limit for a pulse whose tail T = %.0f us is %.0fx the IEC tau %.2f us)"
+      % (e4 * 1e3, e_rate / e4, need[4000.0], v_plat, v_plat / need[4000.0], u0414, 50 / math.log(2),
+         50e-6 / math.log(2) / ((R + R_IEC) * C_IEC), (R + R_IEC) * C_IEC * 1e6))
+print("  8 kV: %.0f V across R exceeds both the 3k3 chart value and the %.0f V plateau -> FAIL either way"
+      % (need[8000.0], v_plat))
 print("SELECTED: Vishay MBE/SMA 0414, 3k3 1 %% (MBE04140C3301FC100): %.0f V >= %.0f V at 4 kV (PASS), < %.0f V at 8 kV (FAIL)"
       % (u0414, need[4000.0], need[8000.0]))
 print("ALTERNATIVE for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to"
