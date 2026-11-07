@@ -2,10 +2,10 @@
 
 | Field | Value |
 | --- | --- |
-| Current gate | G5 prepared — V1_BASELINE committed and tagged; GitHub release awaiting user approval |
-| Baseline under work | `main` @ d85b330 (v1.1 content; GitHub release v1.0.0 published; v1.1.0 release NOT published) |
-| Phase | B complete except the public GitHub release |
-| Last update | 2026-10-30 |
+| Current gate | G5 done — V1_BASELINE released (tag v1.1.0 = 048023c; GitHub release v1.1.0 published 2026-11-04 with user approval) |
+| Baseline under work | `main` @ b1e4bf5: two post-release hardware commits (21a4919 schematic readability, b1e4bf5 J4–J7 socket symbols removed) made outside a change request; NOT independently reviewed, NOT released |
+| Phase | B complete; next work only through /engineering-change (candidate CR-001) |
+| Last update | 2026-11-07 (state reconstructed from the repository after the original session was lost) |
 
 ## Mapping of the generic structure to this repository
 | Generic | Here | Reason |
