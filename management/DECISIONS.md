@@ -110,3 +110,7 @@
 
 ## ADR-020 — CR-002 re-review dispositions, 2026-11-07
 - See reports/review/CR-002/findings.md "Dispositions". Key choices: end-cap gap risk (C2-002) controlled by forming leads on a gauge (±0.25 mm) and a caliper check in the physical plan, not by relayout; the E-pad ↔ GND edge track stays as an intentional spark gap (C2-005); H3 moved to (96, 38).
+
+## ADR-021 — Manager PCB design review follow-up (T-076), 2026-11-07
+- Fixed: JP1 pitch 3.81 mm (pad gap 0.60 → 1.87 mm) against an accidental three-pad solder bridge; J2 pads 3.0 × 4.5 mm oval extended towards the block back (copper 7.1 → 11.6 mm² per pad, spark gap to the GND edge track kept at 1.40 mm); RV1 mounting tabs on AGND; C1 100 nF (KEMET C322C104K5R5TA) wiper to AGND, τ ≤ 0.38 ms vs 30 ms read interval (CALCULATION); silkscreen overlaps removed.
+- Rejected: C2 1 µF at the module. No single-layer route without passing 3V3 close to H2 hardware and running GND 1.1 mm from all electrode pins; both module versions have their own regulator and capacitors. Recorded as not needed.

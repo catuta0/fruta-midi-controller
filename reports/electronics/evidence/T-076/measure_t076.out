@@ -1,0 +1,8 @@
+JP1 pad centres (mm, board): [('1', 79.5, 15.74), ('2', 79.5, 11.93), ('3', 79.5, 8.12)]
+JP1 copper gap pad1-pad2 1.87 mm, pad2-pad3 1.87 mm, pad1-pad3 5.68 mm
+J2 pad 2 size 3.00 x 4.50 mm, drill 1.40, hole y 64.50, copper y 61.50..66.00
+J2 adjacent pad gap (2-3) 2.08 mm
+J2 pad 2 (E0) to GND edge track 1.40 mm
+J2 pad 2 (E0) to R1 pad 2 (E0, same net) 3.15 mm; J2 pad 3 (E1) to R1 pad 2 (E0) 4.18 mm; J2 pad 2 to R2 pad 2 (E1) 5.87 mm
+C1 pads: [('1', '/POT', 31.2, 5.3), ('2', '/AGND', 36.28, 5.3)]
+RV1 pads: [('1', '+3V3'), ('2', '/POT'), ('3', '/AGND'), ('MP', '/AGND'), ('MP', '/AGND')]

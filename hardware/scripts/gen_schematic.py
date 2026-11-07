@@ -335,7 +335,7 @@ def build():
         s.connect(jq, QHX, QHY, str(k + 1), "S%d" % (k + 1))
     QX, QY = 233.68, 114.30
     jp = s.symbol("Jumper", "SolderJumper_3_Open", "JP1", "3V3_ORIG_QT", QX, QY,          # turned over: 3V3 on top
-                  "FrutaMIDI:SolderJumper_3_THT_P2.54mm", in_bom=False, ref_at=(0, 3.81), mirror_x=True)
+                  "FrutaMIDI:SolderJumper_3_THT_P3.81mm", in_bom=False, ref_at=(0, 3.81), mirror_x=True)
     s.connect(jp, QX, QY, "1", "S1")
     s.connect(jp, QX, QY, "2", "+3V3")
     s.connect(jp, QX, QY, "3", "S7")
@@ -355,13 +355,23 @@ def build():
     s.connect(sw, BX, BY, "2", "GND")
     s.text("SCALE button", 45.72, 226.06)
     RX, RY = 96.52, 218.44
-    rv = s.symbol("Device", "R_Potentiometer", "RV1", "10k lin (B10K)", RX, RY, "FrutaMIDI:Potentiometer_RK09K_Vertical",
-                  ref_at=(-5.08, -1.27),
+    # T-076: symbol with the mounting-pin (MP) pin, so the two metal tabs of the RK09K can be tied to AGND
+    # (frame/shaft at the ADC ground: no floating metal under the user's hand next to the wiper).
+    rv = s.symbol("Device", "R_Potentiometer_MountingPin", "RV1", "10k lin (B10K)", RX, RY,
+                  "FrutaMIDI:Potentiometer_RK09K_Vertical", ref_at=(-5.08, -5.08),
                   fields={"Manufacturer": "Alps Alpine", "MPN": "RK09K series, 10k linear (B), vertical"})
     s.connect(rv, RX, RY, "1", "+3V3")
     s.connect(rv, RX, RY, "2", "POT")
     s.connect(rv, RX, RY, "3", "AGND")
+    s.connect(rv, RX, RY, "MP", "AGND")
     s.text("OCTAVE potentiometer", 101.60, 223.52)
+    # T-076: C1 100 nF wiper filter (ADC source impedance / pickup); C322 case = 5.08 mm lead spacing (SOURCE EE-S29)
+    CX, CY = 111.76, 236.22
+    c1 = s.symbol("Device", "C", "C1", "100n X7R 50V", CX, CY, "FrutaMIDI:C_Radial_KEMET_C322_P5.08mm_HomeEtch",
+                  ref_at=(2.54, -1.27), fields={"Manufacturer": "KEMET", "MPN": "C322C104K5R5TA"})
+    s.connect(c1, CX, CY, "1", "POT")
+    s.connect(c1, CX, CY, "2", "AGND")
+    s.text("C1: wiper to AGND, next to RV1", 88.90, 243.84)
     for k in range(4):
         s.symbol("Mechanical", "MountingHole", "H%d" % (k + 1), "M3", 43.18 + 12.70 * k, 243.84,
                  "FrutaMIDI:MountingHole_3.2mm_M3", in_bom=False)
