@@ -114,3 +114,4 @@
 ## ADR-021 — Manager PCB design review follow-up (T-076), 2026-11-07
 - Fixed: JP1 pitch 3.81 mm (pad gap 0.60 → 1.87 mm) against an accidental three-pad solder bridge; J2 pads 3.0 × 4.5 mm oval extended towards the block back (copper 7.1 → 11.6 mm² per pad, spark gap to the GND edge track kept at 1.40 mm); RV1 mounting tabs on AGND; C1 100 nF (KEMET C322C104K5R5TA) wiper to AGND, τ ≤ 0.38 ms vs 30 ms read interval (CALCULATION); silkscreen overlaps removed.
 - Rejected: C2 1 µF at the module. No single-layer route without passing 3V3 close to H2 hardware and running GND 1.1 mm from all electrode pins; both module versions have their own regulator and capacitors. Recorded as not needed.
+- D-ADR-021 addendum: C1 cost (+0.20–0.90 EUR) accepted (REQ-032 stays FAIL, upper bound 38.62 EUR); INTERFACES frozen-6 frozen by manager.

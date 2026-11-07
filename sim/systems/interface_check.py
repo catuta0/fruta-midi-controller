@@ -150,12 +150,31 @@ check("pcb.A1.gnd_pins", all(fps["A1"].get(str(n)) == {"GND"} for n in gnd_pads)
 used = {str(GP_TO_PHYS["GP%d" % fw["pcb"][c]]) for c in pcb_expect} | {"36", "33"} | {str(n) for n in gnd_pads}
 others = {p: n for p, n in fps["A1"].items() if p not in used and n != {None} and not any(x and x.startswith("unconnected") for x in n)}
 check("pcb.A1.no_other_nets", not others, "other connected pads: %s" % others)
-check("pcb.A1.AGND_isolated", "AGND" not in set().union(*[n for r, f in fps.items() for p, n in f.items() if r != "A1" and r != "RV1"]),
-      "AGND net only on A1 pin 33 and RV1 (relies on the Pico-internal AGND-GND link: S-02 'also a GND pin'; S-01 sec. 2.1 'separate analog ground plane ... terminating at this pin')")
+# AGND membership rule (T-077, ADR-021): AGND joins exactly A1 pin 33, RV1 pin 3, both RV1 mounting tabs (MP) and
+# C1 pin 2 (wiper filter to AGND); nothing else. It relies on the Pico-internal AGND-GND link (S-02 'also a GND pin';
+# S-01 sec. 2.1 'separate analog ground plane ... terminating at this pin'), so no other AGND-GND join may exist.
+AGND_ALLOWED = {("A1", "33"), ("RV1", "3"), ("RV1", "MP"), ("C1", "2")}
+agnd_members = sorted({(r, p) for r, f in fps.items() for p, n in f.items() if "AGND" in n})
+check("pcb.AGND_membership", set(agnd_members) == AGND_ALLOWED,
+      "AGND pads %s (allowed exactly %s)" % (agnd_members, sorted(AGND_ALLOWED)))
+mixed = sorted((r, p, sorted(x for x in n if x)) for r, f in fps.items() for p, n in f.items() if "AGND" in n and len(n) > 1)
+check("pcb.AGND_no_shared_pad", not mixed, "AGND pads carrying a second net: %s" % mixed)
+agnd_parts = {r for r, _ in agnd_members}
+gnd_on_agnd_parts = sorted(r for r in agnd_parts - {"A1"} if any("GND" in n for n in fps[r].values()))
+check("pcb.AGND_parts_not_on_GND", not gnd_on_agnd_parts,
+      "parts with an AGND pad that also have a GND pad (would be a second AGND-GND link): %s" % gnd_on_agnd_parts)
 
 # Controls: RV1 (octave pot) and SW1 (button)
 check("pcb.RV1", [fps["RV1"].get(n) for n in "123"] == [{"+3V3"}, {"POT"}, {"AGND"}],
       "RV1 1/2/3 = %s" % [fps["RV1"].get(n) for n in "123"])
+check("pcb.RV1_MP", fps["RV1"].get("MP") == {"AGND"}, "RV1 mounting tabs MP = %s (ADR-021: AGND)" % fps["RV1"].get("MP"))
+c1 = fps.get("C1", {})
+check("pcb.C1_wiper_filter", [c1.get(n) for n in "12"] == [{"POT"}, {"AGND"}] and len(c1) == 2
+      and VALUES.get("C1", "").startswith("100n"),
+      "C1 1/2 = %s, value %r (ADR-021: 100 nF POT to AGND, KEMET C322C104K5R5TA)" % ([c1.get(n) for n in "12"], VALUES.get("C1")))
+pot_members = sorted((r, p) for r, f in fps.items() for p, n in f.items() if "POT" in n)
+check("pcb.POT_membership", set(pot_members) == {("A1", str(GP_TO_PHYS["GP%d" % fw["pcb"]["PIN_POT"]])), ("RV1", "2"), ("C1", "1")},
+      "POT pads %s" % pot_members)
 sw = set().union(*fps["SW1"].values())
 check("pcb.SW1", sw == {"BTN", "GND"}, "SW1 nets %s (active low, firmware INPUT_PULLUP)" % sorted(sw))
 check("fw.button_pullup", "pinMode(PIN_BUTTON, INPUT_PULLUP)" in ino and "digitalRead(PIN_BUTTON) == LOW" in ino,

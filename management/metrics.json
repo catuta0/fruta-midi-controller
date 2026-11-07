@@ -67,11 +67,11 @@
     },
     {
       "name": "bom_core_range",
-      "value": "23.78-37.72",
+      "value": "23.98-38.62",
       "unit": "EUR",
       "label": "CALCULATION",
-      "revision": "CR-002 T-070",
-      "evidence": "reports/systems/budgets.md"
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "reports/systems/budgets.md; sim/systems/budgets.out"
     },
     {
       "name": "esd_gap_ele_e_min",
@@ -96,6 +96,54 @@
       "label": "SOURCE",
       "revision": "CR-002 T-060",
       "evidence": "sim/electronics/calc/calc_pulse_rated.out"
+    },
+    {
+      "name": "pot_filter_C1_part",
+      "value": "KEMET C322C104K5R5TA, 100 nF X7R 50 V +-10 %, radial 5.08 mm",
+      "unit": "-",
+      "label": "SOURCE",
+      "revision": "CR-002 T-076/T-077 (a216c1b)",
+      "evidence": "reports/electronics/SOURCES_EE.md EE-S29; management/INTERFACES.json board.capacitors"
+    },
+    {
+      "name": "pot_filter_C1_price",
+      "value": "0.20-0.90",
+      "unit": "EUR",
+      "label": "ASSUMPTION",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "reports/electronics/SOURCES_EE.md EE-S30 (distributor search, not verified); sim/systems/budgets.out"
+    },
+    {
+      "name": "pot_filter_tau_worst",
+      "value": 0.38,
+      "unit": "ms",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "sim/systems/budgets.out A7; sim/electronics/calc/calc_pot_rc.out"
+    },
+    {
+      "name": "pot_filter_settling_margin_worst",
+      "value": 10.4,
+      "unit": "x (30 ms read period / 2.89 ms settling)",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "sim/systems/budgets.out A7"
+    },
+    {
+      "name": "jp1_pad_gap",
+      "value": 1.87,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "sim/systems/pcb_rules_check.out (read from the design file)"
+    },
+    {
+      "name": "j2_pad_size",
+      "value": "3.0 x 4.5",
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "sim/systems/pcb_rules_check.out (read from the design file)"
     }
   ]
 }

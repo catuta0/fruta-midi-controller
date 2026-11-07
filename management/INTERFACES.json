@@ -1,8 +1,8 @@
 {
-  "revision": "frozen-5 (CR-002 re-review fixes, FrutaMIDI v1.2, ADR-020)",
+  "revision": "frozen-6 (CR-002 manager PCB review follow-up, FrutaMIDI v1.2, ADR-021)",
   "frozen": true,
   "owner": "systems-engineer",
-  "status_note": "frozen-5 prepared by systems-engineer (T-074, 2026-11-07) on manager assignment under ADR-020, input c901ad8. Changes from frozen-4: H3 moved from (95, 48) to (96, 38) (C2-009); R1..R12 drill 1.0 -> 1.1 mm, ring 0.55 mm (C2-008); placement frame now refers to c901ad8. Nets, pinout, terminal map, I2C, USB MIDI, build flags and the R1..R12 part are unchanged. Evidence on c901ad8: sim/systems/interface_check.out 'SUMMARY: 80 checks, 80 PASS, 0 FAIL' (pcb.label_v1.2 PASS, the board reads 'FrutaMIDI v1.2'); sim/systems/pcb_rules_check.out 'SUMMARY: 16 checks, 16 PASS, 0 FAIL'; sim/systems/budgets.out byte-identical to T-070. These are design-file checks, not hardware validation.",
+  "status_note": "frozen-6 prepared by systems-engineer (T-077, 2026-11-07) on manager assignment under ADR-021, input a216c1b (freeze by the manager per T-077 assignment). Changes from frozen-5: C1 100 nF X7R 50 V (KEMET C322C104K5R5TA, 5.08 mm leads) from the pot wiper (POT) to AGND; RV1 mounting tabs (MP) on AGND; AGND membership is now exactly A1 pin 33, RV1 pin 3, RV1 MP and C1 pin 2; JP1 footprint SolderJumper_3_THT_P3.81mm (pitch 3.81 mm, pad gap 1.87 mm); J2 pads 3.0 x 4.5 mm oval (pad 1 rect), drill 1.4 mm offset 0.75 mm towards the block back. Pinout, terminal map, I2C, USB MIDI and build flags are unchanged. Evidence on a216c1b: sim/systems/interface_check.out 'SUMMARY: 85 checks, 85 PASS, 0 FAIL' (pcb.AGND_membership, pcb.AGND_no_shared_pad, pcb.AGND_parts_not_on_GND, pcb.RV1_MP, pcb.C1_wiper_filter, pcb.POT_membership PASS); sim/systems/pcb_rules_check.out 'SUMMARY: 19 checks, 19 PASS, 0 FAIL' (ADR-021 JP1 pad gap >= 1.8 mm PASS at 1.87 mm; ADR-021 J2 pads 3.0 x 4.5 mm PASS); sim/systems/budgets.out 'SUMMARY: 30 checks, 25 PASS, 5 FAIL' (A7 C1 settling PASS; the 5 FAILs are the pre-existing A3b, three 100 kHz latency rows and the BOM cost). These are design-file checks, not hardware validation.",
   "sources": "requirements/SOURCES_SYSTEMS.md",
   "interfaces": [
     {
@@ -407,7 +407,8 @@
           "net": "POT",
           "gp": 28,
           "adc": 2,
-          "pin": 34
+          "pin": 34,
+          "loads": "RV1 pin 2 and C1 pin 1 (100 nF to AGND, ADR-021)"
         },
         {
           "signal": "3V3(OUT)",
@@ -419,7 +420,7 @@
           "signal": "AGND",
           "net": "AGND",
           "pin": 33,
-          "loads": "RV1 pin 3 only; tied to GND inside the Pico (S-02 'also a GND pin')"
+          "loads": "RV1 pin 3, RV1 mounting tabs (MP) and C1 pin 2 only (ADR-021; interface_check pcb.AGND_membership); tied to GND inside the Pico (S-02 'also a GND pin'), no other AGND-GND link on the board"
         },
         {
           "signal": "GND",
@@ -682,7 +683,8 @@
         "pins": {
           "1": "+3V3",
           "2": "POT (ADC)",
-          "3": "AGND"
+          "3": "AGND",
+          "MP": "AGND (mounting tabs, ADR-021)"
         },
         "adc_bits": 10,
         "read_ms": 30,
@@ -692,7 +694,16 @@
         "dead_band_zone": 0.2,
         "dead_band_V": 0.132,
         "error_budget_V": 0.0364,
-        "error_budget_label": "CALCULATION (reports/systems/budgets.md)"
+        "error_budget_label": "CALCULATION (reports/systems/budgets.md)",
+        "filter": {
+          "part": "C1 100 nF X7R, KEMET C322C104K5R5TA, POT to AGND",
+          "tau_ms_nominal": 0.25,
+          "tau_ms_worst": 0.38,
+          "settle_half_lsb10_ms_worst": 2.89,
+          "read_ms": 30,
+          "margin_worst": 10.4,
+          "label": "CALCULATION (R_th = R/4 at mid travel, 10 kOhm +20 % ASSUMPTION; C 100 nF +10 % tol, +15 % X7R temp, SOURCE EE-S29; sim/systems/budgets.out A7 and sim/electronics/calc/calc_pot_rc.out)"
+        }
       }
     },
     {
@@ -753,7 +764,15 @@
         },
         "note": "S1..S7 wire holes, each joined to A2 pads 14\u201320 (module power/I2C row); excluded from BOM"
       },
-      "sockets": "Female headers for A1 (2\u00d7 1\u00d720) and A2 (1\u00d713 + 1\u00d77) are recorded in the Socket field of A1/A2 and the BOM Socket column; the former BOM-only symbols J4\u2013J7 were removed (2026-11-05)"
+      "sockets": "Female headers for A1 (2\u00d7 1\u00d720) and A2 (1\u00d713 + 1\u00d77) are recorded in the Socket field of A1/A2 and the BOM Socket column; the former BOM-only symbols J4\u2013J7 were removed (2026-11-05)",
+      "C1": {
+        "footprint": "FrutaMIDI:C_Radial_KEMET_C322_P5.08mm_HomeEtch",
+        "pads": {
+          "1": "POT",
+          "2": "AGND"
+        },
+        "note": "wiper filter, ADR-021"
+      }
     }
   ],
   "board": {
@@ -770,7 +789,7 @@
       "R15/R16": "220 Ohm I2C series (SCL/SDA), Yageo MFR-12, FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch"
     },
     "placement_mm": {
-      "frame": "board coordinates, origin at the top-left outline corner (KiCad page coordinates minus (50, 50)); footprint anchor (at) as in hardware/frutamidi.kicad_pcb @ c901ad8",
+      "frame": "board coordinates, origin at the top-left outline corner (KiCad page coordinates minus (50, 50)); footprint anchor (at) as in hardware/frutamidi.kicad_pcb @ a216c1b",
       "A1": [
         4.5,
         2.0
@@ -831,7 +850,20 @@
         30.5
       ],
       "H4_note": "moved from (70, 6) (ADR-019 D-4)",
-      "label": "MEASUREMENT: read from the design file by the systems-engineer (T-070, H3 and frame updated in T-074 at c901ad8); not a frozen mechanical interface, recorded for traceability"
+      "label": "MEASUREMENT: read from the design file by the systems-engineer (T-070, H3 and frame updated in T-074 at c901ad8, C1 added in T-077 at a216c1b); not a frozen mechanical interface, recorded for traceability",
+      "C1": [
+        31.2,
+        5.3
+      ]
+    },
+    "capacitors": {
+      "C1": "100 nF X7R 50 V +-10 %, KEMET C322C104K5R5TA (radial, 5.08 mm leads; not C320, which has 2.54 mm leads, SOURCE EE-S29), footprint FrutaMIDI:C_Radial_KEMET_C322_P5.08mm_HomeEtch (pad 2.0 mm, drill 0.8 mm, ring 0.60 mm); pin 1 POT, pin 2 AGND (ADR-021)"
+    },
+    "jumpers": {
+      "JP1": "FrutaMIDI:SolderJumper_3_THT_P3.81mm: 3 pads 1.94 x 2.4 mm, pitch 3.81 mm, copper gap 1.87 mm between adjacent pads (pcb_rules_check, rule >= 1.8 mm, ADR-021), drill 0.8 mm, ring 0.57 mm"
+    },
+    "terminal_pads": {
+      "J2": "FrutaMIDI:TerminalBlock_5.08_1x14: 14 pads 3.0 x 4.5 mm (pad 1 rect, 2..14 oval), drill 1.4 mm offset 0.75 mm towards the block back, ring 0.80 mm; Ex to GND edge track 1.40 mm kept (MEASUREMENT, electronics T-076)"
     }
   },
   "frozen_by": "manager",
