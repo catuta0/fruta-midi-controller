@@ -1,0 +1,35 @@
+\section{Change history}
+\label{sec:changes}
+
+Baseline: release V1\_BASELINE, git tag \texttt{v1.1.0-baseline} (048023c,
+2026-11-04), board label ``FrutaMIDI v1.1'', interfaces frozen-3. Current: FrutaMIDI
+v1.2 on branch \texttt{change/CR-002} at 8394b41, interfaces frozen-4, to be
+released as V1.2 (git tag \texttt{v1.2.0}) after the CR-002 re-review and user
+approval. Sources: \texttt{git log v1.1.0-baseline..8394b41}, the commit messages
+quoted below, \ev{changes/CR-002.md} and ADR-019 \ev{management/DECISIONS.md}.
+
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.10\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}@{}}
+\toprule
+Commit & Change & Effect on nets, copper and checks \\
+\midrule\endhead
+21a4919 & Schematic readability: A3 sheet, framed functional blocks, electrode chain drawn with wires. Layout of the schematic only. & Netlist identical (127 nets, compared node by node); PCB unchanged; ERC 0, DRC 0, parity 0 (commit message). \\
+b1e4bf5 & The unconnected BOM-only socket symbols J4--J7 are removed; the female-header sockets become a Socket field of A1/A2; the BOM gains a Socket column. & Netlist unchanged apart from the removed J4--J7 no-connect nets; PCB copper identical (tracks and pads compared); ERC 0, DRC 0, parity 0 (commit message). \\
+130e754 & CR-002 opened: electrode resistor flashover and pulse rating; supersedes candidate CR-001. & Documents only. \\
+3a3684b & CR-002 T-060: R1--R12 become Vishay MBE04140C3301FC100 (DIN0414, lying flat, 15.24\,mm pitch); relayout (module A2 15.1\,mm up and 2.54\,mm right; J1, JP1 upright, R13--R15 right of the module; H4 moved); analysis.md \S5; ADR-019. & ELE--E gap 0.94 $\rightarrow$ 13.04\,mm, E--other net 1.99 $\rightarrow$ 10.92\,mm (\lbl{MEASUREMENT}, design file); nets and pinout unchanged; ERC 0, DRC 0, parity 0; pcb\_rules\_check 16/16. \\
+8394b41 & CR-002 T-070: REQUIREMENTS draft-6, INTERFACES frozen-4, budgets revision~6 (core BOM 23.78--37.72\,EUR, \lbl{CALCULATION}), risks R-006 rewritten and R-008 added; board label ``FrutaMIDI v1.2''. & Label text only on the board; gap check unchanged (re-run in T-072). \\
+(T-072) & This report, the user manual and figures updated for v1.2. & Documents only. \\
+\bottomrule
+\end{longtable}
+}
+
+\paragraph{What did not change in v1.2.} Firmware, pins and build flags; the J2
+terminal row and pinout; the I\textsuperscript{2}C, USB MIDI and terminal
+interfaces apart from the R1--R12 part; the resistor value
+(\qty{3.3}{\kilo\ohm} 1\,\%) and therefore the electrode sensitivity analysis; the
+home-etch design rules (ADR-019 D-4, \ev{management/INTERFACES.json}).
+
+\paragraph{Requirement status after CR-002.} Unchanged counts (PASS 17, PARTIAL 18,
+FAIL 3, NOT RUN 4). REQ-023 stays PARTIAL (no ESD-gun test); REQ-032 stays FAIL with
+a larger overrun (7.72\,EUR instead of 0.40\,EUR, \lbl{CALCULATION})
+\ev{management/REQUIREMENTS.md}.

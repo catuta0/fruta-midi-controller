@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.1)  5 NOV 2026 00:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.10.1)  7 NOV 2026 18:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -387,7 +387,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 28
 )
 \Hy@SectionHShift=\skip61
 )
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 42.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 44.
  (/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/lm/t1lmr.fd
 File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) (/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/l3kernel/l3backend-pdftex.def
@@ -396,24 +396,24 @@ File: l3backend-pdftex.def 2026-09-09 L3 backend support: PDF output (pdfTeX)
 ) (./frutamidi_report.aux)
 \openout1 = `frutamidi_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 42.
-LaTeX Font Info:    ... okay on input line 42.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 44.
+LaTeX Font Info:    ... okay on input line 44.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -458,31 +458,38 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 42.
+Package hyperref Info: Link coloring OFF on input line 44.
  (./frutamidi_report.out) (./frutamidi_report.out)
 \@outlinefile=\write3
 \openout3 = `frutamidi_report.out'.
 
-LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 44.
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 46.
  (/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-) (./frutamidi_report.toc
-LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 2.
+)
+LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 54.
  (/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OML+lmm on input line 2.
+LaTeX Font Info:    Trying to load font information for OML+lmm on input line 54.
  (/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 2.
+LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 54.
  (/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
-LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 2.
+LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 54.
  (/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <10> on input line 54.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <7> on input line 54.
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <5> on input line 54.
+ (./frutamidi_report.toc
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <10.95> on input line 2.
 LaTeX Font Info:    External font `lmex10' loaded for size
@@ -491,18 +498,12 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <6> on input line 2.
  [1
 
-{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}])
+{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}])
 \tf@toc=\write4
 \openout4 = `frutamidi_report.toc'.
 
  [2] (./sections/01_introduction.tex
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 9.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 9.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 9.
-LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 13.
+LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 16.
  (/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )) (./sections/02_requirements.tex (./generated/requirements_table.tex
@@ -515,55 +516,60 @@ Overfull \hbox (13.68106pt too wide) in paragraph at lines 50--50
 
 [3
 
-{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [4] [5] [6] [7{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}] [8] [9])) (./sections/03_architecture.tex [10] [11{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}]) (./sections/04_interfaces.tex [12]) (./sections/05_electronics.tex
-Underfull \hbox (badness 1147) in paragraph at lines 4--7
-\T1/lmr/m/n/10.95 in \T1/lmr/m/n/10 [$\T1/lmtt/m/n/10 management / handoffs / electronics -[] engineer/$\T1/lmr/m/n/10 ]\T1/lmr/m/n/10.95 , raw out-puts in \T1/lmr/m/n/10 [$\T1/lmtt/m/n/10 sim / electronics / calc/$\T1/lmr/m/n/10 ]\T1/lmr/m/n/10.95 .
+{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}] [4] [5] [6] [7{/Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}] [8] [9] [10])) (./sections/03_architecture.tex [11] [12]) (./sections/04_interfaces.tex [13]) (./sections/05_electronics.tex [14]
+<../figures/board-top-v1.2.png, id=265, 1573.88pt x 1100.11pt>
+File: ../figures/board-top-v1.2.png Graphic file (type png)
+<use ../figures/board-top-v1.2.png>
+Package pdftex.def Info: ../figures/board-top-v1.2.png  used on input line 35.
+(pdftex.def)             Requested size: 386.96027pt x 271.0178pt.
+<../figures/board-copper-v1.2.png, id=268, 1573.88pt x 1100.11pt>
+File: ../figures/board-copper-v1.2.png Graphic file (type png)
+<use ../figures/board-copper-v1.2.png>
+Package pdftex.def Info: ../figures/board-copper-v1.2.png  used on input line 45.
+(pdftex.def)             Requested size: 386.96027pt x 271.0178pt.
+ [15 <../figures/board-top-v1.2.png>] [16 <../figures/board-copper-v1.2.png>] [17] [18]
+Underfull \hbox (badness 4266) in paragraph at lines 222--231
+\T1/lmtt/m/n/10 check _ gap . out$\T1/lmr/m/n/10 ] [$\T1/lmtt/m/n/10 sim / electronics / calc / check _ gap _ old _ 86866be . out$\T1/lmr/m/n/10 ]\T1/lmr/m/n/10.95 . The doc-u-men-ta-tion
  []
 
-[13] [14]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 87.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\@textsuperscript' on input line 87.
-
-) (./sections/06_firmware.tex [15]
+(Font)              <12> on input line 244.
+[19]) (./sections/06_firmware.tex [20]
 Underfull \hbox (badness 1742) in paragraph at lines 37--43
 []\T1/lmr/m/n/10.95 LED pat-terns are non-blocking: pads stay live while the LED blinks (T-041).
  []
 
-) (./sections/07_host_software.tex [16]) (./sections/08_review.tex
+) (./sections/07_host_software.tex [21]) (./sections/08_review.tex
 Underfull \hbox (badness 1817) in paragraph at lines 16--19
 \T1/lmr/m/n/10.95 ERC ``Found 0 vi-o-la-tions''; DRC 0/0/0; sta-tus counts 17/18/3/4 = 42 match
  []
 
-[17]) (./sections/09_limitations.tex [18]) (./sections/10_validation_plan.tex [19] [20]) (./sections/11_reproducibility.tex
+[22]) (./sections/09_limitations.tex [23] [24]) (./sections/10_validation_plan.tex [25]) (./sections/11_reproducibility.tex [26]
 Underfull \hbox (badness 7151) in paragraph at lines 16--18
 []\T1/lmr/m/n/10.95 MCP adapter \T1/lmtt/m/n/10.95 eng-tools \T1/lmr/m/n/10.95 ($\T1/lmtt/m/n/10.95 scripts / mcp / server . mjs$\T1/lmr/m/n/10.95 , @mod-el-con-textpro-to-col/sdk
  []
 
-) (./sections/A_sources.tex [21]) [22] (./frutamidi_report.aux)
+) (./sections/12_change_history.tex [27]) (./sections/A_sources.tex [28]) [29] (./frutamidi_report.aux)
  ***********
 LaTeX2e <2026-06-01>
 L3 programming layer <2026-09-09>
  ***********
 Package rerunfilecheck Info: File `frutamidi_report.out' has not changed.
-(rerunfilecheck)             Checksum: 8C3CF488B7D7B40BA37122D112DA9506;4274.
+(rerunfilecheck)             Checksum: 3490EC887CFF2093BE62F63C2193B577;5148.
  ) 
 Here is how much of TeX's memory you used:
- 15595 strings out of 469040
- 302408 string characters out of 5456350
- 790341 words of memory out of 5000000
- 44418 multiletter control sequences out of 15000+600000
- 717996 words of font info for 95 fonts, out of 8000000 for 9000
+ 15674 strings out of 469040
+ 303931 string characters out of 5456350
+ 798966 words of memory out of 5000000
+ 44466 multiletter control sequences out of 15000+600000
+ 717678 words of font info for 94 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 74i,10n,79p,1312b,1220s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt12.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
-Output written on frutamidi_report.pdf (22 pages, 489434 bytes).
+ 74i,10n,79p,1909b,1220s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx8.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi8.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmmi9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr12.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr17.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr6.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr7.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr8.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmr9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmsy9.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt10.pfb></Users/rod/fruta-midi-controller/tools/TinyTeX/texmf-dist/fonts/type1/public/lm/lmtt9.pfb>
+Output written on frutamidi_report.pdf (29 pages, 635334 bytes).
 PDF statistics:
- 422 PDF objects out of 1000 (max. 8388607)
- 349 compressed objects within 4 object streams
- 73 named destinations out of 1000 (max. 500000)
- 241 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 505 PDF objects out of 1000 (max. 8388607)
+ 420 compressed objects within 5 object streams
+ 102 named destinations out of 1000 (max. 500000)
+ 295 words of extra memory for PDF output out of 10000 (max. 10000000)
 

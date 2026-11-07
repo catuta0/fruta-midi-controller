@@ -31,8 +31,8 @@ V-06 & Misplaced data wire current & Wire J1 SDA/SCL to a supply hole; current m
 V-07 (P-5) & Host enumeration & Windows 10, Windows 11, macOS 12 or later; MIDI monitor & No vendor driver; name ``FrutaMIDI''; Note On/Off and poly aftertouch on channel 1 only & REQ-011, 012, 013 \\
 V-08 (P-6) & False triggers and crosstalk & 10\,min idle with all 12 electrodes on objects; then touch each pad and watch neighbours & No false Note On; no crosstalk & REQ-038 \\
 V-09 & Electrode readings with and without $R$ & \texttt{SERIAL\_DEBUG} deltas per object, with the 3.3\,k$\Omega$ resistor and with it bridged & Touch detected on every object; delta ratio $\ge$ 0.904 (\lbl{SIMULATION} prediction) & REQ-037 \\
-V-10 & ESD robustness & IEC 61000-4-2 contact discharge $\pm$4\,kV on each terminal, at a test lab & No permanent damage: all pads still detect touch afterwards & REQ-023 \\
-V-11 & Series resistor after ESD & Inspect and measure R1--R12 after V-10; watch for flashover & Value within tolerance; no flashover (CR-001 if it fails) & REQ-023 \\
+V-10 & ESD robustness & IEC 61000-4-2 contact discharge $\pm$4\,kV on each terminal, at a test lab & No permanent damage: MPR121 still responds, all pads still detect touch, baseline drift $<$ 1 count (T-060) & REQ-023 \\
+V-11 & Series resistor after ESD & Watch for flashover across R1--R12 during V-10; measure R1--R12 afterwards & No flashover; each resistance within 1\,\% of its pre-test value (T-060) & REQ-023 \\
 V-12 & JP1 bridge and etch gaps & Visual inspection with a magnifier and continuity after etching and bridging & Bridge only on the chosen side; 0.6\,mm gaps clear; no short to GND in any position & REQ-025, 039 \\
 V-13 & Real loop period & Toggle a spare GPIO each loop; oscilloscope & No blocking $>$ 10\,ms during play, except user recalibration and the lost-sensor restart (ADR-018) & REQ-016 \\
 V-14 & Recalibration duration & GPIO toggle around \texttt{recalibrate()} & Recorded per sensor; compare with 16.8--22.1\,ms (\lbl{CALCULATION}); no stuck notes afterwards & REQ-008, 002 \\
@@ -44,5 +44,7 @@ V-19 & MPR121 configuration and burst reads & Read back 0x7B--0x7F after start-u
 V-20 & Sampler in real browsers & Chrome and Edge on Windows and macOS with the device & Pads 36--47 sound; velocity 0 acts as Note Off; learn swaps notes & REQ-034 \\
 V-21 & Sampler with a busy device & Open the device in a DAW on Windows first, then the sampler & Sampler reports the device as busy & REQ-034 \\
 V-22 & Shared notes & Set an octave so two pads share a note; touch both, release one, then the other & One Note On; Note Off only after the last release; aftertouch = the stronger pad & REQ-042 \\
+V-23 & v1.2 configuration wires (R-008) & Inspect the two J1 $\rightarrow$ S wires before power; continuity J1 SDA/SCL to the S hole of the module revision & Each wire on the correct S hole (S5/S6 original, S3/S4 STEMMA QT), flat and mechanically secure & REQ-024, 025 \\
+V-24 & R1--R12 fitted as designed & Inspect the resistor row after soldering; caliper on one resistor & Lying flat, part MBE04140C3301FC100, leads 15.24\,mm apart, no lead bent towards a neighbour & REQ-023 \\
 \end{longtable}
 }

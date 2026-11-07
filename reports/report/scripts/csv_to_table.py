@@ -95,7 +95,11 @@ def escape(text: str) -> str:
             inner = inner.replace("/", r"/\allowbreak{}").replace(r"\_", r"\_\allowbreak{}")
             out.append(r"\texttt{" + inner + "}")
         else:
-            out.append(escape_plain(part))
+            # Plain text: allow line breaks after "/" and "_" so long paths and
+            # footprint names fit the narrow evidence column.
+            plain = escape_plain(part)
+            plain = plain.replace("/", r"/\allowbreak{}").replace(r"\_", r"\_\allowbreak{}")
+            out.append(plain)
     return "".join(out)
 
 
