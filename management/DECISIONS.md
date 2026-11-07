@@ -101,3 +101,9 @@
 - Manager edited REQUIREMENTS.md, requirements.csv and INTERFACES.json under locks for these items.
 
 - N-004 (2026-11-05, user request): the BOM-only socket symbols J4–J7 (unconnected headers drawn only to appear in the BOM) are removed. Sockets are a "Socket" field of A1/A2, exported as a BOM column. Netlist otherwise unchanged; PCB copper identical (91 tracks, 131 pads compared). Schematic relaid out on A3 in framed blocks (commit 21a4919).
+
+## ADR-019 — CR-002 decisions (T-060 open items), 2026-11-07
+- D-1 ESD scope stays ±4 kV (REQ-023 as written). Vishay MBE04140C3301FC100 (DIN0414, 3k3 1 %) is selected: 4.08 kV rating at 3k3 from the datasheet chart, margin 1.12 at 4 kV (CALCULATION). 8 kV remains risk R-006; the LSR37 alternative (12 kV rated, same footprint) is rejected for now because its ±10 % tolerance and up to ±20 % drift after strikes bring touch sensitivity to the 0.90 limit. Recorded as a later option.
+- D-2 Board label becomes "FrutaMIDI v1.2": the layout changed beyond the resistor row. Systems updates ADR-008 / interface_check; the generator text is changed after that.
+- D-3 Cost: the +3.4…+7.3 € for R1–R12 is accepted for safety (ESD protection that cannot be bypassed outweighs the 30 € target); systems re-runs budgets.py and records the cost requirement status honestly (it may move from FAIL by 0.40 € to a larger FAIL).
+- D-4 Layout escalation accepted: A2 15.1 mm up / 2.54 mm right; J1, JP1 (upright, QT top / ORIG bottom), R13–R15 right of the module; H4 to (88.5, 30.5). Nets and pinout unchanged; no firmware change.

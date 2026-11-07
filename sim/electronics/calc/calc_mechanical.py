@@ -27,6 +27,8 @@ PINS = {  # footprint name -> (pin description, max pin cross-dimension mm, labe
                                      "ASSUMPTION (Alps drawing is an image, not read)"),
     "R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch": ("Yageo MFR-12 lead 0.45..0.50 mm", 0.50,
                                                   "SOURCE Yageo MFR datasheet (via search)"),
+    "R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch": ("Vishay MBE/SMA 0414 lead 0.8 mm nominal (LSR37 alternative 0.7 mm)", 0.80,
+                                                     "SOURCE Vishay doc. 28766 dimensions table (EE-S17), T-060"),
     "MountingHole_3.2mm_M3": ("M3 screw 3.0 mm", 3.0, "SOURCE ISO 273 fine clearance 3.2 mm"),
 }
 

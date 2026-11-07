@@ -45,7 +45,7 @@ A 100 × 70 mm board with copper on the bottom side only, designed for chemical 
 | A1 | Raspberry Pi Pico, Raspberry Pi **SC0915** (or Pico H, Pico W, Pico 2, Pico 2 W) | 1 | 5–8 € | The SC0915 has no headers: solder 2 × 1×20 male 2.54 mm headers to it. The "H" version comes with them fitted |
 | — | Male header 1×20, 2.54 mm pitch | 2 | — | For the SC0915 only |
 | A2 | Adafruit MPR121 12-key capacitive touch breakout, Adafruit **1982** | 1 | 9–12 € | Original or STEMMA QT: both work (see [section 5](#5-module-configuration-jp1-and-two-wires)). Comes with the male header to solder onto the module |
-| R1–R12 | Resistor 3.3 kΩ (3k3), axial, DIN0204 size, Yageo MFR-12FTF52-3K3 | 12 | — | One in series with each electrode; mounted vertically |
+| R1–R12 | Resistor 3.3 kΩ (3k3) 1 %, axial, **DIN0414 size** (Ø ≤ 4.2 mm, L ≤ 11.9 mm, lead 0.8 mm), pulse-rated, Vishay **MBE04140C3301FC100** (MBE/SMA 0414) | 12 | 4–8 € | One in series with each electrode; lying flat, 15.24 mm lead spacing. Do not substitute a small DIN0204/0207 resistor: it is not rated for the ESD pulse voltage (see [Electrical safety](#electrical-safety)) |
 | R13, R14 | Resistor 4.7 kΩ (4k7), axial, DIN0204 size, Yageo MFR-12FTF52-4K7 | 2 | — | I²C pull-ups (SCL, SDA); mounted vertically |
 | R15, R16 | Resistor 220 Ω, axial, DIN0204 size, Yageo MFR-12FTF52-220R | 2 | — | In series in SCL (R15) and SDA (R16) on the Pico side; they limit the current if a configuration wire goes to the wrong hole; mounted vertically |
 | A1 socket | Female header 1×20, 2.54 mm pitch (generic) | 2 | 1 € | Pico socket |
@@ -56,7 +56,7 @@ A 100 × 70 mm board with copper on the bottom side only, designed for chemical 
 | RV1 | 10 kΩ linear potentiometer (B10K), 9 mm, vertical, Alps Alpine RK09K series | 1 | 1 € | Plus a knob |
 | JP1 | Solder bridge (no part) | — | — | Bridged with solder or a resistor lead off-cut; see section 5 |
 | — | Thin insulated solid wire (from network cable, for example) | ~10 cm | — | 2 configuration wires (SDA, SCL) |
-| H1–H4 | M3 screws + spacers | 4 | 2 € | Optional |
+| H1–H4 | M3 screws + spacers | 4 | 2 € | Optional. H4 is right of the module (moved in v1.2 layout, CR-002) |
 | — | Micro-USB **data** cable | 1 | 3 € | |
 
 If you cut 40-way female header to length, you lose one pin at each cut: 2 strips of 1×40 are enough: one for 20 + 13, the other for 20 + 7.
@@ -124,9 +124,9 @@ Drill from the copper side, using the dots as a guide. There are 131 holes in to
 
 | Bit | Holes | Where |
 | --- | --- | --- |
-| 0.8 mm | 35 | Resistors R1–R16 (32) and JP1 (3) |
+| 0.8 mm | 11 | Resistors R13–R16 (8) and JP1 (3) |
 | 0.9 mm | 9 | J3, the S1–S7 wire holes (7), and J1 (2, configuration wires) |
-| 1.0 mm | 63 | Female headers for the Pico (40) and the module (20), potentiometer pins (3) |
+| 1.0 mm | 87 | Female headers for the Pico (40) and the module (20), potentiometer pins (3), resistors R1–R12 (24, 0.8 mm leads) |
 | 1.1 mm | 4 | Button |
 | 1.4 mm | 14 | Screw terminals |
 | 1.8 mm, then widen | 2 | Potentiometer mounting tabs (slots of 2.1 × 1.8 mm in the design; see below) |
@@ -142,8 +142,8 @@ Solder from the lowest component to the tallest, so the board sits flat on the t
 
 ![Top view](fabrication/images/board-top.png)
 
-1. **Resistors R1–R12 (3k3).** They stand vertically in a row under the module's electrode header, one per electrode. Do not mix them up with R13/R14.
-2. **Resistors R13 and R14 (4k7)**, the I²C pull-ups, vertical next to J1. Then **R15 and R16 (220 Ω)**, also vertical: R15 just below J1, R16 between the Pico and the SCALE button.
+1. **Resistors R1–R12 (3k3, the large DIN0414 ones).** They lie flat in one row between the module and the screw terminals, one per electrode. Bend both leads at least 1.5 mm from the body so that the body sits centred between the two holes (15.24 mm apart), press it onto the board and solder. Do not stand them up: the lying position keeps the two ends of each resistor about 13 mm apart, which an electrostatic spark cannot jump.
+2. **Resistors R13 and R14 (4k7)**, the I²C pull-ups, vertical above J1 (right of the module). Then **R15 and R16 (220 Ω)**, also vertical: R15 just below J1, R16 between the Pico and the SCALE button.
 3. **Button SW1** ("SCALE").
 4. **Pico female headers (2 × 1×20).** Trick: plug both headers onto the Pico, set the assembly on the board and solder. They end up parallel and at the right spacing. Then remove the Pico.
 5. **Module female headers (1×13 and 1×7).** Same trick: first solder the male header to the module, plug on the female headers, set it on the board and solder.
@@ -155,14 +155,14 @@ Solder from the lowest component to the tallest, so the board sits flat on the t
 
 The Adafruit 1982 exists in two versions, with the 7 power/I²C pins in a different order. That is why the board does not connect them directly. Above the 7 module pins there are 7 holes **S1–S7** (J3), each one directly above a module pin. You configure the board for your module in two steps.
 
-**Step 1: power (JP1).** JP1 is a 3-pad solder bridge. The centre pad is 3V3. Bridge it to **one** side with solder or a resistor lead off-cut:
+**Step 1: power (JP1).** JP1 is a 3-pad solder bridge standing upright to the right of the module (**QT** at the top, **ORIG** at the bottom). The centre pad is 3V3. Bridge it to **one** side with solder or a resistor lead off-cut:
 
 - **ORIG** (pad 1 → S1): original version, 3V3 goes to **VIN**.
 - **QT** (pad 3 → S7): STEMMA QT version, 3V3 goes to **VCC**.
 
 The silkscreen legend to the right of the module repeats this: "JP1 3V3 selector: / ORIG = no white connectors / QT = 2 white connectors".
 
-**Step 2: I²C (two wires).** J1 has 2 holes, **SCL on the left and SDA on the right**. Connect:
+**Step 2: I²C (two wires).** J1 (right of JP1) has 2 holes, **SCL on the left and SDA on the right**. Connect:
 
 - J1 **SDA** → the S hole above the module's **SDA** pin;
 - J1 **SCL** → the S hole above the module's **SCL** pin.
@@ -234,7 +234,7 @@ Sensitivity problems (fruit, cables, ground) are the same as on the breadboard: 
 
 ## Electrical safety
 
-Each electrode has a 3.3 kΩ series resistor (R1–R12) between the screw terminal and the sensor. Its protection against IEC 61000-4-2 contact discharge at ±4 kV is an estimate that rests on assumptions (the sensor pin's surge limit is inferred, not specified), not a pass. The resistor is not rated for the pulse voltage across it. Only an ESD-gun test, ideally with a pulse-rated resistor, can confirm it. The board has not been evaluated for higher discharge levels or for touching while it is connected to mains-powered equipment. <!-- EVIDENCE --> See the [electronics analysis](../reports/electronics/analysis.md). Never connect the electrodes to anything plugged into mains power.
+Each electrode has a 3.3 kΩ series resistor (R1–R12) between the screw terminal and the sensor. Its protection against IEC 61000-4-2 contact discharge at ±4 kV is an estimate that rests on assumptions (the sensor pin's surge limit is inferred, not specified), not a pass. The resistor is a pulse-rated DIN0414 part whose 1.2/50 µs rating at 3.3 kΩ (about 4.1 kV, read from the maker's chart) covers the about 3.6 kV across it at 4 kV, but not the about 7.3 kV at 8 kV; the copper on its two sides is at least 13 mm apart, so a spark cannot bypass it. Only an ESD-gun test can confirm the protection. The board has not been evaluated for higher discharge levels or for touching while it is connected to mains-powered equipment. <!-- EVIDENCE --> See the [electronics analysis](../reports/electronics/analysis.md). Never connect the electrodes to anything plugged into mains power.
 
 ## Modifying the board
 

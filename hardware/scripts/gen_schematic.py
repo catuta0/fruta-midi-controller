@@ -297,7 +297,9 @@ def build():
 
     # T-050: series resistor per electrode (ESD current limit; 2.7 k <= R <= 3.3 k, sim/electronics/calc).
     # Drawn on the wire between the module pin (net ELEx) and the terminal (net Ex).
-    R_FIELDS = {"Manufacturer": "Yageo", "MPN": "MFR-12FTF52-3K3"}
+    # T-060 / CR-002: pulse-rated part, 1.2/50 us rating 4.08 kV at 3k3 >= 3.64 kV across R at IEC 4 kV
+    # (sim/electronics/calc/calc_pulse_rated.py); DIN0414 body lying flat, 15.24 mm pitch (flashover gap).
+    R_FIELDS = {"Manufacturer": "Vishay Beyschlag", "MPN": "MBE04140C3301FC100"}
     TX, TY = 325.12, MY - 2.54                              # terminal pin 2 (E0) level with module pin 2 (E0)
     t = s.symbol("Connector", "Screw_Terminal_01x14", "J2", "Screw terminals 5.08 mm (7x 2-way)", TX, TY,
                  "FrutaMIDI:TerminalBlock_5.08_1x14", ref_at=(0, -20.32),
@@ -306,7 +308,7 @@ def build():
         mx, my, _ = s.pin_end(mod, MX, MY, str(2 + i))
         rx = 297.18
         r = s.symbol("Device", "R", "R%d" % (i + 1), "3k3", rx, my,
-                     "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=R_FIELDS, hide_ref=True,
+                     "FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch", fields=R_FIELDS, hide_ref=True,
                      rot=90)              # rows are 2.54 mm apart: designators are given by the column title
         r1x, r1y, _ = s.pin_end(r, rx, my, "1")
         r2x, r2y, _ = s.pin_end(r, rx, my, "2")
@@ -342,7 +344,7 @@ def build():
            "  STEMMA QT module (current):      JP1 bridge 'QT'   (3V3 -> S7)   wires SDA -> S3   SCL -> S4\n"
            "Module GND enters through the electrode row (pin 1), the same on both revisions.",
            215.90, 165.10)
-    s.text("R1-R12: 3.3k in series with each electrode (ESD current limit, T-050).", 215.90, 180.34)
+    s.text("R1-R12: 3.3k in series with each electrode (ESD current limit, T-050);\npulse-rated DIN0414, lying flat (flashover gap, T-060).", 215.90, 180.34)
 
     # ------------------------------------------------------------------ user controls and mounting holes
     s.frame("4. User controls and mounting holes", 30.48, 198.12, 124.46, 254.00)

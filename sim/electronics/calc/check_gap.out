@@ -1,0 +1,27 @@
+# check_gap.py  MEASUREMENT on the design file hardware/frutamidi.kicad_pcb (KiCad 10.0.4)
+# rule (calc_flashover.out): 4 kV 3.5 mm, 8 kV 7.5 mm; coordinates relative to the board corner
+  channel E0   ELE0  <-> E0  copper gap  13.04 mm
+  channel E1   ELE1  <-> E1  copper gap  13.04 mm
+  channel E2   ELE2  <-> E2  copper gap  13.04 mm
+  channel E3   ELE3  <-> E3  copper gap  13.04 mm
+  channel E4   ELE4  <-> E4  copper gap  13.04 mm
+  channel E5   ELE5  <-> E5  copper gap  13.04 mm
+  channel E6   ELE6  <-> E6  copper gap  13.04 mm
+  channel E7   ELE7  <-> E7  copper gap  13.04 mm
+  channel E8   ELE8  <-> E8  copper gap  13.04 mm
+  channel E9   ELE9  <-> E9  copper gap  13.04 mm
+  channel E10  ELE10 <-> E10 copper gap  13.04 mm
+  channel E11  ELE11 <-> E11 copper gap  13.04 mm
+
+(a) ELEx <-> Ex same channel                               min  13.04 mm   R12 pad 2 [/E11] <-> R12 pad 1 [/ELE11]
+(b) Ex <-> any MPR121/Pico net (other ELE, I2C, 3V3...)    min  10.92 mm   R1 pad 2 [/E0] <-> A1 pad 21 [unconnected-(A1-GPIO16-Pad21)]
+(c) Ex <-> Ey (reported)                                   min   2.08 mm   J2 pad 7 [/E5] <-> J2 pad 8 [/E6]
+(c) Ex <-> GND (reported)                                  min   1.40 mm   J2 pad 2 [/E0] <-> track (27.00,68.00)-(93.04,68.00) [GND]
+lead <-> lead of one resistor (geometry)                   min  14.44 mm   (pitch 15.24 mm - lead 0.8 mm, 12 resistors)
+
+PASS (a) gap 13.04 mm vs rule 3.5 mm (4 kV)
+PASS (a) gap 13.04 mm vs rule 7.5 mm (8 kV)
+PASS (b) gap 10.92 mm vs rule 3.5 mm (4 kV)
+PASS (b) gap 10.92 mm vs rule 7.5 mm (8 kV)
+PASS leads gap 14.44 mm vs rule 3.5 mm (4 kV); PASS vs 7.5 mm (8 kV)
+SUMMARY: PASS (4 kV rule met for (a), (b) and leads)
