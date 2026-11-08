@@ -1,0 +1,40 @@
+ÒGOLDEN MAXÓ
+KEMET Electronics Corporation, P.O. Box 5928, Greenville, S.C. 29606, \(864\
+8
+¨	0\012	01	00	0	0\0122*	0002*.276 \(7.00\	0102*2*	03	011.060\(1.52\MAX.*DIMENSIONS Ñ INCHES & MILLIMETERSCASELHTS\(1\D
+SIZEMAX.MAX.MAX.±.030+.004 - .001
+C315.150\(3.81\.210\(5.33\.100\(2.54\.100\(2.54\.020\(.51\
+C317.150\(3.81\.230\(5.84\.100\(2.54\.200\(5.08\.020\(.51\
+C320.200\(5.08\.260\(6.60\.125\(3.18\.100\(2.54\.020\(.51\
+C322.200\(5.08\.260\(6.60\.125\(3.18\.200\(5.08\.020\(.51\
+C323.200\(5.08\.320\(8.13\.125\(3.18\.200\(5.08\.020\(.51\
+C330.300\(7.62\.360\(9.14\.150\(3.81\.200\(5.08\.020\(.51\
+C333.300\(7.62\.390\(9.91\.150\(3.81\.200\(5.08\.020\(.51\
+C340.400\(10.16\.460\(11.68\.150\(3.81\.200\(5.08\.020\(.51\
+C350.500\(12.70\.560\(14.22\.200\(5.08\.400\(10.16\.025\(.64\NOTE:1 inch = 25.4 mm.NOTE:\(1\ed at seating plane.
+For packaging information, see pages 33 and 34.
+
+1
+C32\(2 \)C123\(3 \)5R5CA .015 µF
+C32\(2 \)C153\(3 \)5R5CA .018 µF
+C32\(2 \)C183\(3 \)5R5CA .022 µF
+C32\(2 \)C223\(3 \)5R5CA .027 µF
+C32\(2 \)C273\(3 \)5R5CA .033 µF
+C32\(2 \)C333\(3 \)5R5CA .039 µF
+C32\(2 \)C393\(3 \)5R5CA .047 µF
+C32\(2 \)C473\(3 \)5R5CA .056 µF
+C32\(2 \)C563\(3 \)5R5CA .068 µF
+C32\(2 \)C683\(3 \)5R5CA .082 µF
+C32\(2 \)C823\(3 \)5R5CA .1 µF
+C32\(2 \)C104\(3 \)5R5CA .12 µF
+C32\(2 \)C124\(3 \)5R5CA .15 µF
+C32\(2 \)C154\(3 \)5R5CA .18 µF
+C32\(2 \)C184\(3 \)5R5CA .22 µF
+C32\(2 \)C224\(3 \)5R5CA .27 µF
+C32\(2 \)C274\(3 \)5R5CA 50 
+\(1\Case Sizes C315/C317 are identical electrically, but differ in lead spacing. See table of dimensions. Insert the appropriat
+e
+symbol, Ò5Ó or Ò7Ó in the part number.
+\(2\Case Sizes C320/C322/C323 are identical electrically. See table of dimensions.
+Insert the appropriate symbol, Ò0Ó or Ò2Ó or Ò3Ó in the part number.
+\(3\Insert proper symbol for capacitance tolerance as follows:

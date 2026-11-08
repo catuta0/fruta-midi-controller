@@ -1,0 +1,179 @@
+(footprint "C_Radial_KEMET_C322_P5.08mm_HomeEtch"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "KEMET Golden Max C322 radial MLCC, 5.08 x 3.18 mm body, 5.08 mm lead spacing, home-etch pads")
+	(property "Reference" ""
+		(at 0 0 0)
+		(layer "F.SilkS")
+		(uuid "bf69c79f-b09a-4ed2-b5a8-68871df44208")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "11715326-0b4c-4502-a8c4-bd4a11de5752")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "29fae511-bf50-4e7a-ae70-13654a07e516")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "c067eb42-3939-46e8-85dc-73b2ae6e4cc8")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr through_hole)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start 1.2 -1.75)
+		(end 3.88 -1.75)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "7b823149-3ead-4dc0-9d47-3ba139f0e1e7")
+	)
+	(fp_line
+		(start 1.2 1.75)
+		(end 3.88 1.75)
+		(stroke
+			(width 0.12)
+			(type default)
+		)
+		(layer "F.SilkS")
+		(uuid "71dd865a-7b6a-477a-acc2-7ec1fa43377c")
+	)
+	(fp_line
+		(start -1.25 -1.85)
+		(end 6.33 -1.85)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "cacd0528-902d-4fb6-b6c0-29bf15d1d028")
+	)
+	(fp_line
+		(start -1.25 1.85)
+		(end -1.25 -1.85)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "ad53816c-13b2-49ef-97bd-65c1132d8fda")
+	)
+	(fp_line
+		(start 6.33 -1.85)
+		(end 6.33 1.85)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "e5d82e5c-0ec9-4b72-b1d6-b892928d53b1")
+	)
+	(fp_line
+		(start 6.33 1.85)
+		(end -1.25 1.85)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "769b6578-ebbc-4558-89e5-218705622810")
+	)
+	(fp_line
+		(start 0 -1.59)
+		(end 5.08 -1.59)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "c9e5fb09-5aa0-4326-b807-cb1d4e311cd0")
+	)
+	(fp_line
+		(start 0 1.59)
+		(end 0 -1.59)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "4362d59c-30b9-45e3-bbdb-e729222ac57d")
+	)
+	(fp_line
+		(start 5.08 -1.59)
+		(end 5.08 1.59)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "a19f8324-533d-4836-a287-305df9abbe47")
+	)
+	(fp_line
+		(start 5.08 1.59)
+		(end 0 1.59)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "0c0421c9-7bea-47b7-b813-11050da97174")
+	)
+	(pad "1" thru_hole circle
+		(at 0 0)
+		(size 2 2)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "153a091e-e0e6-4d24-835f-0c3dcede6b17")
+	)
+	(pad "2" thru_hole circle
+		(at 5.08 0)
+		(size 2 2)
+		(drill 0.9)
+		(layers "*.Cu" "*.Mask")
+		(remove_unused_layers no)
+		(uuid "29c350a1-24d7-4d78-8dc8-8f93f40bf408")
+	)
+	(embedded_fonts no)
+	(model "${KICAD10_3DMODEL_DIR}/Capacitor_THT.3dshapes/C_Disc_D5.0mm_W2.5mm_P5.00mm.step"
+		(offset
+			(xyz 0 0 0)
+		)
+		(scale
+			(xyz 1.016 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

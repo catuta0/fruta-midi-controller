@@ -1,0 +1,7 @@
+0414 (2 pt)    U(3k3) =  4086 V  low-R slope dlogU/dlogR = 0.496  knee R =  5069 ohm  plateau U =  5056 V
+0207 (1 pt)    U(3k3) =  1740 V  low-R slope dlogU/dlogR = 0.493  knee R = 10085 ohm  plateau U =  3017 V
+0204 (0.5 pt)  U(3k3) =  1469 V  low-R slope dlogU/dlogR = 0.539  knee R =  5998 ohm  plateau U =  2027 V
+1.2/50 us energy at 4083 V into 3k3: 185 mJ (script value: 364 mJ)
+lead-centre distance from body end at 15.24 mm pitch, L = 11.9 mm: 1.67 mm
+bend start 1.5 mm, inner radius 0.0 mm -> required pitch 15.70 mm
+bend start 1.5 mm, inner radius 0.8 mm -> required pitch 17.30 mm

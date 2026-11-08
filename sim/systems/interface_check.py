@@ -150,12 +150,31 @@ check("pcb.A1.gnd_pins", all(fps["A1"].get(str(n)) == {"GND"} for n in gnd_pads)
 used = {str(GP_TO_PHYS["GP%d" % fw["pcb"][c]]) for c in pcb_expect} | {"36", "33"} | {str(n) for n in gnd_pads}
 others = {p: n for p, n in fps["A1"].items() if p not in used and n != {None} and not any(x and x.startswith("unconnected") for x in n)}
 check("pcb.A1.no_other_nets", not others, "other connected pads: %s" % others)
-check("pcb.A1.AGND_isolated", "AGND" not in set().union(*[n for r, f in fps.items() for p, n in f.items() if r != "A1" and r != "RV1"]),
-      "AGND net only on A1 pin 33 and RV1 (relies on the Pico-internal AGND-GND link: S-02 'also a GND pin'; S-01 sec. 2.1 'separate analog ground plane ... terminating at this pin')")
+# AGND membership rule (T-077, ADR-021): AGND joins exactly A1 pin 33, RV1 pin 3, both RV1 mounting tabs (MP) and
+# C1 pin 2 (wiper filter to AGND); nothing else. It relies on the Pico-internal AGND-GND link (S-02 'also a GND pin';
+# S-01 sec. 2.1 'separate analog ground plane ... terminating at this pin'), so no other AGND-GND join may exist.
+AGND_ALLOWED = {("A1", "33"), ("RV1", "3"), ("RV1", "MP"), ("C1", "2")}
+agnd_members = sorted({(r, p) for r, f in fps.items() for p, n in f.items() if "AGND" in n})
+check("pcb.AGND_membership", set(agnd_members) == AGND_ALLOWED,
+      "AGND pads %s (allowed exactly %s)" % (agnd_members, sorted(AGND_ALLOWED)))
+mixed = sorted((r, p, sorted(x for x in n if x)) for r, f in fps.items() for p, n in f.items() if "AGND" in n and len(n) > 1)
+check("pcb.AGND_no_shared_pad", not mixed, "AGND pads carrying a second net: %s" % mixed)
+agnd_parts = {r for r, _ in agnd_members}
+gnd_on_agnd_parts = sorted(r for r in agnd_parts - {"A1"} if any("GND" in n for n in fps[r].values()))
+check("pcb.AGND_parts_not_on_GND", not gnd_on_agnd_parts,
+      "parts with an AGND pad that also have a GND pad (would be a second AGND-GND link): %s" % gnd_on_agnd_parts)
 
 # Controls: RV1 (octave pot) and SW1 (button)
 check("pcb.RV1", [fps["RV1"].get(n) for n in "123"] == [{"+3V3"}, {"POT"}, {"AGND"}],
       "RV1 1/2/3 = %s" % [fps["RV1"].get(n) for n in "123"])
+check("pcb.RV1_MP", fps["RV1"].get("MP") == {"AGND"}, "RV1 mounting tabs MP = %s (ADR-021: AGND)" % fps["RV1"].get("MP"))
+c1 = fps.get("C1", {})
+check("pcb.C1_wiper_filter", [c1.get(n) for n in "12"] == [{"POT"}, {"AGND"}] and len(c1) == 2
+      and VALUES.get("C1", "").startswith("100n"),
+      "C1 1/2 = %s, value %r (ADR-021: 100 nF POT to AGND, KEMET C322C104K5R5TA)" % ([c1.get(n) for n in "12"], VALUES.get("C1")))
+pot_members = sorted((r, p) for r, f in fps.items() for p, n in f.items() if "POT" in n)
+check("pcb.POT_membership", set(pot_members) == {("A1", str(GP_TO_PHYS["GP%d" % fw["pcb"]["PIN_POT"]])), ("RV1", "2"), ("C1", "1")},
+      "POT pads %s" % pot_members)
 sw = set().union(*fps["SW1"].values())
 check("pcb.SW1", sw == {"BTN", "GND"}, "SW1 nets %s (active low, firmware INPUT_PULLUP)" % sorted(sw))
 check("fw.button_pullup", "pinMode(PIN_BUTTON, INPUT_PULLUP)" in ino and "digitalRead(PIN_BUTTON) == LOW" in ino,
@@ -249,9 +268,25 @@ if any(VALUES.get(r) == "220" for r in fps):
         check("doc.hw_readme.R15_R16", "R15" in txt and "R16" in txt and "220" in txt,
               "%s lists R15/R16 220 Ohm I2C series resistors" % name)
 
-# Board revision label (ADR-008: "FrutaMIDI v1.1")
+# Board revision label (ADR-008 set "FrutaMIDI v1.1"; ADR-019 D-2 (CR-002) supersedes it with "FrutaMIDI v1.2")
+BOARD_LABEL = "FrutaMIDI v1.2"
 labels_pcb = set(re.findall(r'\(gr_text "(FrutaMIDI v[^"]*)"', pcb))
-check("pcb.label_v1.1", labels_pcb == {"FrutaMIDI v1.1"}, "board label texts %s (ADR-008 expects 'FrutaMIDI v1.1')" % sorted(labels_pcb))
+check("pcb.label_v1.2", labels_pcb == {BOARD_LABEL}, "board label texts %s (ADR-019 D-2 expects '%s')" % (sorted(labels_pcb), BOARD_LABEL))
+
+# Electrode series resistors R1..R12 (CR-002 / ADR-019 D-1): pulse-rated DIN0414 lying flat, 15.24 mm pitch
+R_EL_FP = "FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch"
+R_EL_MPN = "MBE04140C3301FC100"
+fp_info = {}
+for blk in re.split(r"\n\t\(footprint ", pcb)[1:]:
+    ref = re.search(r'\(property "Reference" "([^"]+)"', blk)
+    mpn = re.search(r'\(property "MPN" "([^"]*)"', blk)
+    fp_info[ref.group(1) if ref else None] = (blk.split('"')[1], mpn.group(1) if mpn else None)
+r_el = ["R%d" % i for i in range(1, 13)]
+bad_fp = {r: fp_info.get(r, (None,))[0] for r in r_el if fp_info.get(r, (None,))[0] != R_EL_FP}
+check("pcb.R1_R12_footprint", not bad_fp, "R1..R12 footprint %s (mismatches: %s)" % (R_EL_FP, bad_fp))
+bad_mpn = {r: fp_info.get(r, (None, None))[1] for r in r_el if fp_info.get(r, (None, None))[1] != R_EL_MPN}
+check("pcb.R1_R12_MPN", R_EL_MPN in sch_py and not bad_mpn,
+      "R1..R12 MPN Vishay %s in gen_schematic.py and on the PCB (mismatches: %s)" % (R_EL_MPN, bad_mpn))
 
 # Documentation vs the current PCB topology (T-010)
 if "JP1" in fps:

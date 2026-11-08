@@ -1,8 +1,9 @@
 {
-  "revision": "frozen-3 (documentation-only CR from review N-003, ADR-018)",
+  "revision": "frozen-7 (CR-002 final re-review follow-up, FrutaMIDI v1.2, T-080/T-081; proposed by systems-engineer, freeze by the manager)",
   "frozen": true,
   "owner": "systems-engineer",
-  "status_note": "PROPOSED by systems-engineer (T-011, 2026-11-03), input 5f59c9e plus working tree. Not frozen; the manager freezes. Changes from draft-2: Pico I2C pads go through R15/R16 220 Ohm (nets SDA_PICO/SCL_PICO, ADR-012); JP1 silkscreen legend; board label v1.1 present; run-based aftertouch burst plan (fm_mpr121.h); AUTOCONFIG limits and SCTS now SOURCE (ADR-010/011); breadboard 4k7 pull-ups (ADR-009). Evidence: sim/systems/interface_check.out (78 checks, 78 PASS, 0 FAIL).",
+  "changelog_frozen_7": "frozen-7 prepared by systems-engineer (T-081, 2026-11-08) on the T-079 final re-review dispositions. Changes from frozen-6 (documentation of the mechanical record only; pinout, nets, terminal map, I2C, USB MIDI and firmware build flags unchanged): C1 drill 0.8 -> 0.9 mm (ring 0.60 -> 0.55 mm, electronics T-080, F2-001); J2 Ex <-> GND edge-track spark gap 1.40 +/- 0.05 mm is now enforced by sim/systems/pcb_rules_check.py (F2-006); RV1 knob/shaft ESD path noted (risk R-011, F2-002).",
+  "status_note": "frozen-6 prepared by systems-engineer (T-077, 2026-11-07) on manager assignment under ADR-021, input a216c1b (freeze by the manager per T-077 assignment). Changes from frozen-5: C1 100 nF X7R 50 V (KEMET C322C104K5R5TA, 5.08 mm leads) from the pot wiper (POT) to AGND; RV1 mounting tabs (MP) on AGND; AGND membership is now exactly A1 pin 33, RV1 pin 3, RV1 MP and C1 pin 2; JP1 footprint SolderJumper_3_THT_P3.81mm (pitch 3.81 mm, pad gap 1.87 mm); J2 pads 3.0 x 4.5 mm oval (pad 1 rect), drill 1.4 mm offset 0.75 mm towards the block back. Pinout, terminal map, I2C, USB MIDI and build flags are unchanged. Evidence on a216c1b: sim/systems/interface_check.out 'SUMMARY: 85 checks, 85 PASS, 0 FAIL' (pcb.AGND_membership, pcb.AGND_no_shared_pad, pcb.AGND_parts_not_on_GND, pcb.RV1_MP, pcb.C1_wiper_filter, pcb.POT_membership PASS); sim/systems/pcb_rules_check.out 'SUMMARY: 19 checks, 19 PASS, 0 FAIL' (ADR-021 JP1 pad gap >= 1.8 mm PASS at 1.87 mm; ADR-021 J2 pads 3.0 x 4.5 mm PASS); sim/systems/budgets.out 'SUMMARY: 30 checks, 25 PASS, 5 FAIL' (A7 C1 settling PASS; the 5 FAILs are the pre-existing A3b, three 100 kHz latency rows and the BOM cost). These are design-file checks, not hardware validation.",
   "sources": "requirements/SOURCES_SYSTEMS.md",
   "interfaces": [
     {
@@ -407,7 +408,8 @@
           "net": "POT",
           "gp": 28,
           "adc": 2,
-          "pin": 34
+          "pin": 34,
+          "loads": "RV1 pin 2 and C1 pin 1 (100 nF to AGND, ADR-021)"
         },
         {
           "signal": "3V3(OUT)",
@@ -419,7 +421,8 @@
           "signal": "AGND",
           "net": "AGND",
           "pin": 33,
-          "loads": "RV1 pin 3 only; tied to GND inside the Pico (S-02 'also a GND pin')"
+          "loads": "RV1 pin 3, RV1 mounting tabs (MP) and C1 pin 2 only (ADR-021; interface_check pcb.AGND_membership); tied to GND inside the Pico (S-02 'also a GND pin'), no other AGND-GND link on the board",
+          "esd_note": "The RV1 frame (and a metal shaft, if fitted) is on AGND, so a knob/shaft discharge enters AGND / Pico pin 33 without a series resistor; plastic knob on an insulated shaft specified; knob/shaft strike in the REQ-023 test (risk R-011, T-081)"
         },
         {
           "signal": "GND",
@@ -470,7 +473,8 @@
           "module_net": "ELE0",
           "mpr121": "ELE0",
           "module_row_pin": 2,
-          "firmware_pad": 0
+          "firmware_pad": 0,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 3,
@@ -480,7 +484,8 @@
           "module_net": "ELE1",
           "mpr121": "ELE1",
           "module_row_pin": 3,
-          "firmware_pad": 1
+          "firmware_pad": 1,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 4,
@@ -490,7 +495,8 @@
           "module_net": "ELE2",
           "mpr121": "ELE2",
           "module_row_pin": 4,
-          "firmware_pad": 2
+          "firmware_pad": 2,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 5,
@@ -500,7 +506,8 @@
           "module_net": "ELE3",
           "mpr121": "ELE3",
           "module_row_pin": 5,
-          "firmware_pad": 3
+          "firmware_pad": 3,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 6,
@@ -510,7 +517,8 @@
           "module_net": "ELE4",
           "mpr121": "ELE4",
           "module_row_pin": 6,
-          "firmware_pad": 4
+          "firmware_pad": 4,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 7,
@@ -520,7 +528,8 @@
           "module_net": "ELE5",
           "mpr121": "ELE5",
           "module_row_pin": 7,
-          "firmware_pad": 5
+          "firmware_pad": 5,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 8,
@@ -530,7 +539,8 @@
           "module_net": "ELE6",
           "mpr121": "ELE6",
           "module_row_pin": 8,
-          "firmware_pad": 6
+          "firmware_pad": 6,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 9,
@@ -540,7 +550,8 @@
           "module_net": "ELE7",
           "mpr121": "ELE7",
           "module_row_pin": 9,
-          "firmware_pad": 7
+          "firmware_pad": 7,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 10,
@@ -550,7 +561,8 @@
           "module_net": "ELE8",
           "mpr121": "ELE8",
           "module_row_pin": 10,
-          "firmware_pad": 8
+          "firmware_pad": 8,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 11,
@@ -560,7 +572,8 @@
           "module_net": "ELE9",
           "mpr121": "ELE9",
           "module_row_pin": 11,
-          "firmware_pad": 9
+          "firmware_pad": 9,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 12,
@@ -570,7 +583,8 @@
           "module_net": "ELE10",
           "mpr121": "ELE10",
           "module_row_pin": 12,
-          "firmware_pad": 10
+          "firmware_pad": 10,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 13,
@@ -580,7 +594,8 @@
           "module_net": "ELE11",
           "mpr121": "ELE11",
           "module_row_pin": 13,
-          "firmware_pad": 11
+          "firmware_pad": 11,
+          "series_resistor_part": "Vishay MBE04140C3301FC100 (3k3 1 %, DIN0414)"
         },
         {
           "terminal": 14,
@@ -589,7 +604,7 @@
           "mpr121": null
         }
       ],
-      "protection": "3.3 kOhm series resistor per electrode (ADR-008): PASS at +-4 kV by analysis, PARTIAL at 8 kV (risk R-006)"
+      "protection": "3.3 kOhm series resistor per electrode (ADR-008), pulse-rated Vishay MBE04140C3301FC100, 4.08 kV 1.2/50 us at 3k3 (SOURCE EE-S17b), margin 1.12 at 4 kV (CALCULATION); gap ELEx-Ex 13.04 mm, Ex-other net 10.92 mm vs 3.5 mm rule (MEASUREMENT on the design file, sim/electronics/calc/check_gap.out). Analysis PASS at +-4 kV, test NOT RUN (REQ-023 PARTIAL); 8 kV: resistor rating FAIL (4.08 < 7.27 kV), risk R-006 (ADR-019 D-1)."
     },
     {
       "id": "IF-MPR121-MODULE",
@@ -670,7 +685,8 @@
         "pins": {
           "1": "+3V3",
           "2": "POT (ADC)",
-          "3": "AGND"
+          "3": "AGND",
+          "MP": "AGND (mounting tabs, ADR-021)"
         },
         "adc_bits": 10,
         "read_ms": 30,
@@ -680,7 +696,16 @@
         "dead_band_zone": 0.2,
         "dead_band_V": 0.132,
         "error_budget_V": 0.0364,
-        "error_budget_label": "CALCULATION (reports/systems/budgets.md)"
+        "error_budget_label": "CALCULATION (reports/systems/budgets.md)",
+        "filter": {
+          "part": "C1 100 nF X7R, KEMET C322C104K5R5TA, POT to AGND",
+          "tau_ms_nominal": 0.25,
+          "tau_ms_worst": 0.38,
+          "settle_half_lsb10_ms_worst": 2.89,
+          "read_ms": 30,
+          "margin_worst": 10.4,
+          "label": "CALCULATION (R_th = R/4 at mid travel, 10 kOhm +20 % ASSUMPTION; C 100 nF +10 % tol, +15 % X7R temp, SOURCE EE-S29; sim/systems/budgets.out A7 and sim/electronics/calc/calc_pot_rc.out)"
+        }
       }
     },
     {
@@ -741,11 +766,19 @@
         },
         "note": "S1..S7 wire holes, each joined to A2 pads 14\u201320 (module power/I2C row); excluded from BOM"
       },
-      "sockets": "Female headers for A1 (2\u00d7 1\u00d720) and A2 (1\u00d713 + 1\u00d77) are recorded in the Socket field of A1/A2 and the BOM Socket column; the former BOM-only symbols J4\u2013J7 were removed (2026-11-05)"
+      "sockets": "Female headers for A1 (2\u00d7 1\u00d720) and A2 (1\u00d713 + 1\u00d77) are recorded in the Socket field of A1/A2 and the BOM Socket column; the former BOM-only symbols J4\u2013J7 were removed (2026-11-05)",
+      "C1": {
+        "footprint": "FrutaMIDI:C_Radial_KEMET_C322_P5.08mm_HomeEtch",
+        "pads": {
+          "1": "POT",
+          "2": "AGND"
+        },
+        "note": "wiper filter, ADR-021"
+      }
     }
   ],
   "board": {
-    "revision_label": "FrutaMIDI v1.1 (present on PCB)",
+    "revision_label": "FrutaMIDI v1.2 (ADR-019 D-2; present on the PCB at c901ad8, interface_check pcb.label_v1.2 PASS)",
     "outline_mm": [
       100,
       70
@@ -753,11 +786,88 @@
     "copper": "B.Cu only",
     "fabrication_folder": "hardware/fabrication",
     "resistors": {
-      "R1..R12": "3k3 electrode series",
-      "R13/R14": "4k7 I2C pull-ups (SCL/SDA)",
-      "R15/R16": "220 Ohm I2C series (SCL/SDA)"
+      "R1..R12": "3k3 electrode series, Vishay MBE04140C3301FC100 (1 %, DIN0414), footprint FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch (lying flat, 15.24 mm pitch, pad 2.2 mm, drill 1.1 mm, ring 0.55 mm, C2-008)",
+      "R13/R14": "4k7 I2C pull-ups (SCL/SDA), Yageo MFR-12, FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch",
+      "R15/R16": "220 Ohm I2C series (SCL/SDA), Yageo MFR-12, FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch"
+    },
+    "placement_mm": {
+      "frame": "board coordinates, origin at the top-left outline corner (KiCad page coordinates minus (50, 50)); footprint anchor (at) as in hardware/frutamidi.kicad_pcb @ a216c1b",
+      "A1": [
+        4.5,
+        2.0
+      ],
+      "A2": [
+        60.02,
+        17.645
+      ],
+      "A2_note": "moved 15.1 mm up and 2.54 mm right from (57.48, 32.745) (ADR-019 D-4)",
+      "J1": [
+        85.0,
+        12.5
+      ],
+      "JP1": {
+        "at": [
+          79.5,
+          15.74
+        ],
+        "rotation_deg": 90,
+        "note": "upright: QT top, ORIG bottom (ADR-019 D-4)"
+      },
+      "R13": [
+        85.0,
+        5.5
+      ],
+      "R14": [
+        88.81,
+        5.5
+      ],
+      "R15": [
+        85.0,
+        18.5
+      ],
+      "R16": [
+        27.0,
+        24.86
+      ],
+      "R1..R12": "one row, R1 at (33.35, 42.15) to R12 at (89.23, 42.15), rotation -90 deg, 5.08 mm pitch",
+      "J2": [
+        27.0,
+        64.5
+      ],
+      "H1": [
+        8.0,
+        64.0
+      ],
+      "H2": [
+        95.0,
+        5.0
+      ],
+      "H3": [
+        96.0,
+        38.0
+      ],
+      "H3_note": "moved from (95, 48) (C2-009, ADR-020): a metal screw at the old position bypassed R12 (1.94 mm); new worst bypass 15.36 mm (sim/electronics/calc/check_gap.out (e)); nylon hardware recommended",
+      "H4": [
+        88.5,
+        30.5
+      ],
+      "H4_note": "moved from (70, 6) (ADR-019 D-4)",
+      "label": "MEASUREMENT: read from the design file by the systems-engineer (T-070, H3 and frame updated in T-074 at c901ad8, C1 added in T-077 at a216c1b); not a frozen mechanical interface, recorded for traceability",
+      "C1": [
+        31.2,
+        5.3
+      ]
+    },
+    "capacitors": {
+      "C1": "100 nF X7R 50 V +-10 %, KEMET C322C104K5R5TA (radial, 5.08 mm leads; not C320, which has 2.54 mm leads, SOURCE EE-S29), footprint FrutaMIDI:C_Radial_KEMET_C322_P5.08mm_HomeEtch (pad 2.0 mm, drill 0.9 mm, ring 0.55 mm, frozen-7 / T-080); pin 1 POT, pin 2 AGND (ADR-021)"
+    },
+    "jumpers": {
+      "JP1": "FrutaMIDI:SolderJumper_3_THT_P3.81mm: 3 pads 1.94 x 2.4 mm, pitch 3.81 mm, copper gap 1.87 mm between adjacent pads (pcb_rules_check, rule >= 1.8 mm, ADR-021), drill 0.8 mm, ring 0.57 mm"
+    },
+    "terminal_pads": {
+      "J2": "FrutaMIDI:TerminalBlock_5.08_1x14: 14 pads 3.0 x 4.5 mm (pad 1 rect, 2..14 oval), drill 1.4 mm offset 0.75 mm towards the block back, ring 0.80 mm; Ex to GND edge track 1.40 mm kept (MEASUREMENT, electronics T-076); intentional spark gap (ADR-020, C2-005), rule 1.40 +/- 0.05 mm enforced by pcb_rules_check `ADR-020 Ex <-> GND edge-track spark gap` (T-081, F2-006)"
     }
   },
   "frozen_by": "manager",
-  "frozen_on": "2026-11-04"
+  "frozen_on": "2026-11-08 (frozen-7, manager freeze, ADR-022)"
 }

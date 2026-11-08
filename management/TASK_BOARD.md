@@ -16,3 +16,10 @@
 | T-030 | Translate README + hardware/README to English | documentation-engineer | PASS (interim) | handoffs/documentation-engineer/T-030.md |
 | T-040 | Firmware logic extraction + host unit tests + build matrix | firmware-engineer | IN PROGRESS | reports/firmware/ |
 | T-050 | Electrical analysis, datasheet checks, electrode-protection variants | electronics-engineer | IN PROGRESS | reports/electronics/ |
+| T-060…T-078 | CR-002 design, checks, documents, re-review T-071, manager PCB review fixes | electronics/systems/documentation/reviewer | DONE | management/handoffs/, changes/CR-002.md |
+| T-079 | CR-002 final independent re-review | independent-reviewer | DONE (release-ready) | reports/review/CR-002-final/findings.md |
+| T-080 | F2-001/004/005/007 fixes (C1 drill 0.9 mm, wording, knob limit) | electronics-engineer | PASS | handoffs/electronics-engineer-T-080.md |
+| T-081 | F2-002/003/006 (R-011, REQ-032 text, spark-gap check), frozen-7 | systems-engineer | PASS | handoffs/systems-engineer-T-081.md |
+| T-082 | Report v1.2 final, manual, README | documentation-engineer | PASS | handoffs/documentation-engineer-T-082.md |
+| T-083 | releases/V1.2, merge, tag v1.2.0 | manager | DONE | releases/V1.2/ |
+| T-084 | GitHub release v1.2.0 | manager | WAITING user approval | — |

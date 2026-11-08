@@ -43,7 +43,7 @@
 - D-8 language: English (ADR-005).
 - Tooling: pypdf may be installed into .venv to read datasheets.
 
-## ADR-008 — Electrode protection, I2C speed, board revision (from T-050/T-052)
+## ADR-008 — Electrode protection, I2C speed, board revision (from T-050/T-052) (label superseded by ADR-019 D-2: "FrutaMIDI v1.2")
 - Status: accepted (manager, ADR-001). Evidence: reports/electronics/analysis.md.
 - Electrode protection: variant b (3.3 kΩ series per electrode). PASS vs the ±4 kV target (REQ-023), PARTIAL at 8 kV accepted as a documented risk (R-006); clamps rejected (SMD breaks THT-only; diode variant needs 12 jumpers).
 - I2C: keep 400 kHz; rise-time FAIL fixed at the root cause by 4.7 kΩ pull-ups R13/R14 (D-5 closed).
@@ -101,3 +101,26 @@
 - Manager edited REQUIREMENTS.md, requirements.csv and INTERFACES.json under locks for these items.
 
 - N-004 (2026-11-05, user request): the BOM-only socket symbols J4–J7 (unconnected headers drawn only to appear in the BOM) are removed. Sockets are a "Socket" field of A1/A2, exported as a BOM column. Netlist otherwise unchanged; PCB copper identical (91 tracks, 131 pads compared). Schematic relaid out on A3 in framed blocks (commit 21a4919).
+
+## ADR-019 — CR-002 decisions (T-060 open items), 2026-11-07
+- D-1 ESD scope stays ±4 kV (REQ-023 as written). Vishay MBE04140C3301FC100 (DIN0414, 3k3 1 %) is selected: 4.08 kV rating at 3k3 from the datasheet chart, margin 1.12 at 4 kV (CALCULATION). 8 kV remains risk R-006; the LSR37 alternative (12 kV rated, same footprint) is rejected for now because its ±10 % tolerance and up to ±20 % drift after strikes bring touch sensitivity to the 0.90 limit. Recorded as a later option.
+- D-2 Board label becomes "FrutaMIDI v1.2": the layout changed beyond the resistor row. Systems updates ADR-008 / interface_check; the generator text is changed after that.
+- D-3 Cost: the +3.4…+7.3 € for R1–R12 is accepted for safety (ESD protection that cannot be bypassed outweighs the 30 € target); systems re-runs budgets.py and records the cost requirement status honestly (it may move from FAIL by 0.40 € to a larger FAIL).
+- D-4 Layout escalation accepted: A2 15.1 mm up / 2.54 mm right; J1, JP1 (upright, QT top / ORIG bottom), R13–R15 right of the module; H4 to (88.5, 30.5). Nets and pinout unchanged; no firmware change.
+
+## ADR-020 — CR-002 re-review dispositions, 2026-11-07
+- See reports/review/CR-002/findings.md "Dispositions". Key choices: end-cap gap risk (C2-002) controlled by forming leads on a gauge (±0.25 mm) and a caliper check in the physical plan, not by relayout; the E-pad ↔ GND edge track stays as an intentional spark gap (C2-005); H3 moved to (96, 38).
+
+## ADR-021 — Manager PCB design review follow-up (T-076), 2026-11-07
+- Fixed: JP1 pitch 3.81 mm (pad gap 0.60 → 1.87 mm) against an accidental three-pad solder bridge; J2 pads 3.0 × 4.5 mm oval extended towards the block back (copper 7.1 → 11.6 mm² per pad, spark gap to the GND edge track kept at 1.40 mm); RV1 mounting tabs on AGND; C1 100 nF (KEMET C322C104K5R5TA) wiper to AGND, τ ≤ 0.38 ms vs 30 ms read interval (CALCULATION); silkscreen overlaps removed.
+- Rejected: C2 1 µF at the module. No single-layer route without passing 3V3 close to H2 hardware and running GND 1.1 mm from all electrode pins; both module versions have their own regulator and capacitors. Recorded as not needed.
+- D-ADR-021 addendum: C1 cost (+0.20–0.90 EUR) accepted (REQ-032 stays FAIL, upper bound 38.62 EUR); INTERFACES frozen-6 frozen by manager.
+
+## ADR-022 — Final re-review (T-079) dispositions, 2026-11-08
+- F2-001 fixed: C1 drill 0.8 → 0.9 mm (fit 0.29 mm at max lead 0.61 mm, ring 0.55 mm; CALCULATION, T-080).
+- F2-002 accepted risk R-011 (OPEN, owner electronics): RV1 frame stays on AGND; plastic knob ≤ 15 mm on an insulated shaft specified; knob/shaft strike added to the REQ-023 physical test (step 2b). Fallbacks (tabs unconnected or on GND) only if that test fails.
+- F2-003 fixed: REQ-032 evidence cites ADR-019 D-3 and the ADR-021 addendum; status FAIL against 30 EUR.
+- F2-004, F2-005, F2-007 fixed in hardware/README.md and reports/electronics/analysis.md (T-080).
+- F2-006 fixed: pcb_rules_check enforces the Ex ↔ GND spark gap 1.40 ± 0.05 mm (12/12 at 1.400 mm, MEASUREMENT on design file; mutation tests fail at 0.650 and −0.100 mm).
+- INTERFACES frozen-7 frozen by manager (documentation-only change: C1 drill/ring, spark-gap rule note, AGND ESD note).
+- No further independent re-review: changes are a drill size, wording and a new check, all reproduced by the manager (ERC 0, DRC 0/0/0, checks 85/85, 20/20, budgets 25/5).

@@ -67,3 +67,204 @@ handler; 8 of 9 firmware targets; MPR121 power-on-reset timing. Re-review: compi
 runs (logs only); copper PDFs and silkscreen visually; this report's LaTeX; the
 individual test cases of \texttt{test\_notes\_health.py}. Neither review is a
 hardware test.
+
+\subsection{CR-002 independent re-review}
+\label{sec:cr002-review}
+An independent reviewer re-reviewed the CR-002 outputs at \texttt{8394b41} on branch
+\texttt{change/CR-002} (task T-071): R1--R12 part and footprint, relayout, gap
+check, pulse-rating calculation, budgets revision~6, REQUIREMENTS draft-6,
+INTERFACES frozen-4 and the documentation. The harness refused the reviewer's write
+of the findings file; the manager recorded the findings from the reviewer's
+hand-back report without changing their substance
+\ev{reports/review/CR-002/findings.md}. The electronics fixes were made in T-073
+(committed in c901ad8) \ev{management/handoffs/electronics-engineer/T-073.md};
+dispositions are recorded in ADR-020 \ev{management/DECISIONS.md}.
+
+\paragraph{Summary.}
+\begin{itemize}[noitemsep]
+  \item 13 findings: 0 critical, 0 major, 6 minor, 7 info.
+  \item Dispositions: 8 fixed (C2-006 by systems in T-074, committed in 2ba289a),
+        1 partly fixed with a residual accepted risk (C2-002), 1 accepted risk
+        (C2-005), 2 accepted (C2-012 with a test added, C2-013), 1 no action
+        (C2-004).
+  \item Reviewer re-checks at 8394b41, all PASS (recorded in the findings file;
+        raw outputs in \nolinkurl{reports/review/CR-002/}): ERC 0; DRC 0,
+        unconnected 0, parity 0; \nolinkurl{check_gap.py} PASS (copper only);
+        \nolinkurl{calc_flashover} and \nolinkurl{calc_pulse_rated} outputs
+        byte-identical; interface check 80/80 (committed output stale, 79/80);
+        \nolinkurl{pcb_rules_check} 16/16; budgets byte-identical
+        (23.78--37.72\,EUR); independent chart readings at 3.3\,k$\Omega$ 4086 /
+        1740 / 1469\,V for 0414 / 0207 / 0204; drill count 131 equal to the
+        assembly guide; configuration wires 21.1--32.1\,mm (\lbl{MEASUREMENT},
+        design file).
+  \item Reviewer's requirement cross-check: REQ-023 PARTIAL (agreed); REQ-027
+        PASS; REQ-028/029 PASS with stale evidence text (C2-006); REQ-032 FAIL;
+        REQ-036 should be PARTIAL until C2-001 and C2-007 are fixed (both fixed
+        in T-073).
+\end{itemize}
+
+\paragraph{Highlights.} The closest metal of a flat resistor is its end caps, not
+the copper (C2-002): the 8\,kV gap claims now apply to copper only, and the 4\,kV
+end-cap result is PARTIAL on an assumed cap length (Section~\ref{sec:esd}). The
+pulse energy had been overstated about twice (C2-003): 182\,mJ, not 364\,mJ, with
+the verdicts unchanged. A metal screw at the old H3 position could bypass R12
+(1.94\,mm bypass sum, FAIL); H3 moved to (96, 38)\,mm (15.36\,mm, PASS)
+(\lbl{CALCULATION}, \nolinkurl{check_gap.out}).
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.06\linewidth}>{\raggedright\arraybackslash}p{0.45\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}@{}}
+\caption{CR-002 re-review findings and dispositions (ADR-020).}\label{tab:review-cr002}\\
+\toprule
+ID & Sev. & Finding (one line) & Disposition \\
+\midrule
+\endfirsthead
+\toprule
+ID & Sev. & Finding (one line) & Disposition \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+C2-001 & minor & Assembly guide asked for a lead bend $\ge$1.5\,mm from the body; at 15.24\,mm pitch the lead centre is 1.67\,mm from the body end (\lbl{CALCULATION}). & Fixed: reworded (Vishay $M_\mathrm{min}$ 15.0\,mm $\le$ 15.24\,mm pitch; hold the lead next to the body, test-fit one part). \\
+C2-002 & minor & Closest metal of a flat resistor is cap to cap, not the 13\,mm copper gap; \nolinkurl{check_gap.py} measures copper only; 8\,kV gap claims overreach. & Partly fixed, residual accepted risk: cap-to-cap check added; 4\,kV PASS for placement error $\le\pm$0.25\,mm (worst 3.61\,mm), FAIL corner 3.13\,mm at $\pm$0.5\,mm; 8\,kV caps FAIL; leads formed on a gauge, caliper check in the plan; 8\,kV statements limited to copper. \\
+C2-003 & minor & Pulse energy overstated about 2$\times$ ($\int V\,dt$ form); rating energy-limited at 3.3\,k$\Omega$. & Fixed: 182\,mJ ($\int V^2\,dt$); energy-limited below the 5073\,$\Omega$ knee, plateau 5054\,V; verdicts unchanged. \\
+C2-004 & info & Independent chart reading confirms 4086 / 1740 / 1469\,V; dimensions, LSR37 data and part number agree. & No action. \\
+C2-005 & minor & Every E terminal pad is 1.40\,mm from the GND edge track, so a strike most likely arcs to GND; the current through the GND trunk to Pico, module and USB was not analysed. & Accepted risk: intentional spark gap; ground bounce 87--339\,V for $\approx$1\,ns, $\le$1.53\,A and $\le$0.92\,nC per 220\,$\Omega$ I\textsuperscript{2}C resistor (\lbl{CALCULATION} on \lbl{ASSUMPTION}ed inductances); arc to GND added to the ESD test; GP26/GP27 HBM rating not confirmed (open). \\
+C2-006 & minor & Stale evidence: committed \nolinkurl{interface_check.out} 79/80; REQ-028/029, requirements.csv and INTERFACES frozen-4 notes describe 3a3684b. & Fixed by systems (T-074): \nolinkurl{sim/systems/*.out}, REQUIREMENTS, INTERFACES frozen-5 (committed in 2ba289a). \\
+C2-007 & minor & Assembly guide offered any resistor lead off-cut for JP1 (0.8\,mm holes); R1--R12 leads are 0.8\,mm. & Fixed: solder or an off-cut of an R13--R16 lead (0.5\,mm) only. \\
+C2-008 & info & 1.0\,mm drill for a 0.8\,mm lead sits exactly on the 0.2\,mm fit threshold; generator comment wrong. & Fixed: R1--R12 drill 1.1\,mm (ring 0.55\,mm); comment corrected. \\
+C2-009 & info & Courtyard gaps 0.06\,mm (R row to J2) and 0.09\,mm (R12 to H3); M3 head about 0.5--0.9\,mm from R12. & Fixed: H3 moved (95, 48) $\rightarrow$ (96, 38)\,mm; bypass 1.94\,mm FAIL $\rightarrow$ 15.36\,mm PASS; nylon hardware recommended. \\
+C2-010 & info & Terminal labels ``10'' and ``11'' touch R10/R11 pad 2 (about 0.1\,mm). & Fixed: worst silkscreen-to-pad gap 0.43\,mm. \\
+C2-011 & info & \nolinkurl{check_gap.py} worst-pair name not deterministic on ties. & Fixed: tie-break by reference, then pad. \\
+C2-012 & info & I\textsuperscript{2}C relayout under the module (SDA 3.2\,mm from electrode pads over about 31\,mm) not analysed. & Accepted, test added: I\textsuperscript{2}C traffic against baseline noise (V-27). \\
+C2-013 & info & IEC 60664-1 F.2 values recalled; the 3.5\,mm rule comes from model M4 ($\eta$ = 0.3). & Accepted: F.2 kept as a cross-check marked ``recalled'' (EE-S25). \\
+\end{longtable}
+}
+
+\paragraph{Re-checks after the fixes (T-073, c901ad8).} ERC ``ERC messages: 0
+Errors 0 Warnings 0''; DRC ``Found 0 DRC violations'', ``Found 0 unconnected
+pads''; ``SUMMARY: 16 checks, 16 PASS, 0 FAIL'' (home-etch rules); ``SUMMARY: 80
+checks, 80 PASS, 0 FAIL'' (interfaces) \ev{reports/electronics/evidence/T-073/};
+\nolinkurl{check_gap.out} ``SUMMARY: copper PASS (4 kV rule, (a) and (b)); end caps
+PARTIAL at 4 kV over the swept ASSUMPTIONS; mounting metal PASS''. These fixes were
+reviewed independently in the final re-review T-079, which verified the dispositions
+C2-001 to C2-013 (Section~\ref{sec:final-review}).
+
+\paragraph{What the re-review did not cover.} The findings file does not list
+exclusions. It is a design-file and document review: nothing in it is a hardware
+measurement, and it did not see the T-073 fixes or the systems update T-074; those
+were covered by the final re-review (Section~\ref{sec:final-review}).
+
+\subsection{Manager PCB design review (analisar-pcb) of v1.2}
+\label{sec:manager-pcb-review}
+After the CR-002 re-review fixes, the manager reviewed the v1.2 board with the
+\texttt{analisar-pcb} PCB design review procedure. The review is not independent:
+the manager also directs the design. The electronics engineer acted on its five
+items in T-076 (committed in a216c1b); systems updated the checks, budgets,
+interfaces (frozen-6) and requirements (draft-8) in T-077 (committed in f457bfe).
+Dispositions are recorded in ADR-021 and its addendum
+\ev{management/DECISIONS.md}
+\ev{management/handoffs/electronics-engineer/T-076.md}
+\ev{management/handoffs/systems-engineer/T-077.md}
+\ev{reports/electronics/analysis.md} (\S6).
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.04\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.43\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}@{}}
+\caption{Manager PCB design review of v1.2: items and dispositions (ADR-021).}\label{tab:review-manager-pcb}\\
+\toprule
+\# & Item & Change and evidence & Disposition \\
+\midrule
+\endfirsthead
+\toprule
+\# & Item & Change and evidence & Disposition \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+1 & JP1 pads 0.60\,mm apart on a 2.54\,mm pitch: one solder blob can join all three pads (3V3 on both S1 and S7). & Pitch 3.81\,mm, pads 1.94\,$\times$\,2.4\,mm, drill 0.8\,mm: pad gap 0.60 $\rightarrow$ \textbf{1.87\,mm} on both sides, pads 1 to 3 5.68\,mm apart (\lbl{MEASUREMENT}, design file); check ``ADR-021 JP1 pad gap >= 1.8 mm'' PASS. & Fixed. Bridge with solder or an R13--R16 lead off-cut. \\
+2 & J2 screw-terminal pads round 3.0\,mm: little copper to resist peeling under screw torque on a home-etched board. & Pads 3.0\,$\times$\,4.5\,mm oval (pad 1 rectangular), drill 1.4\,mm, copper offset 0.75\,mm towards the back of the block: copper \textbf{7.1 $\rightarrow$ 11.6\,mm\textsuperscript{2}} per pad (\lbl{CALCULATION}). Offset rather than centred so that the E$x$ to GND edge-track spark gap stays 1.40\,mm (a centred oval would give 0.65\,mm); adjacent pads 2.08\,mm, ring 0.80\,mm (\lbl{MEASUREMENT}); \nolinkurl{check_gap.out} identical to T-073. & Fixed. Peel strength not measured (V-28). \\
+3 & RV1 metal tabs unconnected; wiper unfiltered. & Tabs on AGND; C1 \qty{100}{\nano\farad} X7R 50\,V, KEMET \textbf{C322C104K5R5TA} (5.08\,mm leads; the C320 has 2.54\,mm leads, \lbl{SOURCE} EE-S29), wiper to AGND. $\tau \le$ \textbf{0.38\,ms} worst against the \qty{30}{\milli\second} read period: settling 2.89\,ms, margin \textbf{10.4$\times$} (\lbl{CALCULATION}, Section~\ref{sec:pot-filter}). Interface check rule changed to AGND membership: 85/85 PASS. & Fixed. Cost +0.20--0.90\,EUR (\lbl{ASSUMPTION}) accepted; REQ-032 stays FAIL. \\
+4 & C2 \qty{1}{\micro\farad} from +3V3 to GND at the MPR121 module. & Not added: no single-layer route without running 3V3 next to the H2 fixing metal and a GND track about 48\,mm long 1.1\,mm from all twelve ELE pins; the $\approx$100\,mm loop would decouple little; both module revisions have their own regulator and capacitors (\lbl{SOURCE} EE-S02/EE-S03). & Rejected, recorded as not needed. \\
+5 & Silkscreen overlaps: R16 and SW1 designators overlapped; R14 designator 0.16\,mm from R13 pad 1. & Designators moved; JP1 legend line pitch 1.4 $\rightarrow$ 1.55\,mm; \nolinkurl{check_silk.py} now also checks footprint designators and text-to-text: worst text-to-pad 0.35\,mm, text-to-text 0.11\,mm, PASS (\lbl{MEASUREMENT}, design file). & Fixed. \\
+\end{longtable}
+}
+
+\paragraph{Re-checks after the changes (a216c1b, f457bfe).} ERC ``ERC messages: 0
+Errors 0 Warnings 0''; DRC ``Found 0 DRC violations'', ``Found 0 unconnected
+pads'', ``Found 0 Footprint errors'' \ev{reports/electronics/evidence/T-076/};
+``SUMMARY: 19 checks, 19 PASS, 0 FAIL'' (home-etch rules); ``SUMMARY: 85 checks, 85
+PASS, 0 FAIL'' (interfaces); budgets ``SUMMARY: 30 checks, 25 PASS, 5 FAIL'' (the
+five FAILs are the pre-existing A3b VBUS row, three 100\,kHz latency rows and the
+BOM cost) \ev{sim/systems/}. A mutation test on a scratch copy of the board (an SW1
+GND pad moved to AGND, JP1 pad 2 shifted) made the new AGND and JP1 checks FAIL as
+intended (T-077). These changes were reviewed independently in the final re-review
+T-079 (Section~\ref{sec:final-review}); none of them has been checked on hardware.
+
+\subsection{CR-002 final independent re-review (T-079)}
+\label{sec:final-review}
+An independent reviewer reviewed the whole CR-002 state at \texttt{be9d1f2} on
+branch \texttt{change/CR-002} (task T-079), including the T-073/T-074 fixes and the
+manager PCB review follow-up of ADR-021 (T-076/T-077) and this report at v1.2
+(T-078). As in T-071, the harness refused the reviewer's write; the manager recorded
+the hand-back content without changing its substance
+\ev{reports/review/CR-002-final/findings.md}; raw outputs are in
+\nolinkurl{reports/review/CR-002-final/}. Dispositions are recorded in ADR-022
+\ev{management/DECISIONS.md}; the fixes were made in T-080 (electronics) and T-081
+(systems), committed in a51dfff
+\ev{management/handoffs/electronics-engineer-T-080.md}
+\ev{management/handoffs/systems-engineer-T-081.md}.
+
+\paragraph{Summary.}
+\begin{itemize}[noitemsep]
+  \item Verdict: \textbf{release-ready yes} (design-file release v1.2); 7 findings:
+        0 critical, 0 major, 4 minor (F2-001 to F2-004), 3 info (F2-005 to F2-007).
+  \item Dispositions: 6 fixed, 1 accepted risk with a test and a part specification
+        added (F2-002, risk R-011).
+  \item Reviewer re-checks at be9d1f2 (recorded in the findings file): ERC 0; DRC 0,
+        unconnected 0, parity 0; generators reproduce the committed design
+        (schematic 0 diff lines, PCB 179/179 blocks, identical geometry); B.Cu gerber
+        and drill match the PCB (133 holes); interface check 85/85;
+        \nolinkurl{pcb_rules_check} 19/19; budgets 30 checks, 25 PASS, 5 FAIL; 11
+        electronics calculation scripts byte-identical; C1 RC recomputed: $\tau$
+        0.380\,ms, settling 2.89\,ms against \texttt{POT\_READ\_MS} 30\,ms, margin
+        10.4$\times$ (\lbl{CALCULATION}); report PDF 39 pages. Dispositions C2-001 to
+        C2-013 verified (the C2-002 residual wording became F2-004).
+  \item Reviewer's requirement cross-check: REQ-006 PARTIAL; REQ-023 PARTIAL;
+        REQ-027/028/029 PASS; REQ-032 FAIL; REQ-036 PASS (all as recorded).
+  \item Not covered: hardware, ESD, peel strength and knob fit; the RK09K and current
+        KEMET TA datasheets were not opened.
+\end{itemize}
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.06\linewidth}>{\raggedright\arraybackslash}p{0.45\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}@{}}
+\caption{CR-002 final re-review findings and dispositions (ADR-022).}\label{tab:review-final}\\
+\toprule
+ID & Sev. & Finding (one line) & Disposition \\
+\midrule
+\endfirsthead
+\toprule
+ID & Sev. & Finding (one line) & Disposition \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+F2-001 & minor & C1 lead 0.48--0.61\,mm (\lbl{SOURCE} EE-S29); the 0.8\,mm drill leaves 0.19\,mm at the largest lead, below the 0.2\,mm fit rule; \nolinkurl{calc_mechanical} used the nominal lead. & Fixed (T-080): drill 0.9\,mm, fit 0.29\,mm, ring 0.55\,mm (\lbl{CALCULATION}); calculation uses the largest lead. \\
+F2-002 & minor & RV1 frame (and a metal shaft) on AGND gives a knob/shaft discharge a direct path into Pico pin 33; no analysis, risk or test; shaft material not fixed. & Accepted risk R-011 (OPEN): plastic knob $\le$ 15\,mm on an insulated shaft specified; knob/shaft strike added to the REQ-023 test (step 2b, V-29). \\
+F2-003 & minor & REQ-032 said the C1 cost was not yet accepted, while the ADR-021 addendum accepts it. & Fixed (T-081): REQ-032 evidence cites ADR-019 D-3 and the ADR-021 addendum; status FAIL. \\
+F2-004 & minor & Assembly guide said end caps ``at least 4 mm apart''; at $\pm$0.25\,mm the worst is 3.61\,mm (3.13\,mm at $\pm$0.5\,mm). & Fixed (T-080): $\approx$4.0\,mm centred, $\ge$3.6\,mm at $\pm$0.25\,mm, $\approx$3.1\,mm at $\pm$0.5\,mm; lead-forming gauge required. \\
+F2-005 & info & C1 up to 6.6\,mm tall, 7.8\,mm from the shaft: knobs wider than about 15.5\,mm overhang C1; substitute body size not limited. & Fixed (T-080): knob $\le$ 15\,mm; substitute leads $\le$ 0.7\,mm, body $\le$ 5.08\,$\times$\,3.18\,mm, height $\le$ 6.6\,mm. \\
+F2-006 & info & No pass/fail check enforced the 1.40\,mm E$x$--GND spark gap (a flipped J2 offset gives 0.65\,mm and still passes DRC). & Fixed (T-081): \nolinkurl{pcb_rules_check} spark-gap check, 12/12 pads at 1.400\,mm; mutation tests FAIL at 0.650 and $-$0.100\,mm. \\
+F2-007 & info & \nolinkurl{analysis.md} \S6 typo; C1 3D model at 5.00\,mm pitch. & Fixed (T-080): typo corrected; model scaled to 5.08\,mm (render only). \\
+\end{longtable}
+}
+
+\paragraph{Re-checks after the fixes (T-080/T-081, a51dfff).} ERC ``ERC messages: 0
+Errors 0 Warnings 0''; DRC ``Found 0 DRC violations'', ``Found 0 unconnected
+pads'', ``Found 0 Footprint errors'' \ev{reports/electronics/evidence/T-080/};
+``SUMMARY: 20 checks, 20 PASS, 0 FAIL'' (home-etch rules, now with the spark-gap
+check); ``SUMMARY: 85 checks, 85 PASS, 0 FAIL'' (interfaces); budgets ``SUMMARY: 30
+checks, 25 PASS, 5 FAIL'' (the same five known FAILs) \ev{sim/systems/}. Geometry
+diff against e9309d8 (same design as be9d1f2): only the C1 drill (0.800 $\rightarrow$ 0.900\,mm) and the C1
+3D model scale changed \ev{reports/electronics/evidence/T-080/geo_diff.txt}. By
+ADR-022 the T-080/T-081 changes (a drill size, wording and a new check) were not
+re-reviewed independently again; the manager reproduced the checks above. None of
+this is a hardware test.

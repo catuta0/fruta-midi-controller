@@ -2,12 +2,13 @@
 
 > **Draft — not yet validated on hardware.**
 
-This manual describes the firmware after task T-044 (commit `a208a30`) (`firmware/FrutaMIDI/FrutaMIDI.ino` and its `fm_*.h` headers). Every behaviour below is traced to that source or to the project README; see [Traceability](#traceability) at the end. The complete build has not been tested on hardware, so this manual describes what the firmware is written to do, not measured behaviour.
+This manual describes the firmware after task T-044 (commit `a208a30`) (`firmware/FrutaMIDI/FrutaMIDI.ino` and its `fm_*.h` headers) and the PCB at version 1.2 (change request CR-002, including the review fixes of T-073 in commit `c901ad8` the PCB review follow-up of T-076 in commit `a216c1b` and the final re-review fixes of T-080/T-081 in commit `a51dfff`; the firmware did not change in v1.2). Every behaviour below is traced to that source or to the project README; see [Traceability](#traceability) at the end. The complete build has not been tested on hardware, so this manual describes what the firmware is written to do, not measured behaviour.
 
 ## Contents
 
 - [What FrutaMIDI does](#what-frutamidi-does)
 - [Setup](#setup)
+- [PCB v1.2: what to know before you build](#pcb-v12-what-to-know-before-you-build)
 - [Playing](#playing)
 - [Scales](#scales)
 - [Octave](#octave)
@@ -22,11 +23,36 @@ FrutaMIDI is a USB MIDI device. Each of its 12 pads (24 with a second sensor) se
 
 ## Setup
 
-1. **Build the hardware.** Follow the [breadboard wiring](../../README.md#wiring) or the [PCB guide](../../hardware/README.md).
+1. **Build the hardware.** Follow the [breadboard wiring](../../README.md#wiring) or the [PCB guide](../../hardware/README.md). For the PCB, read [PCB v1.2: what to know before you build](#pcb-v12-what-to-know-before-you-build) first.
 2. **Load the firmware.** Download the `.uf2` file for your board and build from the [Releases](https://github.com/catuta0/fruta-midi-controller/releases/latest) page. The breadboard and the PCB need different files. Hold **BOOTSEL** while you plug in the USB cable, then drag the `.uf2` onto the drive that appears. Details: [Quick start](../../README.md#quick-start-no-programming).
 3. **Connect the objects first.** Clip the leads onto the fruit before you plug in the USB, and do not touch anything while it starts. At startup the sensor measures each pad at rest; that reading is the reference for detecting touches.
 4. **Wait for the LED.** Two slow blinks mean the sensor was found and FrutaMIDI is ready. See [LED signals](#led-signals) for the other patterns.
 5. **Open a sound program.** Open the [online sampler](https://catuta0.github.io/fruta-midi-controller/) in Edge or Chrome, or a music program, and select FrutaMIDI as the MIDI input.
+
+## PCB v1.2: what to know before you build
+
+The [PCB guide](../../hardware/README.md) is the full assembly procedure. These are the points that changed in version 1.2 of the board (silkscreen "FrutaMIDI v1.2"):
+
+- **Electrode resistors R1–R12.** Use 12 × 3.3 kΩ 1 % pulse-rated resistors, Vishay **MBE04140C3301FC100** (DIN0414 size, the large body). Do not use small DIN0204/0207 resistors: they are not rated for the voltage of an electrostatic spark ([PCB guide, Electrical safety](../../hardware/README.md#electrical-safety)).
+- **They lie flat.** All 12 sit in one row between the module and the screw terminals, leads 15.24 mm apart, so there is only about 1.7 mm of straight lead between the body and each hole. Hold each lead with pliers next to the body and bend beyond the pliers (not at the body end itself). Form the leads on a lead-bending gauge, or on a strip of stripboard using holes 1 and 7 (15.24 mm), so the body is centred and the two straight lengths are equal within about 0.25 mm. Form one resistor first and check that it drops into its holes without force, then the rest. Press each body onto the board and solder. Do not stand them up: lying flat keeps the copper pads of each resistor 13 mm apart and its metal end caps several millimetres apart, which is what the ±4 kV protection estimate relies on. That estimate is not a test result and does not cover 8 kV ([PCB guide, Electrical safety](../../hardware/README.md#electrical-safety)).
+- **Drill R1–R12 with 1.1 mm.** Their 0.8 mm leads need the 1.1 mm bit; the full drill table is in [PCB guide, section 3](../../hardware/README.md#3-drill).
+- **Assembly order.** Solder from the lowest part to the tallest: R1–R12 first, then R13–R14 (4.7 kΩ) and R15–R16 (220 Ω), the capacitor C1, the button, the Pico headers, the module headers, the potentiometer, the screw terminals, and last JP1 and the two configuration wires ([PCB guide, section 4](../../hardware/README.md#4-solder)).
+- **Capacitor C1 (100 nF) and the potentiometer tabs.** C1 is a 100 nF (0.1 µF) ceramic capacitor, KEMET **C322C104K5R5TA** or any 100 nF X7R/X5R rated 10 V or more with **5.08 mm** lead spacing (not the C320 version, which has 2.54 mm leads). It sits just above the potentiometer, is not polarised, and smooths the octave-knob reading. Its holes are drilled with 0.9 mm (a substitute capacitor needs leads of at most 0.7 mm and a body no larger than 5.08 × 3.18 mm and 6.6 mm tall). Solder both metal mounting tabs of the potentiometer RV1 as well: on this board they are connected to the potentiometer ground (AGND) ([PCB guide, bill of materials and section 4](../../hardware/README.md#4-solder)).
+- **Octave knob: plastic, at most 15 mm.** Because the potentiometer tabs are on AGND, use a plastic (insulating) knob that covers the whole shaft, preferably on a potentiometer with an insulated shaft. A metal shaft or knob would bring a finger's static discharge straight onto the analog ground; this path has not been analysed or tested. A knob wider than 15 mm would overhang C1.
+- **Screw-terminal pads are oval.** The J2 pads are 3.0 × 4.5 mm ovals, extended towards the back of the terminal block, to give more copper under the screw force on a home-etched board. Solder each pin so the solder covers the pad; nothing else changes in how you fit the terminal blocks.
+- **JP1 stands upright** to the right of the module: **QT** at the top, **ORIG** at the bottom, 3V3 in the middle. Its pads are 3.81 mm apart, with 1.87 mm of bare board between neighbouring pads, so that one blob of solder cannot easily join all three. Bridge the middle pad to **one** side only, with an off-cut of an **R13–R16** lead (0.5 mm) bent into a U through the two holes, or with a generous solder bridge; the lead off-cut is easier. The 0.8 mm leads of R1–R12 do not fit the 0.8 mm JP1 holes. ORIG for the original module (no white connectors), QT for the STEMMA QT module (two small white connectors). A wrong position can damage the sensor; check it before you insert the module ([PCB guide, section 5](../../hardware/README.md#5-module-configuration-jp1-and-two-wires)).
+- **Two configuration wires.** J1, to the right of JP1, has two holes: SCL on the left, SDA on the right. Wire them to the S holes above the module's 7-pin row:
+
+  | Module | JP1 | J1 SDA → | J1 SCL → |
+  | --- | --- | --- | --- |
+  | Original (no white connectors) | ORIG | S5 | S6 |
+  | STEMMA QT (two white connectors) | QT | S3 | S4 |
+
+  In v1.2 the wires are longer than before (about 25–35 mm). Use insulated solid wire, keep each wire flat against the board and no longer than needed, so it cannot be pushed onto the wrong hole or strain its joint.
+- **Mounting screws.** H3 now sits at the right edge above the right end of the resistor row, and H4 to the right of the module. Nylon screws and spacers are preferred: they keep loose metal away from the electrode resistors ([PCB guide, bill of materials](../../hardware/README.md#bill-of-materials)).
+- **Test before powering.** Follow the checklist in [section 6 of the PCB guide](../../hardware/README.md#6-test-before-powering): each terminal should read about 3.3 kΩ to its module pin, and the JP1 centre pad must reach only the S hole for your module (S1 for ORIG, S7 for QT).
+
+The board has not been built or tested. These steps describe the design, not a verified build.
 
 ## Playing
 
@@ -94,10 +120,10 @@ While one of the blink patterns is running, the LED shows the pattern rather tha
 
 | Symptom | What to do |
 | --- | --- |
-| LED blinks fast and does not stop | The sensor is not answering. Unplug the USB, then check the sensor wiring: 3V3, GND, SDA, SCL. On PCB v1.1, check the JP1 bridge for your module version and the 2 configuration wires; see [section 5 of the PCB guide](../../hardware/README.md#5-module-configuration-jp1-and-two-wires). Also check that you loaded the right `.uf2`: breadboard or PCB. |
+| LED blinks fast and does not stop | The sensor is not answering. Unplug the USB, then check the sensor wiring: 3V3, GND, SDA, SCL. On the PCB (v1.2), check that JP1 is bridged to the right side for your module (QT at the top, ORIG at the bottom) and that the 2 configuration wires go to the right S holes (see [PCB v1.2](#pcb-v12-what-to-know-before-you-build) and [section 5 of the PCB guide](../../hardware/README.md#5-module-configuration-jp1-and-two-wires)). Also check that you loaded the right `.uf2`: breadboard or PCB. |
 | A pad is always on | Recalibrate without touching anything. If it persists, the object may be too large: use a smaller piece. |
 | Notes trigger without touching | Recalibrate. Keep cables apart. See [Design notes](../../README.md#design-notes) for threshold settings. |
-| A pad does not react | Check the clip connection (use a nail or needle pushed into the fruit). Recalibrate. |
+| A pad does not react | Check the clip connection (use a nail or needle pushed into the fruit). Recalibrate. On the PCB, measure about 3.3 kΩ from the terminal to the module header pin; if not, resolder that resistor (R1–R12). |
 | The octave knob does nothing | You are in Drum Rack (scale 1), or the breadboard firmware has the knob disabled (see [Octave](#octave)). |
 | A note keeps sounding after I let go of a pad | Another pad may hold the same note (possible after an octave change); release that pad too. |
 | A note is stuck in the program | Touch and release the same pad again: the Note Off releases it. |
@@ -143,3 +169,20 @@ The firmware source is commit `a208a30` (T-044). sha256 values:
 | Startup reference measurement | — | SOURCE | `startSensors()` calls `begin()` with `AUTOCONFIG`, then `configureSensor()` |
 | Sampler pads on notes 36–47; aftertouch opens filter | — | README | README "Sound"; not traced to `docs/index.html` |
 | Flashing procedure, BOOTSEL, `.uf2` names | — | README | README "Quick start" |
+| R1–R12 part, size, lying flat | Vishay MBE04140C3301FC100, 3.3 kΩ 1 %, DIN0414, 15.24 mm lead pitch | SOURCE | hardware/README.md (BOM, section 4 step 1); management/INTERFACES.json frozen-7 `board.resistors`; ADR-019 D-1 |
+| Distance between the copper pads of each resistor | about 13 mm (13.04 mm copper gap) | MEASUREMENT (design file) | sim/electronics/calc/check_gap.out; reports/electronics/analysis.md §5 |
+| Straight lead between body and hole; lead forming | about 1.7 mm; straight lengths equal within about 0.25 mm on a gauge | CALCULATION (15.24 − 11.9)/2; ASSUMPTION (placement error, T-073) | hardware/README.md section 4 step 1; management/handoffs/electronics-engineer/T-073.md (C2-001, C2-002); ADR-020 |
+| R1–R12 drill | 1.1 mm (0.8 mm lead) | SOURCE (design file) | hardware/README.md section 3; sim/electronics/calc/calc_mechanical.out; review finding C2-008 |
+| JP1 bridge material | solder or an R13–R16 lead off-cut (0.5 mm) | SOURCE | hardware/README.md BOM and section 5; review finding C2-007 |
+| JP1 pad pitch and gap | 3.81 mm pitch, 1.87 mm gap | MEASUREMENT (design file) | sim/systems/pcb_rules_check.out; management/metrics.json `jp1_pad_gap`; ADR-021 |
+| C1 part and position | 100 nF X7R 50 V, KEMET C322C104K5R5TA, 5.08 mm leads, above RV1, pot wiper to AGND | SOURCE | hardware/README.md BOM and section 4 step 3; reports/electronics/SOURCES_EE.md EE-S29; management/metrics.json `pot_filter_C1_part`; ADR-021 |
+| RV1 mounting tabs soldered, on AGND | — | SOURCE | hardware/README.md section 4 step 7; INTERFACES.json frozen-7 IF-CONTROLS `pot.pins.MP`; ADR-021 |
+| C1 drill; substitute limits | 0.9 mm; leads ≤ 0.7 mm, body ≤ 5.08 × 3.18 mm, height ≤ 6.6 mm | SOURCE (design file); CALCULATION (0.9 − 0.61 = 0.29 mm fit) | hardware/README.md BOM and section 3; sim/electronics/calc/calc_mechanical.out; management/handoffs/electronics-engineer-T-080.md; review finding F2-001; ADR-022 |
+| Octave knob: plastic, ≤ 15 mm, covering the shaft; insulated shaft preferred | ≤ 15 mm diameter | SOURCE (hardware/README.md); CALCULATION (7.77 mm shaft-to-C1, T-080) | hardware/README.md BOM (RV1); management/RISKS.md R-011; review findings F2-002, F2-005; ADR-022 |
+| J2 terminal pads | 3.0 × 4.5 mm oval, extended towards the back of the block | MEASUREMENT (design file) | sim/systems/pcb_rules_check.out; management/metrics.json `j2_pad_size`; hardware/README.md section 3; ADR-021 |
+| H3 position; nylon hardware preferred | H3 at (96, 38) mm, above the right end of the resistor row | MEASUREMENT (design file) | hardware/README.md BOM; sim/electronics/calc/check_gap.out (e); review finding C2-009; ADR-020 |
+| Assembly order | lowest to tallest, R1–R12 first, JP1 and wires last | SOURCE | hardware/README.md section 4 |
+| JP1 upright, QT top / ORIG bottom | — | SOURCE | hardware/README.md section 5; INTERFACES.json frozen-7 `board.placement_mm.JP1` (rotation 90°); ADR-019 D-4 |
+| J1 SCL left / SDA right; S holes per module | S5/S6 original, S3/S4 STEMMA QT | SOURCE | hardware/README.md section 5 table; INTERFACES.json IF-MPR121-MODULE |
+| Configuration wire length in v1.2 | about 25–35 mm | CALCULATION (T-060, layout) | management/handoffs/electronics-engineer/T-060.md; management/RISKS.md R-008 |
+| Board label | "FrutaMIDI v1.2" | SOURCE | hardware/scripts/gen_pcb.py; ADR-019 D-2 |

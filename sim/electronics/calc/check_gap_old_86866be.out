@@ -1,0 +1,27 @@
+# check_gap.py  MEASUREMENT on the design file ../../../private/tmp/claude-501/-Users-rod-fruta-midi-controller/fc71da27-7efd-493b-b926-53a55223488c/scratchpad/old.kicad_pcb (KiCad 10.0.4)
+# rule (calc_flashover.out): 4 kV 3.5 mm, 8 kV 7.5 mm; coordinates relative to the board corner
+  channel E0   ELE0  <-> E0  copper gap   0.94 mm
+  channel E1   ELE1  <-> E1  copper gap   0.94 mm
+  channel E2   ELE2  <-> E2  copper gap   0.94 mm
+  channel E3   ELE3  <-> E3  copper gap   0.94 mm
+  channel E4   ELE4  <-> E4  copper gap   0.94 mm
+  channel E5   ELE5  <-> E5  copper gap   0.94 mm
+  channel E6   ELE6  <-> E6  copper gap   0.94 mm
+  channel E7   ELE7  <-> E7  copper gap   0.94 mm
+  channel E8   ELE8  <-> E8  copper gap   0.94 mm
+  channel E9   ELE9  <-> E9  copper gap   0.94 mm
+  channel E10  ELE10 <-> E10 copper gap   0.94 mm
+  channel E11  ELE11 <-> E11 copper gap   0.94 mm
+
+(a) ELEx <-> Ex same channel                               min   0.94 mm   R10 pad 2 [/E9] <-> R10 pad 1 [/ELE9]
+(b) Ex <-> any MPR121/Pico net (other ELE, I2C, 3V3...)    min   1.99 mm   R2 pad 2 [/E1] <-> R3 pad 1 [/ELE2]
+(c) Ex <-> Ey (reported)                                   min   0.80 mm   track (47.32,48.14)-(37.16,58.30) [/E1] <-> track (42.24,55.76)-(42.24,64.50) [/E2]
+(c) Ex <-> GND (reported)                                  min   1.40 mm   J2 pad 2 [/E0] <-> track (27.00,68.00)-(93.04,68.00) [GND]
+lead <-> lead of one resistor (geometry)                   min   1.74 mm   (pitch 2.54 mm - lead 0.8 mm, 12 resistors)
+
+FAIL (a) gap 0.94 mm vs rule 3.5 mm (4 kV)
+FAIL (a) gap 0.94 mm vs rule 7.5 mm (8 kV)
+FAIL (b) gap 1.99 mm vs rule 3.5 mm (4 kV)
+FAIL (b) gap 1.99 mm vs rule 7.5 mm (8 kV)
+FAIL leads gap 1.74 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)
+SUMMARY: FAIL

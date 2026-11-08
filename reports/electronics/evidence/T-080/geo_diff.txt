@@ -1,0 +1,10 @@
+38c38
+< model C1 ${KICAD10_3DMODEL_DIR}/Capacitor_THT.3dshapes/C_Disc_D5.0mm_W2.5mm_P5.00mm.step 1.0000 1.0000 1.0000
+---
+> model C1 ${KICAD10_3DMODEL_DIR}/Capacitor_THT.3dshapes/C_Disc_D5.0mm_W2.5mm_P5.00mm.step 1.0160 1.0000 1.0000
+124,125c124,125
+< pad C1 1 81.200 55.300 2.000 2.000 0.800 /POT
+< pad C1 2 86.280 55.300 2.000 2.000 0.800 /AGND
+---
+> pad C1 1 81.200 55.300 2.000 2.000 0.900 /POT
+> pad C1 2 86.280 55.300 2.000 2.000 0.900 /AGND

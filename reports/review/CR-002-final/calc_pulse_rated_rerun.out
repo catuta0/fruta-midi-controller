@@ -1,0 +1,20 @@
+# calc_pulse_rated.py  CALCULATION (T-060, CR-002)
+IEC 4 kV contact: V_R = 3636 V, energy in R = 1.09 mJ, tau = 0.54 us
+IEC 8 kV contact: V_R = 7273 V, energy in R = 4.36 mJ, tau = 0.54 us
+
+part             rating basis                       rating      4 kV      8 kV  size (D x L, pitch)
+MBE/SMA 0414     1.2/50 us graph @3k3               4083 V      PASS      FAIL  4.2 x 11.9 mm, >= 15.0 mm
+MBB/SMA 0207     1.2/50 us graph @3k3               1739 V      FAIL      FAIL  2.5 x 6.5 mm, >= 10.0 mm
+MBA/SMA 0204     1.2/50 us graph @3k3               1468 V      FAIL      FAIL  1.6 x 3.6 mm, >= 5.0 mm
+Vishay LSR37     ESD contact 12 kV (on R alone)    10909 V      PASS      PASS  4.0 x 10.0 mm, >= 15 mm
+Yageo MFR-12     max overload voltage                400 V      FAIL      FAIL  1.8 x 3.3 mm (0204)
+
+MBE/SMA 0414 3k3: margin at 4 kV = 1.12 (rating / V_R); with -5 % reading error 1.07
+HBM equivalence (100 pF / 1500 ohm on R alone): 0414 6 kV -> 4125 V across 3k3; 0207 4 kV -> 2750 V
+Rating pulse energy: integral (V/Vpk)^2 dt = 36.06 us (double exp.; single exp. 36.07 us) -> 182 mJ into 3k3 at 4083 V
+MBE/SMA 0414 chart: log-log slope below the knee 0.496 (0.5 = constant V^2/R, energy-limited); knee at 5073 ohm; plateau 5054 V (voltage-limited above the knee)
+  energy at the knee 182 mJ (same constant as at 3k3 -> 3k3 lies on the energy-limited branch)
+  one IEC 4 kV strike puts 1.09 mJ into R (167x less than the rating pulse) and 3636 V across it, below the 5054 V plateau (1.39x); the 3k3 chart value 4083 V is used as the acceptance limit (conservative: it is an energy limit for a pulse whose tail T = 72 us is 132x the IEC tau 0.54 us)
+  8 kV: 7273 V across R exceeds both the 3k3 chart value and the 5054 V plateau -> FAIL either way
+SELECTED: Vishay MBE/SMA 0414, 3k3 1 % (MBE04140C3301FC100): 4083 V >= 3636 V at 4 kV (PASS), < 7273 V at 8 kV (FAIL)
+ALTERNATIVE for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to +-20 % drift after 100 strikes

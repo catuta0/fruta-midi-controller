@@ -1,4 +1,4 @@
-% FrutaMIDI engineering report — skeleton (task T-031).
+% FrutaMIDI engineering report (skeleton T-031; v1.2 update T-072, CR-002; final re-review update T-082).
 % Each section lives in sections/*.tex so specialists' results can be dropped in.
 % Rule: every number must come from management/metrics.json or a cited report,
 % with its label (SOURCE, CALCULATION, SIMULATION, MEASUREMENT, ASSUMPTION).
@@ -37,7 +37,9 @@
 
 \title{FrutaMIDI: capacitive USB MIDI controller\\[2pt]\large Engineering report}
 \author{FrutaMIDI engineering project}
-\date{Release V1\_BASELINE (git tag \texttt{v1.1.0-baseline}), interfaces frozen-3, 2026-11-04}
+\date{FrutaMIDI v1.2 (change request CR-002), interfaces frozen-7, requirements draft-9, 2026-11-08\\[2pt]
+\small Prepared for release V1.2 (git tag \texttt{v1.2.0}); not yet released.
+Previous release: V1\_BASELINE (git tag \texttt{v1.1.0-baseline})}
 
 \begin{document}
 \maketitle
@@ -45,9 +47,20 @@
 \begin{abstract}
 FrutaMIDI is a USB MIDI controller that sends notes when a user touches conductive
 objects wired to a Raspberry Pi Pico and an Adafruit MPR121 capacitive sensor
-module, built on a breadboard or on a single-sided home-etched PCB (v1.1).
+module, built on a breadboard or on a single-sided home-etched PCB (v1.2).
 This report collects the requirements, decisions, interfaces, analyses and host
-tests at release V1\_BASELINE. Every number is copied from a cited project
+tests for FrutaMIDI v1.2. Version 1.2 (change request CR-002) replaces the
+electrode series resistors by pulse-rated parts lying flat. By analysis of the
+design files, a \qty{4}{\kilo\volt} contact discharge should then neither arc
+across a resistor nor exceed its pulse rating; this has not been tested. A
+manager PCB design review then widened the JP1 solder-jumper gaps, enlarged the
+screw-terminal pads, tied the potentiometer tabs to AGND and added a 100\,nF
+wiper filter (ADR-021). A final independent re-review of these changes (T-079)
+found no critical or major issue (verdict release-ready); its seven findings were
+fixed or accepted (ADR-022), among them a 0.9\,mm drill for C1 and a plastic knob
+on an insulated shaft for the potentiometer (risk R-011).
+Section~\ref{sec:changes} lists the changes since
+the V1\_BASELINE release. Every number is copied from a cited project
 file with its label. \textbf{No part of the hardware has been built or measured}:
 analyses, simulations, design-rule checks and host tests are not hardware
 validation, and the physical validation plan in Section~\ref{sec:validation}
@@ -68,6 +81,7 @@ lists what remains to be measured.
 \input{sections/09_limitations}
 \input{sections/10_validation_plan}
 \input{sections/11_reproducibility}
+\input{sections/12_change_history}
 
 \appendix
 \input{sections/A_sources}

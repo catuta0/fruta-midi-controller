@@ -1,0 +1,48 @@
+\section{Change history}
+\label{sec:changes}
+
+Baseline: release V1\_BASELINE, git tag \texttt{v1.1.0-baseline} (048023c,
+2026-11-04), board label ``FrutaMIDI v1.1'', interfaces frozen-3. Current: FrutaMIDI
+v1.2 on branch \texttt{change/CR-002} at a51dfff (final re-review fixes,
+interfaces frozen-7, requirements draft-9), to be released as V1.2 (git tag
+\texttt{v1.2.0}) after user approval. Sources:
+\texttt{git log v1.1.0-baseline..a51dfff}, the commit messages
+quoted below, \ev{changes/CR-002.md} ADR-019 to ADR-022 \ev{management/DECISIONS.md}.
+
+{\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.10\linewidth}>{\raggedright\arraybackslash}p{0.55\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}@{}}
+\toprule
+Commit & Change & Effect on nets, copper and checks \\
+\midrule\endhead
+21a4919 & Schematic readability: A3 sheet, framed functional blocks, electrode chain drawn with wires. Layout of the schematic only. & Netlist identical (127 nets, compared node by node); PCB unchanged; ERC 0, DRC 0, parity 0 (commit message). \\
+b1e4bf5 & The unconnected BOM-only socket symbols J4--J7 are removed; the female-header sockets become a Socket field of A1/A2; the BOM gains a Socket column. & Netlist unchanged apart from the removed J4--J7 no-connect nets; PCB copper identical (tracks and pads compared); ERC 0, DRC 0, parity 0 (commit message). \\
+130e754 & CR-002 opened: electrode resistor flashover and pulse rating; supersedes candidate CR-001. & Documents only. \\
+3a3684b & CR-002 T-060: R1--R12 become Vishay MBE04140C3301FC100 (DIN0414, lying flat, 15.24\,mm pitch); relayout (module A2 15.1\,mm up and 2.54\,mm right; J1, JP1 upright, R13--R15 right of the module; H4 moved); analysis.md \S5; ADR-019. & ELE--E gap 0.94 $\rightarrow$ 13.04\,mm, E--other net 1.99 $\rightarrow$ 10.92\,mm (\lbl{MEASUREMENT}, design file); nets and pinout unchanged; ERC 0, DRC 0, parity 0; pcb\_rules\_check 16/16. \\
+8394b41 & CR-002 T-070: REQUIREMENTS draft-6, INTERFACES frozen-4, budgets revision~6 (core BOM 23.78--37.72\,EUR, \lbl{CALCULATION}), risks R-006 rewritten and R-008 added; board label ``FrutaMIDI v1.2''. & Label text only on the board; gap check unchanged (re-run in T-072). \\
+dcdb1fc & CR-002 T-072: this report, the user manual and figures updated for v1.2. & Documents only. \\
+1247c44 & CR-002 T-071: independent re-review findings C2-001 to C2-013 recorded (Section~\ref{sec:cr002-review}). & Documents only. \\
+c901ad8 & CR-002 T-073: review fixes. End-cap (cap-to-cap) and mounting-metal checks added to \nolinkurl{check_gap.py}; pulse energy corrected to 182\,mJ; R1--R12 drill 1.0 $\rightarrow$ 1.1\,mm; H3 moved (95, 48) $\rightarrow$ (96, 38)\,mm; terminal labels moved off the pads; E$x$--GND gap kept as a spark gap with a ground-bounce estimate (\nolinkurl{calc_gnd_bounce.py}); assembly guide reworded (lead forming on a gauge, JP1 off-cut, nylon screw at H3, flat configuration wires); ADR-020. & Nets and pinout unchanged; copper gaps 13.04 / 10.92\,mm unchanged; end caps 4\,kV PARTIAL (worst 3.61\,mm at $\pm$0.25\,mm); ERC 0, DRC 0, unconnected 0; pcb\_rules\_check 16/16; interface check 80/80 (\lbl{MEASUREMENT} / \lbl{CALCULATION}, T-073 handoff). \\
+2ba289a & CR-002 T-074/T-075: REQUIREMENTS draft-7, INTERFACES frozen-5, risks R-009 and R-010; this report (CR-002 re-review section, ESD section, validation rows V-25 to V-27), README, user manual and figures updated after T-073. & Documents and check outputs only. \\
+565ffb5 & Report build fix: requirements text without U+222B; report rebuilt. & Documents only. \\
+a216c1b & T-076, manager PCB review follow-up (ADR-021): JP1 pitch 2.54 $\rightarrow$ 3.81\,mm; J2 pads 3.0\,mm round $\rightarrow$ 3.0\,$\times$\,4.5\,mm oval, offset 0.75\,mm towards the block back; RV1 mounting tabs on AGND; new C1 \qty{100}{\nano\farad} KEMET C322C104K5R5TA from the pot wiper to AGND; silkscreen overlaps removed; \nolinkurl{calc_pot_rc.py} added; assembly guide updated. & New part C1 and new AGND members (RV1 tabs, C1 pin 2); other nets and pinout unchanged. JP1 gap 0.60 $\rightarrow$ 1.87\,mm; J2 copper 7.1 $\rightarrow$ 11.6\,mm\textsuperscript{2} per pad; E$x$--GND 1.40\,mm unchanged; 0.8\,mm holes 11 $\rightarrow$ 13 (C1 at 0.8\,mm, changed to 0.9\,mm in a51dfff), 133 holes in total; ERC 0, DRC 0, parity 0 (\lbl{MEASUREMENT} / \lbl{CALCULATION}, T-076 handoff). \\
+f457bfe & T-077: interface check AGND membership rules (replacing \texttt{pcb.A1.AGND\_isolated}), home-etch checks for the JP1 gap and J2 pads, budgets revision~7 (check A7, C1 row), INTERFACES frozen-6, REQUIREMENTS draft-8. & Checks only: interface check 85/85, pcb\_rules\_check 19/19, budgets 30 checks, 25 PASS, 5 FAIL; core BOM 23.98--38.62\,EUR (\lbl{CALCULATION}). \\
+be9d1f2 & T-078: this report (manager PCB review section, C1 and AGND, cost, interfaces), README, user manual and figures updated after T-077. & Documents only. \\
+e9309d8 & T-079: final independent re-review findings F2-001 to F2-007 recorded, verdict release-ready (Section~\ref{sec:final-review}). & Documents and reviewer raw outputs only. \\
+a51dfff & T-080/T-081, final re-review fixes (ADR-022): C1 drill 0.8 $\rightarrow$ 0.9\,mm (fit 0.29\,mm, ring 0.55\,mm) and C1 3D model at 5.08\,mm; \nolinkurl{calc_mechanical} judges C1 on its largest lead; assembly guide: end-cap wording ($\approx$4.0 / $\ge$3.6 / $\approx$3.1\,mm, lead-forming gauge), plastic knob $\le$ 15\,mm on an insulated shaft, C1 substitute limits; spark-gap check in \nolinkurl{pcb_rules_check}; risk R-011; REQUIREMENTS draft-9 (REQ-023 step 2b, REQ-032 evidence); INTERFACES frozen-7. & Nets and pinout unchanged; only C1 drill and model scale changed in the board (geometry diff); drill file 0.8\,mm 11, 0.9\,mm 11, 133 holes in total; ERC 0, DRC 0, parity 0; pcb\_rules\_check 20/20; interface check 85/85; budgets 30 checks, 25 PASS, 5 FAIL (\lbl{MEASUREMENT} / \lbl{CALCULATION}, T-080/T-081 handoffs). \\
+(T-082) & This report (final re-review section, C1 holes, knob, R-011, V-29, interfaces frozen-7, requirements table), README, user manual and board figures updated after T-080/T-081. & Documents only. \\
+\bottomrule
+\end{longtable}
+}
+
+\paragraph{What did not change in v1.2.} Firmware, pins and build flags; the J2
+terminal row and pinout; the I\textsuperscript{2}C, USB MIDI and terminal
+interfaces apart from the R1--R12 part, C1, the AGND members and the JP1 and J2
+footprints (ADR-021); the resistor value
+(\qty{3.3}{\kilo\ohm} 1\,\%) and therefore the electrode sensitivity analysis; the
+home-etch design rules (ADR-019 D-4, \ev{management/INTERFACES.json}).
+
+\paragraph{Requirement status after CR-002.} Unchanged counts in REQUIREMENTS draft-9 at
+a51dfff (PASS 17, PARTIAL 18, FAIL 3, NOT RUN 4). REQ-023 stays PARTIAL (no ESD-gun
+test); REQ-006 stays PARTIAL (C1 settling by calculation only); REQ-032 stays FAIL with
+a larger overrun (8.62\,EUR instead of 0.40\,EUR, \lbl{CALCULATION})
+\ev{management/REQUIREMENTS.md}.

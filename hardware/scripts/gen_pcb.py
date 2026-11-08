@@ -106,6 +106,26 @@ def add_model(fp, path, offset=(0, 0, 0), rot=(0, 0, 0)):
     fp.Add3DModel(m)
 
 
+JP1_PITCH = 3.81           # T-076: JP1 pad pitch (pad gap 3.81 - 1.94 = 1.87 mm)
+# T-076: screw-terminal pads 3.0 x 4.5 mm (long axis along y) for peel strength under screw torque on a single-sided
+# board. The copper is offset 0.75 mm towards the back of the block (away from the board edge): the pad still ends
+# 1.5 mm below the hole centre, as the old 3.0 mm round pad did, so the gap to the GND edge track (intentional spark
+# gap, ADR-020) stays 1.40 mm, and the extra copper goes where there is room (towards the resistor row).
+TERM_PAD = (3.0, 4.5, 1.4)        # width x, length y, drill (mm)
+TERM_PAD_OFFSET = -0.75           # mm, shape centre relative to the hole (negative = towards the back, -y)
+
+
+def set_term_pad(p, first):
+    w, h, drill = TERM_PAD
+    set_pad(p, pcbnew.PAD_SHAPE_RECTANGLE if first else pcbnew.PAD_SHAPE_OVAL, w, h, drill)
+    off = V(0, TERM_PAD_OFFSET)
+    try:
+        p.SetOffset(pcbnew.F_Cu, off)
+    except TypeError:
+        p.SetOffset(off)
+    return p
+
+
 def build_footprints():
     if os.path.isdir(FP_LIB):
         shutil.rmtree(FP_LIB)
@@ -169,22 +189,25 @@ def build_footprints():
     out["Config_2pads"] = fp
 
     # --- 3-way selector jumper, through-hole (T-052 / D-4): pad 1 = S1 (ORIG), 2 = 3V3 (centre), 3 = S7 (QT).
-    # Close with a solder bridge or a lead off-cut across 1-2 or 2-3. Pads 1.94 x 2.4 mm, drill 0.8 (ring 0.57),
-    # pad gap 0.60 mm (= clearance rule). Through-hole, so REQ-027 (no SMD pads) still holds.
-    fp = new_fp("SolderJumper_3_THT_P2.54mm", "3-way selector jumper, THT pads 2.54 mm pitch, bridge 1-2 or 2-3")
+    # Close with a solder bridge or a lead off-cut across 1-2 or 2-3. Pads 1.94 x 2.4 mm, drill 0.8 (ring 0.57).
+    # T-076: pitch 2.54 -> 3.81 mm, pad gap 0.60 -> 1.87 mm (>= 1.8 mm), so one blob cannot easily wet all three pads
+    # (an accidental 1-2-3 bridge would join S1 and S7 = VIN/VCC and IRQ/ADDR of the module). A 0.5 mm R13-R16
+    # off-cut (3.81 + 2.4 = 6.2 mm long) or a deliberate solder bridge over 1.87 mm still closes one side.
+    fp = new_fp("SolderJumper_3_THT_P3.81mm", "3-way selector jumper, THT pads 3.81 mm pitch (1.87 mm gap), bridge 1-2 or 2-3")
     for k in range(3):
-        add_pad(fp, str(1 + k), 2.54 * k, 0, RECT, 1.94, 2.4, 0.8)
-    add_rect(fp, pcbnew.F_SilkS, -1.3, -1.55, 6.38, 1.55, 0.12)
-    add_rect(fp, pcbnew.F_CrtYd, -1.22, -1.45, 6.30, 1.45, 0.05)
-    add_rect(fp, pcbnew.F_Fab, -1.0, -1.2, 6.08, 1.2, 0.1)
+        add_pad(fp, str(1 + k), JP1_PITCH * k, 0, RECT, 1.94, 2.4, 0.8)
+    xe = 2 * JP1_PITCH
+    add_rect(fp, pcbnew.F_SilkS, -1.3, -1.55, xe + 1.3, 1.55, 0.12)
+    add_rect(fp, pcbnew.F_CrtYd, -1.22, -1.45, xe + 1.22, 1.45, 0.05)
+    add_rect(fp, pcbnew.F_Fab, -1.0, -1.2, xe + 1.0, 1.2, 0.1)
     fp.SetExcludedFromBOM(True)                    # copper only, nothing to buy (matches the symbol)
-    out["SolderJumper_3_THT_P2.54mm"] = fp
+    out["SolderJumper_3_THT_P3.81mm"] = fp
 
     # --- Screw terminal 5.08 mm (larger pads)
     fp = lib_fp("TerminalBlock_Phoenix", "TerminalBlock_Phoenix_MKDS-1,5-2-5.08_1x02_P5.08mm_Horizontal")
     fp.SetFPID(pcbnew.LIB_ID("FrutaMIDI", "TerminalBlock_5.08_1x02"))
     for p in fp.Pads():
-        set_pad(p, RECT if p.GetNumber() == "1" else CIRC, 3.0, 3.0, 1.4)    # T-056 / F-014: 1.4 mm drill
+        set_term_pad(p, p.GetNumber() == "1")                                # T-056 / F-014: 1.4 mm drill; T-076 oval
     # blocks butt against each other (continuous 5.08 pitch): courtyard = exact block width
     replace_courtyard(fp, [(-2.52, -5.7), (7.6, -5.7), (7.6, 5.0), (-2.52, 5.0)])
     replace_layer(fp, pcbnew.F_SilkS)
@@ -195,7 +218,7 @@ def build_footprints():
     # --- 14 ways = 7 interlocked 2-way blocks (pin 1 on the left)
     fp = new_fp("TerminalBlock_5.08_1x14", "7 interlocked 2-way screw terminal blocks, 5.08 mm pitch")
     for i in range(14):
-        add_pad(fp, str(i + 1), 5.08 * i, 0, RECT if i == 0 else CIRC, 3.0, 3.0, 1.4)   # F-014: pin diag 1.27 mm
+        set_term_pad(add_pad(fp, str(i + 1), 5.08 * i, 0, OVAL, 3.0, 3.0, 1.4), i == 0)   # F-014: pin diag 1.27 mm
     for b in range(7):
         x0 = 10.16 * b
         add_rect(fp, pcbnew.F_SilkS, x0 - 2.3, -5.4, x0 + 7.38, 4.4)
@@ -223,6 +246,25 @@ def build_footprints():
             set_pad(p, RECT if p.GetNumber() == "1" else OVAL, 2.6, 1.8, 1.0)
     out["Potentiometer_RK09K_Vertical"] = fp
 
+    # --- T-076: C1, KEMET Golden Max C322 radial MLCC: L 5.08, H 6.60, T 3.18 mm max, lead spacing 5.08 mm, lead
+    # .020 +.004/-.001 in = 0.48..0.61 mm (SOURCE EE-S29, dimension table). T-080 / F2-001: drill 0.8 -> 0.9 mm so the
+    # max lead fits (CALCULATION: hole - lead = 0.9 - 0.61 = 0.29 mm diametral >= 0.2 mm rule); round pad 2.0 mm,
+    # ring (2.0 - 0.9)/2 = 0.55 mm >= 0.4 mm. Silkscreen only above and below the body, clear of the pads.
+    fp = new_fp("C_Radial_KEMET_C322_P5.08mm_HomeEtch",
+                "KEMET Golden Max C322 radial MLCC, 5.08 x 3.18 mm body, 5.08 mm lead spacing, home-etch pads")
+    for k in range(2):
+        add_pad(fp, str(k + 1), 5.08 * k, 0, CIRC, 2.0, 2.0, 0.9)
+    for yy in (-1.75, 1.75):
+        add_line(fp, pcbnew.F_SilkS, 1.2, yy, 3.88, yy, 0.12)
+    add_rect(fp, pcbnew.F_Fab, 0.0, -1.59, 5.08, 1.59, 0.1)
+    add_rect(fp, pcbnew.F_CrtYd, -1.25, -1.85, 6.33, 1.85, 0.05)
+    for model in lib_fp("Capacitor_THT", "C_Disc_D5.0mm_W2.5mm_P5.00mm").Models():
+        # T-080 / F2-007: stretch the 5.00 mm library model along x about pad 1 so its leads land on the 5.08 mm
+        # pads (scale 5.08 / 5.00 = 1.016; body width 5.0 -> 5.08 mm, the C322 L max). Render only, no copper.
+        model.m_Scale.x = 5.08 / 5.00
+        fp.Add3DModel(model)
+    out["C_Radial_KEMET_C322_P5.08mm_HomeEtch"] = fp
+
     # --- Resistor 0204 mounted vertical, 2.54 mm pitch (T-050: electrode series R and I2C pull-ups)
     # Pads enlarged for home etching: 1.6 mm pad, 0.8 mm drill (annular ring 0.4 mm); lead 0.45-0.5 mm (Yageo MFR-12).
     fp = lib_fp("Resistor_THT", "R_Axial_DIN0204_L3.6mm_D1.6mm_P2.54mm_Vertical")
@@ -230,6 +272,19 @@ def build_footprints():
     for p in fp.Pads():
         set_pad(p, CIRC, 1.6, 1.6, 0.8)
     out["R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch"] = fp
+
+    # --- Resistor DIN0414 lying flat, 15.24 mm pitch (T-060 / CR-002: electrode series R1-R12, pulse-rated).
+    # Vishay MBE/SMA 0414: D <= 4.2 mm, L <= 11.9 mm, lead 0.8 mm, min. pitch 15.0 mm (SOURCE EE-S17).
+    # Pads 2.2 mm, drill 1.1 mm (T-073 / C2-008: ring (2.2 - 1.1)/2 = 0.55 mm; hole - lead = 0.3 mm diametral,
+    # 0.15 mm radial, above the 0.2 mm diametral fit rule of calc_mechanical.py). Copper gap pad-to-pad 13.04 mm
+    # >= flashover rule 3.5 mm (sim/electronics/calc/calc_flashover.py). Courtyard = body 4.2 mm + 0.05 mm
+    # each side (the 4.5 mm library outline is the generic DIN size; the real part is 4.2 mm max).
+    fp = lib_fp("Resistor_THT", "R_Axial_DIN0414_L11.9mm_D4.5mm_P15.24mm_Horizontal")
+    fp.SetFPID(pcbnew.LIB_ID("FrutaMIDI", "R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch"))
+    for p in fp.Pads():
+        set_pad(p, CIRC, 2.2, 2.2, 1.1)
+    replace_courtyard(fp, [(-1.35, -2.15), (16.59, -2.15), (16.59, 2.15), (-1.35, 2.15)])
+    out["R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch"] = fp
 
     # --- M3 hole
     fp = lib_fp("MountingHole", "MountingHole_3.2mm_M3")
@@ -276,22 +331,36 @@ W, H = 100.0, 70.0
 PICO = (4.5, 2.0)                 # pin 1
 POT = (28.0, 12.16)               # potentiometer pin 1
 BTN = (27.0, 29.94)               # pad 1 (top-left corner)
-MOD_C = (57.48, 32.745)           # module centre
-CFG = (44.0, 15.0)                # J1 pad 1 (SCL); pad 2 (SDA) at +3.81 mm
+# T-060 / CR-002: module moved 15.1 mm up and 2.54 mm right so that the pulse-rated DIN0414 resistors
+# (15.24 mm pitch, lying flat) and the 2.54 -> 5.08 mm fan-out fit between the module and J2.
+MOD_C = (60.02, 17.645)           # module centre (electrode row at y = 25.9, power/I2C S row at y = 10.66)
+CFG = (85.0, 12.5)                # J1 pad 1 (SCL); pad 2 (SDA) at +3.81 mm (right of the module)
 T0, TY = 27.0, 64.5               # first terminal (GND), terminal row
-HOLES = [(8.0, 64.0), (95.0, 5.0), (95.0, 48.0), (70.0, 6.0)]
+# T-060: H4 moved from (70, 6) (module row). T-073 / C2-009: H3 moved from (95, 48) to (96, 38): at (95, 48) a metal
+# screw head or washer (ASSUMED 5.6-7.0 mm) lay 0.2-0.9 mm from the R12 body and level with both of its end caps, a
+# floating-metal bypass of R12 (check_gap.py section (e)); at (96, 38) it faces only the ELE11 end cap.
+HOLES = [(8.0, 64.0), (95.0, 5.0), (96.0, 38.0), (88.5, 30.5)]
 
 W_SIG, W_PWR, W_STUB = 1.0, 1.2, 0.8
 
-# T-050 resistors (0204 vertical, pad 1 = footprint origin, pad 2 2.54 mm below after rotation)
-R_Y1 = 44.6               # pad 1 row of the electrode series resistors (module e-row pads at y = 41.0)
-R_STUB = 1.0              # straight drop below pad 2 before the 45° fan-out (keeps 0.6 mm to the next pad)
+# T-060 electrode resistors R1-R12: DIN0414 lying flat, axis along y, pad 1 (ELEx) on top, pad 2 (Ex) 15.24 mm
+# below. One row at the terminal pitch 5.08 mm, offset R_DX to the right of the terminals (centres the
+# 2.54 -> 5.08 mm fan-out: |dx| <= 13.97 mm on the module side, 1.27 mm on the terminal side).
+R_PITCH = 15.24
+R_Y1 = 42.15              # pad 1 row (courtyard 40.8 .. 58.74 stays above the J2 courtyard at 58.8)
+R_DX = 1.27               # resistor x = terminal x + R_DX
+E_STUB_Y = 27.9           # module side: straight drop from the electrode pin (y = 25.9) before the 45° run
 R_ROT_DOWN = -90          # orientation that puts pad 2 below pad 1 (checked by check_vertical)
-PU_SCL = (44.0, 6.0)      # R13 pad 1 on the 3V3 track (y = 6); pad 2 drops onto the SCL hole of J1
-PU_SDA = (47.81, 6.0)     # R14 pad 1 on the 3V3 track (y = 6); pad 2 drops onto the SDA hole of J1
+GND_DIAG = 71.8           # module GND run x + y = const: >= 0.6 mm from SW1, ch.1 track and R1 (CALCULATION)
+R_ROT_UP = 90             # 0204 vertical part with pad 2 above pad 1
+PU_SCL = (85.0, 5.5)      # R13 pad 1 on 3V3; pad 2 (2.54 mm below) drops onto the SCL hole of J1
+PU_SDA = (88.81, 5.5)     # R14 pad 1 on 3V3; pad 2 drops onto the SDA hole of J1
 SER_SDA = (27.0, None)    # T-055 R16 pad 1 x on the SDA row (pad 2 at +2.54 mm)
-SER_SCL_Y = 21.0          # T-055 R15 pad 1 y on the SCL riser x = 44 (pad 2 2.54 mm above)
-JP1 = (51.6, 15.5)        # T-052 selector jumper, pad 1 (ORIG -> S1); pad 2 = 3V3; pad 3 (QT -> S7)
+SER_SCL = (85.0, 18.5)    # T-055 R15 pad 1 (Pico side) at the end of the SCL run; pad 2 2.54 mm above
+JP1 = (79.5, 15.74)       # T-052 selector jumper turned upright: pad 1 (ORIG -> S1) bottom, pad 2 = 3V3, pad 3 (QT -> S7) top
+C1_POS = (31.2, 5.3)      # T-076: C1 pad 1 (POT); pad 2 (AGND) 5.08 mm to the right, between the 3V3 top run and RV1
+TOP_3V3_Y = 2.0           # 3V3 run along the top edge (above the S1..S7 wire holes)
+Y_S1, Y_SCL, Y_SDA = 15.74, 18.5, 21.0   # runs under the module (between the S row and the electrode row)
 
 # The board sits away from the sheet corner so a printer at 100 % does not clip anything.
 OX, OY = 50.0, 50.0
@@ -393,11 +462,11 @@ def place(bd, fps, comps, pin_net, ref, x, y, rot=0, ref_at=None):
     return fp
 
 
-def check_vertical(fp, x, y):
-    """Fail the build if pad 2 of a vertical resistor is not 2.54 mm directly below pad 1."""
+def check_vertical(fp, x, y, pitch=2.54):
+    """Fail the build if pad 2 of a resistor is not `pitch` mm directly below (pitch < 0: above) pad 1."""
     pos = {p.GetNumber(): p.GetPosition() for p in fp.Pads()}
     p1, p2 = pos["1"], pos["2"]
-    want1, want2 = VB(x, y), VB(x, y + 2.54)
+    want1, want2 = VB(x, y), VB(x, y + pitch)
     if abs(p1.x - want1.x) > 1000 or abs(p1.y - want1.y) > 1000 or \
        abs(p2.x - want2.x) > 1000 or abs(p2.y - want2.y) > 1000:
         raise SystemExit("resistor %s pads at %s/%s, expected pad 2 below pad 1"
@@ -414,9 +483,9 @@ def build_board():
 
     place(bd, None, comps, pin_net, "A1", *PICO, ref_at=(8.89, 24.0))
     place(bd, None, comps, pin_net, "A2", *MOD_C, ref_at=(-13.0, -2.5))
-    place(bd, None, comps, pin_net, "J1", *CFG, ref_at=(3.81, -4.0))
+    place(bd, None, comps, pin_net, "J1", *CFG, ref_at=(6.6, 0.0))
     place(bd, None, comps, pin_net, "J3", *mod_q(1), ref_at="hide")
-    place(bd, None, comps, pin_net, "RV1", *POT)
+    place(bd, None, comps, pin_net, "RV1", *POT, ref_at=(10.0, 2.5))     # T-076: inside the body outline (C1 above)
     place(bd, None, comps, pin_net, "SW1", *BTN)
     place(bd, None, comps, pin_net, "J2", *term(0), ref_at="hide")
     for k, (x, y) in enumerate(HOLES):
@@ -440,32 +509,56 @@ def build_board():
     bd.track([p34, (24.0, p34[1]), (24.0 + (p34[1] - (py + 2.5)), py + 2.5), (px, py + 2.5)], N("A1", "34"))
     p33 = pico_pin(33)
     bd.track([p33, (24.6, p33[1]), (24.6 + (p33[1] - (py + 5.0)), py + 5.0), (px, py + 5.0)], N("A1", "33"))
+    # T-076: C1 100 nF wiper -> AGND above RV1 (outside its courtyard). POT leaves pad 2 to the right, climbs at
+    # x = C1 pad 1 between pad 1 (3V3) and the upper mounting tab; AGND joins C1 pad 2, both tabs (pad "MP") and pad 3.
+    cx1, cy1 = C1_POS
+    place(bd, None, comps, pin_net, "C1", cx1, cy1, ref_at=(2.54, -2.75))
+    bd.track([(px, py + 2.5), (cx1, py + 2.5), (cx1, cy1)], N("A1", "34"))
+    mp = sorted((p.GetPosition().y, p.GetPosition().x) for p in
+                [q for f in bd.b.GetFootprints() if f.GetReference() == "RV1" for q in f.Pads() if q.GetNumber() == "MP"])
+    (mty, mtx), (mby, mbx) = [((y - mm(OY)) / 1e6, (x - mm(OX)) / 1e6) for y, x in mp]
+    agnd = N("A1", "33")
+    c2x = cx1 + 5.08
+    bd.track([(c2x, cy1), (c2x, mty - 1.28), (mtx, mty)], agnd)          # C1 pad 2 -> upper tab
+    bd.track([(mtx, mty), (mbx, mby)], agnd)                             # upper tab -> lower tab
+    bd.track([(px, py + 5.0), (mbx - 1.9, py + 5.0), (mbx, mby)], agnd)  # pad 3 -> lower tab
 
-    # --- 3V3 over the potentiometer to the pull-ups and the JP1 centre pad -------------------
+    # --- 3V3 up past the potentiometer and along the top edge (above the S1..S7 wire holes) -------
+    # T-060: the module moved up, so 3V3 runs over the J3 wire holes to the pull-ups and JP1 on the right.
     cx, cy = CFG
-    jc = (JP1[0] + 2.54, JP1[1])                     # JP1 centre pad (3V3)
-    bd.track([(25.0, pico_pin(36)[1]), (25.0, 6.0), (jc[0], 6.0), jc], V33, W_PWR)
+    jc = (JP1[0], JP1[1] - JP1_PITCH)                # JP1 centre pad (3V3), JP1 upright
+    yt = TOP_3V3_Y
+    bd.track([(25.0, pico_pin(36)[1]), (25.0, yt), (PU_SDA[0], yt), PU_SDA], V33, W_PWR)
+    bd.track([(PU_SCL[0], yt), PU_SCL], V33, W_PWR)
+    xj = 82.5                                        # 3V3 drop to the JP1 centre pad, right of JP1
+    bd.track([(xj, yt), (xj, jc[1]), jc], V33, W_PWR)
 
-    # --- I2C: both come up from below (T-052: J1 = SCL | SDA, so the tracks do not cross) --------
-    # T-055: 220R in line, pad 1 = Pico side, pad 2 = bus side (J1 hole + pull-up).
-    # R16 (SDA) lies on the SDA row between the Pico and SW1; R15 (SCL) stands on the SCL riser below J1
-    # (both outside the module and potentiometer courtyards).
+    # --- I2C: Pico -> under the module (between the S row and the electrode row) -> right side -----
+    # T-055: 220R in line, pad 1 = Pico side, pad 2 = bus side (J1 hole + pull-up). R16 (SDA) stays on the SDA
+    # row left of SW1; R15 (SCL) stands at the end of the SCL run, below J1.
     p31, p32 = pico_pin(31), pico_pin(32)
-    place(bd, None, comps, pin_net, "R16", SER_SDA[0], p31[1], ref_at=(1.27, 1.9))
+    place(bd, None, comps, pin_net, "R16", SER_SDA[0], p31[1], ref_at=(1.27, -2.05))   # T-076: above, clear of SW1 (check_silk)
     bd.track([p31, (SER_SDA[0], p31[1])], N("A1", "31"))
-    bd.track([(SER_SDA[0] + 2.54, p31[1]), (cx + 3.81, p31[1]), (cx + 3.81, cy)], N("J1", "2"))
-    fp = place(bd, None, comps, pin_net, "R15", cx, SER_SCL_Y, rot=90, ref_at=(2.2, -1.27))
-    pads = {p.GetNumber(): p.GetPosition() for p in fp.Pads()}
-    if abs(pads["2"].y - VB(cx, SER_SCL_Y - 2.54).y) > 1000 or abs(pads["2"].x - VB(cx, 0).x) > 1000:
-        raise SystemExit("R15 pad 2 is not 2.54 mm above pad 1")
-    bd.track([p32, (cx, p32[1]), (cx, SER_SCL_Y)], N("A1", "32"))
-    bd.track([(cx, SER_SCL_Y - 2.54), (cx, cy)], N("J1", "1"))
+    xd = 40.5                                        # SDA climbs after SW1 / below the potentiometer pad
+    bd.track([(SER_SDA[0] + 2.54, p31[1]), (xd, p31[1]), (xd + (p31[1] - Y_SDA), Y_SDA),
+              (cx + 3.81, Y_SDA), (cx + 3.81, cy)], N("J1", "2"))
+    xc = 38.5                                        # SCL climbs right of the potentiometer mounting pad
+    sx, sy = SER_SCL
+    bd.track([p32, (xc, p32[1]), (xc + (p32[1] - Y_SCL), Y_SCL), (sx, Y_SCL)], N("A1", "32"))
+    fp = place(bd, None, comps, pin_net, "R15", sx, sy, rot=R_ROT_UP, ref_at=(2.2, -1.27))
+    check_vertical(fp, sx, sy, -2.54)
+    bd.track([(sx, sy - 2.54), (cx, cy)], N("J1", "1"))
 
-    # --- JP1 3V3 selector: pad 1 -> S1 (original VIN), pad 3 -> S7 (STEMMA QT VCC) ----------------
-    place(bd, None, comps, pin_net, "JP1", *JP1, ref_at="hide")
-    bd.track([JP1, mod_q(1)], N("A2", "14"), W_PWR)
-    s7 = mod_q(7)
-    bd.track([(JP1[0] + 5.08, JP1[1]), (s7[0], JP1[1]), s7], N("A2", "20"), W_PWR)
+    # --- JP1 3V3 selector (upright, right of the module): pad 1 -> S1 (original VIN), pad 3 -> S7 (QT VCC)
+    fp = place(bd, None, comps, pin_net, "JP1", *JP1, rot=R_ROT_UP, ref_at="hide")
+    check_vertical(fp, JP1[0], JP1[1], -JP1_PITCH)
+    s1, s7 = mod_s(1), mod_s(7)
+    bd.track([s1, (s1[0], Y_S1), JP1], N("A2", "14"), W_PWR)
+    # T-076: pad 3 now sits 2.54 mm above the S row: S7 runs level, then 45 deg up, then level into pad 3
+    j3y = JP1[1] - 2 * JP1_PITCH
+    rise = s7[1] - j3y
+    xr = JP1[0] - 4.0 - rise                         # 45 deg rise ends 4 mm left of the pad centre
+    bd.track([s7, (xr, s7[1]), (xr + rise, j3y), (JP1[0], j3y)], N("A2", "20"), W_PWR)
 
     # --- Module S row joined to the Q row (wire holes) --------------------------------
     for k in range(1, 8):
@@ -477,28 +570,35 @@ def build_board():
     p28 = pico_pin(28)
     bd.track([p28, (24.5, p28[1]), (bx, by + 4.5)], GND, W_PWR)
 
-    # --- Module GND and first terminal, from Pico pin 23 ---------------------------
+    # --- Module GND (electrode row pin 1) and first terminal, from Pico pin 23 ---------------------
+    # T-060: 45° run x + y = GND_DIAG, outermost on the left of the electrode fan-out.
     g = mod_e(0)
     p23 = pico_pin(23)
-    k = g[0] - (p23[1] - g[1])                     # start of the 45 deg climb
     t1 = term(0)
-    bd.track([p23, (t1[0], p23[1]), (k, p23[1]), g], GND, W_PWR)
-    bd.track([(t1[0], p23[1]), t1], GND, W_PWR)
+    gy = GND_DIAG - g[0]                             # end of the straight drop below the GND pin
+    bd.track([g, (g[0], gy), (t1[0], GND_DIAG - t1[0]), (t1[0], p23[1]), t1], GND, W_PWR)
+    bd.track([p23, (t1[0], p23[1])], GND, W_PWR)
 
-    # --- Electrodes: module pin -> series R (vertical, directly under the pin) -> 45° fan-out -> terminal
-    # T-050. Rj sits in electrode E(j-1); pad 1 (module side, net ELEx) on top, pad 2 (terminal side, net Ex) below.
+    # --- Electrodes: module pin -> 45° fan-out (ELEx, low voltage) -> R lying flat -> short 45° -> terminal (Ex)
+    # T-060 / CR-002: every ELE copper lies above y = R_Y1 + 1.1, every E copper below y = R_Y1 + R_PITCH - 1.1,
+    # so the ELE/E gap (same channel and cross-channel) is set by the resistor pitch (check_gap.py measures it).
     for j in range(1, 13):
         ex, ey = mod_e(j)
         tx, ty = term(j)
-        fp = place(bd, None, comps, pin_net, "R%d" % j, ex, R_Y1, rot=R_ROT_DOWN, ref_at="hide")
-        check_vertical(fp, ex, R_Y1)
-        bd.track([(ex, ey), (ex, R_Y1)], N("A2", str(1 + j)))
-        y0 = R_Y1 + 2.54 + R_STUB
-        bd.track([(ex, R_Y1 + 2.54), (ex, y0), (tx, y0 + abs(tx - ex)), (tx, ty)], N("J2", str(1 + j)))
+        rx = tx + R_DX
+        fp = place(bd, None, comps, pin_net, "R%d" % j, rx, R_Y1, rot=R_ROT_DOWN, ref_at="hide")
+        check_vertical(fp, rx, R_Y1, R_PITCH)
+        dx = rx - ex
+        if E_STUB_Y + abs(dx) > R_Y1 + 1e-6:
+            raise SystemExit("electrode %d: fan-out does not reach x before the resistor row" % j)
+        bd.track([(ex, ey), (ex, E_STUB_Y), (rx, E_STUB_Y + abs(dx)), (rx, R_Y1)], N("A2", str(1 + j)))
+        y2 = R_Y1 + R_PITCH
+        bd.track([(rx, y2), (tx, y2 + R_DX), (tx, ty)], N("J2", str(1 + j)))
 
-    # --- I2C pull-ups 4.7k to 3V3 (T-050), Pico side of the module's level shifter
-    for ref, (x, y), net in (("R13", PU_SCL, N("J1", "1")), ("R14", PU_SDA, N("J1", "2"))):
-        fp = place(bd, None, comps, pin_net, ref, x, y, rot=R_ROT_DOWN, ref_at=(-2.2, 1.27))
+    # --- I2C pull-ups 4.7k to 3V3 (T-050), above J1 (bus side of R15/R16)
+    for ref, (x, y), net, rdx in (("R13", PU_SCL, N("J1", "1"), -2.0), ("R14", PU_SDA, N("J1", "2"), 2.0)):
+        # T-076: R14 designator moved to the right of R14 (it was 0.16 mm from R13 pad 1, check_silk.py)
+        fp = place(bd, None, comps, pin_net, ref, x, y, rot=R_ROT_DOWN, ref_at=(rdx, 1.27))
         check_vertical(fp, x, y)
         bd.track([(x, y + 2.54), (x, cy)], net)
 
@@ -507,22 +607,28 @@ def build_board():
     bd.track([a, (a[0], H - 2.0), (z[0], H - 2.0), z], GND, W_PWR)
 
     # --- Texts ----------------------------------------------------------------------------------
-    bd.text("FrutaMIDI v1.1", 82.0, 12.0, pcbnew.B_Cu, 2.0, mirror=True)
-    bd.text("copper: bottom side", 82.0, 15.5, pcbnew.B_Cu, 1.2, mirror=True)
-    bd.text("FrutaMIDI v1.1", 82.0, 12.0, pcbnew.F_SilkS, 2.0)
-    bd.text("github.com/catuta0/fruta-midi-controller", 72.0, 2.2, pcbnew.F_SilkS, 1.0)
+    bd.text("FrutaMIDI v1.2", 13.4, 55.0, pcbnew.B_Cu, 2.0, mirror=True)
+    bd.text("copper: bottom side", 13.4, 58.4, pcbnew.B_Cu, 1.2, mirror=True)
+    bd.text("FrutaMIDI v1.2", 13.4, 55.0, pcbnew.F_SilkS, 2.0)
+    bd.text("github.com/catuta0/fruta-midi-controller", 60.0, 1.0, pcbnew.F_SilkS, 0.8)
     labels = ["GND"] + [str(i) for i in range(12)] + ["GND"]
     for i, lab in enumerate(labels):
         x, _ = term(i)
-        bd.text(lab, x, 57.6, pcbnew.F_SilkS, 1.1)
+        # numbers sit midway between pad 2 of the previous resistor (x - 5.08 + R_DX) and of their own (x + R_DX),
+        # i.e. at x + R_DX - 2.54; two-digit labels are smaller so they keep >= 0.2 mm from both pads (T-073 / C2-010,
+        # measured by check_silk.py)
+        if lab == "GND":
+            bd.text(lab, x, 57.6, pcbnew.F_SilkS, 1.1)
+        else:
+            bd.text(lab, x + R_DX - 2.54, 57.6, pcbnew.F_SilkS, 1.1 if len(lab) == 1 else 0.9)
     bd.text("OCTAVE", POT[0] + 7.0, 24.0, pcbnew.F_SilkS, 1.0)
     bd.text("SCALE", BTN[0] + 3.25, BTN[1] + 7.6, pcbnew.F_SilkS, 1.0)
-    bd.text("R1 ... R12 = 3k3 (E0 ... E11)", mod_e(6)[0], 50.6, pcbnew.F_SilkS, 1.0)
-    bd.text("ORIG", JP1[0], JP1[1] - 3.1, pcbnew.F_SilkS, 0.8)
-    bd.text("QT", JP1[0] + 5.08, JP1[1] - 3.1, pcbnew.F_SilkS, 0.8)
+    bd.text("R1 ... R12 = 3k3 pulse-rated, lying flat (E0 ... E11)", 61.0, 39.0, pcbnew.F_SilkS, 1.0)
+    bd.text("ORIG", JP1[0], JP1[1] + 2.15, pcbnew.F_SilkS, 0.8)          # below pad 1
+    bd.text("QT", JP1[0], JP1[1] - 2 * JP1_PITCH - 2.15, pcbnew.F_SilkS, 0.8)   # above pad 3
     # T-055 / ADR-009 D-10: how to pick the JP1 side (free area right of the module)
     for k, line in enumerate(("JP1 3V3 selector:", "ORIG = no white connectors", "QT = 2 white connectors")):
-        bd.text(line, 86.0, 21.0 + 1.6 * k, pcbnew.F_SilkS, 0.8)
+        bd.text(line, 88.0, 22.9 + 1.55 * k, pcbnew.F_SilkS, 0.8)    # T-076: 1.55 mm pitch, boxes do not touch
 
     ds = bd.b.GetDesignSettings()
     ds.SetAuxOrigin(VB(0, 0))          # Gerber/drill origin at the board corner

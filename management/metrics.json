@@ -64,6 +64,142 @@
       "label": "CALCULATION",
       "revision": "T-052",
       "evidence": "sim/electronics/calc/calc_esd_variants.out"
+    },
+    {
+      "name": "bom_core_range",
+      "value": "23.98-38.62",
+      "unit": "EUR",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "reports/systems/budgets.md; sim/systems/budgets.out"
+    },
+    {
+      "name": "esd_gap_ele_e_min",
+      "value": 13.04,
+      "unit": "mm",
+      "label": "MEASUREMENT (design file)",
+      "revision": "CR-002 T-060",
+      "evidence": "sim/electronics/calc/check_gap.out"
+    },
+    {
+      "name": "esd_gap_e_other_min",
+      "value": 10.92,
+      "unit": "mm",
+      "label": "MEASUREMENT (design file)",
+      "revision": "CR-002 T-060",
+      "evidence": "sim/electronics/calc/check_gap.out"
+    },
+    {
+      "name": "electrode_R_pulse_rating_3k3",
+      "value": 4.08,
+      "unit": "kV",
+      "label": "SOURCE",
+      "revision": "CR-002 T-060",
+      "evidence": "sim/electronics/calc/calc_pulse_rated.out"
+    },
+    {
+      "name": "pot_filter_C1_part",
+      "value": "KEMET C322C104K5R5TA, 100 nF X7R 50 V +-10 %, radial 5.08 mm",
+      "unit": "-",
+      "label": "SOURCE",
+      "revision": "CR-002 T-076/T-077 (a216c1b)",
+      "evidence": "reports/electronics/SOURCES_EE.md EE-S29; management/INTERFACES.json board.capacitors"
+    },
+    {
+      "name": "pot_filter_C1_price",
+      "value": "0.20-0.90",
+      "unit": "EUR",
+      "label": "ASSUMPTION",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "reports/electronics/SOURCES_EE.md EE-S30 (distributor search, not verified); sim/systems/budgets.out"
+    },
+    {
+      "name": "pot_filter_tau_worst",
+      "value": 0.38,
+      "unit": "ms",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "sim/systems/budgets.out A7; sim/electronics/calc/calc_pot_rc.out"
+    },
+    {
+      "name": "pot_filter_settling_margin_worst",
+      "value": 10.4,
+      "unit": "x (30 ms read period / 2.89 ms settling)",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "sim/systems/budgets.out A7"
+    },
+    {
+      "name": "jp1_pad_gap",
+      "value": 1.87,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "sim/systems/pcb_rules_check.out (read from the design file)"
+    },
+    {
+      "name": "j2_pad_size",
+      "value": "3.0 x 4.5",
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-077 (a216c1b)",
+      "evidence": "sim/systems/pcb_rules_check.out (read from the design file)"
+    },
+    {
+      "name": "c1_drill",
+      "value": 0.9,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "hardware/frutamidi.kicad_pcb; sim/systems/pcb_rules_check.out"
+    },
+    {
+      "name": "c1_lead_fit_max_lead",
+      "value": 0.29,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "sim/electronics/calc/calc_mechanical.out (lead max 0.61 mm SOURCE EE-S29)"
+    },
+    {
+      "name": "c1_annular_ring",
+      "value": 0.55,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "sim/electronics/calc/calc_mechanical.out"
+    },
+    {
+      "name": "drill_holes_total",
+      "value": 133,
+      "unit": "holes",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "hardware/fabrication frutamidi.drl (counted)"
+    },
+    {
+      "name": "ex_gnd_spark_gap",
+      "value": 1.4,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "sim/systems/pcb_rules_check.out (12/12 pads, design file)"
+    },
+    {
+      "name": "knob_diameter_max",
+      "value": 15,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "hardware/README.md; T-080 handoff (shaft to C1 body 7.77 mm, design file)"
+    },
+    {
+      "name": "report_pages",
+      "value": 42,
+      "unit": "pages",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-082",
+      "evidence": "management/handoffs/documentation-engineer/T-082/frutamidi_report.log"
     }
   ]
 }

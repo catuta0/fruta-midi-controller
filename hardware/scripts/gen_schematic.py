@@ -219,8 +219,8 @@ class Sheet:
 	(paper "A3")
 	(title_block
 		(title "{title}")
-		(date "2026-10-30")
-		(rev "1.1")
+		(date "2026-11-07")
+		(rev "1.2")
 		(company "github.com/catuta0/fruta-midi-controller")
 		(comment 1 "Raspberry Pi Pico + Adafruit MPR121 (1982), single-sided PCB")
 	)
@@ -297,7 +297,9 @@ def build():
 
     # T-050: series resistor per electrode (ESD current limit; 2.7 k <= R <= 3.3 k, sim/electronics/calc).
     # Drawn on the wire between the module pin (net ELEx) and the terminal (net Ex).
-    R_FIELDS = {"Manufacturer": "Yageo", "MPN": "MFR-12FTF52-3K3"}
+    # T-060 / CR-002: pulse-rated part, 1.2/50 us rating 4.08 kV at 3k3 >= 3.64 kV across R at IEC 4 kV
+    # (sim/electronics/calc/calc_pulse_rated.py); DIN0414 body lying flat, 15.24 mm pitch (flashover gap).
+    R_FIELDS = {"Manufacturer": "Vishay Beyschlag", "MPN": "MBE04140C3301FC100"}
     TX, TY = 325.12, MY - 2.54                              # terminal pin 2 (E0) level with module pin 2 (E0)
     t = s.symbol("Connector", "Screw_Terminal_01x14", "J2", "Screw terminals 5.08 mm (7x 2-way)", TX, TY,
                  "FrutaMIDI:TerminalBlock_5.08_1x14", ref_at=(0, -20.32),
@@ -306,7 +308,7 @@ def build():
         mx, my, _ = s.pin_end(mod, MX, MY, str(2 + i))
         rx = 297.18
         r = s.symbol("Device", "R", "R%d" % (i + 1), "3k3", rx, my,
-                     "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=R_FIELDS, hide_ref=True,
+                     "FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch", fields=R_FIELDS, hide_ref=True,
                      rot=90)              # rows are 2.54 mm apart: designators are given by the column title
         r1x, r1y, _ = s.pin_end(r, rx, my, "1")
         r2x, r2y, _ = s.pin_end(r, rx, my, "2")
@@ -333,7 +335,7 @@ def build():
         s.connect(jq, QHX, QHY, str(k + 1), "S%d" % (k + 1))
     QX, QY = 233.68, 114.30
     jp = s.symbol("Jumper", "SolderJumper_3_Open", "JP1", "3V3_ORIG_QT", QX, QY,          # turned over: 3V3 on top
-                  "FrutaMIDI:SolderJumper_3_THT_P2.54mm", in_bom=False, ref_at=(0, 3.81), mirror_x=True)
+                  "FrutaMIDI:SolderJumper_3_THT_P3.81mm", in_bom=False, ref_at=(0, 3.81), mirror_x=True)
     s.connect(jp, QX, QY, "1", "S1")
     s.connect(jp, QX, QY, "2", "+3V3")
     s.connect(jp, QX, QY, "3", "S7")
@@ -342,7 +344,7 @@ def build():
            "  STEMMA QT module (current):      JP1 bridge 'QT'   (3V3 -> S7)   wires SDA -> S3   SCL -> S4\n"
            "Module GND enters through the electrode row (pin 1), the same on both revisions.",
            215.90, 165.10)
-    s.text("R1-R12: 3.3k in series with each electrode (ESD current limit, T-050).", 215.90, 180.34)
+    s.text("R1-R12: 3.3k in series with each electrode (ESD current limit, T-050);\npulse-rated DIN0414, lying flat (flashover gap, T-060).", 215.90, 180.34)
 
     # ------------------------------------------------------------------ user controls and mounting holes
     s.frame("4. User controls and mounting holes", 30.48, 198.12, 124.46, 254.00)
@@ -353,13 +355,23 @@ def build():
     s.connect(sw, BX, BY, "2", "GND")
     s.text("SCALE button", 45.72, 226.06)
     RX, RY = 96.52, 218.44
-    rv = s.symbol("Device", "R_Potentiometer", "RV1", "10k lin (B10K)", RX, RY, "FrutaMIDI:Potentiometer_RK09K_Vertical",
-                  ref_at=(-5.08, -1.27),
+    # T-076: symbol with the mounting-pin (MP) pin, so the two metal tabs of the RK09K can be tied to AGND
+    # (frame/shaft at the ADC ground: no floating metal under the user's hand next to the wiper).
+    rv = s.symbol("Device", "R_Potentiometer_MountingPin", "RV1", "10k lin (B10K)", RX, RY,
+                  "FrutaMIDI:Potentiometer_RK09K_Vertical", ref_at=(-5.08, -5.08),
                   fields={"Manufacturer": "Alps Alpine", "MPN": "RK09K series, 10k linear (B), vertical"})
     s.connect(rv, RX, RY, "1", "+3V3")
     s.connect(rv, RX, RY, "2", "POT")
     s.connect(rv, RX, RY, "3", "AGND")
+    s.connect(rv, RX, RY, "MP", "AGND")
     s.text("OCTAVE potentiometer", 101.60, 223.52)
+    # T-076: C1 100 nF wiper filter (ADC source impedance / pickup); C322 case = 5.08 mm lead spacing (SOURCE EE-S29)
+    CX, CY = 111.76, 236.22
+    c1 = s.symbol("Device", "C", "C1", "100n X7R 50V", CX, CY, "FrutaMIDI:C_Radial_KEMET_C322_P5.08mm_HomeEtch",
+                  ref_at=(2.54, -1.27), fields={"Manufacturer": "KEMET", "MPN": "C322C104K5R5TA"})
+    s.connect(c1, CX, CY, "1", "POT")
+    s.connect(c1, CX, CY, "2", "AGND")
+    s.text("C1: wiper to AGND, next to RV1", 88.90, 243.84)
     for k in range(4):
         s.symbol("Mechanical", "MountingHole", "H%d" % (k + 1), "M3", 43.18 + 12.70 * k, 243.84,
                  "FrutaMIDI:MountingHole_3.2mm_M3", in_bom=False)
