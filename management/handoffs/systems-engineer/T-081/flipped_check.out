@@ -1,0 +1,2 @@
+FAIL  ADR-020 Ex <-> GND edge-track spark gap 1.40 +/- 0.05 mm :: 12 electrode pads; gap min -0.100 / max -0.100 mm; nearest GND track is the edge track for 12 of 12; per pad E0=-0.100, E1=-0.100, E2=-0.100, E3=-0.100, E4=-0.100, E5=-0.100, E6=-0.100, E7=-0.100, E8=-0.100, E9=-0.100, E10=-0.100, E11=-0.100
+SUMMARY: 20 checks, 19 PASS, 1 FAIL

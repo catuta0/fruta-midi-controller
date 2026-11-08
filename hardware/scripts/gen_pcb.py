@@ -247,17 +247,21 @@ def build_footprints():
     out["Potentiometer_RK09K_Vertical"] = fp
 
     # --- T-076: C1, KEMET Golden Max C322 radial MLCC: L 5.08, H 6.60, T 3.18 mm max, lead spacing 5.08 mm, lead
-    # 0.51 mm (SOURCE EE-S29, dimension table). Drill 0.8 mm (hole - lead = 0.29 mm diametral, as the 0204 resistors),
-    # round pad 2.0 mm (ring 0.6 mm). Silkscreen only above and below the body, clear of the pads.
+    # .020 +.004/-.001 in = 0.48..0.61 mm (SOURCE EE-S29, dimension table). T-080 / F2-001: drill 0.8 -> 0.9 mm so the
+    # max lead fits (CALCULATION: hole - lead = 0.9 - 0.61 = 0.29 mm diametral >= 0.2 mm rule); round pad 2.0 mm,
+    # ring (2.0 - 0.9)/2 = 0.55 mm >= 0.4 mm. Silkscreen only above and below the body, clear of the pads.
     fp = new_fp("C_Radial_KEMET_C322_P5.08mm_HomeEtch",
                 "KEMET Golden Max C322 radial MLCC, 5.08 x 3.18 mm body, 5.08 mm lead spacing, home-etch pads")
     for k in range(2):
-        add_pad(fp, str(k + 1), 5.08 * k, 0, CIRC, 2.0, 2.0, 0.8)
+        add_pad(fp, str(k + 1), 5.08 * k, 0, CIRC, 2.0, 2.0, 0.9)
     for yy in (-1.75, 1.75):
         add_line(fp, pcbnew.F_SilkS, 1.2, yy, 3.88, yy, 0.12)
     add_rect(fp, pcbnew.F_Fab, 0.0, -1.59, 5.08, 1.59, 0.1)
     add_rect(fp, pcbnew.F_CrtYd, -1.25, -1.85, 6.33, 1.85, 0.05)
     for model in lib_fp("Capacitor_THT", "C_Disc_D5.0mm_W2.5mm_P5.00mm").Models():
+        # T-080 / F2-007: stretch the 5.00 mm library model along x about pad 1 so its leads land on the 5.08 mm
+        # pads (scale 5.08 / 5.00 = 1.016; body width 5.0 -> 5.08 mm, the C322 L max). Render only, no copper.
+        model.m_Scale.x = 5.08 / 5.00
         fp.Add3DModel(model)
     out["C_Radial_KEMET_C322_P5.08mm_HomeEtch"] = fp
 

@@ -21,7 +21,7 @@ PINS = {  # footprint name -> (pin description, max pin cross-dimension mm, labe
     "Config_2pads": ("AWG24 solid wire 0.51 mm", 0.51, "ASSUMPTION (wire gauge chosen by builder)"),
     "SolderJumper_3_THT_P3.81mm": ("resistor lead off-cut 0.45-0.50 mm as link (or solder bridge); T-076 pitch 3.81", 0.50,
                                    "SOURCE Yageo MFR lead (EE-S14)"),
-    "C_Radial_KEMET_C322_P5.08mm_HomeEtch": ("KEMET C322 radial MLCC lead 0.51 mm (.020 in), T-076", 0.51,
+    "C_Radial_KEMET_C322_P5.08mm_HomeEtch": ("KEMET C322 radial MLCC lead .020 +.004/-.001 in = 0.48..0.61 mm, max used; T-080 drill 0.9", 0.61,
                                              "SOURCE KEMET Golden Max dimension table (EE-S29)"),
     "TerminalBlock_5.08_1x14": ("Phoenix MKDS 1,5/2-5,08 pin 0.9 x 0.9 mm (diag 1.27); maker hole 1.3 mm",
                                 0.9 * math.sqrt(2), "SOURCE Phoenix Contact 1715721 data (via search)"),

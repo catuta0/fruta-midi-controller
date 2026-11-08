@@ -21,3 +21,14 @@ Not covered: hardware, ESD, peel-strength, knob fit; RK09K and current KEMET TA 
 
 ## Dispositions (manager)
 All F2 items are to be fixed before the tag (T-080 electronics: F2-001, F2-004, F2-005, F2-007; T-081 systems: F2-002 risk/test, F2-003, F2-006; documentation rebuild afterwards).
+
+## Dispositions (manager, after T-080/T-081)
+| ID | Disposition | Evidence |
+|---|---|---|
+| F2-001 | Fixed: drill 0.9 mm, fit 0.29 mm, ring 0.55 mm | calc_mechanical.out; T-080 |
+| F2-002 | Accepted risk R-011 + knob/shaft strike in REQ-023 step 2b + plastic knob ≤ 15 mm | RISKS.md, REQUIREMENTS.md, hardware/README.md |
+| F2-003 | Fixed | REQUIREMENTS.md, requirements.csv |
+| F2-004 | Fixed | hardware/README.md |
+| F2-005 | Fixed (knob ≤ 15 mm; substitute body/lead limits) | hardware/README.md |
+| F2-006 | Fixed: pcb_rules_check spark-gap check, 12/12 at 1.400 mm | pcb_rules_check.out; T-081 mutation outputs |
+| F2-007 | Fixed (typo; 3D model scaled to 5.08 mm) | analysis.md; gen_pcb.py |

@@ -115,3 +115,12 @@
 - Fixed: JP1 pitch 3.81 mm (pad gap 0.60 → 1.87 mm) against an accidental three-pad solder bridge; J2 pads 3.0 × 4.5 mm oval extended towards the block back (copper 7.1 → 11.6 mm² per pad, spark gap to the GND edge track kept at 1.40 mm); RV1 mounting tabs on AGND; C1 100 nF (KEMET C322C104K5R5TA) wiper to AGND, τ ≤ 0.38 ms vs 30 ms read interval (CALCULATION); silkscreen overlaps removed.
 - Rejected: C2 1 µF at the module. No single-layer route without passing 3V3 close to H2 hardware and running GND 1.1 mm from all electrode pins; both module versions have their own regulator and capacitors. Recorded as not needed.
 - D-ADR-021 addendum: C1 cost (+0.20–0.90 EUR) accepted (REQ-032 stays FAIL, upper bound 38.62 EUR); INTERFACES frozen-6 frozen by manager.
+
+## ADR-022 — Final re-review (T-079) dispositions, 2026-11-08
+- F2-001 fixed: C1 drill 0.8 → 0.9 mm (fit 0.29 mm at max lead 0.61 mm, ring 0.55 mm; CALCULATION, T-080).
+- F2-002 accepted risk R-011 (OPEN, owner electronics): RV1 frame stays on AGND; plastic knob ≤ 15 mm on an insulated shaft specified; knob/shaft strike added to the REQ-023 physical test (step 2b). Fallbacks (tabs unconnected or on GND) only if that test fails.
+- F2-003 fixed: REQ-032 evidence cites ADR-019 D-3 and the ADR-021 addendum; status FAIL against 30 EUR.
+- F2-004, F2-005, F2-007 fixed in hardware/README.md and reports/electronics/analysis.md (T-080).
+- F2-006 fixed: pcb_rules_check enforces the Ex ↔ GND spark gap 1.40 ± 0.05 mm (12/12 at 1.400 mm, MEASUREMENT on design file; mutation tests fail at 0.650 and −0.100 mm).
+- INTERFACES frozen-7 frozen by manager (documentation-only change: C1 drill/ring, spark-gap rule note, AGND ESD note).
+- No further independent re-review: changes are a drill size, wording and a new check, all reproduced by the manager (ERC 0, DRC 0/0/0, checks 85/85, 20/20, budgets 25/5).

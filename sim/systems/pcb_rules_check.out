@@ -5,7 +5,7 @@ PASS  REQ-027 through-hole only (no SMD pads) :: smd pads: 0
 PASS  REQ-029 track width >= 0.8 mm (stubs) / signal 1.0 / power 1.2 :: widths used [0.8, 1.0, 1.2] mm
 PASS  REQ-028 board outline 100 x 70 mm :: outline 100.000 x 70.000 mm (4 Edge.Cuts lines)
 PASS  REQ-029 annular ring >= 0.4 mm [Adafruit_MPR121_1982_Socket] :: min ring 0.40 mm (pad 1 rect 1.8x2.4 drill 1.0 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [C_Radial_KEMET_C322_P5.08mm_HomeEtch] :: min ring 0.60 mm (pad 1 circle 2.0x2.0 drill 0.8 offset 0.0/0.0)
+PASS  REQ-029 annular ring >= 0.4 mm [C_Radial_KEMET_C322_P5.08mm_HomeEtch] :: min ring 0.55 mm (pad 1 circle 2.0x2.0 drill 0.9 offset 0.0/0.0)
 PASS  REQ-029 annular ring >= 0.4 mm [Config_2pads] :: min ring 0.65 mm (pad 1 rect 2.2x2.2 drill 0.9 offset 0.0/0.0)
 PASS  REQ-029 annular ring >= 0.4 mm [Potentiometer_RK09K_Vertical] :: min ring 0.40 mm (pad 1 rect 2.6x1.8 drill 1.0 offset 0.0/0.0)
 PASS  REQ-029 annular ring >= 0.4 mm [R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch] :: min ring 0.40 mm (pad 1 circle 1.6x1.6 drill 0.8 offset 0.0/0.0)
@@ -17,4 +17,5 @@ PASS  REQ-029 annular ring >= 0.4 mm [TerminalBlock_5.08_1x14] :: min ring 0.80 
 PASS  REQ-029 annular ring >= 0.4 mm [WireHoles_1x07_P2.54mm] :: min ring 0.45 mm (pad 1 circle 1.8x1.8 drill 0.9 offset 0.0/0.0)
 PASS  ADR-021 JP1 pad gap >= 1.8 mm :: SolderJumper_3_THT_P3.81mm: pitch [3.81, 3.81] mm, pad-to-pad copper gaps [1.87, 1.87] mm
 PASS  ADR-021 J2 pads 3.0 x 4.5 mm :: 14 pads, sizes [(3.0, 4.5)], shapes ['oval', 'rect'], drill offsets [0.75] mm
-SUMMARY: 19 checks, 19 PASS, 0 FAIL
+PASS  ADR-020 Ex <-> GND edge-track spark gap 1.40 +/- 0.05 mm :: 12 electrode pads; gap min 1.400 / max 1.400 mm; nearest GND track is the edge track for 12 of 12; per pad E0=1.400, E1=1.400, E2=1.400, E3=1.400, E4=1.400, E5=1.400, E6=1.400, E7=1.400, E8=1.400, E9=1.400, E10=1.400, E11=1.400
+SUMMARY: 20 checks, 20 PASS, 0 FAIL

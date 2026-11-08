@@ -1,0 +1,2 @@
+6469f1ef25b977f5369a42fa097a3be5c11e181079a746cb15166cbe116e44a6  hardware/fabrication/gerbers/frutamidi.drl
+a629f20b68eea7d8608b9ec5307cbb21e3912fda0a98bd7e7123cadb1f5f3df2  hardware/frutamidi.kicad_pcb

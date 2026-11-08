@@ -23,15 +23,15 @@
   '9'                                                     size 1.10  bbox (75.82,56.61)-(77.24,58.59)  nearest R10 pad 2   0.73 mm  PASS
   'GND'                                                   size 1.10  bbox (91.18,56.61)-(94.90,58.59)  nearest R12 pad 2   0.85 mm  PASS
   'FrutaMIDI v1.2'                                        size 2.00  bbox (2.20,53.20)-(24.60,56.80)  nearest A1 pad 20   2.04 mm  PASS
-  'J1'                                                    size 1.27  bbox (90.40,11.48)-(92.80,13.52)  nearest J1 pad 2    0.49 mm  PASS
-  'A1'                                                    size 1.27  bbox (12.13,24.98)-(14.65,27.02)  nearest A1 pad 10   6.43 mm  PASS
-  'C1'                                                    size 1.27  bbox (32.39,1.53)-(35.09,3.57)  nearest C1 pad 1    1.10 mm  PASS
-  'SW1'                                                   size 1.00  bbox (28.60,27.09)-(31.90,28.79)  nearest SW1 pad 1   0.77 mm  PASS
-  'R16'                                                   size 1.00  bbox (26.69,21.96)-(29.85,23.66)  nearest R16 pad 1   0.40 mm  PASS
   'R13'                                                   size 1.00  bbox (82.15,5.19)-(83.85,8.35)  nearest R13 pad 1   0.35 mm  PASS
   'R14'                                                   size 1.00  bbox (89.96,5.19)-(91.66,8.35)  nearest R14 pad 1   0.35 mm  PASS
+  'A2'                                                    size 1.27  bbox (45.76,14.12)-(48.28,16.17)  nearest A2 pad 14   4.29 mm  PASS
+  'C1'                                                    size 1.27  bbox (32.39,1.53)-(35.09,3.57)  nearest C1 pad 1    1.10 mm  PASS
+  'SW1'                                                   size 1.00  bbox (28.60,27.09)-(31.90,28.79)  nearest SW1 pad 1   0.77 mm  PASS
+  'J1'                                                    size 1.27  bbox (90.40,11.48)-(92.80,13.52)  nearest J1 pad 2    0.49 mm  PASS
+  'A1'                                                    size 1.27  bbox (12.13,24.98)-(14.65,27.02)  nearest A1 pad 10   6.43 mm  PASS
+  'R16'                                                   size 1.00  bbox (26.69,21.96)-(29.85,23.66)  nearest R16 pad 1   0.40 mm  PASS
   'RV1'                                                   size 1.00  bbox (36.47,13.81)-(39.53,15.51)  nearest RV1 pad MP  2.06 mm  PASS
   'R15'                                                   size 1.00  bbox (86.35,15.65)-(88.05,18.81)  nearest R15 pad 1   0.55 mm  PASS
-  'A2'                                                    size 1.27  bbox (45.76,14.12)-(48.28,16.17)  nearest A2 pad 14   4.29 mm  PASS
 PASS worst silkscreen text-to-text gap 0.11 mm ('ORIG = no white connectors' <-> 'QT = 2 white connectors'; negative = overlap), criterion >= 0
 PASS worst silkscreen-text to pad gap 0.35 mm ('R13' <-> R13 pad 1), 34 texts
