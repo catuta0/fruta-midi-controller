@@ -37,7 +37,7 @@
 
 \title{FrutaMIDI: capacitive USB MIDI controller\\[2pt]\large Engineering report}
 \author{FrutaMIDI engineering project}
-\date{FrutaMIDI v1.2 (change request CR-002), interfaces frozen-5, 2026-11-07\\[2pt]
+\date{FrutaMIDI v1.2 (change request CR-002), interfaces frozen-6, requirements draft-8, 2026-11-07\\[2pt]
 \small Prepared for release V1.2 (git tag \texttt{v1.2.0}); not yet released.
 Previous release: V1\_BASELINE (git tag \texttt{v1.1.0-baseline})}
 
@@ -52,7 +52,10 @@ This report collects the requirements, decisions, interfaces, analyses and host
 tests for FrutaMIDI v1.2. Version 1.2 (change request CR-002) replaces the
 electrode series resistors by pulse-rated parts lying flat. By analysis of the
 design files, a \qty{4}{\kilo\volt} contact discharge should then neither arc
-across a resistor nor exceed its pulse rating; this has not been tested.
+across a resistor nor exceed its pulse rating; this has not been tested. A
+manager PCB design review then widened the JP1 solder-jumper gaps, enlarged the
+screw-terminal pads, tied the potentiometer tabs to AGND and added a 100\,nF
+wiper filter (ADR-021).
 Section~\ref{sec:changes} lists the changes since
 the V1\_BASELINE release. Every number is copied from a cited project
 file with its label. \textbf{No part of the hardware has been built or measured}:

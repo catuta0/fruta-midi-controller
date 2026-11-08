@@ -25,11 +25,11 @@ Risk level & Low--medium & High & Medium \\
 \bottomrule
 \end{longtable}
 \noindent The BOM figure for A above is the T-008 value; the current core BOM is
-23.78--37.72\,EUR (\lbl{CALCULATION}, budgets revision~6 after CR-002, REQ-032,
+23.98--38.62\,EUR (\lbl{CALCULATION}, budgets revision~7 after CR-002 and ADR-021, REQ-032,
 Section~\ref{sec:requirements}) \ev{reports/systems/budgets.md}.
 
 \subsection{Decisions}
-Summary of \ev{management/DECISIONS.md} (ADR-000 to ADR-019). Decisions taken by the manager under
+Summary of \ev{management/DECISIONS.md} (ADR-000 to ADR-021). Decisions taken by the manager under
 ADR-001 are flagged there for later user review.
 
 {\small
@@ -57,6 +57,8 @@ ADR-016 & REQ-018 stays FAIL with a documented deviation (low-power USB port 4.4
 ADR-017 & Firmware review fixes: per-note reference counting (F-004), sensor health with loss detection and retry (F-005), \texttt{setClock} after every sensor \texttt{begin()} (F-006). & T-044 \\
 ADR-018 & Re-review dispositions: F-007 fixed (build logs committed); N-001 accepted as a REQ-016 exception (lost-sensor restart 16.8--22.1\,ms, fault path only); N-002 evidence refreshed; N-003 interfaces frozen-3 (IF-PCB-AUX). & T-061 \\
 ADR-019 & CR-002 decisions. D-1: ESD scope stays $\pm$4\,kV; R1--R12 become Vishay MBE04140C3301FC100 (DIN0414, 3k3 1\,\%), 4.08\,kV 1.2/50\,\textmu s rating at 3.3\,k$\Omega$ (\lbl{SOURCE} EE-S17b), margin 1.12 at 4\,kV (\lbl{CALCULATION}); 8\,kV stays risk R-006, LSR37 deferred. D-2: board label ``FrutaMIDI v1.2''. D-3: cost increase accepted, REQ-032 stays FAIL. D-4: relayout accepted (module, J1, JP1, R13--R15, H4 moved; nets and pinout unchanged). & T-060, T-070 \\
+ADR-020 & CR-002 re-review dispositions: end-cap gap risk (C2-002) controlled by forming the leads on a gauge and a caliper check in the physical plan; the E-pad to GND edge track stays as an intentional spark gap (C2-005); H3 moved to (96, 38)\,mm. & T-073 \\
+ADR-021 & Manager PCB design review follow-up: JP1 pitch 3.81\,mm (gap 1.87\,mm); J2 pads 3.0\,$\times$\,4.5\,mm oval; RV1 tabs on AGND; C1 100\,nF wiper filter; silkscreen overlaps removed; C2 1\,\textmu F rejected. Addendum: C1 cost accepted (REQ-032 stays FAIL); INTERFACES frozen-6. & T-076, T-077 \\
 \bottomrule
 \end{longtable}
 }

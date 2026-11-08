@@ -83,7 +83,7 @@ dispositions are recorded in ADR-020 \ev{management/DECISIONS.md}.
 \paragraph{Summary.}
 \begin{itemize}[noitemsep]
   \item 13 findings: 0 critical, 0 major, 6 minor, 7 info.
-  \item Dispositions: 8 fixed (C2-006 by systems in T-074, not yet in c901ad8),
+  \item Dispositions: 8 fixed (C2-006 by systems in T-074, committed in 2ba289a),
         1 partly fixed with a residual accepted risk (C2-002), 1 accepted risk
         (C2-005), 2 accepted (C2-012 with a test added, C2-013), 1 no action
         (C2-004).
@@ -129,7 +129,7 @@ C2-002 & minor & Closest metal of a flat resistor is cap to cap, not the 13\,mm 
 C2-003 & minor & Pulse energy overstated about 2$\times$ ($\int V\,dt$ form); rating energy-limited at 3.3\,k$\Omega$. & Fixed: 182\,mJ ($\int V^2\,dt$); energy-limited below the 5073\,$\Omega$ knee, plateau 5054\,V; verdicts unchanged. \\
 C2-004 & info & Independent chart reading confirms 4086 / 1740 / 1469\,V; dimensions, LSR37 data and part number agree. & No action. \\
 C2-005 & minor & Every E terminal pad is 1.40\,mm from the GND edge track, so a strike most likely arcs to GND; the current through the GND trunk to Pico, module and USB was not analysed. & Accepted risk: intentional spark gap; ground bounce 87--339\,V for $\approx$1\,ns, $\le$1.53\,A and $\le$0.92\,nC per 220\,$\Omega$ I\textsuperscript{2}C resistor (\lbl{CALCULATION} on \lbl{ASSUMPTION}ed inductances); arc to GND added to the ESD test; GP26/GP27 HBM rating not confirmed (open). \\
-C2-006 & minor & Stale evidence: committed \nolinkurl{interface_check.out} 79/80; REQ-028/029, requirements.csv and INTERFACES frozen-4 notes describe 3a3684b. & Fixed by systems (T-074): \nolinkurl{sim/systems/*.out}, REQUIREMENTS, INTERFACES frozen-5 (committed after c901ad8). \\
+C2-006 & minor & Stale evidence: committed \nolinkurl{interface_check.out} 79/80; REQ-028/029, requirements.csv and INTERFACES frozen-4 notes describe 3a3684b. & Fixed by systems (T-074): \nolinkurl{sim/systems/*.out}, REQUIREMENTS, INTERFACES frozen-5 (committed in 2ba289a). \\
 C2-007 & minor & Assembly guide offered any resistor lead off-cut for JP1 (0.8\,mm holes); R1--R12 leads are 0.8\,mm. & Fixed: solder or an off-cut of an R13--R16 lead (0.5\,mm) only. \\
 C2-008 & info & 1.0\,mm drill for a 0.8\,mm lead sits exactly on the 0.2\,mm fit threshold; generator comment wrong. & Fixed: R1--R12 drill 1.1\,mm (ring 0.55\,mm); comment corrected. \\
 C2-009 & info & Courtyard gaps 0.06\,mm (R row to J2) and 0.09\,mm (R12 to H3); M3 head about 0.5--0.9\,mm from R12. & Fixed: H3 moved (95, 48) $\rightarrow$ (96, 38)\,mm; bypass 1.94\,mm FAIL $\rightarrow$ 15.36\,mm PASS; nylon hardware recommended. \\
@@ -151,3 +151,48 @@ not re-reviewed independently.
 \paragraph{What the re-review did not cover.} The findings file does not list
 exclusions. It is a design-file and document review: nothing in it is a hardware
 measurement, and it did not see the T-073 fixes or the systems update T-074.
+
+\subsection{Manager PCB design review (analisar-pcb) of v1.2}
+\label{sec:manager-pcb-review}
+After the CR-002 re-review fixes, the manager reviewed the v1.2 board with the
+\texttt{analisar-pcb} PCB design review procedure. The review is not independent:
+the manager also directs the design. The electronics engineer acted on its five
+items in T-076 (committed in a216c1b); systems updated the checks, budgets,
+interfaces (frozen-6) and requirements (draft-8) in T-077 (committed in f457bfe).
+Dispositions are recorded in ADR-021 and its addendum
+\ev{management/DECISIONS.md}
+\ev{management/handoffs/electronics-engineer/T-076.md}
+\ev{management/handoffs/systems-engineer/T-077.md}
+\ev{reports/electronics/analysis.md} (\S6).
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.04\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}>{\raggedright\arraybackslash}p{0.43\linewidth}>{\raggedright\arraybackslash}p{0.19\linewidth}@{}}
+\caption{Manager PCB design review of v1.2: items and dispositions (ADR-021).}\label{tab:review-manager-pcb}\\
+\toprule
+\# & Item & Change and evidence & Disposition \\
+\midrule
+\endfirsthead
+\toprule
+\# & Item & Change and evidence & Disposition \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+1 & JP1 pads 0.60\,mm apart on a 2.54\,mm pitch: one solder blob can join all three pads (3V3 on both S1 and S7). & Pitch 3.81\,mm, pads 1.94\,$\times$\,2.4\,mm, drill 0.8\,mm: pad gap 0.60 $\rightarrow$ \textbf{1.87\,mm} on both sides, pads 1 to 3 5.68\,mm apart (\lbl{MEASUREMENT}, design file); check ``ADR-021 JP1 pad gap >= 1.8 mm'' PASS. & Fixed. Bridge with solder or an R13--R16 lead off-cut. \\
+2 & J2 screw-terminal pads round 3.0\,mm: little copper to resist peeling under screw torque on a home-etched board. & Pads 3.0\,$\times$\,4.5\,mm oval (pad 1 rectangular), drill 1.4\,mm, copper offset 0.75\,mm towards the back of the block: copper \textbf{7.1 $\rightarrow$ 11.6\,mm\textsuperscript{2}} per pad (\lbl{CALCULATION}). Offset rather than centred so that the E$x$ to GND edge-track spark gap stays 1.40\,mm (a centred oval would give 0.65\,mm); adjacent pads 2.08\,mm, ring 0.80\,mm (\lbl{MEASUREMENT}); \nolinkurl{check_gap.out} identical to T-073. & Fixed. Peel strength not measured (V-28). \\
+3 & RV1 metal tabs unconnected; wiper unfiltered. & Tabs on AGND; C1 \qty{100}{\nano\farad} X7R 50\,V, KEMET \textbf{C322C104K5R5TA} (5.08\,mm leads; the C320 has 2.54\,mm leads, \lbl{SOURCE} EE-S29), wiper to AGND. $\tau \le$ \textbf{0.38\,ms} worst against the \qty{30}{\milli\second} read period: settling 2.89\,ms, margin \textbf{10.4$\times$} (\lbl{CALCULATION}, Section~\ref{sec:pot-filter}). Interface check rule changed to AGND membership: 85/85 PASS. & Fixed. Cost +0.20--0.90\,EUR (\lbl{ASSUMPTION}) accepted; REQ-032 stays FAIL. \\
+4 & C2 \qty{1}{\micro\farad} from +3V3 to GND at the MPR121 module. & Not added: no single-layer route without running 3V3 next to the H2 fixing metal and a GND track about 48\,mm long 1.1\,mm from all twelve ELE pins; the $\approx$100\,mm loop would decouple little; both module revisions have their own regulator and capacitors (\lbl{SOURCE} EE-S02/EE-S03). & Rejected, recorded as not needed. \\
+5 & Silkscreen overlaps: R16 and SW1 designators overlapped; R14 designator 0.16\,mm from R13 pad 1. & Designators moved; JP1 legend line pitch 1.4 $\rightarrow$ 1.55\,mm; \nolinkurl{check_silk.py} now also checks footprint designators and text-to-text: worst text-to-pad 0.35\,mm, text-to-text 0.11\,mm, PASS (\lbl{MEASUREMENT}, design file). & Fixed. \\
+\end{longtable}
+}
+
+\paragraph{Re-checks after the changes (a216c1b, f457bfe).} ERC ``ERC messages: 0
+Errors 0 Warnings 0''; DRC ``Found 0 DRC violations'', ``Found 0 unconnected
+pads'', ``Found 0 Footprint errors'' \ev{reports/electronics/evidence/T-076/};
+``SUMMARY: 19 checks, 19 PASS, 0 FAIL'' (home-etch rules); ``SUMMARY: 85 checks, 85
+PASS, 0 FAIL'' (interfaces); budgets ``SUMMARY: 30 checks, 25 PASS, 5 FAIL'' (the
+five FAILs are the pre-existing A3b VBUS row, three 100\,kHz latency rows and the
+BOM cost) \ev{sim/systems/}. A mutation test on a scratch copy of the board (an SW1
+GND pad moved to AGND, JP1 pad 2 shifted) made the new AGND and JP1 checks FAIL as
+intended (T-077). These changes were not re-reviewed independently, and none of
+them has been checked on hardware.

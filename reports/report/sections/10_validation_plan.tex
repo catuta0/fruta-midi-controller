@@ -7,7 +7,7 @@ where a requirement gives no threshold, the analysis prediction is the criterion
 and is labelled. Items P-1 to P-6 are the systems plan
 \ev{management/handoffs/systems-engineer/T-011.md}; hardware items from firmware are
 in \ev{reports/firmware/coverage.md}; electronics next tests are in the
-T-050 to T-055 handoffs. All rows are NOT RUN.
+T-050 to T-055, T-073 and T-076 handoffs. All rows are NOT RUN.
 
 {\footnotesize
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.21\linewidth}>{\raggedright\arraybackslash}p{0.27\linewidth}>{\raggedright\arraybackslash}p{0.29\linewidth}>{\raggedright\arraybackslash}p{0.10\linewidth}@{}}
@@ -33,7 +33,7 @@ V-08 (P-6) & False triggers and crosstalk & 10\,min idle with all 12 electrodes 
 V-09 & Electrode readings with and without $R$ & \texttt{SERIAL\_DEBUG} deltas per object, with the 3.3\,k$\Omega$ resistor and with it bridged & Touch detected on every object; delta ratio $\ge$ 0.904 (\lbl{SIMULATION} prediction) & REQ-037 \\
 V-10 & ESD robustness & IEC 61000-4-2 contact discharge $\pm$4\,kV on each terminal, at a test lab & No permanent damage: MPR121 still responds, all pads still detect touch, baseline drift $<$ 1 count (T-060) & REQ-023 \\
 V-11 & Series resistor after ESD & Watch for flashover across R1--R12 during V-10; measure R1--R12 afterwards & No flashover; each resistance within 1\,\% of its pre-test value (T-060) & REQ-023 \\
-V-12 & JP1 bridge and etch gaps & Visual inspection with a magnifier and continuity after etching and bridging & Bridge only on the chosen side; 0.6\,mm gaps clear; no short to GND in any position & REQ-025, 039 \\
+V-12 & JP1 bridge and etch gaps & Visual inspection with a magnifier and continuity after etching and bridging & Bridge only on the chosen side; the 1.87\,mm gap on the other side clear (ADR-021) and 0.6\,mm track gaps clear; no short to GND in any position & REQ-025, 039 \\
 V-13 & Real loop period & Toggle a spare GPIO each loop; oscilloscope & No blocking $>$ 10\,ms during play, except user recalibration and the lost-sensor restart (ADR-018) & REQ-016 \\
 V-14 & Recalibration duration & GPIO toggle around \texttt{recalibrate()} & Recorded per sensor; compare with 16.8--22.1\,ms (\lbl{CALCULATION}); no stuck notes afterwards & REQ-008, 002 \\
 V-15 & Pot ADC noise on the PCB & Log \texttt{analogRead} at each zone border for 10\,s & Peak-to-peak noise $<$ 41 counts & REQ-006 \\
@@ -49,5 +49,6 @@ V-24 & R1--R12 fitted as designed & Inspect the resistor row after soldering; ca
 V-25 & Arc path and I\textsuperscript{2}C upsets during ESD (C2-005) & During V-10, watch each terminal for an arc to the GND edge track; after every strike check for I\textsuperscript{2}C NACKs (logic analyser on SDA/SCL), the lost-sensor LED blink, Pico resets (USB re-enumeration) and stuck notes (MIDI monitor) & Arc, if any, to the GND track only (not across R$x$); no reset, no lost sensor and no stuck note after any strike; any I\textsuperscript{2}C error recorded and reported (ADR-020) & REQ-023 \\
 V-26 & MBE 0414 body and end-cap length (C2-002) & Caliper on one resistor before fitting: body length $L$ and cap length $L_c$; then re-run \nolinkurl{check_gap.py} section (d) with the measured values & $L_c \le$ 3.0\,mm (4\,kV rule met at every swept $L$ and placement error, \lbl{CALCULATION}); otherwise the recomputed cap gap $\ge$ 3.5\,mm at the measured placement error & REQ-023 \\
 V-27 & I\textsuperscript{2}C traffic against electrode baseline noise (C2-012) & \texttt{SERIAL\_DEBUG} deltas per electrode with the bus idle between reads versus continuous I\textsuperscript{2}C polling, electrodes on typical objects & No false Note On; noise with traffic increase of at most 3 counts in the per-electrode delta (\lbl{ASSUMPTION} threshold, T-074) & REQ-038 \\
+V-28 & ADR-021 parts and pads & Test-fit C1 (5.08\,mm leads) in its 0.8\,mm holes; bridge JP1 with an R13--R16 lead off-cut over the 1.87\,mm gap; tighten and re-tighten every J2 screw; with the pot fitted, log \texttt{analogRead} during slow and fast turns & C1 seated flat without force; JP1 bridge on one side only, no continuity to the other side; no J2 pad lifted or cracked; the octave follows the knob with no visible lag (settling $\le$ 2.89\,ms, \lbl{CALCULATION}) & REQ-006, 025, 029 \\
 \end{longtable}
 }

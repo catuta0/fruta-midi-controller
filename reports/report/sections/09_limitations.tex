@@ -16,8 +16,9 @@ home-etch rules; firmware behaviour (host tests on a copy of the loop order);
 sampler behaviour (headless Chrome with a stubbed Web MIDI API).
 
 \paragraph{Open FAILs and accepted risks.} REQ-018 (4.40\,V low-power-port VBUS minimum below the Pico's recommended 4.50\,V; documented deviation, ADR-016); REQ-032 (BOM upper bound
-37.72\,EUR $>$ 30\,EUR after CR-002, prices mostly \lbl{ASSUMPTION}; increase
-accepted for ESD safety, ADR-019 D-3); REQ-040 (wrong JP1
+38.62\,EUR $>$ 30\,EUR after CR-002 and ADR-021, prices mostly \lbl{ASSUMPTION};
+increases accepted for ESD safety, ADR-019 D-3, and for the C1 wiper filter, ADR-021
+addendum); REQ-040 (wrong JP1
 position exceeds MPR121 input ratings on an unpowered module; accepted risk R-007);
 R-006 (at 8\,kV contact the 7.27\,kV across each resistor exceeds its 4.08\,kV
 rating, and the pin current exceeds the inferred limit by 1.65$\times$; accepted,
@@ -54,19 +55,19 @@ Section~\ref{sec:validation}):
         \ev{reports/firmware/coverage.md}.
 \end{itemize}
 
-\paragraph{Process limitations.} Requirements are draft-7 (T-074), not baselined.
+\paragraph{Process limitations.} Requirements are draft-8 (T-077), not baselined.
 The independent re-review of the CR-002 changes is reported in
-Section~\ref{sec:cr002-review}. At c901ad8 the committed interface-check output
-predates the v1.2 board label (1 expected FAIL, \texttt{pcb.label\_v1.2}); the
-re-run on the T-073 board gives 80/80 PASS and is recorded in
-\nolinkurl{reports/electronics/evidence/T-073/} (Section~\ref{sec:electronics});
-refreshing the committed file is assigned to systems (T-074, finding C2-006). Some
+Section~\ref{sec:cr002-review}; the later manager PCB review and its fixes
+(ADR-021, Section~\ref{sec:manager-pcb-review}) were not re-reviewed independently.
+The committed systems outputs are current at f457bfe (interface check 85/85,
+home-etch rules 19/19, budgets 25 PASS and 5 FAIL of 30). Some
 user-documentation statements (prices, OS behaviour, etching process values) are
 not traced to a source (documentation handoffs T-030 to T-035).
 
 \subsection{Risk register}
 \label{sec:risks}
-From \ev{management/RISKS.md}. CR-002 rewrote R-006 and added R-008.
+From \ev{management/RISKS.md}. CR-002 rewrote R-006 and added R-008 to R-010;
+ADR-021 added no risk.
 
 {\footnotesize
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.31\linewidth}>{\raggedright\arraybackslash}p{0.12\linewidth}@{}}
@@ -81,6 +82,8 @@ R-005 & Limited disk space on the host & M / M & Install only what is needed & O
 R-006 & ESD at 8\,kV: 7.27\,kV across each 3k3 (\lbl{CALCULATION}) exceeds the 4.08\,kV rating of the MBE 0414 (\lbl{SOURCE} EE-S17b); pin current 2.20\,A vs inferred 1.33\,A (1.65$\times$). Copper gaps meet the 8\,kV 7.5\,mm rule; the end caps do not (T-073, finding C2-002) & L / M & Scope stays $\pm$4\,kV (ADR-008, ADR-019 D-1); later option Vishay LSR37 (same footprint, 12\,kV), deferred for tolerance and drift; IEC test in the plan & ACCEPTED \\
 R-007 & Wrong JP1 position puts +3V3 on ADDR (QT) or IRQ (original) of an unpowered module & L / L--M & Silkscreen, manual warning, LED error pattern (ADR-009) & ACCEPTED \\
 R-008 & v1.2 relayout lengthens the two J1 $\rightarrow$ S configuration wires to about 25--35\,mm: a loose wire can be pushed onto the wrong S hole or strain its joint. About 1.8\,pF per line (\lbl{CALCULATION}, 50\,pF/m \lbl{ASSUMPTION}) vs the 115.2\,pF limit; a wrong hole is limited to 15.5\,mA by R15/R16 & L / L & Wiring table, pre-power inspection; documentation says to route the wires flat and short; physical check in the plan & OPEN \\
+R-009 & End-cap flashover around R1--R12 at 4\,kV depends on lead forming and on the unsourced end-cap length (C2-002): cap-to-cap worst 3.61\,mm at $\pm$0.25\,mm placement error (PASS against 3.5\,mm), 3.13\,mm at $\pm$0.5\,mm (FAIL) (\lbl{CALCULATION} on \lbl{ASSUMPTION}s) & M / M & Leads formed on a gauge; caliper check of one MBE 0414 before the ESD test (V-26); REQ-023 stays PARTIAL (ADR-020) & ACCEPTED \\
+R-010 & Electrode pads 1.40\,mm from the GND edge track (intentional spark gap, C2-005): estimated 87--339\,V ground bounce for $\approx$1\,ns, $\le$1.53\,A and $\le$0.92\,nC per I\textsuperscript{2}C line (\lbl{CALCULATION} on \lbl{ASSUMPTION}s); no HBM rating found for GP26/GP27 & L / M & Spark gap kept (ADR-020; also kept by the J2 pad change of ADR-021); firmware recovers a lost sensor; ESD test watches for arcs, I\textsuperscript{2}C errors and resets (V-25) & OPEN \\
 \bottomrule
 \end{longtable}
 }
