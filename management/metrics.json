@@ -144,6 +144,62 @@
       "label": "MEASUREMENT",
       "revision": "CR-002 T-077 (a216c1b)",
       "evidence": "sim/systems/pcb_rules_check.out (read from the design file)"
+    },
+    {
+      "name": "c1_drill",
+      "value": 0.9,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "hardware/frutamidi.kicad_pcb; sim/systems/pcb_rules_check.out"
+    },
+    {
+      "name": "c1_lead_fit_max_lead",
+      "value": 0.29,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "sim/electronics/calc/calc_mechanical.out (lead max 0.61 mm SOURCE EE-S29)"
+    },
+    {
+      "name": "c1_annular_ring",
+      "value": 0.55,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "sim/electronics/calc/calc_mechanical.out"
+    },
+    {
+      "name": "drill_holes_total",
+      "value": 133,
+      "unit": "holes",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "hardware/fabrication frutamidi.drl (counted)"
+    },
+    {
+      "name": "ex_gnd_spark_gap",
+      "value": 1.4,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "sim/systems/pcb_rules_check.out (12/12 pads, design file)"
+    },
+    {
+      "name": "knob_diameter_max",
+      "value": 15,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-002 T-080/T-081 (a51dfff)",
+      "evidence": "hardware/README.md; T-080 handoff (shaft to C1 body 7.77 mm, design file)"
+    },
+    {
+      "name": "report_pages",
+      "value": 42,
+      "unit": "pages",
+      "label": "MEASUREMENT",
+      "revision": "CR-002 T-082",
+      "evidence": "management/handoffs/documentation-engineer/T-082/frutamidi_report.log"
     }
   ]
 }

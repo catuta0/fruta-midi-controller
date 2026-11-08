@@ -25,12 +25,19 @@ rating, and the pin current exceeds the inferred limit by 1.65$\times$; accepted
 ADR-019 D-1). CR-002 re-review (ADR-020): end-cap gap at 4\,kV PARTIAL, resting on
 an assumed cap length (C2-002); E$x$ $\leftrightarrow$ GND spark gap with an
 estimated 87--339\,V ground bounce for $\approx$1\,ns and no confirmed HBM rating for
-GP26/GP27 (C2-005).
+GP26/GP27 (C2-005). Final re-review (ADR-022): knob/shaft discharge path into AGND
+not analysed, plastic knob $\le$ 15\,mm on an insulated shaft specified and a test
+step added (R-011, F2-002).
 
 \paragraph{Main assumptions} (each to be retired by the plan in
 Section~\ref{sec:validation}):
 \begin{itemize}[noitemsep]
   \item Component prices (BOM, REQ-032) \ev{reports/systems/budgets.md}.
+  \item RV1: a metal shaft is in contact with the frame and tabs (RK09K datasheet
+        not opened); an insulated-shaft RK09K variant exists (not confirmed); 0.27\,mm
+        plan clearance of a 15\,mm knob over C1 is enough
+        \ev{management/handoffs/electronics-engineer-T-080.md}
+        \ev{management/RISKS.md} (R-011).
   \item Resistor end-cap length 1.5--3.5\,mm, body length $\ge$ 11.0\,mm, placement
         error $\le\pm$0.5\,mm; track inductance 0.7--1.0\,nH/mm and socket plus pin
         3--10\,nH \ev{management/handoffs/electronics-engineer/T-073.md}.
@@ -55,19 +62,22 @@ Section~\ref{sec:validation}):
         \ev{reports/firmware/coverage.md}.
 \end{itemize}
 
-\paragraph{Process limitations.} Requirements are draft-8 (T-077), not baselined.
+\paragraph{Process limitations.} Requirements are draft-9 (T-081), not baselined.
 The independent re-review of the CR-002 changes is reported in
 Section~\ref{sec:cr002-review}; the later manager PCB review and its fixes
-(ADR-021, Section~\ref{sec:manager-pcb-review}) were not re-reviewed independently.
-The committed systems outputs are current at f457bfe (interface check 85/85,
-home-etch rules 19/19, budgets 25 PASS and 5 FAIL of 30). Some
+(ADR-021, Section~\ref{sec:manager-pcb-review}) were reviewed independently in the
+final re-review T-079 (verdict release-ready, findings F2-001 to F2-007, all
+dispositioned in ADR-022; Section~\ref{sec:final-review}). The T-080/T-081 fixes of
+those findings were reproduced by the manager, not re-reviewed independently
+(ADR-022). The committed systems outputs are current at a51dfff (interface check
+85/85, home-etch rules 20/20, budgets 25 PASS and 5 FAIL of 30). Some
 user-documentation statements (prices, OS behaviour, etching process values) are
 not traced to a source (documentation handoffs T-030 to T-035).
 
 \subsection{Risk register}
 \label{sec:risks}
 From \ev{management/RISKS.md}. CR-002 rewrote R-006 and added R-008 to R-010;
-ADR-021 added no risk.
+ADR-021 added no risk; the final re-review added R-011 (ADR-022).
 
 {\footnotesize
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.35\linewidth}>{\raggedright\arraybackslash}p{0.08\linewidth}>{\raggedright\arraybackslash}p{0.31\linewidth}>{\raggedright\arraybackslash}p{0.12\linewidth}@{}}
@@ -83,7 +93,8 @@ R-006 & ESD at 8\,kV: 7.27\,kV across each 3k3 (\lbl{CALCULATION}) exceeds the 4
 R-007 & Wrong JP1 position puts +3V3 on ADDR (QT) or IRQ (original) of an unpowered module & L / L--M & Silkscreen, manual warning, LED error pattern (ADR-009) & ACCEPTED \\
 R-008 & v1.2 relayout lengthens the two J1 $\rightarrow$ S configuration wires to about 25--35\,mm: a loose wire can be pushed onto the wrong S hole or strain its joint. About 1.8\,pF per line (\lbl{CALCULATION}, 50\,pF/m \lbl{ASSUMPTION}) vs the 115.2\,pF limit; a wrong hole is limited to 15.5\,mA by R15/R16 & L / L & Wiring table, pre-power inspection; documentation says to route the wires flat and short; physical check in the plan & OPEN \\
 R-009 & End-cap flashover around R1--R12 at 4\,kV depends on lead forming and on the unsourced end-cap length (C2-002): cap-to-cap worst 3.61\,mm at $\pm$0.25\,mm placement error (PASS against 3.5\,mm), 3.13\,mm at $\pm$0.5\,mm (FAIL) (\lbl{CALCULATION} on \lbl{ASSUMPTION}s) & M / M & Leads formed on a gauge; caliper check of one MBE 0414 before the ESD test (V-26); REQ-023 stays PARTIAL (ADR-020) & ACCEPTED \\
-R-010 & Electrode pads 1.40\,mm from the GND edge track (intentional spark gap, C2-005): estimated 87--339\,V ground bounce for $\approx$1\,ns, $\le$1.53\,A and $\le$0.92\,nC per I\textsuperscript{2}C line (\lbl{CALCULATION} on \lbl{ASSUMPTION}s); no HBM rating found for GP26/GP27 & L / M & Spark gap kept (ADR-020; also kept by the J2 pad change of ADR-021); firmware recovers a lost sensor; ESD test watches for arcs, I\textsuperscript{2}C errors and resets (V-25) & OPEN \\
+R-010 & Electrode pads 1.40\,mm from the GND edge track (intentional spark gap, C2-005): estimated 87--339\,V ground bounce for $\approx$1\,ns, $\le$1.53\,A and $\le$0.92\,nC per I\textsuperscript{2}C line (\lbl{CALCULATION} on \lbl{ASSUMPTION}s); no HBM rating found for GP26/GP27 & L / M & Spark gap kept (ADR-020; also kept by the J2 pad change of ADR-021) and enforced by \nolinkurl{pcb_rules_check} (1.40\,$\pm$\,0.05\,mm, ADR-022); firmware recovers a lost sensor; ESD test watches for arcs, I\textsuperscript{2}C errors and resets (V-25) & OPEN \\
+R-011 & Knob/shaft ESD path into AGND (F2-002): the RV1 tabs and frame are on AGND (ADR-021) and a metal shaft is assumed to touch the frame (\lbl{ASSUMPTION}); a discharge to a metal shaft or conductive knob enters AGND at Pico pin 33 with no series resistor. Not analysed numerically (no peak current, flashover path or RP2040 ADC/AGND ESD rating) & L / M & Plastic knob $\le$ 15\,mm covering the whole shaft, insulated-shaft RK09K variant where available; knob/shaft strike in the REQ-023 test (step 2b, V-29); fallbacks (tabs unconnected or on GND) only if that test fails & OPEN \\
 \bottomrule
 \end{longtable}
 }

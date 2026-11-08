@@ -146,11 +146,13 @@ pads''; ``SUMMARY: 16 checks, 16 PASS, 0 FAIL'' (home-etch rules); ``SUMMARY: 80
 checks, 80 PASS, 0 FAIL'' (interfaces) \ev{reports/electronics/evidence/T-073/};
 \nolinkurl{check_gap.out} ``SUMMARY: copper PASS (4 kV rule, (a) and (b)); end caps
 PARTIAL at 4 kV over the swept ASSUMPTIONS; mounting metal PASS''. These fixes were
-not re-reviewed independently.
+reviewed independently in the final re-review T-079, which verified the dispositions
+C2-001 to C2-013 (Section~\ref{sec:final-review}).
 
 \paragraph{What the re-review did not cover.} The findings file does not list
 exclusions. It is a design-file and document review: nothing in it is a hardware
-measurement, and it did not see the T-073 fixes or the systems update T-074.
+measurement, and it did not see the T-073 fixes or the systems update T-074; those
+were covered by the final re-review (Section~\ref{sec:final-review}).
 
 \subsection{Manager PCB design review (analisar-pcb) of v1.2}
 \label{sec:manager-pcb-review}
@@ -194,5 +196,75 @@ PASS, 0 FAIL'' (interfaces); budgets ``SUMMARY: 30 checks, 25 PASS, 5 FAIL'' (th
 five FAILs are the pre-existing A3b VBUS row, three 100\,kHz latency rows and the
 BOM cost) \ev{sim/systems/}. A mutation test on a scratch copy of the board (an SW1
 GND pad moved to AGND, JP1 pad 2 shifted) made the new AGND and JP1 checks FAIL as
-intended (T-077). These changes were not re-reviewed independently, and none of
-them has been checked on hardware.
+intended (T-077). These changes were reviewed independently in the final re-review
+T-079 (Section~\ref{sec:final-review}); none of them has been checked on hardware.
+
+\subsection{CR-002 final independent re-review (T-079)}
+\label{sec:final-review}
+An independent reviewer reviewed the whole CR-002 state at \texttt{be9d1f2} on
+branch \texttt{change/CR-002} (task T-079), including the T-073/T-074 fixes and the
+manager PCB review follow-up of ADR-021 (T-076/T-077) and this report at v1.2
+(T-078). As in T-071, the harness refused the reviewer's write; the manager recorded
+the hand-back content without changing its substance
+\ev{reports/review/CR-002-final/findings.md}; raw outputs are in
+\nolinkurl{reports/review/CR-002-final/}. Dispositions are recorded in ADR-022
+\ev{management/DECISIONS.md}; the fixes were made in T-080 (electronics) and T-081
+(systems), committed in a51dfff
+\ev{management/handoffs/electronics-engineer-T-080.md}
+\ev{management/handoffs/systems-engineer-T-081.md}.
+
+\paragraph{Summary.}
+\begin{itemize}[noitemsep]
+  \item Verdict: \textbf{release-ready yes} (design-file release v1.2); 7 findings:
+        0 critical, 0 major, 4 minor (F2-001 to F2-004), 3 info (F2-005 to F2-007).
+  \item Dispositions: 6 fixed, 1 accepted risk with a test and a part specification
+        added (F2-002, risk R-011).
+  \item Reviewer re-checks at be9d1f2 (recorded in the findings file): ERC 0; DRC 0,
+        unconnected 0, parity 0; generators reproduce the committed design
+        (schematic 0 diff lines, PCB 179/179 blocks, identical geometry); B.Cu gerber
+        and drill match the PCB (133 holes); interface check 85/85;
+        \nolinkurl{pcb_rules_check} 19/19; budgets 30 checks, 25 PASS, 5 FAIL; 11
+        electronics calculation scripts byte-identical; C1 RC recomputed: $\tau$
+        0.380\,ms, settling 2.89\,ms against \texttt{POT\_READ\_MS} 30\,ms, margin
+        10.4$\times$ (\lbl{CALCULATION}); report PDF 39 pages. Dispositions C2-001 to
+        C2-013 verified (the C2-002 residual wording became F2-004).
+  \item Reviewer's requirement cross-check: REQ-006 PARTIAL; REQ-023 PARTIAL;
+        REQ-027/028/029 PASS; REQ-032 FAIL; REQ-036 PASS (all as recorded).
+  \item Not covered: hardware, ESD, peel strength and knob fit; the RK09K and current
+        KEMET TA datasheets were not opened.
+\end{itemize}
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.06\linewidth}>{\raggedright\arraybackslash}p{0.45\linewidth}>{\raggedright\arraybackslash}p{0.36\linewidth}@{}}
+\caption{CR-002 final re-review findings and dispositions (ADR-022).}\label{tab:review-final}\\
+\toprule
+ID & Sev. & Finding (one line) & Disposition \\
+\midrule
+\endfirsthead
+\toprule
+ID & Sev. & Finding (one line) & Disposition \\
+\midrule
+\endhead
+\bottomrule
+\endlastfoot
+F2-001 & minor & C1 lead 0.48--0.61\,mm (\lbl{SOURCE} EE-S29); the 0.8\,mm drill leaves 0.19\,mm at the largest lead, below the 0.2\,mm fit rule; \nolinkurl{calc_mechanical} used the nominal lead. & Fixed (T-080): drill 0.9\,mm, fit 0.29\,mm, ring 0.55\,mm (\lbl{CALCULATION}); calculation uses the largest lead. \\
+F2-002 & minor & RV1 frame (and a metal shaft) on AGND gives a knob/shaft discharge a direct path into Pico pin 33; no analysis, risk or test; shaft material not fixed. & Accepted risk R-011 (OPEN): plastic knob $\le$ 15\,mm on an insulated shaft specified; knob/shaft strike added to the REQ-023 test (step 2b, V-29). \\
+F2-003 & minor & REQ-032 said the C1 cost was not yet accepted, while the ADR-021 addendum accepts it. & Fixed (T-081): REQ-032 evidence cites ADR-019 D-3 and the ADR-021 addendum; status FAIL. \\
+F2-004 & minor & Assembly guide said end caps ``at least 4 mm apart''; at $\pm$0.25\,mm the worst is 3.61\,mm (3.13\,mm at $\pm$0.5\,mm). & Fixed (T-080): $\approx$4.0\,mm centred, $\ge$3.6\,mm at $\pm$0.25\,mm, $\approx$3.1\,mm at $\pm$0.5\,mm; lead-forming gauge required. \\
+F2-005 & info & C1 up to 6.6\,mm tall, 7.8\,mm from the shaft: knobs wider than about 15.5\,mm overhang C1; substitute body size not limited. & Fixed (T-080): knob $\le$ 15\,mm; substitute leads $\le$ 0.7\,mm, body $\le$ 5.08\,$\times$\,3.18\,mm, height $\le$ 6.6\,mm. \\
+F2-006 & info & No pass/fail check enforced the 1.40\,mm E$x$--GND spark gap (a flipped J2 offset gives 0.65\,mm and still passes DRC). & Fixed (T-081): \nolinkurl{pcb_rules_check} spark-gap check, 12/12 pads at 1.400\,mm; mutation tests FAIL at 0.650 and $-$0.100\,mm. \\
+F2-007 & info & \nolinkurl{analysis.md} \S6 typo; C1 3D model at 5.00\,mm pitch. & Fixed (T-080): typo corrected; model scaled to 5.08\,mm (render only). \\
+\end{longtable}
+}
+
+\paragraph{Re-checks after the fixes (T-080/T-081, a51dfff).} ERC ``ERC messages: 0
+Errors 0 Warnings 0''; DRC ``Found 0 DRC violations'', ``Found 0 unconnected
+pads'', ``Found 0 Footprint errors'' \ev{reports/electronics/evidence/T-080/};
+``SUMMARY: 20 checks, 20 PASS, 0 FAIL'' (home-etch rules, now with the spark-gap
+check); ``SUMMARY: 85 checks, 85 PASS, 0 FAIL'' (interfaces); budgets ``SUMMARY: 30
+checks, 25 PASS, 5 FAIL'' (the same five known FAILs) \ev{sim/systems/}. Geometry
+diff against e9309d8 (same design as be9d1f2): only the C1 drill (0.800 $\rightarrow$ 0.900\,mm) and the C1
+3D model scale changed \ev{reports/electronics/evidence/T-080/geo_diff.txt}. By
+ADR-022 the T-080/T-081 changes (a drill size, wording and a new check) were not
+re-reviewed independently again; the manager reproduced the checks above. None of
+this is a hardware test.

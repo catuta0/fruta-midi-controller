@@ -12,7 +12,7 @@ The MPR121 detects the touch, the Pico turns it into MIDI notes and the computer
 - **Breadboard:** no soldering. This README.
 - **Single-sided PCB**, for etching at home with the chemical method, with KiCad schematic, BOM and assembly guide: [`hardware/`](hardware/).
   Board version 1.2 adds a few parts and pad changes compared with the breadboard; the [assembly guide](hardware/README.md) has the details:
-  - **C1**, a 100 nF ceramic capacitor with 5.08 mm lead spacing (KEMET C322C104K5R5TA), sits just above the octave potentiometer and smooths its reading. Solder the potentiometer's two metal tabs too: they are connected to its ground (AGND).
+  - **C1**, a 100 nF ceramic capacitor with 5.08 mm lead spacing (KEMET C322C104K5R5TA), sits just above the octave potentiometer and smooths its reading. Solder the potentiometer's two metal tabs too: they are connected to its ground (AGND). Because of that, fit a **plastic (insulating) knob, at most 15 mm in diameter, covering the whole shaft**, preferably on a potentiometer with an insulated shaft: a metal shaft or knob would bring a finger's static discharge straight onto the analog ground, and a wider knob would hit C1 (see the [assembly guide](hardware/README.md#bill-of-materials)).
   - **JP1** pads are 3.81 mm apart (1.87 mm gap). Bridge the centre pad to one side with a generous solder blob or, more easily, an off-cut of an R13–R16 lead (0.5 mm).
   - The **screw-terminal pads** are 3.0 × 4.5 mm ovals, which give more copper under the screw force.
 

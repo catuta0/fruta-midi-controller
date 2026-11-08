@@ -1,8 +1,8 @@
 \section{Interfaces}
 \label{sec:interfaces}
 
-Source: \ev{management/INTERFACES.json}, revision \texttt{frozen-6} (CR-002 manager
-PCB review follow-up, FrutaMIDI v1.2, ADR-021; frozen by the manager on 2026-11-07). History: frozen-1 of 2026-11-03
+Source: \ev{management/INTERFACES.json}, revision \texttt{frozen-7} (CR-002 final re-review follow-up, FrutaMIDI v1.2,
+T-080/T-081, ADR-022; frozen by the manager on 2026-11-08). History: frozen-1 of 2026-11-03
 (ADR-013); documentation-only changes from T-012 (ADR-016) and review N-003
 (ADR-018) gave frozen-3 of 2026-11-04. Frozen-4 changes the R1--R12 part and
 footprint, the IF-TERMINALS protection text, the board revision label, and records
@@ -13,7 +13,13 @@ notes and the H3 placement after the re-review. Frozen-6 (T-077) adds C1
 (AGND is now exactly A1 pin 33, RV1 pin 3, the RV1 tabs and C1 pin 2), and records
 the JP1 footprint (3.81\,mm pitch, 1.87\,mm pad gap) and the 3.0\,$\times$\,4.5\,mm
 oval J2 pads; pinout, terminal map, I\textsuperscript{2}C, USB MIDI and build flags
-are unchanged. Changes go through the engineering change process.
+are unchanged. Frozen-7 (T-081, ADR-022) is a documentation-only change of the
+mechanical record: C1 drill 0.8 $\rightarrow$ 0.9\,mm (annular ring 0.55\,mm,
+finding F2-001), the E$x$ $\leftrightarrow$ GND edge-track spark gap of
+1.40\,$\pm$\,0.05\,mm now enforced by \nolinkurl{pcb_rules_check.py} (F2-006), and
+an AGND ESD note for the RV1 knob/shaft path (risk R-011, F2-002); pinout, nets,
+terminal map, I\textsuperscript{2}C, USB MIDI and build flags are unchanged.
+Changes go through the engineering change process.
 
 {\small
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.20\linewidth}>{\raggedright\arraybackslash}p{0.60\linewidth}>{\raggedright\arraybackslash}p{0.15\linewidth}@{}}
@@ -25,7 +31,7 @@ IF-I2C & \qty{400}{\kilo\hertz}; sensor 0 at 0x5A, optional sensor 1 at 0x5B (br
 IF-PICO-PINS & Breadboard: SDA GP4 (pin 6), SCL GP5 (pin 7), button GP15 (pin 20), pot GP26/ADC0 (pin 31, optional), 3V3 pin 36. PCB: SDA\_PICO GP26 (pin 31) via R16, SCL\_PICO GP27 (pin 32) via R15, button GP22 (pin 29), pot GP28. AGND (pin 33) is the analogue ground return (\lbl{SOURCE} S-01 \S2.1); on the PCB it reaches only RV1 pin 3, the RV1 mounting tabs and C1 pin 2 (ADR-021). LED GP25 (Pico, Pico 2) or CYW43 WL\_GPIO0 (W boards) (\lbl{SOURCE} S-02). & REQ-017, 031 \\
 IF-TERMINALS & J2: 14 terminals at 5.08\,mm: GND, E0--E11, GND; pads 3.0\,$\times$\,4.5\,mm oval, drill 1.4\,mm, copper extended 0.75\,mm towards the back of the block (ADR-021). Terminal $k$ ($k = 2..13$) reaches MPR121 ELE$(k-2)$ through R1--R12 \qty{3.3}{\kilo\ohm}, Vishay MBE04140C3301FC100 (DIN0414, lying flat, 15.24\,mm lead pitch); protection at $\pm$4\,kV is an estimate on \lbl{ASSUMPTION}s, not a pass (review F-002); resistor pulse rating FAIL at 8\,kV (R-006). & REQ-022, 023, 030 \\
 IF-MPR121-MODULE & Socket A2: 1$\times$13 electrode row and 1$\times$7 power/I\textsuperscript{2}C row S1--S7. JP1 (upright since v1.2: QT top, ORIG bottom; 3.81\,mm pitch, 1.87\,mm pad gap since ADR-021): pad 1 S1 (ORIG), pad 2 +3V3, pad 3 S7 (QT); a wrong choice puts +3V3 on ADDR or IRQ, never GND (REQ-039 PASS, REQ-040 FAIL). J1: pad 1 SCL, pad 2 SDA; wires to S5/S6 (original) or S3/S4 (STEMMA QT). & REQ-024, 025 \\
-IF-CONTROLS & SW1 to GND with internal pull-up, sampled every \qty{10}{\milli\second}; long press $>$ \qty{800}{\milli\second} recalibrates, short press selects the next scale. RV1 \qty{10}{\kilo\ohm} linear, wiper filtered by C1 \qty{100}{\nano\farad} to AGND ($\tau \le$ \qty{0.38}{\milli\second}, \lbl{CALCULATION}): 10-bit ADC read every \qty{30}{\milli\second}, 5 zones of 0.66\,V, hysteresis 0.7 zone, dead band 0.132\,V against an error budget of 0.0364\,V (\lbl{CALCULATION}, budgets.md). & REQ-006, 007, 008 \\
+IF-CONTROLS & SW1 to GND with internal pull-up, sampled every \qty{10}{\milli\second}; long press $>$ \qty{800}{\milli\second} recalibrates, short press selects the next scale. RV1 \qty{10}{\kilo\ohm} linear (plastic knob $\le$ 15\,mm on an insulated shaft, R-011), wiper filtered by C1 \qty{100}{\nano\farad} to AGND ($\tau \le$ \qty{0.38}{\milli\second}, \lbl{CALCULATION}): 10-bit ADC read every \qty{30}{\milli\second}, 5 zones of 0.66\,V, hysteresis 0.7 zone, dead band 0.132\,V against an error budget of 0.0364\,V (\lbl{CALCULATION}, budgets.md). & REQ-006, 007, 008 \\
 IF-FW-BUILD & arduino-cli 1.5.1, arduino-pico 6.3.1, Adafruit MPR121 1.2.1, BusIO 1.17.4, MIDI Library 5.0.2. FQBN \nolinkurl{rp2040:rp2040:<board>:usbstack=tinyusb} for Pico, Pico W, Pico 2, Pico 2 W; \nolinkurl{-DFRUTAMIDI_PCB} selects the PCB pin map; optional \nolinkurl{arduino:avr:leonardo}. Artifacts \texttt{FrutaMIDI-<board>.uf2} and \texttt{FrutaMIDI-pcb-<board>.uf2}. & REQ-033 \\
 IF-PCB-AUX & Documentation-only (review N-003): J3 = the S1--S7 wire holes (FrutaMIDI:WireHoles\_1x07\_P2.54mm), each joined to the module power/I\textsuperscript{2}C row; the female-header sockets (2$\times$1$\times$20 Pico, 1$\times$13 and 1$\times$7 module) are a Socket field of A1/A2, not separate symbols. & --- \\
 \bottomrule
@@ -35,7 +41,7 @@ IF-PCB-AUX & Documentation-only (review N-003): J3 = the S1--S7 wire holes (Frut
 \noindent Board: outline 100 $\times$ 70\,mm, copper on B.Cu only, label
 ``FrutaMIDI v1.2'' (ADR-019 D-2; text in \nolinkurl{hardware/scripts/gen_pcb.py}
 and \nolinkurl{hardware/frutamidi.kicad_pcb}), fabrication folder
-\nolinkurl{hardware/fabrication}. The placement recorded in frozen-6 (for
+\nolinkurl{hardware/fabrication}. The placement recorded in frozen-6 and frozen-7 (for
 example A2 at (60.02, 17.645)\,mm, H4 at (88.5, 30.5)\,mm, C1 at (31.2, 5.3)\,mm, \lbl{MEASUREMENT} on the
 design file) is for traceability and is not a frozen mechanical interface. Mounting
 hole H3 moved from (95, 48) to (96, 38)\,mm in T-073 (review finding C2-009); the

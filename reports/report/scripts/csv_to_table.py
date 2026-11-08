@@ -92,7 +92,8 @@ def escape(text: str) -> str:
     for part in parts:
         if len(part) >= 2 and part.startswith("`") and part.endswith("`"):
             inner = escape_plain(part[1:-1])
-            inner = inner.replace("/", r"/\allowbreak{}").replace(r"\_", r"\_\allowbreak{}")
+            inner = (inner.replace("/", r"/\allowbreak{}").replace(r"\_", r"\_\allowbreak{}")
+                     .replace(":", r":\allowbreak{}"))
             out.append(r"\texttt{" + inner + "}")
         else:
             # Plain text: allow line breaks after "/" and "_" so long paths and
@@ -101,6 +102,38 @@ def escape(text: str) -> str:
             plain = plain.replace("/", r"/\allowbreak{}").replace(r"\_", r"\_\allowbreak{}")
             out.append(plain)
     return "".join(out)
+
+
+# A longtable row cannot break across pages. Evidence longer than FIRST_CHUNK
+# characters is split at sentence ends: the first part stays in the Evidence
+# column, the rest goes into full-width continuation rows of at most CONT_CHUNK
+# characters each, so the table can break between them.
+FIRST_CHUNK = 900
+CONT_CHUNK = 1800
+CONT_WIDTH = r"\dimexpr0.84\linewidth+6\tabcolsep\relax"
+
+
+def split_sentences(text: str):
+    text = " ".join(text.split())
+    parts = re.split(r"(?<=[.;])\s+(?=[A-Z(])", text)
+    return [p for p in parts if p]
+
+
+def chunk_evidence(text: str):
+    """Return [first, cont1, cont2, ...] raw-text chunks (unescaped)."""
+    sentences = split_sentences(text)
+    if len(" ".join(sentences)) <= FIRST_CHUNK:
+        return [" ".join(sentences)]
+    chunks, cur, limit = [], "", FIRST_CHUNK
+    for sent in sentences:
+        if cur and len(cur) + 1 + len(sent) > limit:
+            chunks.append(cur)
+            cur, limit = sent, CONT_CHUNK
+        else:
+            cur = f"{cur} {sent}" if cur else sent
+    if cur:
+        chunks.append(cur)
+    return chunks
 
 
 def main(argv):
@@ -124,14 +157,21 @@ def main(argv):
     body = []
     for n, r in enumerate(rows, start=2):
         try:
-            cells = {c: escape(r[c] or "") for c in COLUMNS}
+            cells = {c: escape(r[c] or "") for c in COLUMNS if c != "evidence"}
+            ev = [escape(c) for c in chunk_evidence(r["evidence"] or "")]
         except ValueError as e:
             errors.append(f"line {n}: {e}")
             continue
+        first = ev[0] + (r" \textit{(continued below)}" if len(ev) > 1 else "")
         body.append(
             f"{cells['id']} & \\textbf{{{cells['title']}}}\\newline {cells['statement']} & "
-            f"{cells['verification']} & {cells['status']} & {cells['evidence']} \\\\"
+            f"{cells['verification']} & {cells['status']} & {first} \\\\"
         )
+        for k, part in enumerate(ev[1:], start=1):
+            body.append(
+                f"& \\multicolumn{{4}}{{>{{\\raggedright\\arraybackslash}}p{{{CONT_WIDTH}}}}}"
+                f"{{\\textit{{{cells['id']} evidence, continued ({k}/{len(ev) - 1}):}} {part}}} \\\\"
+            )
     if errors:
         sys.exit("ERROR:\n  " + "\n  ".join(errors))
 
