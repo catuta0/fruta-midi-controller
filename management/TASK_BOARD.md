@@ -22,4 +22,4 @@
 | T-081 | F2-002/003/006 (R-011, REQ-032 text, spark-gap check), frozen-7 | systems-engineer | PASS | handoffs/systems-engineer-T-081.md |
 | T-082 | Report v1.2 final, manual, README | documentation-engineer | PASS | handoffs/documentation-engineer-T-082.md |
 | T-083 | releases/V1.2, merge, tag v1.2.0 | manager | DONE | releases/V1.2/ |
-| T-084 | GitHub release v1.2.0 | manager | WAITING user approval | — |
+| T-084 | GitHub release v1.2.0 | manager | DONE (user approved 2026-11-08) | https://github.com/catuta0/fruta-midi-controller/releases/tag/v1.2.0 |

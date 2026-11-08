@@ -2,9 +2,9 @@
 
 | Field | Value |
 | --- | --- |
-| Current gate | G5 (v1.2) prepared — releases/V1.2 committed, tag v1.2.0; GitHub release v1.2.0 awaiting explicit user approval |
+| Current gate | G5 (v1.2) closed — releases/V1.2, tag v1.2.0, GitHub release v1.2.0 published |
 | Baseline under work | `main` (CR-002 merged); releases V1_BASELINE (v1.1.0-baseline) and V1.2 (v1.2.0) |
-| Phase | CR-002 complete except the public GitHub release v1.2.0 |
+| Phase | CR-002 complete; only physical validation remains (out of scope) |
 | Last update | 2026-11-08 |
 
 ## Mapping of the generic structure to this repository
