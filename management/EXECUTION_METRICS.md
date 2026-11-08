@@ -10,3 +10,10 @@
 | Tool versions | management/TOOLCHAIN.md (KiCad 10.0.4, arduino-cli 1.5.1, arduino-pico 6.3.1, avr 1.8.8, Python 3.9.6, pytest 8.4.2, pdfTeX 1.40.29 / TeX Live 2026, node 26.4.0, playwright-core 1.64.1, Chrome 156) |
 | Retries / failures worth noting | install script zsh word-splitting (1 retry); tlmgr needed self-update; report writes refused for electronics/reviewer agents (manager wrote files); requirements.csv write failure restored from git; malformed REQ-015 CSV row found and fixed |
 | Final checks | ERC 0, DRC 0/0/0, interface_check 78/78, pcb_rules_check 15/15, firmware host tests 295 passed, 9/9 builds, host/sampler tests 102 passed (T-021), report 22 pages 0 errors |
+
+## CR-002 / v1.2 (2026-11-07 → 2026-11-08)
+| Item | Value |
+| --- | --- |
+| Tasks | T-060…T-083 (electronics T-060/073/076/080, systems T-070/074/077/081, documentation T-072/075/078/082, reviewer T-071/T-079, manager analisar-pcb reviews ×2) |
+| Retries / failures worth noting | reviewer findings writes refused (manager wrote files); report build broke on U+222B; REQ-023 table row overflowed a page (fixed in csv_to_table.py); zsh `$B:u` modifier broke the firmware build loop (rerun with sh); agents interrupted by session restarts, resumed |
+| Final checks | ERC 0, DRC 0/0/0, interface_check 85/85, pcb_rules_check 20/20, budgets 25 PASS / 5 FAIL, firmware 9/9 builds, 295 host tests, 102 host/sampler tests, report 42 pages 0 errors, SHA256SUMS 21/21 OK |

@@ -1,0 +1,251 @@
+# FrutaMIDI — single-sided PCB (version 1.2)
+
+A 100 × 70 mm board with copper on the bottom side only, designed for chemical etching at home (toner transfer or photosensitive board). It takes a Raspberry Pi Pico and an Adafruit MPR121 module (1982), both socketed, plus 14 screw terminals, a button, a potentiometer, a 3.3 kΩ series resistor on each electrode, two I²C pull-up resistors and two 220 Ω I²C series resistors.
+
+![Render of the assembled board](fabrication/images/board-3d.png)
+
+> **Status:** the schematic passes ERC and the PCB passes DRC, both with no violations, and the PCB matches the schematic. <!-- EVIDENCE --> The board has not yet been fabricated or physically tested. If you make one, open an *issue* with the result.
+
+## Contents
+
+- [Files](#files)
+- [Bill of materials](#bill-of-materials)
+- [Design rules for home etching](#design-rules-for-home-etching)
+- [1. Print](#1-print)
+- [2. Transfer and etch](#2-transfer-and-etch)
+- [3. Drill](#3-drill)
+- [4. Solder](#4-solder)
+- [5. Module configuration: JP1 and two wires](#5-module-configuration-jp1-and-two-wires)
+- [6. Test before powering](#6-test-before-powering)
+- [7. Firmware and first power-up](#7-firmware-and-first-power-up)
+- [Common problems](#common-problems)
+- [Electrical safety](#electrical-safety)
+- [Modifying the board](#modifying-the-board)
+
+## Files
+
+| File | Purpose |
+| --- | --- |
+| [`fabrication/1-copper-for-transfer.pdf`](fabrication/1-copper-for-transfer.pdf) | **What you print** for toner or positive photosensitive board. 1:1 scale, already in the right orientation |
+| [`fabrication/1b-copper-negative.pdf`](fabrication/1b-copper-negative.pdf) | The same in negative, only for dry film / negative resist |
+| [`fabrication/2-assembly-map.pdf`](fabrication/2-assembly-map.pdf) | Where each component goes, seen from the top |
+| [`fabrication/3-silkscreen-optional-mirrored.pdf`](fabrication/3-silkscreen-optional-mirrored.pdf) | Optional: transfer the labels onto the component side |
+| [`fabrication/frutamidi-schematic.pdf`](fabrication/frutamidi-schematic.pdf) | Schematic |
+| [`fabrication/gerbers/`](fabrication/gerbers/) | Gerbers + Excellon drill files, if you prefer to order the board (JLCPCB, PCBWay…) |
+| [`fabrication/bom-kicad.csv`](fabrication/bom-kicad.csv) | BOM exported from KiCad, with manufacturer and part number columns |
+| `frutamidi.kicad_pro` / `.kicad_sch` / `.kicad_pcb` | KiCad 10 project, with its own libraries (`FrutaMIDI.kicad_sym`, `FrutaMIDI.pretty/`) |
+| [`scripts/`](scripts/) | Schematic and PCB generators, and `build_all.sh` (regenerates, checks and exports) |
+
+## Bill of materials
+
+### Components
+
+| Ref. | Part | Qty | Approx. price | Notes |
+| --- | --- | --- | --- | --- |
+| A1 | Raspberry Pi Pico, Raspberry Pi **SC0915** (or Pico H, Pico W, Pico 2, Pico 2 W) | 1 | 5–8 € | The SC0915 has no headers: solder 2 × 1×20 male 2.54 mm headers to it. The "H" version comes with them fitted |
+| — | Male header 1×20, 2.54 mm pitch | 2 | — | For the SC0915 only |
+| A2 | Adafruit MPR121 12-key capacitive touch breakout, Adafruit **1982** | 1 | 9–12 € | Original or STEMMA QT: both work (see [section 5](#5-module-configuration-jp1-and-two-wires)). Comes with the male header to solder onto the module |
+| R1–R12 | Resistor 3.3 kΩ (3k3) 1 %, axial, **DIN0414 size** (Ø ≤ 4.2 mm, L ≤ 11.9 mm, lead 0.8 mm), pulse-rated, Vishay **MBE04140C3301FC100** (MBE/SMA 0414) | 12 | 4–8 € | One in series with each electrode; lying flat, 15.24 mm lead spacing. Do not substitute a small DIN0204/0207 resistor: it is not rated for the ESD pulse voltage (see [Electrical safety](#electrical-safety)) |
+| R13, R14 | Resistor 4.7 kΩ (4k7), axial, DIN0204 size, Yageo MFR-12FTF52-4K7 | 2 | — | I²C pull-ups (SCL, SDA); mounted vertically |
+| R15, R16 | Resistor 220 Ω, axial, DIN0204 size, Yageo MFR-12FTF52-220R | 2 | — | In series in SCL (R15) and SDA (R16) on the Pico side; they limit the current if a configuration wire goes to the wrong hole; mounted vertically |
+| A1 socket | Female header 1×20, 2.54 mm pitch (generic) | 2 | 1 € | Pico socket |
+| A2 socket | Female header 1×13, 2.54 mm pitch (generic) | 1 | 0.50 € | Module electrode row |
+| A2 socket | Female header 1×7, 2.54 mm pitch (generic) | 1 | 0.40 € | Module power/I²C row |
+| J2 | 2-way screw terminal block, **5.08 mm** pitch, interlocking, Phoenix Contact **1715721** (MKDS 1,5/ 2-5,08) or equivalent | 7 | 2–3 € | They lock together to form the 14-way strip |
+| SW1 | 6 × 6 mm push button, 4 legs, Omron **B3F-1000** | 1 | 0.20 € | Choose the height to suit the enclosure |
+| RV1 | 10 kΩ linear potentiometer (B10K), 9 mm, vertical, Alps Alpine RK09K series | 1 | 1 € | Plus a knob: **plastic (insulating) knob, at most 15 mm in diameter, covering the whole shaft**; use a plastic-shaft (insulated) RK09K variant where one is available (not confirmed from an Alps datasheet). The two metal mounting tabs are soldered and tied to AGND (v1.2, T-076), so a metal shaft or knob would bring a finger discharge straight onto the analog ground. A knob wider than 15 mm overhangs C1 (up to 6.6 mm tall, 7.8 mm from the shaft) |
+| C1 | Ceramic capacitor 100 nF (0.1 µF) 50 V X7R ±10 %, radial, **5.08 mm lead spacing**, KEMET **C322C104K5R5TA** (Golden Max C322: body ≤ 5.08 × 3.18 mm, height ≤ 6.6 mm, leads 0.48–0.61 mm) | 1 | 0.20–0.90 € | Potentiometer wiper to AGND, just above RV1. A substitute 100 nF X7R/X5R ≥ 10 V fits if it has **5.08 mm (0.2") lead spacing, leads ≤ 0.7 mm** (0.9 mm holes) and a body **no larger than 5.08 × 3.18 mm and no taller than 6.6 mm** (the 15 mm knob limit at RV1 assumes this envelope); not the C320 version, which has 2.54 mm leads |
+| JP1 | Solder bridge (no part) | — | — | Bridged with an off-cut of an R13–R16 lead (0.5 mm) or with solder; the pads are 3.81 mm apart (1.87 mm gap); see section 5 |
+| — | Thin insulated solid wire (from network cable, for example) | ~10 cm | — | 2 configuration wires (SDA, SCL) |
+| H1–H4 | M3 screws + spacers, **nylon** preferred | 4 | 2 € | Optional. H4 is right of the module and H3 above the right end of the resistor row (both moved in the v1.2 layout, CR-002). Nylon screws and spacers keep loose metal away from the electrode resistors; metal ones are acceptable at the new H3/H4 positions |
+| — | Micro-USB **data** cable | 1 | 3 € | |
+
+If you cut 40-way female header to length, you lose one pin at each cut: 2 strips of 1×40 are enough: one for 20 + 13, the other for 20 + 7.
+
+### Fabrication materials
+
+| Part | Qty | Notes |
+| --- | --- | --- |
+| **Single-sided** copper board, FR4 or FR2, 100 × 70 mm (35 µm) | 1 | Or cut from a larger one |
+| **Toner:** laser printer + transfer paper (or glossy magazine paper) + clothes iron | — | Inkjet ink does not work |
+| **Photographic:** positive pre-sensitised board + transparency film + UV lamp + developer (sodium hydroxide) | — | Alternative to toner |
+| Ferric chloride (or sodium persulfate) | ~0.5 L | See the safety note in section 2 |
+| Plastic container, nitrile gloves, goggles | — | Nothing metal |
+| Acetone or thinner, fine steel wool, isopropyl alcohol | — | Cleaning |
+| Fine permanent marker | 1 | Touching up toner gaps |
+| Drill bits of 0.8 · 0.9 · 1.0 · 1.1 · 1.4 · 1.8 · 3.2 mm, plus a round needle file | 1 each | Mini drill, preferably on a stand |
+| Soldering iron, flux-core solder (0.8 mm), multimeter | — | |
+
+## Design rules for home etching
+
+| Rule | Value |
+| --- | --- |
+| Copper layers | Bottom only; all components through-hole on top |
+| Track width | 1.0 mm (signals) and 1.2 mm (GND, 3V3); 0.8 mm on the short connections of the S row |
+| Minimum clearance | 0.6 mm (project rule); 0.5 mm is the absolute minimum accepted by DRC |
+| Pads | Minimum annular ring 0.40 mm. Pico socket 2.4 × 1.8 mm, module headers 1.8 × 2.4 mm (0.74 mm between pads on the 2.54 mm pitch), potentiometer 2.6 × 1.8 mm (0.70 mm between pads), terminals oval 3.0 × 4.5 mm (extended towards the back of the block, for peel strength under screw torque), JP1 1.94 × 2.4 mm on a 3.81 mm pitch (1.87 mm between pads) |
+| Vias and bridges | No vias. Only the JP1 solder bridge and the 2 module configuration wires |
+| Ground plane | None, on purpose: copper around the electrode tracks takes away sensitivity |
+
+## 1. Print
+
+1. Open [`1-copper-for-transfer.pdf`](fabrication/1-copper-for-transfer.pdf) and print at **actual size / 100 %**, without "fit to page".
+2. Measure the printed outline: it must be **100 × 70 mm**. If it is not, the printer scale is wrong.
+3. Check that the text **"FrutaMIDI v1.2" appears reversed (mirrored) on the paper**. That is intended: once transferred to the copper it reads correctly.
+4. For toner: laser printer, maximum density, transfer paper. For photosensitive board: transparency film, preferably two copies stacked so it is fully opaque.
+
+The small dots in the centre of the pads are left without copper after etching and act as a guide for the drill.
+
+## 2. Transfer and etch
+
+**Preparing the board:** cut it to 100 × 70 mm and rub the copper with steel wool until it shines. Clean it with alcohol and do not touch it with your fingers again.
+
+**Toner**
+
+1. Place the paper with the ink facing the copper and hold it with tape.
+2. Iron on maximum, no steam, 3–5 minutes with pressure, going well over the corners.
+3. Let it cool, soak in warm water for 5–10 minutes and remove the paper by rubbing with your finger.
+4. Touch up broken tracks or pads with holes using the permanent marker.
+
+**Positive photosensitive**
+
+1. Place the transparency with the ink facing the resist (it gives a sharper result).
+2. Expose to UV light as the manufacturer specifies (usually 1–3 minutes), develop, rinse in water and check that the tracks are sharp.
+
+**Etching**
+
+- Ferric chloride at 40–50 °C (water bath), agitating: 10–20 minutes. Take the board out when all the copper between the tracks has gone.
+- Rinse with water, remove the toner/resist with acetone, and check against the light that there are no bridges between tracks, especially in the electrode fan-out, around the resistor row, at JP1 and between the Pico pads.
+
+**Safety:** wear gloves and goggles, in a ventilated place. Ferric chloride stains everything permanently and is corrosive. Do not pour the used solution down the drain: it contains dissolved copper, so take it to a recycling/waste collection centre. If you use hydrochloric acid with hydrogen peroxide, always mix it in small quantities and outdoors, because it releases toxic gases.
+
+## 3. Drill
+
+Drill from the copper side, using the dots as a guide. There are 133 holes in total: 131 round holes and the 2 potentiometer slots.
+
+| Bit | Holes | Where |
+| --- | --- | --- |
+| 0.8 mm | 11 | Resistors R13–R16 (8) and JP1 (3) |
+| 0.9 mm | 11 | J3, the S1–S7 wire holes (7), J1 (2, configuration wires) and capacitor C1 (2; v1.2 T-080: 0.9 mm so the thickest C1 lead, 0.61 mm, fits) |
+| 1.0 mm | 63 | Female headers for the Pico (40) and the module (20), potentiometer pins (3) |
+| 1.1 mm | 28 | Resistors R1–R12 (24, 0.8 mm leads) and the button (4) |
+| 1.4 mm | 14 | Screw terminals |
+| 1.8 mm, then widen | 2 | Potentiometer mounting tabs (slots of 2.1 × 1.8 mm in the design; see below) |
+| 3.2 mm | 4 | M3 mounting (optional; not plated) |
+
+**Potentiometer tab slots.** Drill the two potentiometer tab holes with a 1.8 mm bit, then widen each one along the long side of its pad (left-right, the 4 mm direction) to about 2.1 mm with a round needle file or by rocking the 1.8 mm bit sideways. Test-fit the pot before soldering; the tabs must drop in without force.
+
+If you like, apply flux or protective lacquer to the copper after drilling. You can also tin the tracks with the iron so they do not oxidise.
+
+## 4. Solder
+
+Solder from the lowest component to the tallest, so the board sits flat on the table. Use the [assembly map](fabrication/2-assembly-map.pdf).
+
+![Top view](fabrication/images/board-top.png)
+
+1. **Resistors R1–R12 (3k3, the large DIN0414 ones).** They lie flat in one row between the module and the screw terminals, one per electrode. The holes are 15.24 mm apart and Vishay allows a lead spacing down to 15.0 mm for this part, so there is only about 1.7 mm of straight lead between the body and each hole: bend each lead as close to the body as the datasheet allows (do not bend at the body end itself: hold the lead with pliers next to the body and bend beyond the pliers). Form one resistor first and check that it drops into its holes without forcing the leads, then form the rest the same way. Keep the body centred between the two holes: form the leads on a lead-bending gauge, or on a strip of stripboard using holes 1 and 7 (15.24 mm), so that the two straight lengths are equal within about 0.25 mm; press the body onto the board and solder. Do not stand them up: lying flat keeps the copper pads of each resistor 13 mm apart and its two metal end caps several millimetres apart, which is what the ±4 kV protection estimate relies on. With the dimensions assumed in the analysis the end caps of neighbouring resistors are about 4.0 mm apart with perfectly centred bodies, and at least 3.6 mm if each body sits within ±0.25 mm of centre; at ±0.5 mm the worst case drops to about 3.1 mm, below the 3.5 mm estimated for 4 kV. So form the leads on a lead-bending gauge (or the stripboard strip), not by eye.
+2. **Resistors R13 and R14 (4k7)**, the I²C pull-ups, vertical above J1 (right of the module). Then **R15 and R16 (220 Ω)**, also vertical: R15 just below J1, R16 between the Pico and the SCALE button.
+3. **Capacitor C1 (100 nF)**, just above the potentiometer, pressed down onto the board (it is not polarised).
+4. **Button SW1** ("SCALE").
+5. **Pico female headers (2 × 1×20).** Trick: plug both headers onto the Pico, set the assembly on the board and solder. They end up parallel and at the right spacing. Then remove the Pico.
+6. **Module female headers (1×13 and 1×7).** Same trick: first solder the male header to the module, plug on the female headers, set it on the board and solder.
+7. **Potentiometer RV1** ("OCTAVE"), including the two mounting tabs: they are connected to AGND (the potentiometer ground), so solder both.
+8. **Terminals J2.** Lock the 7 blocks together before placing them on the board, with the wire entries facing away from the board.
+9. **JP1 and the 2 configuration wires:** see the next section.
+
+## 5. Module configuration: JP1 and two wires
+
+The Adafruit 1982 exists in two versions, with the 7 power/I²C pins in a different order. That is why the board does not connect them directly. Above the 7 module pins there are 7 holes **S1–S7** (J3), each one directly above a module pin. You configure the board for your module in two steps.
+
+**Step 1: power (JP1).** JP1 is a 3-pad solder bridge standing upright to the right of the module (**QT** at the top, **ORIG** at the bottom). The centre pad is 3V3. Bridge it to **one** side with an off-cut of an **R13–R16** lead (0.5 mm; the 0.8 mm leads of R1–R12 do not fit the 0.8 mm JP1 holes), bent into a U through the two holes, or with solder. The pads are 3.81 mm apart (1.87 mm of bare board between them), so that a single blob cannot easily join all three pads; a solder-only bridge needs a generous amount of solder, and the lead off-cut is easier:
+
+- **ORIG** (pad 1 → S1): original version, 3V3 goes to **VIN**.
+- **QT** (pad 3 → S7): STEMMA QT version, 3V3 goes to **VCC**.
+
+The silkscreen legend to the right of the module repeats this: "JP1 3V3 selector: / ORIG = no white connectors / QT = 2 white connectors".
+
+**Step 2: I²C (two wires).** J1 (right of JP1) has 2 holes, **SCL on the left and SDA on the right**. Connect:
+
+- J1 **SDA** → the S hole above the module's **SDA** pin;
+- J1 **SCL** → the S hole above the module's **SCL** pin.
+
+To confirm, read the letters printed on the module next to the 7-pin row, and check this table:
+
+| Version | How to recognise it | JP1 | SDA → | SCL → |
+| --- | --- | --- | --- | --- |
+| Original | No small white connectors | **ORIG** | **S5** | **S6** |
+| STEMMA QT (current) | Two small white 4-pin connectors (STEMMA QT / Qwiic) | **QT** | **S3** | **S4** |
+
+Use insulated solid wire and run it on the component side, **flat on the board and as short as the route allows** (about 25–35 mm each): a long loose loop can be pushed onto the wrong S hole or strain its joint. Solder the two wires underneath, on the copper. The other S holes stay empty. The module's GND needs no wire: it comes in through the electrode row and is the same in both versions.
+
+> **A wrong JP1 position can damage the sensor.** ORIG on a STEMMA QT module puts 3V3 on the module's ADDR pin; QT on an original module puts it on IRQ. The MPR121 chip is then unpowered, so 3V3 on that pin is above its absolute maximum rating (VDD + 0.3 V), and it can back-feed the module through its 10 kΩ pull-ups. There is no direct short to GND, but the module is not supplied correctly, the sensor does not respond and the Pico LED blinks fast. Check JP1 against the table above **before** inserting the module (section 6). Never bridge all three pads.
+
+## 6. Test before powering
+
+With the multimeter, **without the Pico or the module plugged in**:
+
+- [ ] Continuity between the **JP1 centre pad** (3V3) and a **GND** terminal: it must **not** beep.
+- [ ] Resistance between each terminal 0…11 and the corresponding pin of the module's 1×13 header: about **3.3 kΩ** (the series resistor). It does not beep in continuity mode.
+- [ ] Continuity between neighbouring terminals (0–1, 1–2, …): it does **not** beep.
+- [ ] Continuity between the two GND terminals at the ends: it beeps.
+- [ ] Resistance between the module's SDA pin and pin 31 of the Pico socket (and SCL and pin 32): about **220 Ω** (R16 / R15), with the configuration wires already soldered. It may not beep in continuity mode.
+- [ ] **Before inserting the module:** continuity between the JP1 centre pad and the S hole for your version (S1 for ORIG, S7 for QT): it beeps. The other side (S7 or S1) must **not** beep.
+
+## 7. Firmware and first power-up
+
+The board uses different pins from the breadboard, so it needs the **PCB version** of the firmware:
+
+| Board | File (in [Releases](https://github.com/catuta0/fruta-midi-controller/releases/latest)) |
+| --- | --- |
+| Raspberry Pi Pico | `FrutaMIDI-pcb-rpipico.uf2` |
+| Raspberry Pi Pico W | `FrutaMIDI-pcb-rpipicow.uf2` |
+| Raspberry Pi Pico 2 | `FrutaMIDI-pcb-rpipico2.uf2` |
+| Raspberry Pi Pico 2 W | `FrutaMIDI-pcb-rpipico2w.uf2` |
+
+1. With the Pico **off the board**, hold BOOTSEL, plug in the USB and drag the `.uf2` onto the RPI-RP2 drive (on the Pico 2: RP2350).
+2. Unplug the USB. Plug in the Pico with the **USB facing the top edge** (the "1" on the silkscreen is next to pin 1).
+3. Plug in the module with the **13-pin row facing the terminals**: the module's lettering ends up upside down, and that is intended.
+4. Plug in the USB. The Pico LED should give 2 slow blinks (sensor found) and then light up whenever you touch a terminal.
+5. Open the [online sampler](https://catuta0.github.io/fruta-midi-controller/), touch the screw of terminal 0 with your finger and the kick drum should play.
+
+If you compile it yourself, uncomment `#define FRUTAMIDI_PCB` at the start of [`FrutaMIDI.ino`](../firmware/FrutaMIDI/FrutaMIDI.ino). This definition moves I²C to GP26/GP27 (`Wire1`), the button to GP22 and the potentiometer to GP28, and enables the potentiometer.
+
+| Signal | Pico pin | GP |
+| --- | --- | --- |
+| SDA (I²C1) | 31 | GP26 |
+| SCL (I²C1) | 32 | GP27 |
+| Button | 29 | GP22 |
+| Potentiometer | 34 | GP28 / ADC2 |
+| 3V3 | 36 | — |
+| AGND | 33 | — |
+| GND | 3, 8, 13, 18, 23, 28, 38 | — |
+
+## Common problems
+
+| Symptom | Likely cause | What to do |
+| --- | --- | --- |
+| Pico LED blinks fast | Sensor not responding | Check that JP1 is bridged to the side for your version and that the 2 wires go to the right S holes; check that you uploaded the **pcb** `.uf2` |
+| Nothing happens when plugged in | Pico the wrong way round, or charge-only cable | USB towards the top edge; change the cable |
+| One terminal is always playing | Copper or solder bridge between tracks | Look with a magnifier in the electrode fan-out and the resistor row; cut with a craft knife |
+| Two terminals play together | Short between neighbouring tracks | Same procedure |
+| One terminal never plays | Resistor of that electrode not soldered, or broken track | Measure about 3.3 kΩ from the terminal to the module header pin (section 6); resolder |
+| The potentiometer does not change the octave | Breadboard firmware | Upload the **pcb** `.uf2` |
+| The octave jumps by itself | Potentiometer tab or pin badly soldered | Resolder RV1 |
+
+Sensitivity problems (fruit, cables, ground) are the same as on the breadboard: see the [design notes in the main README](../README.md#design-notes).
+
+## Electrical safety
+
+Each electrode has a 3.3 kΩ series resistor (R1–R12) between the screw terminal and the sensor. Its protection against IEC 61000-4-2 contact discharge at ±4 kV is an estimate that rests on assumptions (the sensor pin's surge limit is inferred, not specified), not a pass. The resistor is a pulse-rated DIN0414 part whose 1.2/50 µs rating at 3.3 kΩ (about 4.1 kV, read from the maker's chart) covers the about 3.6 kV across it at 4 kV, but not the about 7.3 kV at 8 kV. A spark could also try to jump around the resistor: its copper pads are 13 mm apart; with the dimensions assumed in the analysis the metal end caps of neighbouring resistors are about 4.0 mm apart when centred and at least 3.6 mm when each body is placed within ±0.25 mm (leads formed on a gauge), above the 3.5 mm estimated for 4 kV, but only about 3.1 mm, below it, at ±0.5 mm; that is an estimate, not a guarantee, and it is not enough for 8 kV. Each terminal pad is 1.4 mm from the GND track along the board edge, so a strong discharge will most likely jump to GND there instead of reaching the sensor. Only an ESD-gun test can confirm the protection. The board has not been evaluated for higher discharge levels or for touching while it is connected to mains-powered equipment. <!-- EVIDENCE --> See the [electronics analysis](../reports/electronics/analysis.md). Never connect the electrodes to anything plugged into mains power.
+
+## Modifying the board
+
+The schematic and the PCB are generated by the scripts in [`scripts/`](scripts/), not drawn by hand. To change something, edit `gen_schematic.py` / `gen_pcb.py` and run:
+
+```sh
+sh hardware/scripts/build_all.sh
+```
+
+The script regenerates everything, runs ERC and DRC (it fails if there are violations), checks that the PCB matches the schematic and exports the `fabrication/` folder again. The KiCad files also open and edit normally in KiCad 10, but if you edit them by hand, stop regenerating them with the script.
+
+The module footprint was measured from [Adafruit's Eagle files](https://github.com/adafruit/Adafruit-MPR121-PCB) (CC BY-SA). Both versions have the same geometry: only the order of the 7-pin row changes.
