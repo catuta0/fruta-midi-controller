@@ -148,3 +148,9 @@ User decision ("ok pronto fica HPWC"), replacing ADR-024 on R1-R12 and ADR-023 D
 - 1.2/50 us chart reading about 4596 V against about 3636 V across R at 4 kV: margin about 1.26 (CALCULATION, chart reading). Conductor gap 4.4 mm (SOURCE) against the 3.5 mm rule: PASS at 4 kV. 8 kV FAIL (R-006).
 - Accepted deviation, by the user: at +5 % (3465 ohm) the worst-choice sensitivity is 0.885 against the 0.90 limit (SIMULATION). Mitigation: each resistor is measured before soldering and only those within the selection limit are used. The limit of 0.90 is not changed.
 - The ADR-024 MELF land and the accepted 3.2 mm gap no longer apply. Silicone over R1-R12 is optional only: neutral-cure electronics grade, never acetic-cure.
+
+## ADR-026 — R1-R12 standard 2512 3k3 1 % (CR-003), 2026-11-09
+User decision after discussing cost against the 4 kV target (user: pulse-proven parts are excessive for a hand-built instrument; "ok ok"). Supersedes ADR-025 on R1-R12.
+- R1-R12: Yageo RC2512FK-073K3L, 3k3 ±1 %, 1 W, 200 V rated. Mouser 603-RC2512FK-073K3L: 12 for 1.31 EUR at 0.109 EUR, stock 13, next delivery 2027-05-18 (SOURCE, Mouser Portugal, 2026-11-09). One-board quote about 13.8 EUR excluding shipping and taxes (CALCULATION).
+- Accepted by the user: no sourced pulse capability, so survival of a 4 kV strike is NOT PROVEN. The ±4 kV target of REQ-023 was itself an ASSUMPTION (IEC 61000-4-2 level 2, standard not read). Possible effects: resistance drift or a dead channel; in the worst case an arc reaches the module. Energy of a 4 kV IEC-style strike into R is about 1 mJ against 182 mJ behind the earlier 1.2/50 us chart criterion (CALCULATION, T-060/T-090).
+- REQ-023 stays PARTIAL at best; the physical ESD test decides. Selection by multimeter (ADR-025) no longer applies. Silicone stays optional.
