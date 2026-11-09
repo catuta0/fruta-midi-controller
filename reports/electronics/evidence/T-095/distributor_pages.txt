@@ -1,0 +1,52 @@
+T-095 pages opened 2026-11-09 (browser pane, public catalogue pages and catalogue filters only; no cart, account, form, order or contact).
+All numbers SOURCE. Ex shipping and tax. LCSC prices USD, Mouser prices EUR.
+
+== LCSC widened search for R1-R12 ==
+Family searches (https://www.lcsc.com/search?q=...):
+- HVC2512: 18 results, listed values 250 kOhm to 1000 MOhm, Riedon/Ohmite/TT, voltage attribute 2 kV. No value near 3k.
+- CHV2512: 25 results, Bourns, 100 kOhm to 100 MOhm, 3 kV.
+- HV732H: KOA 2010, 100 kOhm to 100 MOhm.
+- CRHV2512: 17 results, Vishay, 12 MOhm to 1000 MOhm, 3 kV.
+- RCV2512: 32 results, Vishay, listed rows 100 kOhm and above, first page stock 0.
+- SG73P3A: "0 results". PWC2512: "0 results". HPWC2512: "0 results" (T-094).
+- RPC2512JT3K30 C2532497 Stackpole, 3.3k 5 % 1.5 W 500 V, stock 0, Pre/New, 1+ 0.1018.
+- RPC2512JT3K00 C7060300 Stackpole, 3k 5 % 1.5 W, stock 0, Pre/New, 1+ 0.2811.
+- MMB0207: 456 results. C4327785 MMB02070C3301FB200 3.3k, stock 100; C4127801 MMB02070C3001FB200 3k, stock 460 (rejected: T-090 chart 1.74 kV at 3k3).
+- SMM02070C3301FBP00 C2088434 3.3k 350 V, stock 835 (thin film MELF; no 1.2/50 chart read in this task).
+- CMB02070X3301GB200 C2079554 Vishay, 3.3k 2 % 1 W 500 V carbon film 0207, In-Stock 33, Minimum 1, Multiple 1; 1+ 1.1603, 10+ 0.9719, 30+ 0.8686. Product page opened.
+- CMB02070X3001, X1601, X2701 searches: no rows returned.
+- "anti-surge 2512 resistor": 1,554,191 relevance results, milliohm shunts first; not usable.
+
+Parametric filters on https://www.lcsc.com/category/1199.html (Chip Resistor - Surface Mount):
+- Resistance 3.3 kOhm only: 2,237 results; Voltage Rating options up to 1 kV (highest).
+- Resistance 3.3 kOhm and 1 kV: 2 results, ERJ-UP8D3301V C2128848 and ERJ-UP8F3301V C2123435, Panasonic 1206, stock 0.
+- Resistance 2.7, 2.74, 2.8, 2.87, 2.94, 3, 3.01, 3.09, 3.16, 3.24, 3.3 kOhm: 16,351 results; Voltage Rating options up to 1 kV (highest).
+- Same values with 600 V, 750 V, 1 kV: 9 results, all stock 0: ERJ-UP8D3091V, ERJ-UP8D2701V, ERJ-UP8D3301V, ERJ-UP8F3301V (1206, 1 kV); KTR25JZPF3301, KTR25JZPF3001 (1210, 600 V); ERJ-P06D2701V (0805, 600 V); SMF73K0JT, SMF72K7JT (TE 7 W metal film, 750 V, package blank).
+- Same values, packages 2512, SMD 6.4x3.1 mm, 0207, voltage 400 V and 500 V: 50 results; manufacturers Panasonic, Stackpole, TE, UNI-ROYAL, Vishay. Default order puts stock first. Only three with stock: CRGP2512F3K3 C2082816 (130), CMB02070X3301GB200 C2079554 (33), CRGP2512F2K7 C2082813 (5).
+- Same values, packages 2816, 6227, MELF-0207, MELF-0309, MELF, SMD 6.6x3.9, 7.3x4.3, 9x5.5, 11x5.5 mm: 155 results, voltage options 200-350 V. In stock on the first page: MELF thin or metal film parts (MMB, SMM, MM204, 1MMF10TSS07).
+Limit: the filter uses LCSC's Voltage Rating attribute, which is a working voltage (not a pulse rating) and is blank on some rows. Brand-specific searches for Ta-I, Viking, Ralec, Walsin were not run separately; none of them appears in the 400 V and above manufacturer list above.
+
+LCSC shipping: https://www.lcsc.com/help-center/shipping-delivering/shipping-cost-calculation says cost varies with weight, shipping method and destination; no rate table. Customs page: incoterms FCA or EXW, the customer pays duties, taxes and courier fees. Portugal cost NOT CONFIRMED.
+
+== Mouser Portugal (https://pt.mouser.com/, EUR) ==
+Supplied by the coordinator (user confirmed on pt.mouser.com 2026-11-09, not opened by me): 358-SC0915 stock 9270, 3.44 at 1, min 1; 485-1982 stock 168, 6.84, min 1.
+Opened in T-094: HPWC2512-3K3JT1, 2,381 in stock, min 1; 1 at 2.05, 10 at 1.25.
+- 603-RC1206FR-074K7L YAGEO 4.7k 1 % 1/4 W 1206, 466,664 in stock, min 1 mult 1; 1 at 0.086, 10 at 0.022.
+- 603-RC1206FR-07220RL YAGEO 220R 1 % 1/4 W 1206, 93,608 in stock, min 1 mult 1 (listing truncated after quantity tier; min read from the sibling row format); 1 at 0.086, 10 at 0.017.
+- 187-CL31B104KBCNNNC Samsung 100 nF 10 % 50 V X7R 1206, 72,793 in stock, min 1 mult 1; 1 at 0.12, 10 at 0.069. Cut tape; a 5.00 EUR MouseReel fee applies only if MouseReel is chosen.
+- 603-CC206KRX7R9BB104 YAGEO, 379,339 in stock; 1 at 0.292 (dearer).
+- 653-B3S-1000, manufacturer shown as "Aratas", 10,532 in stock, min 1 mult 1; 1 at 0.697. Stem height 4.3 mm, 1.6 N, 50 mA, 24 VDC.
+- 652-PTV09A-4015F-B103 Bourns 10k 20 % linear, 50 mW, horizontal PC pin, Flatted / D shaft 6 mm, 15 mm, "Carbon Element, Insulated Shaft", 772 in stock, min 1 mult 1; 1 at 0.765, 10 at 0.641. Temperature -10 to +50 C, 10,000 cycles.
+- 688-RK09D1130C2P Alps 10k linear, Flatted / D 6 mm, 25 mm, 1,871 in stock, min 1 mult 1; 1 at 1.86.
+- 179-SPK-016A Same Sky knob, ABS, smooth, shaft diameter 6 mm, outside diameter 11 mm, height 17.2 mm, line indicator, 2,493 in stock, min 1 mult 1; 1 at 0.327. Bore style (D or round) not on the page.
+- 652-CR1206FX-4701ELF, 652-CR1206FX-2200ELF Bourns: specification pages opened; prices not read.
+- CMB02070X3301GB200 Vishay, 1,219 in stock, min 1 mult 1; 1 at 0.697, 10 at 0.422, 25 at 0.325.
+Header strip: not needed, Adafruit 1982 ships with its header (T-090 source T90-S11).
+
+Mouser shipping: https://pt.mouser.com/en/help/orders-shipping/shipping-options-explained says delivery rates are in the shopping basket. Homepage and /en/new-customers/ show "FREE SHIPPING" with no condition readable in text. Portugal cost NOT CONFIRMED.
+
+Exchange rate: ECB euro reference rate, 9 November 2026, 1 EUR = 1.1193 USD. https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
+
+== Not opened ==
+- Same Sky SPK-016 datasheet: the Mouser PDF link answered as a file download; a save dialog appeared to the user and the page did not load. Not retried.
+- Manufacturer datasheets for RC1206, CL31, B3S (T90-S9 covers B3S), PTV09: not opened; Mouser specification rows only.
