@@ -10,7 +10,7 @@
   RP2040 I2C internal pull-ups               0.000 .. 0.132 mA      CALCULATION, RPU 50..80 kOhm SOURCE S-17 Table 625
   Octave pot 10k +-20 %                      0.275 .. 0.412 mA      CALCULATION V/R
   Button pull-up (pressed)                   0.000 .. 0.066 mA      CALCULATION, RPU >= 50 kOhm SOURCE S-17
-  Electrode series R1..R12 3k3               0.000 .. 0.000 mA      CALCULATION: no DC path (MPR121 charge current only, inside IDD)
+  Electrode series R1..R12 3k0               0.000 .. 0.000 mA      CALCULATION: no DC path (MPR121 charge current only, inside IDD)
   External 3V3 load, 1 sensor                1.495 .. 6.085 mA  CALCULATION (sum)
   External 3V3 load, 2 sensors               2.715 .. 10.155 mA  CALCULATION (+ second module, breadboard)
 PASS  A1 3V3 external load <= 300 mA with >= 50 % margin :: worst 10.15 mA (2 sensors) vs 300 mA, margin 96.6 %
@@ -29,6 +29,8 @@ PASS  A5 pot: ADC noise + DNL + quantisation + ripple < dead band (no octave cha
 PASS  A6 I2C on ADC-capable GP26/27: pull-up rail = IOVDD :: R13/R14 and module VIN/VCC are on +3V3 (Pico pin 36)
   POT C1: R_th max 3000 Ohm, C max 126.5 nF, tau 0.380 ms, settle to 1/2 LSB10 2.89 ms vs read period 30 ms (margin 10.4x)  CALCULATION
 PASS  A7 pot C1 filter: worst-case settling to 1/2 LSB10 x 5 <= read period :: tau 0.380 ms, settle 2.89 ms, read period 30 ms, margin 10.4x (criterion >= 5x ASSUMPTION)
+  POT wires: 25.0 pF on C1 (0.028 % of 90 nF); IR drop per wire 26.8 uV at 0.41 mA, length 0.50 m, R 0.13 ohm/m (ASSUMPTIONS)  CALCULATION
+PASS  A8 off-board pot wires: capacitance <= 1 % of C1 and IR drop <= 1 % of the dead band :: 25.0 pF vs 90.0 nF; 26.8 uV vs dead band 0.132 V (hum and interference pickup on the wires NOT analysed)
 
 ==========================================================================================
 (b) LATENCY BUDGET (firmware T-040: M1 burst read, non-blocking LED)
@@ -86,32 +88,34 @@ PASS  B7 I2C high seen by RP2040 (VIH 2.0 V) :: 3.30 V vs 2.0 V, margin 1.30 V
 PASS  B8 I2C high seen by MPR121 (VIH 0.7*VDD_max; module side pulled to its own VDD) :: module side high = VDD, margin 0.3*VDD >= 0.93 V (VIH up to 2.38 V)
 PASS  B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-17 IIOVDD_MAX) :: 15.5 mA per line at 3.4 V (2 lines 30.9 mA)
   220 Ohm x 10 pF pad capacitance (ASSUMPTION) = 2.2 ns: negligible against 300 ns  CALCULATION
-  series 3k3: C   20 pF, tau 0.07 us vs CDT 1 us (ratio 0.07); IR at 63 uA = 0.208 V  CALCULATION
-  series 3k3: C  100 pF, tau 0.33 us vs CDT 4 us (ratio 0.08); IR at 63 uA = 0.208 V  CALCULATION
-  series 3k3: C  500 pF, tau 1.65 us vs CDT 32 us (ratio 0.05); IR at 63 uA = 0.208 V  CALCULATION
-  series 3k3: C 1000 pF, tau 3.30 us vs CDT 32 us (ratio 0.10); IR at 63 uA = 0.208 V  CALCULATION
+  series 3k0 +5%: C   20 pF, tau 0.06 us vs CDT 1 us (ratio 0.06); IR at 63 uA = 0.198 V  CALCULATION
+  series 3k0 +5%: C  100 pF, tau 0.32 us vs CDT 4 us (ratio 0.08); IR at 63 uA = 0.198 V  CALCULATION
+  series 3k0 +5%: C  500 pF, tau 1.57 us vs CDT 32 us (ratio 0.05); IR at 63 uA = 0.198 V  CALCULATION
+  series 3k0 +5%: C 1000 pF, tau 3.15 us vs CDT 32 us (ratio 0.10); IR at 63 uA = 0.198 V  CALCULATION
 
 ==========================================================================================
 (c) BOM COST (ADR-007 D-7 core definition)
 ==========================================================================================
-  A1 Raspberry Pi Pico H (or Pico/W/2/2W + headers)    x1  5.00 .. 8.00 EUR   ASSUMPTION (hardware/README.md)
-  A2 Adafruit MPR121 breakout 1982                     x1  9.00 .. 12.00 EUR  ASSUMPTION; SOURCE S-05 USD 7.95 list (1-9 pcs) before EU shipping/VAT
-  Female header 1x20 (Pico socket)                     x2  1.00 .. 1.00 EUR   ASSUMPTION
-  Female header 1x13                                   x1  0.50 .. 0.50 EUR   ASSUMPTION
-  Female header 1x7                                    x1  0.40 .. 0.40 EUR   ASSUMPTION
-  J2 screw terminal 2-way 5.08 mm, interlocking        x7  2.00 .. 3.00 EUR   ASSUMPTION
-  SW1 tactile switch 6x6 mm                            x1  0.20 .. 0.20 EUR   ASSUMPTION
-  RV1 10k linear pot 9 mm + knob                       x1  1.00 .. 1.50 EUR   ASSUMPTION
-  R1..R12 3k3 1 % pulse-rated Vishay MBE04140C3301FC100 (DIN0414) x12 3.60 .. 7.92 EUR   SOURCE EE-S26 in reports/electronics/SOURCES_EE.md (sibling values 330R/330k: RS GBP 0.26, LCSC USD 0.30, qty 1-24); 3k3 equal price ASSUMPTION (CR-002, T-060)
-  C1 100 nF X7R 50 V radial 5.08 mm KEMET C322C104K5R5TA x1  0.20 .. 0.90 EUR   ASSUMPTION from distributor search EE-S30 in reports/electronics/SOURCES_EE.md (search extract, T-076, prices not verified; ADR-021)
-  R13/R14 4k7, R15/R16 220R, 0.25 W axial (Yageo MFR-12) x4  0.08 .. 0.20 EUR   ASSUMPTION
+  A1 Raspberry Pi Pico SC0915 (no headers); Pico W/2/2 W also fit x1  4.07 .. 8.00 EUR   low SOURCE S-45 (DigiKey NL, qty 1, ex VAT); high ASSUMPTION (Pico W / 2 W variants, kept from revision 7)
+  A2 Adafruit MPR121 breakout 1982 (male headers supplied) x1  9.00 .. 12.00 EUR  ASSUMPTION; SOURCE S-05 USD 7.95 list (1-9 pcs) before EU shipping/VAT
+  SW1 Omron B3S-1000 SMD tactile switch                x1  0.74 .. 0.82 EUR   low SOURCE S-46 (DigiKey AT, qty 1, ex VAT); high RS (per unit in packs of 5, search extract S-46)
+  RV1 10k linear pot, insulated shaft, plastic knob (off-board) x1  1.00 .. 1.50 EUR   ASSUMPTION (unchanged from revision 7, no insulated-shaft part selected)
+  R1..R12 3k0 5 % TT HPWC2512-3K0JT18                  x12 4.26 .. 27.13 EUR  ASSUMPTION: 3k0 not listed by any distributor found (S-40); equal price to sibling values S-41/S-42, USD converted
+  C1 100 nF X7R 50 V 1206 KEMET C1206C104K5RACTU       x1  0.01 .. 0.40 EUR   SOURCE S-43, USD converted (ASSUMPTION rate); qty 1 tier not stated
+  R13/R14 4k7, R15/R16 220R, 1 % 1206 thick film (generic) x4  0.02 .. 0.70 EUR   SOURCE S-44 listings for one 1206 part, USD converted (ASSUMPTION rate); qty 1 tier not stated
   Single-sided copper clad 100x70 mm                   x1  1.00 .. 3.00 EUR   ASSUMPTION (part of the assembled board)
-  Core BOM (ADR-007 definition)                            23.98 .. 38.62 EUR  CALCULATION
+  Core BOM (ADR-007 definition)                            20.10 .. 53.55 EUR  CALCULATION
   excluded: Etchant/toner consumables                      0.50 .. 2.00 EUR  ASSUMPTION
   excluded: Micro-USB data cable                           3.00 .. 3.00 EUR  ASSUMPTION
+  excluded: Electrode, pot and link wire, hot-melt, epoxy  1.00 .. 3.00 EUR  ASSUMPTION
   excluded: Crocodile leads x12 (optional)                 5.00 .. 10.00 EUR  ASSUMPTION
-  excluded: M3 hardware (optional)                         2.00 .. 2.00 EUR  ASSUMPTION
-FAIL  C1 core BOM upper bound <= 30 EUR :: core 23.98 .. 38.62 EUR
+  excluded: M3 nylon hardware (optional)                   2.00 .. 2.00 EUR  ASSUMPTION
+FAIL  C1 core BOM upper bound <= 30 EUR :: core 20.10 .. 53.55 EUR
+  removed from the V1.2 BOM: Female headers 2x 1x20, 1x13, 1x7 (sockets) 1.90 .. 1.90 EUR  revision 7 figures
+  removed from the V1.2 BOM: J2 screw terminals 7 x 2-way               2.00 .. 3.00 EUR  revision 7 figures
+  removed from the V1.2 BOM: R1..R12 Vishay MBE04140C3301FC100 (12 x 0.30-0.66) 3.60 .. 7.92 EUR  revision 7 figures
+  SENSITIVITY: R1..R12 at listed TME sibling prices instead of the 1 pc figure: 3.63 .. 10.94 EUR -> core 19.47 .. 37.36 EUR  CALCULATION
+  AVAILABILITY: if HPWC2512 3k0 is sold only at the sibling MOQ of 150 pcs at USD 1.139, the buy-in is 145.22 .. 162.31 EUR for one board (not in the core range)  CALCULATION
 
-SUMMARY: 30 checks, 25 PASS, 5 FAIL
+SUMMARY: 31 checks, 26 PASS, 5 FAIL
 wrote reports/systems/budgets.md

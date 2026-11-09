@@ -1,4 +1,4 @@
-"""System budgets for FrutaMIDI (systems-engineer). Revision 7 (T-077, CR-002 C1 100 nF wiper filter: BOM row and settling check A7); revision 6 T-070 (R1..R12 price); revision 3 T-011, revision 2 was T-010, revision 1 T-009.
+"""System budgets for FrutaMIDI (systems-engineer). Revision 8 (T-093, CR-003 / ADR-023 SMD BOM, 3k0 R1..R12, off-board pot check A8); revision 7 (T-077, CR-002 C1 100 nF wiper filter: BOM row and settling check A7); revision 6 T-070 (R1..R12 price); revision 3 T-011, revision 2 was T-010, revision 1 T-009.
 
 T-011 changes: aftertouch burst plan = run-based reads from fm_mpr121.h (worst case over all 4096 masks);
 RP2040 pull-up 50..80 kOhm and IO levels from SOURCE S-17 (RP2040 datasheet Table 625); I2C series
@@ -67,7 +67,7 @@ load("PCB I2C pull-ups R13/R14 4k7 (lines low)", rng(0.0, 2 * V33 / 4.7), "CALCU
 load("RP2040 I2C internal pull-ups", rng(0.0, 2 * V33 / 50.0), "CALCULATION, RPU 50..80 kOhm SOURCE S-17 Table 625")
 load("Octave pot 10k +-20 %", (V33 / 12.0, V33 / 8.0), "CALCULATION V/R")
 load("Button pull-up (pressed)", rng(0.0, V33 / 50.0), "CALCULATION, RPU >= 50 kOhm SOURCE S-17")
-load("Electrode series R1..R12 3k3", rng(0.0, 0.0), "CALCULATION: no DC path (MPR121 charge current only, inside IDD)")
+load("Electrode series R1..R12 3k0", rng(0.0, 0.0), "CALCULATION: no DC path (MPR121 charge current only, inside IDD)")
 
 ext_1 = add(*[r for _, r, _, _ in loads])
 ext_mod = add(*[r for _, r, _, m in loads if m])
@@ -145,7 +145,8 @@ check("A6 I2C on ADC-capable GP26/27: pull-up rail = IOVDD", True, "R13/R14 and 
 # A7 (T-077, ADR-021): C1 100 nF (KEMET C322C104K5R5TA) from the wiper (POT) to AGND forms a low-pass with the
 # pot Thevenin resistance. R_th = R*a*(1-a), maximum R/4 at mid travel. Inputs as in sim/electronics/calc/calc_pot_rc.py:
 POT_R = rng(10e3 * 0.8, 10e3 * 1.2)                 # ASSUMPTION: 10 kOhm +-20 % (typical carbon-track tolerance)
-C1_F = rng(100e-9 * 0.9, 100e-9 * 1.10 * 1.15)      # SOURCE EE-S29 (K = +-10 %, X7R +-15 % over temperature)
+C1_F = rng(100e-9 * 0.9, 100e-9 * 1.10 * 1.15)      # K = +-10 %, X7R +-15 % over temperature. SOURCE EE-S29 is the KEMET radial family; the v1.3
+                                                    # part C1206C104K5RACTU has the same K/R codes, its datasheet was not opened (ASSUMPTION, T-091)
 POT_READ_S = 30e-3                                  # SOURCE firmware/FrutaMIDI/fm_pot.h POT_READ_MS = 30
 rth_max = POT_R[1] / 4
 tau_c1 = rth_max * C1_F[1]
@@ -156,6 +157,17 @@ print("  POT C1: R_th max %.0f Ohm, C max %.1f nF, tau %.3f ms, settle to 1/2 LS
 check("A7 pot C1 filter: worst-case settling to 1/2 LSB10 x 5 <= read period", 5 * t_settle <= POT_READ_S,
       "tau %.3f ms, settle %.2f ms, read period %.0f ms, margin %.1fx (criterion >= 5x ASSUMPTION)"
       % (tau_c1 * 1e3, t_settle * 1e3, POT_READ_S * 1e3, POT_READ_S / t_settle))
+# A8 (T-093, ADR-023 D-2): RV1 is off-board on 3 wires. Wire capacitance adds to C1; wire resistance drops in series with the pot current.
+WIRE_LEN_M = rng(0.05, 0.5)                         # ASSUMPTION: enclosure-dependent, not specified by the design; to be measured on the build
+WIRE_C_F_PER_M = 50e-12                             # ASSUMPTION: same value as risk R-008
+WIRE_R_OHM_PER_M = 0.13                             # ASSUMPTION: 0.13 mm2 copper (about 26 AWG)
+i_pot = V33 / POT_R[0]                              # worst pot current, A
+wire_c = WIRE_LEN_M[1] * WIRE_C_F_PER_M
+wire_ir = i_pot * WIRE_LEN_M[1] * WIRE_R_OHM_PER_M
+print("  POT wires: %.1f pF on C1 (%.3f %% of 90 nF); IR drop per wire %.1f uV at %.2f mA, length %.2f m, R %.2f ohm/m (ASSUMPTIONS)  CALCULATION"
+      % (wire_c * 1e12, 100 * wire_c / C1_F[0], wire_ir * 1e6, i_pot * 1e3, WIRE_LEN_M[1], WIRE_R_OHM_PER_M))
+check("A8 off-board pot wires: capacitance <= 1 % of C1 and IR drop <= 1 % of the dead band", wire_c <= 0.01 * C1_F[0] and wire_ir <= 0.01 * dead_v,
+      "%.1f pF vs %.1f nF; %.1f uV vs dead band %.3f V (hum and interference pickup on the wires NOT analysed)" % (wire_c * 1e12, C1_F[0] * 1e9, wire_ir * 1e6, dead_v))
 assert abs(V33 / 10.0 - 0.33) < 1e-12     # known-answer smoke case (T-006)
 
 # =============================================================================================
@@ -373,12 +385,12 @@ check("B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-
 tau_pad = RS_I2C * 10e-12 * 1e9
 print("  220 Ohm x 10 pF pad capacitance (ASSUMPTION) = %.1f ns: negligible against 300 ns  CALCULATION" % tau_pad)
 
-# Electrode series resistor 3k3 (T-050): RC and IR drop against the MPR121 charge (S-04 CDC/CDT)
-R_S = 3.3e3
+# Electrode series resistor 3k0 5 % (ADR-023 D-1; worst case +5 % = 3.15 kOhm): RC and IR drop against the MPR121 charge (S-04 CDC/CDT)
+R_S = 3.0e3 * 1.05
 for c_pf in (20, 100, 500, 1000):
     cdt = cdt_for(c_pf) or 32
     tau = R_S * c_pf * 1e-12 * 1e6
-    print("  series 3k3: C %4d pF, tau %.2f us vs CDT %g us (ratio %.2f); IR at 63 uA = %.3f V  CALCULATION"
+    print("  series 3k0 +5%%: C %4d pF, tau %.2f us vs CDT %g us (ratio %.2f); IR at 63 uA = %.3f V  CALCULATION"
           % (c_pf, tau, cdt, tau / cdt, 63e-6 * R_S))
 
 # =============================================================================================
@@ -388,24 +400,27 @@ print()
 print("=" * 90)
 print("(c) BOM COST (ADR-007 D-7 core definition)")
 print("=" * 90)
+# All prices exclude VAT unless stated. Distributor pages opened 2026-11-09 are SOURCE (S-40..S-46 in requirements/SOURCES_SYSTEMS.md);
+# a USD figure is converted with the ASSUMPTION rate below. Bounds are min and max of the listed figures; quantity tiers are often not stated.
+FX_USD_EUR = rng(0.85, 0.95)        # ASSUMPTION: no rate source opened; a range so that the conversion is carried into the bounds
+HPWC_USD = rng(0.418, 2.38)         # sibling values, 3k0 not listed (S-40); low TME HPWC2512-1K0JT18 (S-41), high 1 pc figure of HPWC2512-1K0JT1 (S-42, search extract)
+C1_USD = rng(0.0102, 0.42)          # SOURCE S-43 (range of listed offers for C1206C104K5RACTU, quantity tiers not stated)
+R1206_USD = rng(0.0045, 0.183)      # SOURCE S-44 (RC1206FR-074K7L as a typical 1206 1 %, range of listed offers); equal price for 220R ASSUMPTION
 BOM = [
-    ("A1 Raspberry Pi Pico H (or Pico/W/2/2W + headers)", 1, rng(5.0, 8.0), "ASSUMPTION (hardware/README.md)"),
-    ("A2 Adafruit MPR121 breakout 1982", 1, rng(9.0, 12.0), "ASSUMPTION; SOURCE S-05 USD 7.95 list (1-9 pcs) before EU shipping/VAT"),
-    ("Female header 1x20 (Pico socket)", 2, rng(0.5, 0.5), "ASSUMPTION"),
-    ("Female header 1x13", 1, rng(0.5, 0.5), "ASSUMPTION"),
-    ("Female header 1x7", 1, rng(0.4, 0.4), "ASSUMPTION"),
-    ("J2 screw terminal 2-way 5.08 mm, interlocking", 7, rng(2.0 / 7, 3.0 / 7), "ASSUMPTION"),
-    ("SW1 tactile switch 6x6 mm", 1, rng(0.2, 0.2), "ASSUMPTION"),
-    ("RV1 10k linear pot 9 mm + knob", 1, rng(1.0, 1.5), "ASSUMPTION"),
-    ("R1..R12 3k3 1 % pulse-rated Vishay MBE04140C3301FC100 (DIN0414)", 12, rng(0.30, 0.66),
-     "SOURCE EE-S26 in reports/electronics/SOURCES_EE.md (sibling values 330R/330k: RS GBP 0.26, LCSC USD 0.30, qty 1-24); 3k3 equal price ASSUMPTION (CR-002, T-060)"),
-    ("C1 100 nF X7R 50 V radial 5.08 mm KEMET C322C104K5R5TA", 1, rng(0.20, 0.90),
-     "ASSUMPTION from distributor search EE-S30 in reports/electronics/SOURCES_EE.md (search extract, T-076, prices not verified; ADR-021)"),
-    ("R13/R14 4k7, R15/R16 220R, 0.25 W axial (Yageo MFR-12)", 4, rng(0.02, 0.05), "ASSUMPTION"),
+    ("A1 Raspberry Pi Pico SC0915 (no headers); Pico W/2/2 W also fit", 1, rng(4.07, 8.0),
+     "low SOURCE S-45 (DigiKey NL, qty 1, ex VAT); high ASSUMPTION (Pico W / 2 W variants, kept from revision 7)"),
+    ("A2 Adafruit MPR121 breakout 1982 (male headers supplied)", 1, rng(9.0, 12.0), "ASSUMPTION; SOURCE S-05 USD 7.95 list (1-9 pcs) before EU shipping/VAT"),
+    ("SW1 Omron B3S-1000 SMD tactile switch", 1, rng(0.74, 0.822), "low SOURCE S-46 (DigiKey AT, qty 1, ex VAT); high RS (per unit in packs of 5, search extract S-46)"),
+    ("RV1 10k linear pot, insulated shaft, plastic knob (off-board)", 1, rng(1.0, 1.5), "ASSUMPTION (unchanged from revision 7, no insulated-shaft part selected)"),
+    ("R1..R12 3k0 5 % TT HPWC2512-3K0JT18", 12, (HPWC_USD[0] * FX_USD_EUR[0], HPWC_USD[1] * FX_USD_EUR[1]),
+     "ASSUMPTION: 3k0 not listed by any distributor found (S-40); equal price to sibling values S-41/S-42, USD converted"),
+    ("C1 100 nF X7R 50 V 1206 KEMET C1206C104K5RACTU", 1, (C1_USD[0] * FX_USD_EUR[0], C1_USD[1] * FX_USD_EUR[1]), "SOURCE S-43, USD converted (ASSUMPTION rate); qty 1 tier not stated"),
+    ("R13/R14 4k7, R15/R16 220R, 1 % 1206 thick film (generic)", 4, (R1206_USD[0] * FX_USD_EUR[0], R1206_USD[1] * FX_USD_EUR[1]), "SOURCE S-44 listings for one 1206 part, USD converted (ASSUMPTION rate); qty 1 tier not stated"),
     ("Single-sided copper clad 100x70 mm", 1, rng(1.0, 3.0), "ASSUMPTION (part of the assembled board)"),
 ]
 EXCLUDED = [("Etchant/toner consumables", rng(0.5, 2.0)), ("Micro-USB data cable", rng(3.0, 3.0)),
-            ("Crocodile leads x12 (optional)", rng(5.0, 10.0)), ("M3 hardware (optional)", rng(2.0, 2.0))]
+            ("Electrode, pot and link wire, hot-melt, epoxy", rng(1.0, 3.0)), ("Crocodile leads x12 (optional)", rng(5.0, 10.0)), ("M3 nylon hardware (optional)", rng(2.0, 2.0))]
+REMOVED = [("Female headers 2x 1x20, 1x13, 1x7 (sockets)", rng(1.9, 1.9)), ("J2 screw terminals 7 x 2-way", rng(2.0, 3.0)), ("R1..R12 Vishay MBE04140C3301FC100 (12 x 0.30-0.66)", rng(3.60, 7.92))]
 core = (0.0, 0.0)
 for name, q, (lo, hi), lab in BOM:
     line = (q * lo, q * hi)
@@ -415,6 +430,16 @@ print("  %-56s %s  CALCULATION" % ("Core BOM (ADR-007 definition)", fmt(core, "E
 for n, r in EXCLUDED:
     print("  excluded: %-46s %s  ASSUMPTION" % (n, fmt(r, "EUR", 2)))
 check("C1 core BOM upper bound <= 30 EUR", core[1] <= 30.0, "core %s" % fmt(core, "EUR", 2))
+for n, r in REMOVED:
+    print("  removed from the V1.2 BOM: %-42s %s  revision 7 figures" % (n, fmt(r, "EUR", 2)))
+hpwc_line = [(q * lo, q * hi) for name, q, (lo, hi), _ in BOM if name.startswith("R1..R12")][0]
+HPWC_DIST_USD = rng(0.356, 0.96)     # SOURCE S-41 (range over the HPWC2512 J-tolerance values listed by TME, quantity tiers not stated)
+hpwc_dist = (12 * HPWC_DIST_USD[0] * FX_USD_EUR[0], 12 * HPWC_DIST_USD[1] * FX_USD_EUR[1])
+core_dist = (core[0] - hpwc_line[0] + hpwc_dist[0], core[1] - hpwc_line[1] + hpwc_dist[1])
+print("  SENSITIVITY: R1..R12 at listed TME sibling prices instead of the 1 pc figure: %s -> core %s  CALCULATION" % (fmt(hpwc_dist, "EUR", 2), fmt(core_dist, "EUR", 2)))
+MOQ_ONE = (150, 1.139)               # SOURCE S-47 (HPWC2512-1K0JT18, onlinecomponents: MOQ 150, USD 1.139, sibling value)
+print("  AVAILABILITY: if HPWC2512 3k0 is sold only at the sibling MOQ of %d pcs at USD %.3f, the buy-in is %s for one board (not in the core range)  CALCULATION"
+      % (MOQ_ONE[0], MOQ_ONE[1], fmt((MOQ_ONE[0] * MOQ_ONE[1] * FX_USD_EUR[0], MOQ_ONE[0] * MOQ_ONE[1] * FX_USD_EUR[1]), "EUR", 2)))
 
 print()
 print("SUMMARY: %d checks, %d PASS, %d FAIL" % (len(checks), checks.count(True), checks.count(False)))
@@ -426,7 +451,7 @@ OUT_MD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "r
 L = []
 L.append("# FrutaMIDI system budgets")
 L.append("")
-L.append("Generated by `sim/systems/budgets.py` (revision 7, T-077, CR-002: pulse-rated R1..R12, C1 wiper filter). Do not edit by hand: re-run the script. Raw output: `sim/systems/budgets.out`.")
+L.append("Generated by `sim/systems/budgets.py` (revision 8, T-093, CR-003 / ADR-023: SMD BOM, R1..R12 3k0, off-board pot). Do not edit by hand: re-run the script. Raw output: `sim/systems/budgets.out`.")
 L.append("Labels: SOURCE ids refer to `requirements/SOURCES_SYSTEMS.md`. Everything here is CALCULATION unless marked; nothing is MEASURED.")
 L.append("")
 L.append("**Checks:** %d PASS, %d FAIL." % (checks.count(True), checks.count(False)))
@@ -476,7 +501,7 @@ L.append("The zone is %.3f V wide. The dead band is 0.2 zone = %.3f V each side 
          "The static offset of %.3f V (S-01 §4.3) moves every threshold together and is not budgeted. The nearest DNL-peak code is %.3f V from a switch point."
          % (zone_v, dead_v, noise_pp, ENOB, dnl_v, q10_v, ripple_v, err_v, adc_offset_v, near))
 L.append("")
-L.append("C1 wiper filter (ADR-021): R_th max %.0f Ohm (10 kOhm +20 %% ASSUMPTION, at mid travel), C max %.1f nF (SOURCE EE-S29, +10 %% tolerance, +15 %% X7R temperature), "
+L.append("C1 wiper filter (ADR-021, 1206 in v1.3): R_th max %.0f Ohm (10 kOhm +20 %% ASSUMPTION, at mid travel), C max %.1f nF (+10 %% tolerance, +15 %% X7R temperature; EE-S29 family, v1.3 part datasheet not opened, ASSUMPTION), "
          "tau %.3f ms, settling to 1/2 LSB at 10 bits %.2f ms against the %.0f ms read period (fm_pot.h), margin %.1fx." % (rth_max, C1_F[1] * 1e9, tau_c1 * 1e3, t_settle * 1e3, POT_READ_S * 1e3, POT_READ_S / t_settle))
 L.append("")
 L.append("## BOM (ADR-007 core definition)")
@@ -486,6 +511,10 @@ L.append("| --- | --- | --- | --- |")
 for name, q, (lo, hi), lab in BOM:
     L.append("| %s | %d | %.2f–%.2f | %s |" % (name, q, q * lo, q * hi, lab))
 L.append("| **Core total** | | **%.2f–%.2f** | CALCULATION |" % core)
+L.append("")
+L.append("Sensitivity: with R1..R12 at listed TME sibling prices the core is %.2f–%.2f EUR. 3k0 itself is not listed by any distributor found (2026-11-09); the upper bound uses a 1-piece figure of a sibling value." % core_dist)
+L.append("")
+L.append("Removed from the V1.2 BOM: " + "; ".join("%s %.2f–%.2f EUR" % (n, r[0], r[1]) for n, r in REMOVED) + ".")
 L.append("")
 open(OUT_MD, "w").write("\n".join(L) + "\n")
 print("wrote reports/systems/budgets.md")

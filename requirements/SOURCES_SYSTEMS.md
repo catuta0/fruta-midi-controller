@@ -30,3 +30,16 @@ Repository inputs, all read-only, at e4668d4 with a dirty working tree; the SHA-
 | S-17 | Raspberry Pi RP2040 datasheet RP-008371-DS-1 (local copy `sim/systems/datasheets/rp2040-datasheet.pdf`, 5,301,205 B, sha256 be56fbb75ba0ae9e26558a73c93ac3e75c2ad4e6878d3b6703de2a76d886ea8c, git-ignored; extract `rp2040-datasheet-gpio-dc.txt`) | https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf | §5.5.3.4 Table 625 'Digital IO' (PDF pages 616–617) at IOVDD 3.3 V: VIH min 2 V (max IOVDD + 0.3 V); VIL max 0.8 V (min −0.3 V); VHYS 0.2 V (Schmitt); VOH min 2.62 V and VOL max 0.5 V at IOH/IOL = 2, 4, 8 or 12 mA drive setting; RPU 50–80 kΩ; IIOVDD_MAX 50 mA (sum of all IO) | **Read** (T-011) |
 
 T-010 note: the Pico W and Pico 2 W datasheets were not downloaded (not requested), so their board currents stay ASSUMPTIONs. PDF sizes for the git-ignore list: pico-datasheet.pdf 18.2 MB (over 5 MB), pico-2-datasheet.pdf 3.0 MB.
+
+## CR-003 / T-093 price sources (opened or searched 2026-11-09; web pages change, prices exclude VAT unless stated)
+
+| ID | Document | URL | Value | Status |
+| --- | --- | --- | --- | --- |
+| S-40 | Findchips search for HPWC2512-3K0JT18 | https://www.findchips.com/search/HPWC2512-3K0JT18 | "No results were found for HPWC2512-3K0JT18": no distributor offers for the selected part | Read (WebFetch) |
+| S-41 | Findchips search for HPWC2 | https://www.findchips.com/search/HPWC2 | TME HPWC2512 J-tolerance values listed: 510R USD 0.356–0.433, 1K0 USD 0.418–0.464, 33K USD 0.77–0.96; quantity tiers not stated | Read (WebFetch) |
+| S-42 | HPWC2512-1K0JT1 aggregator listing (via search) | search result, Findchips extract | About USD 2.38 at 1 piece, USD 0.79 at 1000 (sibling value, distributor not confirmed) | Search extract only, page not opened |
+| S-43 | Findchips search for C1206C104K5RACTU | https://www.findchips.com/search/C1206C104K5RACTU | Offers USD 0.0102 to 0.42 (range over distributors); quantity tiers not stated | Read (WebFetch) |
+| S-44 | Findchips search for RC1206FR-074K7L | https://www.findchips.com/search/RC1206FR-074K7L | Offers USD 0.0045 to 0.183 (range over distributors); used as a typical 1206 1 % resistor; quantity tiers not stated | Read (WebFetch) |
+| S-45 | DigiKey NL, Raspberry Pi SC0915 | https://www.digikey.nl/en/products/detail/raspberry-pi/SC0915/13684020 | EUR 4.07 at quantity 1 (cut tape), excluding VAT (EUR 4.92 with VAT) | Read (WebFetch) |
+| S-46 | DigiKey AT, Omron B3S-1000 | https://www.digikey.at/en/products/detail/omron-electronics-inc-emc-div/B3S-1000/20686 | EUR 0.74 at quantity 1, EUR 0.628 at 10, excluding VAT; RS Ireland EUR 0.822 per unit in packs of 5 (search extract) | Read (WebFetch) for DigiKey; RS search extract only |
+| S-47 | onlinecomponents, TT HPWC2512 pages | https://www.onlinecomponents.com/en/productdetail/welwyn-tt-electronics/hpwc25121k0jt18-53175008.html ; hpwc25123k0mt18-53628617 | HPWC2512-1K0JT18: MOQ 150, USD 1.139, page marks it discontinued with stock; HPWC2512-3K0MT18 (20 % tolerance code as per the datasheet pattern): MOQ 900, stock 0 | Read (WebFetch) for 1K0; 3K0M search extract only |
