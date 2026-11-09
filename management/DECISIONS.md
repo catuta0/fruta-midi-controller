@@ -141,3 +141,10 @@ User decision after the T-095 quote comparison ("CMB, mudas a placa pronto"), re
 - Accepted deviation, by the user: the conductor gap of the part is 3.2 mm (SOURCE) against the 3.5 mm flashover rule at 4 kV. A layout cannot change it. The check must report this as a deviation and must not be relaxed. REQ-023 stays PARTIAL; 8 kV FAIL (R-006).
 - All parts move to Mouser: the only shop able to supply the whole board on 2026-11-09 (T-095). One-board quote about 17.6 EUR, excluding shipping and taxes (CALCULATION from SOURCE prices).
 - Consequences: new MELF land pattern, re-layout of the R row, a hand-soldering procedure for a rolling part.
+
+## ADR-025 — R1-R12 HPWC2512 3k3 at Mouser (CR-003), 2026-11-09
+User decision ("ok pronto fica HPWC"), replacing ADR-024 on R1-R12 and ADR-023 D-1. ADR-024 stays valid only for moving the BOM to Mouser.
+- R1-R12: TT Electronics HPWC2512-3K3JT1, 3k3 ±5 %, existing 2512 land (G 5.0 mm). 12 for 15.00 EUR, stock 2381 (SOURCE, Mouser Portugal, 2026-11-09). One-board quote about 27.5 EUR, excluding shipping and taxes (CALCULATION).
+- 1.2/50 us chart reading about 4596 V against about 3636 V across R at 4 kV: margin about 1.26 (CALCULATION, chart reading). Conductor gap 4.4 mm (SOURCE) against the 3.5 mm rule: PASS at 4 kV. 8 kV FAIL (R-006).
+- Accepted deviation, by the user: at +5 % (3465 ohm) the worst-choice sensitivity is 0.885 against the 0.90 limit (SIMULATION). Mitigation: each resistor is measured before soldering and only those within the selection limit are used. The limit of 0.90 is not changed.
+- The ADR-024 MELF land and the accepted 3.2 mm gap no longer apply. Silicone over R1-R12 is optional only: neutral-cure electronics grade, never acetic-cure.
