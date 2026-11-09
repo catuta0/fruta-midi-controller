@@ -78,6 +78,15 @@ def add_rect(fp, layer, x1, y1, x2, y2, w=0.1):
         add_line(fp, layer, a, b, c, d, w)
 
 
+def add_circle(fp, layer, r, w=0.1):
+    s = pcbnew.PCB_SHAPE(fp, pcbnew.SHAPE_T_CIRCLE)
+    s.SetLayer(layer)
+    s.SetCenter(V(0, 0))
+    s.SetEnd(V(r, 0))
+    s.SetWidth(mm(w))
+    fp.Add(s)
+
+
 def add_text(fp, txt, x, y, layer=pcbnew.F_Fab, size=1.0):
     t = pcbnew.PCB_TEXT(fp)
     t.SetText(txt)
@@ -120,6 +129,7 @@ def add_keepout(fp, x1, y1, x2, y2):
     return z
 
 
+HOLE_R, WASHER_R = 1.6, 3.5   # M3 drill radius; ISO 7089 M3 washer radius (ASSUMPTION, largest hardware the layout keeps clear)
 JP1_PITCH = 3.81           # T-076: JP1 pad pitch (pad gap 3.81 - 1.94 = 1.87 mm), kept in SMD
 TERM_PAD = (3.0, 4.5)      # J2 solder-wire pad: width x, length y (mm); same copper as the V1.2 terminal pad
 
@@ -243,6 +253,9 @@ def build_footprints():
     fp.SetDuplicatePadNumbersAreJumpers(True)
     fp.Reference().SetLayer(pcbnew.F_Fab)
     fp.Value().SetVisible(False)
+    for item in fp.GraphicalItems():                    # library designator sits above the body, on R16 (T-092): move it right
+        if item.GetClass() == "PCB_TEXT" and "REFERENCE" in item.GetText():
+            item.SetPosition(V(7.0, 0.0))
     out[name] = fp
 
     # --- R1-R12: TT HPWC2512, hand-solder land: pad 1.9 x 3.35 mm, copper gap G = 5.0 mm (T-090, ADR-023 D-1).
@@ -272,6 +285,9 @@ def build_footprints():
     fp = lib_fp("MountingHole", name)
     fp.SetFPID(pcbnew.LIB_ID("FrutaMIDI", name))
     replace_layer(fp, pcbnew.F_SilkS)
+    fp.Value().SetVisible(False)
+    add_circle(fp, pcbnew.F_Fab, HOLE_R)                # drill
+    add_circle(fp, pcbnew.F_Fab, WASHER_R, 0.05)        # largest screw head / washer the layout keeps clear (T-092)
     out[name] = fp
 
     # F.Fab gets every pad outline, so the assembly map (F.Fab + outline, no copper) is readable on its own.
@@ -323,7 +339,11 @@ PICO = (4.5, 2.0)                 # pin 1 column; the land centres are 1.3 mm ou
 MOD_C = (60.02, 17.645)           # module centre (electrode row at y = 25.9, power/I2C S row at y = 10.66)
 CFG = (85.0, 12.5)                # J1 pad 1 (SCL); pad 2 (SDA) at +3.81 mm (right of the module)
 T0, TY = 27.0, 63.75              # first J2 pad centre (GND), pad row; 1.40 mm above the GND edge track (ADR-020)
-HOLES = [(8.0, 64.0), (95.0, 5.0), (96.0, 38.0), (88.5, 30.5)]   # as V1.2
+# T-092: well-spread support, one hole per board quadrant (check_smd.py). H4 is as close to the USB end of the Pico as the
+# layout allows: it cannot go left of or above the module (Pico lands reach x 25.68, module end y 0.63), so it sits just
+# right of the lands, x fixed by 0.6 mm from the 3.5 mm washer radius to the lands and to the 3V3 riser at x 34.5.
+# H3 cannot go nearer its corner: J2 pad 14 and the spark-gap track fill the bottom edge up to x 94.54.
+HOLES = [(5.0, 65.0), (96.0, 4.0), (96.5, 58.0), (29.8, 4.0)]
 
 W_SIG, W_PWR, W_STUB = 1.0, 1.2, 0.8
 
@@ -341,7 +361,7 @@ PU_SDA = (88.81, 5.5)     # R14 pad 1 on 3V3; pad 2 drops onto the SDA pad of J1
 SER_SDA = (27.6, 24.86)   # R16 pad 1 on the Pico side (pin 31 row)
 JP1 = (79.5, 15.74)       # selector upright: pad 1 (ORIG -> S1) bottom, pad 2 = 3V3, pad 3 (QT -> S7) top
 TOP_3V3_Y = 2.0           # 3V3 run along the top edge (above the S1..S7 wire pads)
-RAIL_3V3_X = 27.2         # 3V3 riser from Pico pin 36 to the top run, just right of the Pico outer land edge (25.68)
+X_3V3_LEVEL = 31.5        # 3V3 leaves Pico pin 36 level to this x, then 45 deg up to RV1 pad 1 (keeps the area around H4 free)
 Y_S1, Y_SCL, Y_SDA = 15.74, 21.05, 23.55     # runs under the module (between the S row and the electrode row)
 SER_SCL = (85.0, Y_SCL)   # R15 pad 1 (Pico side) at the end of the SCL run; pad 2 2.9 mm above
 XC, XD = 38.5, 40.5       # x where SCL and SDA leave the Pico rows and climb to the module runs
@@ -477,7 +497,7 @@ def build_board():
     place(bd, comps, pin_net, "A2", *MOD_C, ref_at=(-13.0, -2.5))
     place(bd, comps, pin_net, "J1", *CFG, ref_at=(6.6, 0.0))
     place(bd, comps, pin_net, "J3", *mod_q(1), ref_at="hide")
-    place(bd, comps, pin_net, "RV1", *RV_PAD, ref_at=(3.2, 5.08))
+    place(bd, comps, pin_net, "RV1", *RV_PAD, ref_at=(-3.2, 5.08))
     place(bd, comps, pin_net, "SW1", *SW_C, ref_at="hide")                 # the library land carries ${REFERENCE} on F.Fab
     place(bd, comps, pin_net, "J2", *term(0), ref_at=(0, 4.2))
     for k, (x, y) in enumerate(HOLES):
@@ -498,11 +518,11 @@ def build_board():
     bd.track([(xl, pico_pin(18)[1]), (xr_, pico_pin(23)[1])], GND, W_PWR)
 
     # --- RV1 wire pads, C1 and the 3V3 riser --------------------------------------------------------------------------
-    x3, py3 = RAIL_3V3_X, pico_pin(36)[1]
     p36, p34, p33 = pico_pin(36), pico_pin(34), pico_pin(33)
-    bd.track([p36, (x3, py3), (x3, TOP_3V3_Y), (PU_SDA[0], TOP_3V3_Y), PU_SDA], V33, W_PWR)
     rvx, rvy = RV_PAD
-    bd.track([(x3, rvy), (rvx, rvy)], V33, W_PWR)                         # RV1 pad 1
+    x3, py3 = X_3V3_LEVEL, p36[1]
+    # 3V3: pin 36 -> level -> 45 deg -> RV1 pad 1 -> straight up -> top run -> R14 (T-092: riser moved from x 27.2 to x 34.5 for H4)
+    bd.track([p36, (x3, py3), (rvx, py3 - (rvx - x3)), (rvx, rvy), (rvx, TOP_3V3_Y), (PU_SDA[0], TOP_3V3_Y), PU_SDA], V33, W_PWR)
 
     cx1, cy1 = C1_POS
     fp = place(bd, comps, pin_net, "C1", cx1, cy1, rot=R_ROT_DOWN, ref_at=(-2.6, 1.45))
@@ -525,7 +545,7 @@ def build_board():
     # --- I2C: Pico -> under the module (between the S row and the electrode row) -> right side ------------------------
     # 220R in line, pad 1 = Pico side, pad 2 = bus side. R16 (SDA) stays on the SDA row by the Pico; R15 (SCL) below J1.
     p31, p32 = pico_pin(31), pico_pin(32)
-    place(bd, comps, pin_net, "R16", SER_SDA[0], p31[1], ref_at=(1.45, 2.05))
+    place(bd, comps, pin_net, "R16", SER_SDA[0], p31[1], ref_at=(1.45, -2.05))
     bd.track([p31, (SER_SDA[0], p31[1])], N("A1", "31"))
     bd.track([(SER_SDA[0] + 2.9, p31[1]), (XD, p31[1]), (XD + (p31[1] - Y_SDA), Y_SDA),
               (cx + 3.81, Y_SDA), (cx + 3.81, cy)], N("J1", "2"))
@@ -604,8 +624,10 @@ def build_board():
     labels = ["GND"] + ["E%d" % i for i in range(12)] + ["GND"]
     for i, lab in enumerate(labels):
         x, _ = term(i)
-        bd.text(lab, x, 60.0, pcbnew.F_Fab, 1.0 if lab == "GND" else 0.9)
-    bd.text("OCTAVE: 1 = 3V3, 2 = WIPER, 3 = AGND", 38.5, 5.4, pcbnew.F_Fab, 0.8)
+        bd.text(lab, x - (1.0 if i == 13 else 0.0), 60.0, pcbnew.F_Fab, 1.0 if lab == "GND" else 0.9)   # last label clear of the H3 washer circle
+    bd.text("OCTAVE", 39.0, 6.0, pcbnew.F_Fab, 0.9)
+    for k, lab in enumerate(("1 3V3", "2 WIPER", "3 AGND")):
+        bd.text(lab, 39.6, RV_PAD[1] + 5.08 * k, pcbnew.F_Fab, 0.8)
     bd.text("SCALE", SW_C[0], SW_C[1] + 4.2, pcbnew.F_Fab, 1.0)
     bd.text("R1 ... R12 = 3k0 HPWC2512 (E0 ... E11), keep solder and flux off the 5 mm gap", 61.0, 46.4, pcbnew.F_Fab, 0.9)
     for k, line in enumerate(("JP1 3V3 selector:", "ORIG = no white connectors", "QT = 2 white connectors")):

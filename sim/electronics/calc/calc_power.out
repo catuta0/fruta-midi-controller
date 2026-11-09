@@ -20,13 +20,13 @@
   3V3 path 120 mm x 1.2 mm: R = 49.1 mOhm, drop at 4.4 mA = 0.218 mV (CALCULATION, length ASSUMPTION)
 
 ## Dissipation. CALCULATION
-  Octave pot 10k: P = V^2/R = 1.16 mW vs 50 mW rating (SOURCE Alps RK09K1130A5R page) -> margin 43x
-  Series R 3.3k, DC: P = (63 uA)^2 * 3.3k = 1.31e-05 W (negligible)
-  Series R 3.3k, one IEC 8 kV contact pulse: E = 4.36 mJ in 0.54 us (CALCULATION); pulse rating of the chosen resistor not verified (open item)
+  Octave pot 10k: P = V^2/R = 1.16 mW vs 50 mW rating (SOURCE Alps RK09K1130A5R page, V1.2 part; the off-board pot needs an equal or higher rating, ASSUMPTION) -> margin 43x
+  Series R 3k0 (HPWC2512, ADR-023), DC: P = (63 uA)^2 * 3k0 = 1.19e-05 W (negligible)
+  Series R 3k0, one IEC 8 kV contact pulse: E = 4.32 mJ in 0.50 us (CALCULATION); pulse rating: calc_pulse_rated.out
   Board total from 3V3: P = 14.7 mW
 
 ## Clearance vs voltage
   Highest steady voltage on the PCB: 3.3 V (VBUS stays on the Pico). IPC-2221B Table 6-1, B2 (external,
   uncoated, <= 3050 m), 0-15 V: 0.10 mm minimum (SOURCE). Design rule 0.6 mm -> margin 6x.
-  ESD transient 4 kV: uniform-field air breakdown ~3 kV/mm (ASSUMPTION) -> arcs across gaps < 1.3 mm; screw terminal pitch 5.08 mm, electrode track gaps >= 0.6 mm: arcing between adjacent electrode tracks is possible at 4 kV (not damaging by itself; the series R still sits between each track and the MPR121).
-  ESD transient 8 kV: uniform-field air breakdown ~3 kV/mm (ASSUMPTION) -> arcs across gaps < 2.7 mm; screw terminal pitch 5.08 mm, electrode track gaps >= 0.6 mm: arcing between adjacent electrode tracks is possible at 8 kV (not damaging by itself; the series R still sits between each track and the MPR121).
+  ESD transient 4 kV: uniform-field air breakdown ~3 kV/mm (ASSUMPTION) -> arcs across gaps < 1.3 mm; J2 wire-pad pitch 5.08 mm, electrode track gaps >= 0.6 mm: arcing between adjacent E tracks is possible at 4 kV. Gaps across the series R and to the module nets: calc_flashover.out and check_gap.out.
+  ESD transient 8 kV: uniform-field air breakdown ~3 kV/mm (ASSUMPTION) -> arcs across gaps < 2.7 mm; J2 wire-pad pitch 5.08 mm, electrode track gaps >= 0.6 mm: arcing between adjacent E tracks is possible at 8 kV. Gaps across the series R and to the module nets: calc_flashover.out and check_gap.out.

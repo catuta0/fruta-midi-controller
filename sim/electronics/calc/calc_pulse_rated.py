@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""T-060 / CR-002: pulse rating of candidate 3k3 THT resistors vs one IEC 61000-4-2 contact discharge.
+"""T-060 / CR-002: pulse rating of candidate 3k3 THT resistors vs one IEC 61000-4-2 contact discharge (V1.2 record).
+T-092 / ADR-023: section for the selected SMD part HPWC2512 3k0 +-5 % at the end of the output.
 
 Requirement (CR-002): datasheet single-pulse / overload voltage >= V_R = V * R / (R + 330) = 3636 V at 4 kV
 (7273 V at 8 kV reported).  CALCULATION unless labelled.
@@ -19,6 +20,9 @@ SOURCE EE-S18: Vishay BCcomponents LSR37 "High Voltage Surge Resistor", doc. 287
   1 k..10 k E12, +-10 % / +-20 %, 0.5 W; "ESD contact discharge 12 kV; 100 pulses; dR/R max +-20 %
   (typical +-10 %)"; D 4.0, L1 9.0, L2 10.0, lead 0.7 mm; minimum pitch for automatic insertion 15 mm.
 SOURCE EE-S14b (calc_pulse.py): Yageo MFR-12: max overload voltage 400 V, no short-pulse rating.
+SOURCE T90-S2 TT Electronics HPWC Series 09.23: 1.2/50 us chart, raster, read in T-090 (reports/electronics/evidence/T-090/
+  charts/chartread_raw.txt, top curve = 2512): 2850 ohm 4352-4472 V, 3000 ohm 4472 V, 3150 ohm 4596 V. Reading uncertainty
+  +-5 % (ASSUMPTION). It is a 1.2/50 us rating, not an IEC 61000-4-2 ESD rating (same basis as ADR-019).
 """
 import math
 
@@ -103,7 +107,22 @@ print("  one IEC 4 kV strike puts %.2f mJ into R (%.0fx less than the rating pul
          50e-6 / math.log(2) / ((R + R_IEC) * C_IEC), (R + R_IEC) * C_IEC * 1e6))
 print("  8 kV: %.0f V across R exceeds both the 3k3 chart value and the %.0f V plateau -> FAIL either way"
       % (need[8000.0], v_plat))
-print("SELECTED: Vishay MBE/SMA 0414, 3k3 1 %% (MBE04140C3301FC100): %.0f V >= %.0f V at 4 kV (PASS), < %.0f V at 8 kV (FAIL)"
+print("V1.2 (superseded by ADR-023): Vishay MBE/SMA 0414, 3k3 1 %% (MBE04140C3301FC100): %.0f V >= %.0f V at 4 kV (PASS), < %.0f V at 8 kV (FAIL)"
       % (u0414, need[4000.0], need[8000.0]))
-print("ALTERNATIVE for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to"
+print("V1.2 alternative for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to"
       " +-20 % drift after 100 strikes")
+
+# ---- T-092: selected SMD part (ADR-023 D-1)
+print()
+print("# SMD board: TT Electronics HPWC2512 3k0 +-5 %; ratings SOURCE T90-S2 chart read (T-090), +-5 % reading ASSUMPTION")
+HPWC = ((2850.0, 4352.0), (3000.0, 4472.0), (3150.0, 4596.0))
+print("%-9s %10s %11s %11s %9s %9s %10s %10s %10s" % ("R ohm", "rating V", "V_R@4kV", "V_R@8kV", "m@4kV", "m@8kV", "m@4kV -5%", "E@4kV mJ", "Ipk@4kV A"))
+worst4 = float("inf")
+for r_h, rate in HPWC:
+    v4, v8 = 4000.0 * r_h / (r_h + R_IEC), 8000.0 * r_h / (r_h + R_IEC)
+    worst4 = min(worst4, rate / v4)
+    print("%-9.0f %10.0f %11.0f %11.0f %9.2f %9.2f %10.2f %10.2f %10.2f" % (
+        r_h, rate, v4, v8, rate / v4, rate / v8, 0.95 * rate / v4, 0.5 * C_IEC * 4000.0 ** 2 * r_h / (r_h + R_IEC) * 1e3, 4000.0 / (r_h + R_IEC)))
+print("SELECTED: HPWC2512 3k0: rating margin at 4 kV >= %.2f over the tolerance band -> %s; at 8 kV margin %.2f -> FAIL (R-006 open)"
+      % (worst4, "PASS" if worst4 >= 1.0 else "FAIL", 4472.0 / (8000.0 * 3000.0 / 3330.0)))
+print("  with -5 %% chart reading error, worst margin at 4 kV: %.2f (%s)" % (0.95 * worst4, "PASS" if 0.95 * worst4 >= 1.0 else "FAIL"))

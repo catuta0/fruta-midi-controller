@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""T-076: CALCULATION of the octave-potentiometer ADC input settling with C1 = 100 nF from the wiper (POT) to AGND.
+"""T-076, updated T-092 for the SMD board (C1 1206 near the Pico, pot off-board on 3 wires, ADR-023 D-2): CALCULATION of the
+octave-potentiometer ADC input settling with C1 = 100 nF from the wiper (POT) to AGND.
 
 Source resistance seen by C1 = Thevenin resistance of the pot divider, R_th = Ra * Rb / (Ra + Rb), maximum R/4 at
 mid travel (both ends tied to 3V3 / AGND, which are low impedance).
 Inputs:
-  R_pot 10 kOhm +-20 %          SOURCE EE-S13 (Alps RK09K1130A5R product page)
-  C1 100 nF +-10 % X7R          SOURCE EE-S29 (KEMET Golden Max catalogue, tolerance code K = +-10 %)
-  X7R capacitance change over -55..+125 C: +-15 %   SOURCE EE-S29 (temperature characteristic table)
+  R_pot 10 kOhm +-20 %          ASSUMPTION for the bought off-board pot: same value and tolerance as the V1.2 Alps part
+                                (SOURCE EE-S13 for that part); the off-board pot has no chosen MPN (ADR-023 D-2)
+  C1 100 nF +-10 % X7R 1206     ASSUMPTION: code K = +-10 % on the 1206 example KEMET C1206C104K5RACTU; datasheet NOT opened (T-090)
+  X7R capacitance change over temperature: +-15 %   ASSUMPTION: EIA X7R class figure, 1206 datasheet not opened (T-090)
+  X7R DC bias at 3.3 V on a 50 V part ignored (ASSUMPTION; 6.6 % of rating, would lower C, which shortens tau)
+  Wire to the off-board pot: 30-50 pF/m (ASSUMPTION), up to 0.30 m (ASSUMPTION): at most 15 pF, 0.015 % of C1, ignored
   POT_READ_MS = 30 ms           SOURCE firmware/FrutaMIDI/fm_pot.h (pot sample period)
   ADC: 10-bit analogRead (Arduino default), hysteresis 0.2 zone = ~41 counts   SOURCE fm_pot.h comments
   RP2040 ADC sampling capacitance: not given in the RP2040 datasheet ADC section (sim/systems/datasheets/
@@ -23,7 +27,7 @@ N_BITS = 10
 C_SAMPLE = 10e-12
 T_TURN = 0.100
 
-print("# calc_pot_rc.py  T-076 CALCULATION (inputs: SOURCE / ASSUMPTION, see header)")
+print("# calc_pot_rc.py  T-076 / T-092 CALCULATION (inputs: SOURCE / ASSUMPTION, see header; C1 1206, off-board pot)")
 r_th_nom = R_NOM / 4
 r_th_max = R_NOM * (1 + R_TOL) / 4
 c_max = C_NOM * (1 + C_TOL) * (1 + C_TEMP)

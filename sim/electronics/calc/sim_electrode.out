@@ -27,6 +27,30 @@ R      C_ext    pairs   CDC_uA   CDT_us    cnt/pF     ratio  worst/pF worstrat  
 2.2k      500pF    27       36     32.0     1.336     0.971     0.944    0.940     9.0pF
 2.2k     1000pF    14       63     32.0     0.605     0.998     0.480    0.924    19.8pF
 2.2k     2000pF     0  -- no valid CDC/CDT pair (OOR) --
+2.85k      10pF    43       31      2.0    25.054     0.982    17.841    0.942     0.5pF
+2.85k      20pF    35       42      2.0    18.103     0.951    12.579    0.916     0.7pF
+2.85k      50pF    38       19      8.0    10.290     0.966     7.111    0.929     1.2pF
+2.85k     100pF    39       33      8.0     5.890     0.961     4.150    0.939     2.0pF
+2.85k     200pF    39       59      8.0     3.071     0.926     2.238    0.924     3.9pF
+2.85k     500pF    28       36     32.0     1.335     0.970     0.924    0.920     9.0pF
+2.85k    1000pF    15       63     32.0     0.604     0.997     0.470    0.905    19.9pF
+2.85k    2000pF     0  -- no valid CDC/CDT pair (OOR) --
+3k         10pF    43       31      2.0    25.029     0.981    17.805    0.940     0.5pF
+3k         20pF    35       42      2.0    18.077     0.950    12.542    0.914     0.7pF
+3k         50pF    38       19      8.0    10.285     0.965     7.096    0.927     1.2pF
+3k        100pF    40       33      8.0     5.887     0.960     4.058    0.918     2.0pF
+3k        200pF    39       59      8.0     3.069     0.925     2.237    0.924     3.9pF
+3k        500pF    28       36     32.0     1.335     0.970     0.924    0.920     9.0pF
+3k       1000pF    15       63     32.0     0.604     0.997     0.470    0.904    19.9pF
+3k       2000pF     0  -- no valid CDC/CDT pair (OOR) --
+3.15k      10pF    43       31      2.0    25.004     0.980    17.769    0.938     0.5pF
+3.15k      20pF    35       42      2.0    18.051     0.948    12.505    0.911     0.7pF
+3.15k      50pF    39       19      8.0    10.280     0.965     6.951    0.908     1.2pF
+3.15k     100pF    40       63      4.0     5.551     0.905     4.053    0.917     2.2pF
+3.15k     200pF    39       59      8.0     3.067     0.925     2.235    0.923     3.9pF
+3.15k     500pF    28       36     32.0     1.335     0.970     0.923    0.920     9.0pF
+3.15k    1000pF    15       63     32.0     0.604     0.996     0.470    0.904    19.9pF
+3.15k    2000pF     0  -- no valid CDC/CDT pair (OOR) --
 3.3k       10pF    43       31      2.0    24.979     0.979    17.733    0.936     0.5pF
 3.3k       20pF    35       42      2.0    18.025     0.947    12.468    0.908     0.7pF
 3.3k       50pF    39       19      8.0    10.275     0.964     6.937    0.907     1.2pF
@@ -35,6 +59,14 @@ R      C_ext    pairs   CDC_uA   CDT_us    cnt/pF     ratio  worst/pF worstrat  
 3.3k      500pF    28       36     32.0     1.334     0.970     0.923    0.919     9.0pF
 3.3k     1000pF    15       63     32.0     0.604     0.996     0.470    0.904    19.9pF
 3.3k     2000pF     0  -- no valid CDC/CDT pair (OOR) --
+3.465k     10pF    43       31      2.0    24.952     0.978    17.694    0.934     0.5pF
+3.465k     20pF    35       42      2.0    17.996     0.945    12.427    0.905     0.7pF
+3.465k     50pF    39       19      8.0    10.270     0.964     6.922    0.905     1.2pF
+3.465k    100pF    41       63      4.0     5.538     0.903     4.043    0.915     2.2pF
+3.465k    200pF    40       58      8.0     3.011     0.908     2.180    0.901     4.0pF
+3.465k    500pF    29       36     32.0     1.334     0.970     0.904    0.900     9.0pF
+3.465k   1000pF    16       63     32.0     0.603     0.996     0.460    0.885    19.9pF
+3.465k   2000pF     0  -- no valid CDC/CDT pair (OOR) --
 4.7k       10pF    43       31      2.0    24.747     0.970    17.397    0.919     0.5pF
 4.7k       20pF    36       21      4.0    18.189     0.955    11.917    0.868     0.7pF
 4.7k       50pF    41       19      8.0    10.229     0.960     6.670    0.872     1.2pF
@@ -88,7 +120,11 @@ R      C_ext    pairs   CDC_uA   CDT_us    cnt/pF     ratio  worst/pF worstrat  
 R=0      min nominal ratio=1.000  min worst-case ratio=1.000  MEETS (>=0.90 nominal, >=0.80 worst)
 R=1k     min nominal ratio=0.968  min worst-case ratio=0.962  MEETS (>=0.90 nominal, >=0.80 worst)
 R=2.2k   min nominal ratio=0.944  min worst-case ratio=0.924  MEETS (>=0.90 nominal, >=0.80 worst)
+R=2.85k  min nominal ratio=0.926  min worst-case ratio=0.905  MEETS (>=0.90 nominal, >=0.80 worst)
+R=3k     min nominal ratio=0.925  min worst-case ratio=0.904  MEETS (>=0.90 nominal, >=0.80 worst)
+R=3.15k  min nominal ratio=0.905  min worst-case ratio=0.904  MEETS (>=0.90 nominal, >=0.80 worst)
 R=3.3k   min nominal ratio=0.904  min worst-case ratio=0.904  MEETS (>=0.90 nominal, >=0.80 worst)
+R=3.465k min nominal ratio=0.903  min worst-case ratio=0.885  MEETS (>=0.90 nominal, >=0.80 worst)
 R=4.7k   min nominal ratio=0.887  min worst-case ratio=0.861  does not meet
 R=6.8k   min nominal ratio=0.814  min worst-case ratio=0.786  does not meet
 R=10k    min nominal ratio=0.679  min worst-case ratio=0.435  does not meet

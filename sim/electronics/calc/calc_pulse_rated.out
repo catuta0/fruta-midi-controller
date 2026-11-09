@@ -16,5 +16,13 @@ MBE/SMA 0414 chart: log-log slope below the knee 0.496 (0.5 = constant V^2/R, en
   energy at the knee 182 mJ (same constant as at 3k3 -> 3k3 lies on the energy-limited branch)
   one IEC 4 kV strike puts 1.09 mJ into R (167x less than the rating pulse) and 3636 V across it, below the 5054 V plateau (1.39x); the 3k3 chart value 4083 V is used as the acceptance limit (conservative: it is an energy limit for a pulse whose tail T = 72 us is 132x the IEC tau 0.54 us)
   8 kV: 7273 V across R exceeds both the 3k3 chart value and the 5054 V plateau -> FAIL either way
-SELECTED: Vishay MBE/SMA 0414, 3k3 1 % (MBE04140C3301FC100): 4083 V >= 3636 V at 4 kV (PASS), < 7273 V at 8 kV (FAIL)
-ALTERNATIVE for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to +-20 % drift after 100 strikes
+V1.2 (superseded by ADR-023): Vishay MBE/SMA 0414, 3k3 1 % (MBE04140C3301FC100): 4083 V >= 3636 V at 4 kV (PASS), < 7273 V at 8 kV (FAIL)
+V1.2 alternative for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to +-20 % drift after 100 strikes
+
+# SMD board: TT Electronics HPWC2512 3k0 +-5 %; ratings SOURCE T90-S2 chart read (T-090), +-5 % reading ASSUMPTION
+R ohm       rating V     V_R@4kV     V_R@8kV     m@4kV     m@8kV  m@4kV -5%   E@4kV mJ  Ipk@4kV A
+2850            4352        3585        7170      1.21      0.61       1.15       1.08       1.26
+3000            4472        3604        7207      1.24      0.62       1.18       1.08       1.20
+3150            4596        3621        7241      1.27      0.63       1.21       1.09       1.15
+SELECTED: HPWC2512 3k0: rating margin at 4 kV >= 1.21 over the tolerance band -> PASS; at 8 kV margin 0.62 -> FAIL (R-006 open)
+  with -5 % chart reading error, worst margin at 4 kV: 1.15 (PASS)

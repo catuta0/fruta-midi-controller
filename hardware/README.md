@@ -135,7 +135,9 @@ Use the [assembly map](fabrication/2-assembly-map.pdf). Work from the lowest par
 9. **RV1 wires.** Three insulated wires to pads 1 (3V3), 2 (wiper), 3 (AGND) to your off-board pot. Add a small bead of hot-melt over the wires, on the pads, for strain relief. Keep the wires short.
 10. **Electrode and GND wires (J2).** Solder each wire onto the upper half of its pad, leaving the part of the pad next to the board edge clean. Add a bead of hot-melt over the wire and the upper pad. **Keep the glue away from the 1.4 mm gap at the bottom of the pad:** the spark gap must stay open air.
 
-**Mounting (M3).** Nylon screws preferred. A metal screw or washer must not touch any copper or part; if you use metal ones, keep the head on the top side clear of copper by at least 1 mm.
+**Mounting (M3).** The four holes are at H1 (5.0, 65.0), H2 (96.0, 4.0), H3 (96.5, 58.0) and H4 (29.8, 4.0) mm from the top-left board corner, as seen on the assembly map; the outer circle drawn around each hole is the 7 mm area kept free of copper. H4 is the screw closest to the USB end of the Pico: fit it if you fit any, because it stops the board bending when a cable is pulled. It does not make the Pico solder joints stronger, so the epoxy bead and a strain-relieved cable stay necessary.
+
+Use M3 screws no wider than 5.6 mm under the head, with a washer of at most 7 mm. **Nylon screw and nylon washer preferred**, above all at H3, which is nearest the electrode resistors (and at H4, where a 7 mm metal washer would be only 0.6 mm from the Pico pads and the 3V3 track). If you use metal hardware, check after tightening that no washer touches copper or a part.
 
 **Rework:** the Pico and the module are soldered flat, so a failed one has to be desoldered from the surface. Use plenty of flux and hot air or a wide iron tip on one side at a time.
 

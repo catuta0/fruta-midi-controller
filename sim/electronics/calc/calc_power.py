@@ -63,13 +63,13 @@ print("  3V3 path 120 mm x 1.2 mm: R = %.1f mOhm, drop at %.1f mA = %.3f mV (CAL
 # ---------------------------------------------------------------- dissipation
 print()
 print("## Dissipation. CALCULATION")
-print("  Octave pot 10k: P = V^2/R = %.2f mW vs 50 mW rating (SOURCE Alps RK09K1130A5R page) -> margin %.0fx" %
+print("  Octave pot 10k: P = V^2/R = %.2f mW vs 50 mW rating (SOURCE Alps RK09K1130A5R page, V1.2 part; the off-board pot needs an equal or higher rating, ASSUMPTION) -> margin %.0fx" %
       (V33_MAX ** 2 / 10e3 * 1e3, 50e-3 / (V33_MAX ** 2 / 10e3)))
-p_rs = (63e-6) ** 2 * 3.3e3
-print("  Series R 3.3k, DC: P = (63 uA)^2 * 3.3k = %.2e W (negligible)" % p_rs)
-e8 = 0.5 * 150e-12 * 8000 ** 2 * 3.3e3 / (3.3e3 + 330)
-print("  Series R 3.3k, one IEC 8 kV contact pulse: E = %.2f mJ in %.2f us (CALCULATION); pulse rating of the chosen "
-      "resistor not verified (open item)" % (e8 * 1e3, (3.3e3 + 330) * 150e-12 * 1e6))
+p_rs = (63e-6) ** 2 * 3.0e3
+print("  Series R 3k0 (HPWC2512, ADR-023), DC: P = (63 uA)^2 * 3k0 = %.2e W (negligible)" % p_rs)
+e8 = 0.5 * 150e-12 * 8000 ** 2 * 3.0e3 / (3.0e3 + 330)
+print("  Series R 3k0, one IEC 8 kV contact pulse: E = %.2f mJ in %.2f us (CALCULATION); pulse rating: calc_pulse_rated.out"
+      % (e8 * 1e3, (3.0e3 + 330) * 150e-12 * 1e6))
 print("  Board total from 3V3: P = %.1f mW" % (V33 * tot * 1e3))
 
 # ---------------------------------------------------------------- clearance vs voltage
@@ -79,6 +79,6 @@ print("  Highest steady voltage on the PCB: 3.3 V (VBUS stays on the Pico). IPC-
 print("  uncoated, <= 3050 m), 0-15 V: 0.10 mm minimum (SOURCE). Design rule 0.6 mm -> margin 6x.")
 for v in (4000, 8000):
     print("  ESD transient %d kV: uniform-field air breakdown ~3 kV/mm (ASSUMPTION) -> arcs across gaps < %.1f mm;"
-          " screw terminal pitch 5.08 mm, electrode track gaps >= 0.6 mm: arcing between adjacent electrode tracks is"
-          " possible at %d kV (not damaging by itself; the series R still sits between each track and the MPR121)." %
+          " J2 wire-pad pitch 5.08 mm, electrode track gaps >= 0.6 mm: arcing between adjacent E tracks is"
+          " possible at %d kV. Gaps across the series R and to the module nets: calc_flashover.out and check_gap.out." %
           (v // 1000, v / 3000, v // 1000))

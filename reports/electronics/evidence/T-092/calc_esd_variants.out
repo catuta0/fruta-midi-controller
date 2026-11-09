@@ -1,0 +1,46 @@
+# calc_esd_variants.py  CALCULATION
+# HBM-equivalent pin current limit I_lim = 2000 V / 1500 ohm = 1.33 A
+# Charge per IEC discharge Q = 150 pF * V; HBM 2 kV charge = 0.20 uC
+
+R           Ipk@2kV     Ipk@4kV     Ipk@6kV     Ipk@8kV    tau@R (us)  E_R@8kV (mJ)
+0             7.50A      15.00A      22.50A      30.00A         0.050          0.00
+1k            1.50A       3.01A       4.51A       6.02A         0.200          3.61
+2.2k          0.79A       1.58A       2.37A       3.16A         0.380          4.17
+2.7k          0.66A       1.32A       1.98A       2.64A         0.455          4.28
+2.85k         0.63A       1.26A       1.89A       2.52A         0.477          4.30
+3k            0.60A       1.20A       1.80A       2.40A         0.500          4.32
+3.15k         0.57A       1.15A       1.72A       2.30A         0.522          4.34
+3.3k          0.55A       1.10A       1.65A       2.20A         0.544          4.36
+4.7k          0.40A       0.80A       1.19A       1.59A         0.755          4.49
+6.8k          0.28A       0.56A       0.84A       1.12A         1.070          4.58
+10k           0.19A       0.39A       0.58A       0.77A         1.549          4.65
+22k           0.09A       0.18A       0.27A       0.36A         3.349          4.73
+47k           0.04A       0.08A       0.13A       0.17A         7.099          4.77
+100k          0.02A       0.04A       0.06A       0.08A        15.050          4.78
+
+R_min for Ipk <= 1.33 A at 2 kV contact: 1170 ohm   (charge 0.30 uC = 1.5 x HBM 2 kV charge)
+R_min for Ipk <= 1.33 A at 4 kV contact: 2670 ohm   (charge 0.60 uC = 3.0 x HBM 2 kV charge)
+R_min for Ipk <= 1.33 A at 6 kV contact: 4170 ohm   (charge 0.90 uC = 4.5 x HBM 2 kV charge)
+R_min for Ipk <= 1.33 A at 8 kV contact: 5670 ohm   (charge 1.20 uC = 6.0 x HBM 2 kV charge)
+
+# Self-capacitance of an isolated conductive sphere C = 4*pi*eps0*r (CALCULATION):
+  cherry tomato r=1.5 cm   1.7 pF
+  apple r=4 cm             4.5 pF
+  melon r=8 cm             8.9 pF
+  watermelon r=15 cm       16.7 pF
+  Human body to earth: 100-200 pF (SOURCE: HBM uses 100 pF; IEC 61000-4-2 uses 150 pF).
+  Sweep 10 pF..1000 pF covers object + 1 m wire (ASSUMPTION 30-50 pF/m) untouched and a hand in
+  contact (+100..300 pF) with margin; 2000 pF is the MPR121 datasheet upper bound (SOURCE).
+
+# Variant comparison at identical inputs (IEC contact 4 kV and 8 kV, CDC_min = 1 uA, C_ext 10..1000 pF)
+variant                                Ipk@4kV   Ipk@8kV   C_add pF  leak/1uA % parts                  single-layer home-etch
+a) none                                 15.00A    30.00A        0.0         0.0 n/a                    yes (no parts)
+b) series R 3k0 2512 (selected)          1.20A     2.40A        0.0         0.0 HPWC2512               yes, as routed (T-091)
+b1) series R 3k0 at -5 %                 1.26A     2.52A        0.0         0.0 HPWC2512               yes, as routed (T-091)
+b') series R 10k                         0.39A     0.77A        0.0         0.0 2512                   yes
+c) R 3k0 + TPD4E05U06 x3 to GND          1.20A     2.40A        0.5         1.0 SMD USON-10 2.5x1 mm   no: 0.5 mm pitch vs 0.6 mm clearance rule
+d) R 3k0 + 2x1N4148 to 3V3/GND           1.20A     2.40A        8.0         5.0 DO-35 or SOD           partial: 3V3 bus crosses 12 tracks (no bridges on one layer)
+
+# Current / I_lim = 1.33 A:  a) 11.2x over at 4 kV  b) 3k0 0.90x (4 kV), 1.80x (8 kV)  b1) 2850 ohm 0.94x (4 kV), 1.89x (8 kV)  b') 0.58x (8 kV)
+# Margin I_lim / Ipk at 4 kV: 3k0 1.11, 2850 ohm 1.06, V1.2 3k3 1.21 (CALCULATION; I_lim is an ASSUMPTION for an IEC-shaped pulse)
+# Sensitivity: see sim_electrode.out, rows 2.85k / 3k / 3.15k (selected part) and 10k (b').

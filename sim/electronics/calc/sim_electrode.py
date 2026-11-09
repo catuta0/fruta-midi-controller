@@ -92,7 +92,8 @@ def analyse(R, Ce):
     return dict(n=len(pairs), nominal=nominal, s_nom=sn, best=best, worst=worst)
 
 
-R_SWEEP = [0, 1e3, 2.2e3, 3.3e3, 4.7e3, 6.8e3, 10e3, 22e3, 47e3, 100e3]
+# T-092: 2.85k / 3k / 3.15k = selected HPWC2512 3k0 +-5 % (ADR-023); 3.3k kept as the V1.2 reference; 3.465k = rejected 3k3 +5 %
+R_SWEEP = [0, 1e3, 2.2e3, 2.85e3, 3e3, 3.15e3, 3.3e3, 3.465e3, 4.7e3, 6.8e3, 10e3, 22e3, 47e3, 100e3]
 C_SWEEP = [10e-12, 20e-12, 50e-12, 100e-12, 200e-12, 500e-12, 1000e-12, 2000e-12]
 
 

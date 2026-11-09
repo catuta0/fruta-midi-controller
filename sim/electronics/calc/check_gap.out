@@ -36,14 +36,14 @@
     6.8    0.9    0.50           5.00         4.34   R1 E-term <-> R2 ELE-term
 
 (e) floating metal at H1..H4 (radius 2.8 / 3.5 mm): bypass ELEx -> metal -> Ex = sum of the two gaps, worst channel
-    r 2.8 H1  at (8.00,64.00): copper side  44.34 mm (ELE0 24.56 + E0 19.78)
-    r 2.8 H2  at (95.00,5.00): copper side  71.48 mm (ELE11 24.46 + E11 47.02)
-    r 2.8 H3  at (96.00,38.00): copper side  19.10 mm (ELE11 4.50 + E11 14.61)
-    r 2.8 H4  at (88.50,30.50): copper side  25.57 mm (ELE11 4.22 + E11 21.35)
-    r 3.5 H1  at (8.00,64.00): copper side  42.94 mm (ELE0 23.86 + E0 19.08)
-    r 3.5 H2  at (95.00,5.00): copper side  70.08 mm (ELE11 23.76 + E11 46.32)
-    r 3.5 H3  at (96.00,38.00): copper side  17.71 mm (ELE11 3.80 + E11 13.91)
-    r 3.5 H4  at (88.50,30.50): copper side  24.17 mm (ELE11 3.52 + E11 20.65)
+    r 2.8 H1  at (5.00,65.00): copper side  50.45 mm (ELE0 27.66 + E0 22.79)
+    r 2.8 H2  at (96.00,4.00): copper side  73.98 mm (ELE11 25.87 + E11 48.10)
+    r 2.8 H3  at (96.50,58.00): copper side   9.66 mm (ELE11 6.74 + E11 2.91)
+    r 2.8 H4  at (29.80,4.00): copper side  71.63 mm (ELE0 23.75 + E0 47.89)
+    r 3.5 H1  at (5.00,65.00): copper side  49.05 mm (ELE0 26.96 + E0 22.09)
+    r 3.5 H2  at (96.00,4.00): copper side  72.58 mm (ELE11 25.17 + E11 47.40)
+    r 3.5 H3  at (96.50,58.00): copper side   8.26 mm (ELE11 6.04 + E11 2.21)
+    r 3.5 H4  at (29.80,4.00): copper side  70.23 mm (ELE0 23.05 + E0 47.19)
 
 (f) ADR-020 spark gap: electrode J2 pad <-> nearest GND copper (should be the edge track at y = 68.0)
     E0    to edge track 1.401 mm; to any GND copper 1.401 mm
@@ -66,7 +66,7 @@ FAIL (b) copper gap 5.29 mm vs rule 7.5 mm (8 kV)
 PASS (d) terminations worst 4.40 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.00 mm]
 PASS (d) terminations worst 4.25 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.25 mm]
 PASS (d) terminations worst 3.79 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.50 mm]
-PASS (e) floating-metal bypass worst 17.71 mm vs rule 3.5 mm (4 kV); PASS vs 7.5 mm (8 kV)
+PASS (e) floating-metal bypass worst 8.26 mm vs rule 3.5 mm (4 kV); PASS vs 7.5 mm (8 kV)
 PASS (f) spark gap: 12 electrode pads, min 1.401 / max 1.401 mm vs 1.40 +/- 0.05 mm; nearest GND is the edge track
 SUMMARY: copper PASS (4 kV rule, (a) and (b)); terminations PASS at 4 kV over the swept ASSUMPTIONS; mounting metal PASS; spark gap PASS
 SUMMARY 8 kV: copper FAIL; terminations FAIL (worst 3.79 mm vs 7.5 mm)

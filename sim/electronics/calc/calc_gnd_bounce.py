@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""T-073 / C2-005: ESD strike on a terminal that arcs across the 1.40 mm E-pad <-> GND edge-track gap.
+"""T-073 / C2-005, inductances updated T-092 for the SMD board (no sockets): ESD strike on a terminal that arcs across the
+1.40 mm E-pad <-> GND edge-track gap.
 
 Every J2 electrode pad is 1.40 mm (MEASUREMENT, check_gap.out (c)) from the GND track along the bottom edge. That
 is below the breakdown distance of every model in calc_flashover.out at 3.6 kV, so a 4 kV contact strike most
@@ -29,9 +30,16 @@ I_PK = 3.75 * KV * 1.15           # A, upper tolerance
 TR = (0.6e-9, 1.0e-9)             # s, rise time range
 I30 = 2.0 * KV
 # ASSUMPTION: 1.2 mm track without a ground plane 0.7 ... 1.0 nH/mm (thin-strip partial inductance, order of
-# magnitude 1 nH/mm); female socket + male header pin of the Pico 3 ... 10 nH. To be checked only by the ESD test.
+# magnitude 1 nH/mm). To be checked only by the ESD test.
 L_MM = (0.7e-9, 1.0e-9)
-L_PIN = (3e-9, 10e-9)
+# T-092, board without sockets (ADR-023). Series elements between the board trunk and the two IC grounds (ASSUMPTION):
+#   Pico castellation joint: 0.5 ... 1.5 nH (short solder fillet + module edge plating, about 1 mm at 0.5 ... 1.5 nH/mm)
+#   MPR121 module header pin butted on the pad: stand-off 2.5 mm (T-090 ASSUMPTION) + through the 1.6 mm module board
+#     (ASSUMPTION) = 4.1 mm at 0.7 ... 1.2 nH/mm = 2.9 ... 4.9 nH
+# V1.2 used 3 ... 10 nH for female socket + male header pin.
+L_CAST = (0.5e-9, 1.5e-9)
+L_MODPIN = (2.9e-9, 4.9e-9)
+L_PIN = (L_CAST[0] + L_MODPIN[0], L_CAST[1] + L_MODPIN[1])
 R_SER, V_CLAMP = 220.0, 1.5       # R15/R16 (SOURCE schematic); two diode drops in the path (ASSUMPTION)
 HBM_RP2040_KV = 4.0               # SOURCE EE-S28: RP2040 HBM 4 kV (JEDEC JS-001, "Digital (FT) pins only"), CDM 500 V
 HBM_C, HBM_R = 100e-12, 1500.0    # HBM network (JEDEC JS-001, SOURCE from memory)
@@ -81,7 +89,9 @@ def main():
                                                         round(p.GetPosition().y * TOMM - oy, 3))
     p23 = pads[("A1", "23")]
     mod_gnd = pads[("A2", "1")]
-    print("# calc_gnd_bounce.py  CALCULATION (T-073, C2-005) on %s (KiCad %s)" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
+    print("# calc_gnd_bounce.py  CALCULATION (T-073, C2-005; T-092 no sockets) on %s (KiCad %s)" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
+    print("# series elements (ASSUMPTION): castellation %.1f-%.1f nH + butted module pin %.1f-%.1f nH = %.1f-%.1f nH (V1.2: 3-10 nH socket + header)"
+          % (L_CAST[0] * 1e9, L_CAST[1] * 1e9, L_MODPIN[0] * 1e9, L_MODPIN[1] * 1e9, L_PIN[0] * 1e9, L_PIN[1] * 1e9))
     # node where the module GND branch joins the terminal trunk: the vertex shared by the module->Pico and
     # terminal->Pico shortest paths that is farthest from the Pico
     l_mod, path_mod = shortest(g, mod_gnd, p23)

@@ -1,0 +1,9 @@
+# calc_pot_rc.py  T-076 / T-092 CALCULATION (inputs: SOURCE / ASSUMPTION, see header; C1 1206, off-board pot)
+nominal                                    R_th 2500 ohm  C 100 nF  tau 0.250 ms  fc 637 Hz
+    full-scale step to 1/2 LSB (10-bit): 7.62 tau = 1.91 ms; read period 30 ms = 120 tau; margin 15.7x
+    ramp lag at a 100 ms full turn: 2.6 counts (zone width 205 counts, hysteresis ~41 counts)
+worst (R +20 %, C +10 % tol, +15 % temp)   R_th 3000 ohm  C 126 nF  tau 0.380 ms  fc 419 Hz
+    full-scale step to 1/2 LSB (10-bit): 7.62 tau = 2.89 ms; read period 30 ms = 79 tau; margin 10.4x
+    ramp lag at a 100 ms full turn: 3.9 counts (zone width 205 counts, hysteresis ~41 counts)
+ADC sample-capacitor charge sharing (C_sample <= 10 pF ASSUMPTION): <= 0.102 LSB (10-bit) per conversion
+PASS worst-case settling 2.89 ms vs read period 30 ms (criterion: margin >= 5x, ASSUMPTION)

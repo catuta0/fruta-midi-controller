@@ -13,7 +13,9 @@ import sys
 import pcbnew
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from check_gap import items, seg_seg, TOMM, ROOT, W_MAX, W_LABEL
+from check_gap import items, seg_seg, dist, Item, TOMM, ROOT, W_MAX, W_LABEL
+
+PICO_X = 4.5                                        # pin 1 column, board coordinates (gen_pcb.py PICO)
 
 PCB = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "hardware", "frutamidi.kicad_pcb")
 GB = os.path.join(ROOT, "hardware", "fabrication", "gerbers")
@@ -159,5 +161,62 @@ got = {n: a1[n].GetNetname() for n in want}
 check("REQ-031 A1 pin map unchanged", all(got[n] == want[n] for n in want), str(got))
 used = sum(1 for p in a1.values() if p.GetNetname() and not p.GetNetname().startswith("unconnected"))
 check("A1 connected pads = 13 (6 signal/power + 7 GND)", used == 13, "%d" % used)
+# 7. mounting holes (T-092): spread, USB end, head / washer clearance
+holes = {fp.GetReference(): pos_fp for fp, pos_fp in ((f, (f.GetPosition().x * TOMM - ox, f.GetPosition().y * TOMM - oy)) for f in board.GetFootprints()) if re.fullmatch(r"H\d", fp.GetReference())}
+print("# mounting holes (MEASUREMENT, design file): %s" % {k: (round(v[0], 2), round(v[1], 2)) for k, v in sorted(holes.items())})
+W, H = 100.0, 70.0
+quad = sorted(("L" if x < W / 2 else "R") + ("T" if y < H / 2 else "B") for x, y in holes.values())
+check("T-092 one hole per board quadrant", quad == ["LB", "LT", "RB", "RT"], str(quad))
+names = sorted(holes)
+pairs = [(math.hypot(holes[a][0] - holes[b][0], holes[a][1] - holes[b][1]), a, b) for i, a in enumerate(names) for b in names[i + 1:]]
+dmin = min(pairs)
+check("T-092 min distance between holes >= 45 mm (criterion chosen in T-092; T-091 had 10.6 mm)", dmin[0] >= 45.0, "%.2f mm (%s-%s)" % dmin)
+cx, cy = sum(v[0] for v in holes.values()) / 4, sum(v[1] for v in holes.values()) / 4
+ring = sorted(holes.values(), key=lambda v: math.atan2(v[1] - cy, v[0] - cx))
+area = abs(sum(ring[i][0] * ring[(i + 1) % 4][1] - ring[(i + 1) % 4][0] * ring[i][1] for i in range(4))) / 2
+check("T-092 area of the hole quadrilateral >= 60 % of the board (criterion chosen in T-092)", area / (W * H) >= 0.60, "%.0f mm2 = %.1f %% of %.0f mm2" % (area, 100 * area / (W * H), W * H))
+USB_END = (PICO_X + 8.89, 0.63)                    # centre of the Pico USB end: pin 1 column + 8.89, module end y 2.0 - 1.37 (SOURCE RP-008307-DS-2 via T-090)
+d_usb = sorted((math.hypot(v[0] - USB_END[0], v[1] - USB_END[1]), k) for k, v in holes.items())
+check("T-092 nearest hole <= 20 mm from the centre of the Pico USB end (criterion chosen in T-092; T-091 had 63.6 mm)", d_usb[0][0] <= 20.0, "%s at %.2f mm; next %s at %.2f mm" % (d_usb[0][1], d_usb[0][0], d_usb[1][1], d_usb[1][0]))
+BOARD_T = 1.6                                       # ASSUMPTION standard FR-4
+HOLE_R, WASHER, HEAD = 1.6, 3.5, 2.8               # drill (SOURCE ISO 273 fine) ; ISO 7089 washer, ISO 7045 pan head radius (ASSUMPTION, recalled)
+hc = {}
+for k, (x, y) in sorted(holes.items()):
+    edge = min(x, W - x, y, H - y) - HOLE_R
+    near = sorted((dist(Item("", "", [((x, y), (x, y))], 0.0), it), it.desc, it.net) for it in its)
+    near = list(near[0])
+    near[1] = re.sub(r"\(([-\d.]+),([-\d.]+)\)", lambda m: "(%.2f,%.2f)" % (float(m.group(1)) - ox, float(m.group(2)) - oy), near[1])
+    crt = []
+    for fp in board.GetFootprints():
+        if fp.GetReference() == k:
+            continue
+        for g in fp.GraphicalItems():
+            if g.GetLayer() == pcbnew.F_CrtYd and g.GetClass() == "PCB_SHAPE" and g.GetShape() == pcbnew.SHAPE_T_SEGMENT:
+                a, b = g.GetStart(), g.GetEnd()
+                crt.append((seg_seg((x, y), (x, y), (a.x * TOMM - ox, a.y * TOMM - oy), (b.x * TOMM - ox, b.y * TOMM - oy)), fp.GetReference()))
+    crt = min(crt)
+    hc[k] = (near[0], crt[0])
+    check("T-092 %s drill edge to board edge >= board thickness %.1f mm" % (k, BOARD_T), edge >= BOARD_T - 1e-6, "%.2f mm" % edge)
+    check("T-092 %s washer r %.1f mm clear of copper >= 0.6 mm" % (k, WASHER), near[0] - WASHER >= 0.6 - 1e-3, "washer %.2f mm, pan head r %.1f %.2f mm, nearest %s [%s]" % (near[0] - WASHER, HEAD, near[0] - HEAD, near[1], near[2]))
+    check("T-092 %s washer r %.1f mm clear of part courtyards" % (k, WASHER), crt[0] - WASHER >= 0.0, "washer %.2f mm, pan head %.2f mm, nearest courtyard %s" % (crt[0] - WASHER, crt[0] - HEAD, crt[1]))
+
+# 8. assembly map: reference designators do not touch each other (T-092; replaces the retired check_silk.py)
+boxes = []
+for fp in board.GetFootprints():
+    cand = [fp.Reference()] if fp.Reference().IsVisible() else []
+    cand += [g for g in fp.GraphicalItems() if g.GetClass() == "PCB_TEXT" and "REFERENCE" in g.GetText()]
+    for t in cand:
+        if t.GetLayer() == pcbnew.F_Fab:
+            bb = t.GetBoundingBox()
+            boxes.append((fp.GetReference(), bb.GetLeft() * TOMM - ox, bb.GetTop() * TOMM - oy, bb.GetRight() * TOMM - ox, bb.GetBottom() * TOMM - oy))
+def box_gap(p, q):
+    dx = max(p[1] - q[3], q[1] - p[3], 0.0)
+    dy = max(p[2] - q[4], q[2] - p[4], 0.0)
+    return math.hypot(dx, dy)
+gaps = sorted((box_gap(p, q), p[0], q[0]) for i, p in enumerate(boxes) for q in boxes[i + 1:])
+sw_r16 = [g for g in gaps if {g[1], g[2]} == {"R16", "SW1"}]
+check("T-092 SW1 and R16 designators >= 2.0 mm apart on the assembly map (criterion chosen in T-092)", sw_r16 and sw_r16[0][0] >= 2.0, "gap %.2f mm" % sw_r16[0][0])
+check("T-092 all reference designators apart >= 0.2 mm on the assembly map (F.Fab)", gaps[0][0] >= 0.2, "%d designators; worst %.2f mm (%s, %s)" % (len(boxes), gaps[0][0], gaps[0][1], gaps[0][2]))
+
 print("SUMMARY: %d checks, %d PASS, %d FAIL" % (len(res), res.count(True), res.count(False)))
 sys.exit(0 if all(res) else 1)
