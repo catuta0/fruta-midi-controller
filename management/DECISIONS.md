@@ -133,3 +133,11 @@ User decisions from the T-090 feasibility study (reports/electronics/smd_feasibi
 - D-4 Holes: 4 M3 mounting holes stay; every other hole goes (133 to 4, MEASUREMENT for 133, design intent for 4).
 - Manager: A1 surface-soldered on castellations with an etched bare-copper keep-out; A2 pins butted on surface pads; SW1 Omron B3S-1000; R13-R16 and C1 in 1206; JP1 SMD 3-pad bridge; J1 stays as two insulated wire links on surface pads. Bare MPR121 rejected (0.40 mm pitch against the 0.6 mm clearance rule, SOURCE and REQ-029). Loss of socket rework accepted as a consequence of the user's request.
 - Single layer without new wire bridges is an estimate only until layout (T-091).
+
+## ADR-024 — R1-R12 changed to CMB 0207 3k3; BOM moved to Mouser (CR-003), 2026-11-09
+User decision after the T-095 quote comparison ("CMB, mudas a placa pronto"), replacing ADR-023 D-1:
+- R1-R12: Vishay CMB02070X3301GB200 (MELF 0207, 3k3 ±2 %). HPWC2512-3K0JT18 has no small-quantity offer (T-093); HPWC2512-3K3JT1 rejected by the user.
+- 1.2/50 us chart 5175 V at 3k3 (SOURCE, reading about ±5 %) against about 3636 V across R at 4 kV: margin 1.42 (CALCULATION). Worst-choice sensitivity at 3366 ohm 0.901 against the 0.90 limit (SIMULATION).
+- Accepted deviation, by the user: the conductor gap of the part is 3.2 mm (SOURCE) against the 3.5 mm flashover rule at 4 kV. A layout cannot change it. The check must report this as a deviation and must not be relaxed. REQ-023 stays PARTIAL; 8 kV FAIL (R-006).
+- All parts move to Mouser: the only shop able to supply the whole board on 2026-11-09 (T-095). One-board quote about 17.6 EUR, excluding shipping and taxes (CALCULATION from SOURCE prices).
+- Consequences: new MELF land pattern, re-layout of the R row, a hand-soldering procedure for a rolling part.
