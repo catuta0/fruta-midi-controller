@@ -262,14 +262,14 @@ def build():
     s.frame("2. I2C bus", 132.08, 35.56, 208.28, 91.44)
     s.text("R13/R14: 4.7k pull-ups to 3V3 (rise time at 400 kHz, T-050).\n"
            "R15/R16: 220R between the Pico pins and the bus (wrong-wire current limit, T-055).", 133.35, 40.64)
-    PU_FIELDS = {"Manufacturer": "generic", "MPN": "4k7 1 % thick film, 1206"}
+    PU_FIELDS = {"Manufacturer": "FOJAN", "MPN": "FRC1206F4701TS", "LCSC": "C2907387"}   # T-094: 4k7 1 % 250 mW 1206
     for k, net in enumerate(("SCL", "SDA")):
         rx, ry = 144.78 + 10.16 * k, 63.50
         r = s.symbol("Device", "R", "R%d" % (13 + k), "4k7", rx, ry,
                      "FrutaMIDI:R_1206_HomeEtch", fields=PU_FIELDS, ref_at=(2.54, -1.27))
         s.connect(r, rx, ry, "1", "+3V3")
         s.connect(r, rx, ry, "2", net)
-    SR_FIELDS = {"Manufacturer": "generic", "MPN": "220R 1 % thick film, 1206"}
+    SR_FIELDS = {"Manufacturer": "FOJAN", "MPN": "FRC1206F2200TS", "LCSC": "C2933642"}   # T-094: 220R 1 % 250 mW 1206
     for k, net in enumerate(("SCL", "SDA")):
         rx, ry = 180.34, 58.42 + 12.70 * k
         r = s.symbol("Device", "R", "R%d" % (15 + k), "220", rx, ry,
@@ -348,7 +348,7 @@ def build():
     s.frame("4. User controls and mounting holes", 30.48, 198.12, 124.46, 254.00)
     BX, BY = 50.80, 218.44
     sw = s.symbol("Switch", "SW_Push", "SW1", "B3S-1000", BX, BY, "FrutaMIDI:SW_SPST_B3S-1000_HomeEtch",
-                  fields={"Manufacturer": "Omron", "MPN": "B3S-1000"})
+                  fields={"Manufacturer": "Omron", "MPN": "B3S-1000", "LCSC": "C2733655"})
     s.connect(sw, BX, BY, "1", "BTN")
     s.connect(sw, BX, BY, "2", "GND")
     s.text("SCALE button", 45.72, 226.06)
@@ -357,15 +357,15 @@ def build():
     # tied to AGND here (R-011, reports/electronics).
     rv = s.symbol("Device", "R_Potentiometer", "RV1", "10k lin (B10K)", RX, RY,
                   "FrutaMIDI:WirePads_1x03_P5.08mm", ref_at=(-5.08, -5.08),
-                  fields={"Manufacturer": "Alps Alpine", "MPN": "10k linear (B), off-board on wires, e.g. RK09K series"})
+                  fields={"Manufacturer": "Alps Alpine", "MPN": "RK09D1130C2P", "LCSC": "C361173"})   # T-094: 10k linear, insulated flat shaft (takes a knob), off-board on wires
     s.connect(rv, RX, RY, "1", "+3V3")
     s.connect(rv, RX, RY, "2", "POT")
     s.connect(rv, RX, RY, "3", "AGND")
     s.text("OCTAVE pot (off-board, 3 wires)", 101.60, 223.52)
-    # T-091 / ADR-023: C1 100 nF 1206 X7R 50 V wiper filter, near the Pico (C1 MPN datasheet not opened, T-090)
+    # T-091 / ADR-023: C1 100 nF 1206 X7R 50 V wiper filter, near the Pico (T-094: LCSC part; datasheet not opened)
     CX, CY = 111.76, 236.22
     c1 = s.symbol("Device", "C", "C1", "100n X7R 50V", CX, CY, "FrutaMIDI:C_1206_HomeEtch",
-                  ref_at=(2.54, -1.27), fields={"Manufacturer": "KEMET", "MPN": "C1206C104K5RACTU"})
+                  ref_at=(2.54, -1.27), fields={"Manufacturer": "Samsung", "MPN": "CL31B104KBCNNNC", "LCSC": "C24497"})
     s.connect(c1, CX, CY, "1", "POT")
     s.connect(c1, CX, CY, "2", "AGND")
     s.text("C1: wiper to AGND, near Pico", 88.90, 243.84)

@@ -362,7 +362,8 @@ SER_SDA = (27.6, 24.86)   # R16 pad 1 on the Pico side (pin 31 row)
 JP1 = (79.5, 15.74)       # selector upright: pad 1 (ORIG -> S1) bottom, pad 2 = 3V3, pad 3 (QT -> S7) top
 TOP_3V3_Y = 2.0           # 3V3 run along the top edge (above the S1..S7 wire pads)
 X_3V3_LEVEL = 31.5        # 3V3 leaves Pico pin 36 level to this x, then 45 deg up to RV1 pad 1 (keeps the area around H4 free)
-Y_S1, Y_SCL, Y_SDA = 15.74, 21.05, 23.55     # runs under the module (between the S row and the electrode row)
+# T-094 (R-017): SDA and SCL moved up, away from the electrode row (pad top edge y 24.7): SDA 3.30 mm, SCL 5.30 mm edge to edge
+Y_S1, Y_SCL, Y_SDA = 15.74, 18.9, 20.9       # runs under the module (between the S row and the electrode row)
 SER_SCL = (85.0, Y_SCL)   # R15 pad 1 (Pico side) at the end of the SCL run; pad 2 2.9 mm above
 XC, XD = 38.5, 40.5       # x where SCL and SDA leave the Pico rows and climb to the module runs
 RV_PAD = (34.5, 8.42)     # RV1 pad 1 (3V3); pads 2 (wiper) and 3 (AGND) 5.08 mm apart below
@@ -617,7 +618,7 @@ def build_board():
 
     # --- Copper text (ADR-023: no silkscreen assumed; stroke >= 0.5 mm, clearance >= 0.6 mm) ----------------------------
     bd.text("FrutaMIDI v1.3", 13.4, 55.0, pcbnew.F_Cu, 2.0, thick=0.5)
-    bd.text("ORIG", 79.0, 18.75, pcbnew.F_Cu, 1.8, thick=0.5)    # selector legend (R-007): below JP1 pad 1
+    bd.text("ORIG", 74.0, 13.2, pcbnew.F_Cu, 1.8, thick=0.5)     # selector legend (R-007): left of JP1 pad 1 (T-094: the I2C runs pass where it was)
     bd.text("QT", 78.5, 5.0, pcbnew.F_Cu, 2.0, thick=0.5)       # above JP1 pad 3
 
     # --- Assembly-map texts (F.Fab only) --------------------------------------------------------------------------------

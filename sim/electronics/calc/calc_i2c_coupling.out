@@ -1,0 +1,13 @@
+# calc_i2c_coupling.py  T-094 / R-017  CALCULATION; eps_eff=2.75 ASSUMPTION; victim = middle electrode pad
+
+before (T-092, y_SDA 23.55, y_SCL 21.05)  edge-to-pad gap SDA 0.65 mm, SCL 3.15 mm (layout)
+  cell 0.60 mm (240 cells): C(SDA to pad) 69.76 fF ; C(SCL to pad) 19.46 fF
+  cell 0.40 mm (435 cells): C(SDA to pad) 71.07 fF ; C(SCL to pad) 19.74 fF
+  SDA full-swing step on the MPR121 pin node (18 pF): 13.029 mV = 4.06 ADC counts (touch threshold 12 counts)
+
+after  (T-094, y_SDA 20.90, y_SCL 18.90)  edge-to-pad gap SDA 3.30 mm, SCL 5.30 mm (layout)
+  cell 0.60 mm (240 cells): C(SDA to pad) 32.77 fF ; C(SCL to pad) 13.68 fF
+  cell 0.40 mm (435 cells): C(SDA to pad) 33.04 fF ; C(SCL to pad) 13.80 fF
+  SDA full-swing step on the MPR121 pin node (18 pF): 6.058 mV = 1.89 ADC counts (touch threshold 12 counts)
+
+SDA-to-pad capacitance after / before = 0.465 (factor 2.15 lower); finest mesh values

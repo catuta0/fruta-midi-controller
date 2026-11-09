@@ -67,4 +67,24 @@ value comes from a search-engine extract of the document; it was not opened, so 
 | FR-4 modulus 22 GPa, Poisson 0.15 | calc_usb_pry | **No laminate datasheet opened**, typical values |
 | ISO 7045 M3 pan head 5.6 mm, ISO 7089 M3 washer 7.0 mm, ISO 273 fine clearance 3.2 mm | Screw-head and washer clearance | **Standards NOT opened**, recalled |
 | IEC 61000-4-2 (EE-S16), IEC 60664-1 F.2 (EE-S25), IPC-2221B (EE-S15) | ESD source, flashover rule, track rise | **Standards NOT opened**, recalled (as before) |
-| Off-board potentiometer (ADR-023 D-2) | R-011, pot RC | No part chosen; Alps EE-S13 values carried over as ASSUMPTION |
+| Off-board potentiometer (ADR-023 D-2) | R-011, pot RC | Superseded by T94-S7 (T-094): RK09D1130C2P |
+
+## LCSC-only BOM study (T-094, opened 2026-11-09)
+
+Distributor data (Cxxxxx, stock, price, minimum and multiple) and the list of pages not opened: `evidence/T-094/distributor_pages.txt`.
+
+| ID | Document | Data used | Status |
+|---|---|---|---|
+| T94-S1 | Vishay CRCW-HP e3, doc. 20043 rev. 17-Mar-2026, sha256 08344ee1...6505, `evidence/T-094/datasheets/vishay_crcw_hp_20043.pdf` | Pulse voltage chart: Umax 1750 V at t up to about 1 ms, not 1.2/50 µs; dimensions | Read |
+| T94-S2 | TE CRGP 9-1773463-9 CIS WR 03/2018, https://www.lcsc.com/datasheet/C2082816.pdf | One-pulse power chart (50 rectangular impulses, 2512 about 2000 W up to 10 µs, chart reading); max overload 1000 V; termination dimensions | Read in the LCSC viewer, pages 1-7, no local copy |
+| T94-S3 | Bourns CMP, sha256 66189cdc...6401, `evidence/T-094/datasheets/bourns_cmp.pdf` | Power against pulse duration only, no 1.2/50 µs chart | Read |
+| T94-S4 | Yageo SR, sha256 5fa9b7ab...a8f5, `evidence/T-094/datasheets/yageo_sr_20105.pdf` | Pulse power figures, ESD 2 kV HBM, no 1.2/50 µs chart | Read |
+| T94-S5 | hanxia HX 6x6x4.3WS drawing, https://www.lcsc.com/datasheet/C25168849.pdf | Lead span 6.7 mm (rejected: different land) | Page 1 only |
+| T94-S6 | Alps RK09K1130AP5 product page, https://tech.alpsalpine.com/e/products/detail/RK09K1130AP5/ | Insulated shaft series, shaft type Driver, LM1 15 mm, 10 kΩ, taper 1B, 0.05 W, 20 V DC (rejected: driver shaft is not a knob shaft) | Read (web page; PDF catalogue NOT opened) |
+| T94-S7 | Alps RK09D1130C2P product page, https://tech.alpsalpine.com/e/products/detail/RK09D1130C2P/ | Insulated shaft series, shaft type Flat, LM1 25 mm, with collar, 10 kΩ, taper 1B, 0.05 W, 20 V DC | Read, first part of the page (web page; PDF catalogue NOT opened) |
+
+| Item | Used for | Status |
+|---|---|---|
+| FOJAN FRC1206F4701TS, FRC1206F2200TS, Samsung CL31B104KBCNNNC | R13-R16, C1 | LCSC listing parameters only; **manufacturer datasheets NOT opened**; 1206 land from T90-S6 |
+| ZX-PZ2.54-1-16PZZ | A2 header (optional) | LCSC listing only; **drawing NOT opened** |
+| TME, DigiKey, Farnell pages | Fallback information | **NOT opened** (see the evidence file) |

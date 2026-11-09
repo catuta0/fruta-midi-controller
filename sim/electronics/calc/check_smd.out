@@ -6,9 +6,9 @@ PASS  ADR-023 only SMD pads plus NPTH mounting holes :: plated/through [], on B.
 PASS  ADR-023 exactly 4 M3 holes in the board file :: NPTH [('H1', 3.2), ('H2', 3.2), ('H3', 3.2), ('H4', 3.2)]
 PASS  drill file merged holes :: 4 hits in hardware/fabrication/gerbers/frutamidi.drl (expected 4)
 PASS  REQ-029 min track width >= 0.8 mm :: min 0.80 mm
-PASS  REQ-029 power >= 1.2 mm :: {'GND': [1.2], '/S1': [1.2], '/S7': [1.2], '+3V3': [1.2]}
+PASS  REQ-029 power >= 1.2 mm :: {'GND': [1.2], '+3V3': [1.2], '/S1': [1.2], '/S7': [1.2]}
 PASS  REQ-029 signal >= 1.0 mm except short stubs :: 5 stub segments below 1.0 mm, longest 5.08 mm; nets ['/S2', '/S3', '/S4', '/S5', '/S6']
-PASS  copper outside Pico keep-out TP/USB (T-090) :: nearest copper margin 1.52 mm: track (57.40,57.08)-(57.40,95.18) [GND]; rectangle (9.52, 0.48, 17.27, 14.98)
+PASS  copper outside Pico keep-out TP/USB (T-090) :: nearest copper margin 1.52 mm: track (53.20,57.08)-(57.40,57.08) [GND]; rectangle (9.52, 0.48, 17.27, 14.98)
 PASS  copper outside Pico keep-out SWD pads :: nearest copper margin 2.05 mm: track (57.40,95.18)-(69.40,95.18) [GND]; rectangle (9.45, 47.83, 17.33, 52.23)
 PASS  ADR-023 no copper under R1-R12 bodies between the pads :: 0 intrusions [] (body width 3.4 mm, SOURCE TT HPWC 09.23: W 3.2 +- 0.2 mm)
 PASS  A1 inner land width 16.18 mm (SOURCE RP-008307-DS-2 Fig. 5) :: 16.180 mm
@@ -42,5 +42,5 @@ PASS  T-092 H4 drill edge to board edge >= board thickness 1.6 mm :: 2.40 mm
 PASS  T-092 H4 washer r 3.5 mm clear of copper >= 0.6 mm :: washer 0.60 mm, pan head r 2.8 1.30 mm, nearest track (34.50,8.42)-(34.50,2.00) [+3V3]
 PASS  T-092 H4 washer r 3.5 mm clear of part courtyards :: washer 0.30 mm, pan head 1.00 mm, nearest courtyard A1
 PASS  T-092 SW1 and R16 designators >= 2.0 mm apart on the assembly map (criterion chosen in T-092) :: gap 8.29 mm
-PASS  T-092 all reference designators apart >= 0.2 mm on the assembly map (F.Fab) :: 28 designators; worst 1.63 mm (R13, JP1)
+PASS  T-092 all reference designators apart >= 0.2 mm on the assembly map (F.Fab) :: 28 designators; worst 1.63 mm (JP1, R13)
 SUMMARY: 43 checks, 43 PASS, 0 FAIL

@@ -1,0 +1,500 @@
+=== PAGE 1 ===
+*RoHS COMPLIANT
+&
+**HALOGEN FREE
+301
+Features
+■ Thick film technology
+■ Power rating up to 1.5 watts @ 70 °C
+■ High power surge withstanding
+■ RoHS compliant*
+■ Halogen free**
+Applications
+■ Power supplies
+■ Digital meters
+■ Consumer electronics
+■ LED lighting
+■ Industry control boards
+CMP Series High Power Anti-Surge Chip Resistors
+Electrical Characteristics
+Model
+Characteristic
+CMP0603 CMP0805 CMP1206 CMP2010 CMP2512
+Power Rating @ 70 °C 0.25 W 0.5 W Operating Temperature Range Derated to Zero Load at 0.75 W -55 °C to +155 °C
++155 °C
+1 W 1.5 W
+Maximum Working Voltage 75 V 200 V 250 V 200 V 300 V
+Maximum Overload Voltage 125 V 300 V Resistance Tolerance 500 V ±1 %, ±5 %
+400 V 600 V
+Temperature Coefficient
+10 Ω to 1 MΩ
+(±1 %, E24 & E96 Series)
+±100 ppm/°C
+±100 ppm/°C
+±100 ppm/°C
+±100 ppm/°C
+±100 ppm/°C
+10 Ω to 1 MΩ
+(±5 %, E24 Series
+±200 ppm/°C
+±200 ppm/°C
+±200 ppm/°C
+±200 ppm/°C
+±200 ppm/°C
+Note: Solder pad and trace size should be evaluated and board surface temperature should not exceed +105 °C when applying
+full rated power.
+Additional Information
+Click these links for more information:
+PRODUCT
+TECHNICAL
+INVENTORY SAMPLES CONTACT
+SELECTOR
+LIBRARY
+Asia-Pacific: Tel: +886-2 2562-4117 • Email: asiacus@bourns.com
+EMEA: Tel: +36 88 885 877 • Email: eurocus@bourns.com
+The Americas: Tel: +1-951 781-5500 • Email: americus@bourns.com
+www.bourns.com
+WARNING Cancer and Reproductive Harm - www.P65Warnings.ca.gov
+* RoHS Directive 2015/863, Mar 31, 2015 and Annex.
+** Bourns considers a product to be “halogen free” if (a) the Bromine (Br) content is 900 ppm or less; (b) the Chlorine (Cl) content is 900 ppm or less; and (c) the total Bromine (Br)
+and Chlorine (Cl) content is 1500 ppm or less.
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 2 ===
+CMP Series High Power Anti-Surge Chip Resistors
+Product Dimensions
+Model L W C D T
+L
+CMP0603 1.60 ± 0.10
+(.063 ± .004)
+0.80 ± 0.10
+0.30 ± 0.20
+0.30 ± 0.20
+0.45 ± 0.10
+(.031 ± .004)
+(.012 ± .008)
+(.012 ± .008)
+(.018 ± .004)
+CMP0805 2.00 ± 0.10
+(.079 ± .004)
+1.25 ± 0.10
+0.40 ± 0.20
+0.40 ± 0.20
+0.50 ± 0.10
+W
+(.049 ± .004)
+(.016 ± .008)
+(.016 ± .008)
+(.020 ± .004)
+CMP1206 3.10 ± 0.10
+(.122 ± .004)
+1.60 ± 0.10
+0.50 ± 0.25
+0.50 ± 0.25
+0.55 ± 0.10
+(.063 ± .004)
+(.020 ± .010)
+(.020 ± .010)
+(.022 ± .004)
+CMP2010 5.00 ± 0.20
+(.197 ± .008)
+2.50 ± 0.20
+0.65 ± 0.25
+0.60 ± 0.25
+0.60 ± 0.10
+(.098 ± .008)
+(.026 ± .010)
+(.023 ± .010)
+(.024 ± .004)
+CMP2512 3.10 ± 0.20
+0.60 ± 0.25
+1.80 ± 0.25
+0.60 ± 0.15
+C
+D
+C
+T
+6.40 ± 0.20
+(.252 ± .008)
+D
+(.122 ± .008)
+(.024 ± .010)
+(.071 ± .010)
+(.024 ± .006)
+DIMENSIONS: MM
+(INCHES)
+Recommended Solder Pad Layout
+L
+Model A B L
+CMP0603 0.90
+(.035)
+1.00
+3.00
+(.039)
+(.118)
+CMP0805 1.30
+(.051)
+1.15
+3.50
+A
+(.045)
+(.138)
+CMP1206 1.80
+(.071)
+1.30
+4.70
+(.051)
+(.185)
+B
+CMP2010 3.00
+(.118)
+1.50
+6.80
+(.059)
+(.268)
+CMP2512 3.70
+(.146)
+2.45
+7.60
+(.096)
+(.299)
+DIMENSIONS: MM
+(INCHES)
+Surge Performance
+Peak Power (Watts)
+1000
+100
+10
+1
+0.1
+CMP2512
+CMP2010
+CMP1206
+CMP0805
+CMP0603
+0.0001 0.001 0.1 0.01 1
+Pulse Duration (Seconds)
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 3 ===
+CMP Series High Power Anti-Surge Chip Resistors
+Construction
+Sn PLATING
+OVERCOAT
+(BLACK) CONDUCTOR
+RESISTIVE
+ELEMENT
+Ni PLATING
+CERAMIC SUBSTRATE
+Environmental Characteristics
+Moisture Sensitivity Level ...........................................................1
+Derating Curve
+Power Ratio (%)
+100
+Rated Voltage
+The rated voltage is calculated by the following formula:
+V= P X R Soldering Profile
+V: Rated Voltage (V)
+P: Rated Power (W)
+R: Resistance Value (Ω)
+-55
+70 155
+Ambient Temperature (°C)
+260 °C peak
+<1>
+255 °C
+220 °C
+Temperature (°C)
+275
+225
+175
+125
+75
+25
+<1>
+Maximum of 20 seconds between
++255 °C and +260 °C
+190 °C
+90 - 150
+seconds
+150 °C
+Ramp Down
+6 °C/second
+60 - 120 seconds
+10 seconds minimum
+Ramp Up
+3 °C/second maximum
+0 50 100 150 200 250 300
+Time (seconds)
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 4 ===
+CMP Series High Power Anti-Surge Chip Resistors
+How to Order
+CMP 0603 - F X - 1002 E LF
+Model
+CMP = High Power Anti-Surge Resistor
+Size
+0603 = 0603 Size
+0805 = 0805 Size
+1206 = 1206 Size
+2010 = 2010 Size
+2512 = 2512 Size
+Resistance Tolerance
+F = ±1 %
+J = ±5 %
+TCR (See Electrical Characteristics chart)
+W = ±200 PPM/°C
+X = ±100 PPM/°C
+Resistance Value
+1 % Tolerance:
+<100 Ω ..............“R” represents decimal point (example: 24R3 = 24.3 Ω)
+≥100 Ω ..............First three digits are significant, fourth digit represents number of zeros to follow
+(example: 8252 = 82.5K Ω)
+5 % Tolerance:
+≥10 Ω ................First two digits are significant, third digit represents number of zeros to follow
+(example: 474 = 470K Ω)
+Packaging
+E = 5,000 pieces on 180 mm (7 inch) plastic reel, paper tape - CMP0603, CMP0805, CMP1206
+4,000 pieces on 180 mm (7 inch) reel, plastic tape - CMP2010, CMP2512
+Termination
+LF = Tin-plated (RoHS Compliant)
+Performance Characteristics
+Test Procedure (IEC 60115-1) Test Limits ΔR
+Short Time Overload 5 times rated power for 5 seconds 1 % Tolerance: ≤ ± (1 % + 0.05 Ω)
+5 % Tolerance ≤ ± (2 % + 0.05 Ω)
+Temperature Cycling
+Repeat 5 cycles as follows:
+-55 °C (30 min.) --> 25 °C (2-3 min.)--> 155 °C (30 min.)
+--> 25 °C (2~3 min.)
+1 % Tolerance ≤ ± (0.5 % + 0.05 Ω)
+5 % Tolerance ≤ ± (1 % + 0.05 Ω)
+Load Life 1.5 hours at rated voltage followed by a pause of 0.5 hour at 70 ± 2 °C;
+Cycle repeated for 1000 hours
+1 % Tolerance ≤ ± (1 % + 0.05 Ω)
+5 % Tolerance ≤ ± (3 % + 0.05 Ω)
+Load Life with Humidity
+40 ±2 °C with 90~95 % relative humidity;
+DC rated voltage for 1.5 hours “ON”, 0.5 hour “OFF”;
+Cycle repeated for 1000 hours
+1 % Tolerance ≤ ± (1 % + 0.05 Ω)
+5 % Tolerance ≤ ± (3 % + 0.05 Ω)
+Resistance to Solder
+Heat 260 ±5 °C for 10 ±1 seconds 1 % Tolerance ≤ ± (0.5 % + 0.05 Ω)
+5 % Tolerance ≤ ± (1 %) + 0.05 Ω
+Solderability After immersing flux, dip in 245 ±2 °C molten solder bath for 3 ± 0.5
+seconds
+At least 95 % of termination must be
+covered with solder..
+Board Flex Bending 2 mm 1 % Tolerance ≤ ± (0.5 % + 0.05 Ω)
+5 % Tolerance ≤ ± (1 % + 0.05 Ω)
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 5 ===
+CMP Series High Power Anti-Surge Chip Resistors
+Typical Part Marking
+±5 % (E24): 301
+CMP0603, CMP0805, CMP1206, CMP2010, CMP2512
+Resistance value is expressed by 3 digits. The first two digits represent the significant figures of the nominal
+resistance value in ohms; the third digit represents the exponent for a base of 10.
+Example: 301 = 30 x 101 = 300 ohms
+±1 % (E24/E96): 1542
+CMP0805, CMP1206, CMP2010, CMP2512
+Resistance value is expressed by 4 digits. The first three digits represent the significant figures of the nominal
+resistance value in ohms; the third digit represents the exponent for a base of 10.
+Example: 1542 = 154 x 102 = 15.4K ohms
+±1 % (E24): CMP0603
+Resistance value is expressed by 3 digits. The first two digits represent the significant figures of the nominal
+resistance value in ohms; the third digit represents the exponent for a base of 10.
+Example: 222 = 22 x 102 = 2.2K ohms
+±1 % (E96): CMP0603
+Resistance value is expressed by 2 digits followed by an alpha character multiplier. (Refer to marking table below.)
+Example: 01B = 100 x 101 = 1K ohms
+222
+01B
+This table shows the first two digits
+for the three-digit E96 part marking
+scheme. The third character is a letter
+multiplier:
+A=100
+B=101
+C=102
+D=103
+E=104
+F=105
+G=106
+H=107
+X=10-1
+Y=10-2
+Z=10-3
+Code 01 02 03 04 05 06 07 08 09 10 11 12 R Value 100 102 105 107 110 113 115 118 121 124 127 130 Code R Value 21 162 22 165 23 169 24 174 13 14 15 16 17 18 19 20 133 137 140 143 147 150 154 158 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 178 182 187 191 196 200 205 210 215 221 226 232 237 243 249 255 Code 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 R Value 261 267 274 280 287 294 301 309 316 324 332 340 348 357 365 374 383 392 402 412 Code 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 R Value 422 432 442 453 464 475 487 499 511 523 536 549 562 576 590 604 619
+634
+649
+665
+Code 81 82 83 84 85 86 87 88 89 90 91 92 93 94 95 96 R Value
+681
+698
+715
+732
+750
+768
+787
+806
+825
+845
+866
+887
+909
+931
+953
+976
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 6 ===
+CMP Series High Power Anti-Surge Chip Resistors
+Packaging Dimensions (Conforms to EIA RS-481A)
+14.9
+4.00 ± 0.10
+2.00 ± 0.05
+1.75 ± 0.10
+CMP0603, CMP0805, CMP1206:
+CMP2010, CMP2512:
+2.0 ± 0.5
+(.587)
+MAX.
+16.7
+(.657)
+MAX.
+(.079 ± .002)
+(.157 ± .004)
+DIA.
+1.50 +0.10/-0
+(.059 +.004/-0)
+(.069 ± .004)
+(.079 ± .020)
+13.0 ± 0.5
+W
+(.512 ± .020)
+60.0 ± 0.5
+(2.36 ± .020)
+F
+B
+A 4.00 ± 0.10
+(.157 ± .004)
+20
+MIN.
+(.787)
+178.0 ± 2.0
+(7.008 ± .080)
+10.0 ± 1.5
+CMP0603, CMP0805, CMP1206:
+CMP2010, CMP2512:
+(.394 ± .059)
+13.8 ± 1.5
+(.543 ± .059)
+Model Tape Type Pieces per
+Reel A B W F
+1.10 ± 0.20
+1.90 ± 0.20
+CMP0603
+(.043 ± .008)
+(.075 ± .008)
+CMP0805 Paper 5,000
+1.65 ± 0.20
+(.065 ± .008)
+2.40 ± 0.20
+8.00 ± 0.30
+3.50 ± 0.05
+(.094 ± .008)
+(.315 ± .012)
+(.138 ± .020)
+CMP1206 2.00 ± 0.20
+(.079 ± .008)
+3.60 ± 0.20
+(.142 ± .008)
+2.80 ± 0.20
+5.50 ± 0.20
+CMP2010
+(.110 ± .008)
+(.216 ± .008) 12.00 ± 0.30
+5.50 ± 0.05
+Plastic 4,000
+CMP2512 3.50 ± 0.20
+(.138 ± .008)
+DIMENSIONS: MM
+(INCHES)
+6.70 ± 0.20
+(.472 ± .012)
+(.217 ± .020)
+(.264 ± .008)
+REV. 05/26/20
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 7 ===
+Legal Disclaimer Notice
+This legal disclaimer applies to purchasers and users of Bourns® products manufactured by or on behalf of Bourns, Inc. and its affiliates (collectively,
+“Bourns”).
+Unless otherwise expressly indicated in writing, Bourns® products and data sheets relating thereto are subject to change without notice. Users should check
+for and obtain the latest relevant information and verify that such information is current and complete before placing orders for Bourns® products.
+The characteristics and parameters of a Bourns® product set forth in its data sheet are based on laboratory conditions, and statements regarding the
+suitability of products for certain “typical” applications are based on Bourns’ knowledge of typical requirements in generic applications. Bourns assumes
+that “typical” applications include failsafe/backup features to address critical risks to users and are designed to allow rework of Bourns® product to
+avoid scrap of a device solely due to malfunctioning Bourns® product. The characteristics and parameters of a Bourns® product in a user application
+may vary from the data sheet characteristics and parameters due to (i) the combination of the Bourns® product with other components in the user’s
+application, or (ii) the environment of the user application itself. The characteristics and parameters of a Bourns® product also can and do vary in
+different applications and actual performance may vary over time. Thus, users should always verify the actual performance of the Bourns® product in
+their specific devices and applications and make their own independent judgments regarding the suitability of Bourns® product and the amount of
+additional test margin to design into their device or application to compensate for differences between laboratory and real-world conditions.
+Unless Bourns has explicitly designated an individual Bourns® product as meeting the requirements of a particular industry standard (e.g., IATF
+16949) or a particular qualification (e.g., UL listed or recognized), Bourns is not responsible for any failure of an individual Bourns® product to meet
+the requirements of such industry standard or particular qualification even if such industry standard or qualification is a “state of art”. Users of Bourns®
+products are responsible for ensuring compliance with safety-related requirements and standards applicable to their devices or applications.
+Bourns® products are not recommended, authorized or intended for use in applications where failure or malfunction may result in personal injury,
+death, or severe property or environmental damage, such as without limitation nuclear, life-critical medical and certain automotive and aviation
+applications. Except as set forth in the bullet points below or unless expressly and specifically approved in writing on a case-by-case basis by an
+authorized Bourns’ representative, use of any Bourns® products in such unauthorized high-risk applications is at the user’s sole risk.
+•
+Bourns considers implantable/invasive devices and devices/procedures designed as life-supporting or life-sustaining by the U.S. Food and Drug
+Administration or equivalent organizations outside of the United States as “life-critical” medical applications. Bourns expressly identifies those
+Bourns® standard products that are suitable for use in typical medical applications that are not life-critical in its publication entitled “Bourns
+Medical Grade Component Guide.”
+•
+•
+•
+Bourns expressly identifies those Bourns® standard products that are suitable for use in typical automotive applications associated with any
+Automate Safety Integrity Level (ASIL) in its publication entitled “Bourns Automotive Grade Component Guide.” Bourns’ designation of Bourns®
+product as compliant with the AEC-Q standard does not by itself mean that Bourns has approved such product for use in an automotive
+application.
+Bourns expressly identifies Bourns® standard products that are suitable for use in the typical aviation applications/systems requiring System
+Design Assurance Level (RTCA DO-254 DAL) of C, D or E in its publication entitled “Bourns Civilian Aerospace/Aviation Grade Component Guide.”
+Bourns does not test its products for compliance with United States Federal Aviation Administration standards or any other generally equivalent
+governmental organization standard applicable to products designed or manufactured for use in aviation applications. Use of Bourns® standard
+components in aviation applications associated with RTCA DO-254 DAL A or B without proper approval noted above shall be at the user’s sole
+risk.
+Bourns will review and authorize on a case-by-case basis the use of Bourns® standard products which are at least AEC-Q compliant in space-
+related civil applications (rockets, satellites) with a negotiated cross-waiver and indemnity agreement.
+The use and level of testing applicable to Bourns® custom products shall be negotiated on a case-by-case basis by Bourns and the user for which such
+Bourns® custom products are specially designed. Absent a written agreement between Bourns and the user regarding the use and level of such testing,
+the above provisions applicable to Bourns® standard products shall also apply to such Bourns® custom products.
+Use of Bourns® products or Bourns’ technology in military/defense applications must be reviewed with Bourns for compliance with applicable export
+control laws and embargoes. Users shall not sell, transfer, export or re-export (which includes transfers within a country) any Bourns® products or
+technology or technical data for use in activities which involve the design, development, production, use or stockpiling of nuclear, chemical or
+biological weapons or missiles, nor shall they use Bourns® products or technology or technical data in any facility which engages in activities relating
+to such devices. Further, Bourns® products and Bourns’ technology and technical data may not under any circumstance be exported or re-exported to
+countries subject to international sanctions or embargoes. Bourns® products and technology may not, without prior authorization from Bourns and/or
+the Government of a country where such product/technology is designed and/or manufactured, be resold, transferred, or re-exported (including within
+the same country) to any party not eligible to receive commodities, software, and technical data originating in such country.
+To the maximum extent permitted by applicable law, Bourns disclaims (i) any and all liability for special, punitive, consequential, incidental or indirect
+damages or lost revenues or lost profits, and (ii) any and all implied warranties (those not based on parameters specified in Bourns’ data sheets and/or
+specifications), including implied warranties of fitness for particular purpose, non-infringement and merchantability.
+For your convenience, copies of this Legal Disclaimer Notice with German, Spanish, Japanese, Traditional Chinese and Simplified Chinese bilingual versions are
+available at:
+Web Page: https://www.bourns.com/legal/disclaimers-terms-and-policies
+PDF: https://www.bourns.com/docs/Legal/disclaimer.pdf
+K2540 05/26R

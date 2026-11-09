@@ -43,12 +43,12 @@ A 100 × 70 mm board with copper on the **component side only**, designed for ch
 | --- | --- | --- | --- |
 | A1 | Raspberry Pi Pico, Raspberry Pi **SC0915** (Pico, Pico W, Pico 2, Pico 2 W; the castellated pads must be free, so **no** H version with headers fitted) | 1 | Surface-soldered on its castellated edge pads. There are no sockets: a failed Pico must be desoldered from the surface |
 | A2 | Adafruit MPR121 12-key capacitive touch breakout, Adafruit **1982** | 1 | Original or STEMMA QT: both work (section 5). Use the male headers supplied with it |
-| R1–R12 | Pulse-rated chip resistor 3.0 kΩ ±5 %, 2512, TT Electronics **HPWC2512-3K0JT18** (part number built from the datasheet pattern; stock and price not confirmed) | 12 | One in series with each electrode. Do not substitute an ordinary 2512: this part is chosen for its pulse rating and for its 4.4 mm gap between terminations |
-| R13, R14 | Resistor 4.7 kΩ 1 %, 1206, thick film | 2 | I²C pull-ups (SCL, SDA) |
-| R15, R16 | Resistor 220 Ω 1 %, 1206, thick film | 2 | In series in SCL (R15) and SDA (R16), on the Pico side; they limit the current if a configuration wire goes to the wrong pad |
-| C1 | Ceramic capacitor 100 nF 50 V X7R, 1206, e.g. KEMET C1206C104K5RACTU (datasheet not opened) | 1 | Potentiometer wiper to AGND, near the Pico |
-| SW1 | Tactile switch, Omron **B3S-1000** (6 × 6 mm, SMD) | 1 | Height 4.3 mm |
-| RV1 | 10 kΩ linear potentiometer (B10K) off-board, connected by 3 wires, with an **insulated (plastic) shaft and insulating knob** | 1 | Mount it in your enclosure. See [Electrical safety](#electrical-safety): a metal shaft is not protected. Keep the wires as short as your enclosure allows |
+| R1–R12 | Pulse-rated chip resistor 3.0 kΩ ±5 %, 2512, TT Electronics **HPWC2512-3K0JT18** (part number built from the datasheet pattern; no offer found at LCSC or in the Mouser search on 2026-11-09, replacement is an open decision, T-094) | 12 | One in series with each electrode. Do not substitute an ordinary 2512: this part is chosen for its pulse rating and for its 4.4 mm gap between terminations |
+| R13, R14 | Resistor 4.7 kΩ 1 %, 1206, thick film, FOJAN **FRC1206F4701TS** (LCSC C2907387, sold in 100s) | 2 | I²C pull-ups (SCL, SDA) |
+| R15, R16 | Resistor 220 Ω 1 %, 1206, thick film, FOJAN **FRC1206F2200TS** (LCSC C2933642, sold in 100s) | 2 | In series in SCL (R15) and SDA (R16), on the Pico side; they limit the current if a configuration wire goes to the wrong pad |
+| C1 | Ceramic capacitor 100 nF 50 V X7R, 1206, Samsung **CL31B104KBCNNNC** (LCSC C24497, sold in 20s) | 1 | Potentiometer wiper to AGND, near the Pico |
+| SW1 | Tactile switch, Omron **B3S-1000** (6 × 6 mm, SMD; LCSC C2733655, sold in 5s) | 1 | Height 4.3 mm |
+| RV1 | 10 kΩ linear potentiometer (B10K) off-board, Alps **RK09D1130C2P** (LCSC C361173; insulated flat shaft, 25 mm, taper 1B, Alps product page), connected by 3 wires, with an **insulated (plastic) shaft and insulating knob**. No knob in stock at LCSC on 2026-11-09; buy one that fits a flat shaft | 1 | Mount it in your enclosure. See [Electrical safety](#electrical-safety): a metal shaft is not protected. Keep the wires as short as your enclosure allows |
 | JP1 | Solder bridge on 3 surface pads (no part) | — | Bridged with a short tinned wire off-cut, see section 5 |
 | — | Thin insulated solid wire (from network cable, for example) | ~10 cm | The 2 configuration wires (SDA, SCL) |
 | — | Electrode wire, insulated, 0.25–0.5 mm² | 12 + GND | Soldered to the J2 pads, then strain-relieved with hot-melt glue |
