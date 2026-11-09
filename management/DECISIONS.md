@@ -124,3 +124,12 @@
 - F2-006 fixed: pcb_rules_check enforces the Ex ↔ GND spark gap 1.40 ± 0.05 mm (12/12 at 1.400 mm, MEASUREMENT on design file; mutation tests fail at 0.650 and −0.100 mm).
 - INTERFACES frozen-7 frozen by manager (documentation-only change: C1 drill/ring, spark-gap rule note, AGND ESD note).
 - No further independent re-review: changes are a drill size, wording and a new check, all reproduced by the manager (ERC 0, DRC 0/0/0, checks 85/85, 20/20, budgets 25/5).
+
+## ADR-023 — SMD conversion for home chemical etching (CR-003), 2026-11-09
+User decisions from the T-090 feasibility study (reports/electronics/smd_feasibility.md):
+- D-1 R1-R12: one TT Electronics HPWC2512 3k0 ±5 % per channel. 4 kV rating margin 1.24 and conductor gap margin 1.34 (CALCULATION from SOURCE chart and dimensions); 8 kV stays FAIL (R-006). 3k3 rejected: at +5 % the worst-choice sensitivity is 0.899, below the 0.90 limit of ADR-019 (CALCULATION). MPN, stock and price not confirmed.
+- D-2 RV1: off-board potentiometer on 3 wire pads. R-011 must be re-derived.
+- D-3 J2: solder-wire pads with hot-melt strain relief. WAGO 2060 rejected.
+- D-4 Holes: 4 M3 mounting holes stay; every other hole goes (133 to 4, MEASUREMENT for 133, design intent for 4).
+- Manager: A1 surface-soldered on castellations with an etched bare-copper keep-out; A2 pins butted on surface pads; SW1 Omron B3S-1000; R13-R16 and C1 in 1206; JP1 SMD 3-pad bridge; J1 stays as two insulated wire links on surface pads. Bare MPR121 rejected (0.40 mm pitch against the 0.6 mm clearance rule, SOURCE and REQ-029). Loss of socket rework accepted as a consequence of the user's request.
+- Single layer without new wire bridges is an estimate only until layout (T-091).

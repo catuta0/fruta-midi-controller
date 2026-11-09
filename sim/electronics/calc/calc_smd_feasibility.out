@@ -1,0 +1,78 @@
+# calc_smd_feasibility.py  CALCULATION (T-090, CR-003)
+# V1.2 rule: >= 3.5 mm at 4 kV; required gap below = worst of M4 eta=0.3 and IEC 60664-1 F.2 case A at the voltage across that gap
+
+== 1. Electrode resistor options ==
+option                              R_tot   N  rate/pt  V/pt@4k   m_v@4k   m_v@8k     gap  req@4k  m_g@4k  req@8k  m_g@8k
+V1.2 MBE0414 3k3 (caps worst .25)    3300   1     4083     3636     1.12     0.56    3.61    3.33    1.08    7.46    0.48
+A HPWC2512 3k0 5 %                   3000   1     4472     3604     1.24     0.62    4.40    3.29    1.34    7.38    0.60
+A' HPWC2512 3k3 5 %                  3300   1     4596     3636     1.26     0.63    4.40    3.33    1.32    7.46    0.59
+B HPWC2010 3k3 5 %                   3300   1     3797     3636     1.04     0.52    3.00    3.33    0.90    7.46    0.40
+C HPWC1206 3k3 5 %                   3300   1     1722     3636     0.47     0.24    1.70    3.33    0.51    7.46    0.23
+D MMB0207 3k3 1 %                    3300   1     1736     3636     0.48     0.24    3.20    3.33    0.96    7.46    0.43
+E CMB0207 3k3 1 %                    3300   1     5175     3636     1.42     0.71    3.20    3.33    0.96    7.46    0.43
+E' CMB0207 3k0 1 %                   3000   1     4991     3604     1.39     0.69    3.20    3.29    0.97    7.38    0.43
+F 2x CMB0207 1k65 1 %                3300   2     3689     1818     2.03     1.01    3.20    1.42    2.25    3.33    0.96
+G 2x HPWC2512 1k6 5 %                3200   2     3547     1813     1.96     0.98    4.40    1.42    3.10    3.32    1.33
+H 3x MMB0207 1k1 1 %                 3300   3     1008     1212     0.83     0.42    3.20    0.84    3.80    2.04    1.57
+I 3x HPWC1206 1k1 5 %                3300   3     1025     1212     0.85     0.42    1.70    0.84    2.02    2.04    0.83
+# columns: rate/pt V chart rating per part; V/pt V across one part; m_v rating margin; gap mm conductor gap per part;
+# req mm required per-gap; m_g gap margin. margin >= 1.0 meets the criterion. Equal sharing assumed for N > 1 (see report).
+
+Rule 3.5 mm: V1.2 caps  PASS (3.61 mm, +-0.25 mm placement, ASSUMPTION cap length); +-0.5 mm 3.13 mm FAIL
+Rule 3.5 mm: 2512 B min 4.4 mm PASS; 2010 B min 3.0 mm FAIL; 1206 B min 1.7 mm FAIL; MELF 0207 L1 min 3.2 mm FAIL
+Rule 3.5 mm, 2x series: per-gap requirement at 4 kV (V/2) is below 3.2 and 4.4 mm -> PASS for both (see table)
+
+== 2. Land patterns (copper gap G, pad length along axis Y, pad width X, overall Z, mm) ==
+  2512 HPWC, hand solder (proposed)          G 5.00  Y 1.90  X 3.35  Z 8.80  ; adjacent lane gap at 5.08 mm pitch 1.73 mm
+  CMB 0207 MELF (IPC G 3.2 widened to 3.6)   G 3.60  Y 2.20  X 2.40  Z 8.00  ; adjacent lane gap at 5.08 mm pitch 2.68 mm
+  1206 (Vishay 28950 IPC)                    G 1.75  Y 1.15  X 1.80  Z 4.05  ; adjacent lane gap at 5.08 mm pitch 3.28 mm
+  2512 termination spans L/2 - A .. L/2 from centre: inner 2.20 .. 3.10 mm, outer 3.10 .. 3.40 mm (L 6.2..6.8, A 0.3..0.9); pad spans 2.50 .. 4.40 mm: every termination lands on the pad; conductor gap is set by B min 4.4 mm, not by the 5.0 mm copper gap
+  rule (b) Ex <-> ELEy diagonal, 2512 lanes at 5.08 mm: sqrt(1.73^2 + 5.00^2) = 5.29 mm vs 3.5 mm
+  2 x 2512 in line: Z = 1.9 + 5.0 + 3.0 + 5.0 + 1.9 = 16.8 mm
+
+== 3. Pico land (datasheet Figure 5) ==
+  pad width 1.6 mm (R0.8), pad length (22.58 - 16.18) / 2 = 3.20 mm, pitch 2.54 mm
+  pad-to-pad gap = 0.94 mm vs 0.6 mm rule: PASS
+  track between adjacent pads needs 1.0 + 2 x 0.6 = 2.2 mm, available 0.94 mm: not possible
+  datasheet pad overhang beyond module edge 0.79 mm; proposed hand-solder land length 4.2 mm, overhang 1.79 mm
+  interior width between pad rows 16.18 mm, usable 14.98 mm, 1.0 mm signal tracks fitting (track + clearance) = 9
+  Exposed underside features in V1.2 board coordinates (x = 2.89 + x_d, y = 51.63 - y_d), keep-out square side = pad + 2 x 0.6 mm:
+    TP1 GND (KiCad name)       datasheet (10.500, 46.500) -> board (13.390, 5.130), size 1.50 x 1.50
+    TP2 USB DM (KiCad name)    datasheet (11.500, 49.800) -> board (14.390, 1.830), size 1.50 x 1.50
+    TP3 USB DP (KiCad name)    datasheet (9.500, 49.800) -> board (12.390, 1.830), size 1.50 x 1.50
+    TP4 GPIO23 (KiCad name)    datasheet (8.000, 43.000) -> board (10.890, 8.630), size 1.50 x 1.50
+    TP5 GPIO25 (KiCad name)    datasheet (8.000, 40.500) -> board (10.890, 11.130), size 1.50 x 1.50
+    TP6 BOOTSEL (KiCad name)   datasheet (8.000, 38.000) -> board (10.890, 13.630), size 1.50 x 1.50
+    A USB shell                datasheet (7.775, 49.500) -> board (10.665, 2.130), size 1.10 x 1.80
+    B USB shell                datasheet (13.225, 49.500) -> board (16.115, 2.130), size 1.10 x 1.80
+    C USB shell                datasheet (8.075, 46.470) -> board (10.965, 5.160), size 1.05 x 1.45
+    D USB shell                datasheet (12.925, 46.470) -> board (15.815, 5.160), size 1.05 x 1.45
+  union keep-out rectangle: x 9.52 .. 17.27, y 0.48 .. 14.98 (width 7.75, height 14.50 mm)
+  interior between pad rows on board: x 5.30 .. 21.48; left channel beside keep-out 3.61 mm, right channel 3.61 mm (minus 0.6 clearance to the pads)
+  USB shell front at y = 2.0 - 1.37 - 1.3 = -0.67 mm (board edge y = 0): overhangs the board edge by 0.67 mm, plug cannot foul the board
+  outer pad edge to board edge: datasheet land 2.10 mm; proposed land 1.10 mm
+  Pry: F = 10 N upward on the USB plug, lever 52 mm about the far pad row, rigid module, 40 pads: first pad 0.75 N vs peel 1.05 N/mm x 1.6 mm = 1.68 N (margin 2.25)
+  Pry: F = 30 N upward on the USB plug, lever 52 mm about the far pad row, rigid module, 40 pads: first pad 2.24 N vs peel 1.05 N/mm x 1.6 mm = 1.68 N (margin 0.75)
+  Pry: F = 10 N upward on the USB plug, lever 52 mm about the far pad row, rigid module, 40 pads: first pad 0.75 N vs peel 0.80 N/mm x 1.6 mm = 1.28 N (margin 1.72)
+  Pry: F = 30 N upward on the USB plug, lever 52 mm about the far pad row, rigid module, 40 pads: first pad 2.24 N vs peel 0.80 N/mm x 1.6 mm = 1.28 N (margin 0.57)
+
+== 4. Module A2 mechanical ==
+  Pry F = 5 N at the module end, lever 23.2 mm, 13-row joints: 0.587 N per joint vs peel 1.05 N/mm x 1.8 mm = 1.89 N (margin 3.2)
+  Pry F = 5 N at the module end, lever 23.2 mm, 13-row joints: 0.587 N per joint vs peel 0.80 N/mm x 1.8 mm = 1.44 N (margin 2.5)
+  Butt joint gross area: pin 0.64 x 0.64 mm (ASSUMPTION, common 2.54 mm header) = 0.41 mm2 x 20 = 8.2 mm2; side fillet adds lap area
+
+== 5. Bare MPR121 versus home-etch rules ==
+  QFN-20 3 x 3 mm: terminal width 0.20, pitch 0.40 (SOURCE) -> gap between terminals 0.20 mm vs 0.6 mm rule (ratio 0.33); pitch alone is below the 0.6 mm clearance
+
+== 6. Hole count ==
+  V1.2: 133 drilled holes (MEASUREMENT, CR-003 frutamidi.drl). Proposal: 4 M3 holes -> 97.0 % fewer
+
+== 7. Other values ==
+  C1: V working 3.3 V on 50 V rated -> 6.6 % of rating
+  R +5 % on 3k3 = 3465 ohm; sensitivity interpolated between 3.3k 0.904 and 4.7k 0.887 (typical column, analysis.md) = 0.902
+  3k0 5 % range: 2850 .. 3150 ohm, inside the 2.7..3.3 kOhm design rule; V_R 4 kV = 3604 V
+  ESD energy into R at 4 kV (3k0): 1.08 mJ
+  Peak current with arc around R: 4 kV/330 = 12.1 A; through 3k0: 1.20 A
+  B3S pad gap on same side (4.5 - 1.3) = 3.2 mm; across pads = 6.4 mm
+  Worst-choice sensitivity at 3465 ohm, interpolated between 3.3k 0.904 and 4.7k 0.861 = 0.899
+  Peak current through 2850 ohm at 4 kV: 1.26 A; margin against the 1.33 A inferred pin limit 1.06; V1.2 3k3: 1.10 A, margin 1.21

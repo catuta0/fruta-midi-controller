@@ -18,3 +18,4 @@ sim/systems/datasheets/*.pdf
 !reports/**/build/
 !releases/**/*.uf2
 !releases/**/*.hex
+reports/electronics/evidence/T-090/datasheets/
