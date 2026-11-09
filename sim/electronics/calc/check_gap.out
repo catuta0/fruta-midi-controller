@@ -1,76 +1,72 @@
 # check_gap.py  MEASUREMENT on the design file hardware/frutamidi.kicad_pcb (KiCad 10.0.4)
 # rule (calc_flashover.out): 4 kV 3.5 mm, 8 kV 7.5 mm; coordinates relative to the board corner
-# copper = B.Cu pads and tracks (MEASUREMENT); caps/screws = CALCULATION with the ASSUMPTIONS in the header
-  channel E0   ELE0  <-> E0  copper gap  13.04 mm
-  channel E1   ELE1  <-> E1  copper gap  13.04 mm
-  channel E2   ELE2  <-> E2  copper gap  13.04 mm
-  channel E3   ELE3  <-> E3  copper gap  13.04 mm
-  channel E4   ELE4  <-> E4  copper gap  13.04 mm
-  channel E5   ELE5  <-> E5  copper gap  13.04 mm
-  channel E6   ELE6  <-> E6  copper gap  13.04 mm
-  channel E7   ELE7  <-> E7  copper gap  13.04 mm
-  channel E8   ELE8  <-> E8  copper gap  13.04 mm
-  channel E9   ELE9  <-> E9  copper gap  13.04 mm
-  channel E10  ELE10 <-> E10 copper gap  13.04 mm
-  channel E11  ELE11 <-> E11 copper gap  13.04 mm
+# copper = F.Cu pads and tracks (MEASUREMENT); terminations/screws = CALCULATION with the ASSUMPTIONS in the header
+# W_MAX = 3.4 mm (SOURCE TT HPWC 09.23: W 3.2 +- 0.2 mm)
+  channel E0   ELE0  <-> E0  copper gap   5.00 mm
+  channel E1   ELE1  <-> E1  copper gap   5.00 mm
+  channel E2   ELE2  <-> E2  copper gap   5.00 mm
+  channel E3   ELE3  <-> E3  copper gap   5.00 mm
+  channel E4   ELE4  <-> E4  copper gap   5.00 mm
+  channel E5   ELE5  <-> E5  copper gap   5.00 mm
+  channel E6   ELE6  <-> E6  copper gap   5.00 mm
+  channel E7   ELE7  <-> E7  copper gap   5.00 mm
+  channel E8   ELE8  <-> E8  copper gap   5.00 mm
+  channel E9   ELE9  <-> E9  copper gap   5.00 mm
+  channel E10  ELE10 <-> E10 copper gap   5.00 mm
+  channel E11  ELE11 <-> E11 copper gap   5.00 mm
 
-(a) ELEx <-> Ex same channel, copper         min  13.04 mm   R1 pad 2 [/E0] <-> R1 pad 1 [/ELE0]
-(b) Ex <-> any MPR121/Pico net, copper       min  10.92 mm   R1 pad 2 [/E0] <-> A1 pad 21 [unconnected-(A1-GPIO16-Pad21)]
-(c) Ex <-> Ey copper (reported)              min   2.08 mm   J2 pad 2 [/E0] <-> J2 pad 3 [/E1]
+(a) ELEx <-> Ex same channel, copper         min   5.00 mm   R1 pad 2 [/E0] <-> R1 pad 1 [/ELE0]
+(b) Ex <-> any MPR121/Pico net, copper       min   5.29 mm   R1 pad 2 [/E0] <-> R2 pad 1 [/ELE1]
+(c) Ex <-> Ey copper (reported)              min   1.66 mm   R1 pad 2 [/E0] <-> track (37.16,57.17)-(37.16,63.75) [/E1]
 (c) Ex <-> GND copper (reported)             min   1.40 mm   J2 pad 2 [/E0] <-> track (27.00,68.00)-(93.04,68.00) [GND]
 
-(d) end caps of R1..R12 lying flat (top side), D = 4.2 mm, 12 resistors; gap in mm
-    L      Lc     delta       same-ch     cross-ch   worst cross-channel pair
-    11.0   1.5    0.00           8.00         8.05   R1 E-cap <-> R2 ELE-cap
-    11.0   1.5    0.25           8.00         7.55   R1 E-cap <-> R2 ELE-cap
-    11.0   1.5    0.50           8.00         7.06   R1 E-cap <-> R2 ELE-cap
-    11.0   2.0    0.00           7.00         7.06   R1 E-cap <-> R2 ELE-cap
-    11.0   2.0    0.25           7.00         6.56   R1 E-cap <-> R2 ELE-cap
-    11.0   2.0    0.50           7.00         6.06   R1 E-cap <-> R2 ELE-cap
-    11.0   2.5    0.00           6.00         6.06   R1 E-cap <-> R2 ELE-cap
-    11.0   2.5    0.25           6.00         5.57   R1 E-cap <-> R2 ELE-cap
-    11.0   2.5    0.50           6.00         5.08   R1 E-cap <-> R2 ELE-cap
-    11.0   3.0    0.00           5.00         5.08   R1 E-cap <-> R2 ELE-cap
-    11.0   3.0    0.25           5.00         4.59   R1 E-cap <-> R2 ELE-cap
-    11.0   3.0    0.50           5.00         4.10   R1 E-cap <-> R2 ELE-cap
-    11.0   3.5    0.00           4.00         4.10   R1 E-cap <-> R2 ELE-cap
-    11.0   3.5    0.25           4.00         3.61   R1 E-cap <-> R2 ELE-cap
-    11.0   3.5    0.50           4.00         3.13   R1 E-cap <-> R2 ELE-cap
-    11.9   1.5    0.00           8.90         8.94   R1 E-cap <-> R2 ELE-cap
-    11.9   1.5    0.25           8.90         8.45   R1 E-cap <-> R2 ELE-cap
-    11.9   1.5    0.50           8.90         7.95   R1 E-cap <-> R2 ELE-cap
-    11.9   2.0    0.00           7.90         7.95   R1 E-cap <-> R2 ELE-cap
-    11.9   2.0    0.25           7.90         7.45   R1 E-cap <-> R2 ELE-cap
-    11.9   2.0    0.50           7.90         6.96   R1 E-cap <-> R2 ELE-cap
-    11.9   2.5    0.00           6.90         6.96   R1 E-cap <-> R2 ELE-cap
-    11.9   2.5    0.25           6.90         6.46   R1 E-cap <-> R2 ELE-cap
-    11.9   2.5    0.50           6.90         5.97   R1 E-cap <-> R2 ELE-cap
-    11.9   3.0    0.00           5.90         5.97   R1 E-cap <-> R2 ELE-cap
-    11.9   3.0    0.25           5.90         5.47   R1 E-cap <-> R2 ELE-cap
-    11.9   3.0    0.50           5.90         4.98   R1 E-cap <-> R2 ELE-cap
-    11.9   3.5    0.00           4.90         4.98   R1 E-cap <-> R2 ELE-cap
-    11.9   3.5    0.25           4.90         4.49   R1 E-cap <-> R2 ELE-cap
-    11.9   3.5    0.50           4.90         4.00   R1 E-cap <-> R2 ELE-cap
+(d) terminations of R1..R12 (HPWC2512, W 3.4 mm, 12 resistors); gap in mm
+    L      A      delta       same-ch     cross-ch   worst cross-channel pair
+    6.2    0.3    0.00           5.60         5.85   R1 E-term <-> R2 ELE-term
+    6.2    0.3    0.25           5.60         5.37   R1 E-term <-> R2 ELE-term
+    6.2    0.3    0.50           5.60         4.90   R1 E-term <-> R2 ELE-term
+    6.2    0.9    0.00           4.40         4.71   R1 E-term <-> R2 ELE-term
+    6.2    0.9    0.25           4.40         4.25   R1 E-term <-> R2 ELE-term
+    6.2    0.9    0.50           4.40         3.79   R1 E-term <-> R2 ELE-term
+    6.8    0.3    0.00           6.20         6.42   R1 E-term <-> R2 ELE-term
+    6.8    0.3    0.25           6.20         5.94   R1 E-term <-> R2 ELE-term
+    6.8    0.3    0.50           6.20         5.46   R1 E-term <-> R2 ELE-term
+    6.8    0.9    0.00           5.00         5.27   R1 E-term <-> R2 ELE-term
+    6.8    0.9    0.25           5.00         4.80   R1 E-term <-> R2 ELE-term
+    6.8    0.9    0.50           5.00         4.34   R1 E-term <-> R2 ELE-term
 
 (e) floating metal at H1..H4 (radius 2.8 / 3.5 mm): bypass ELEx -> metal -> Ex = sum of the two gaps, worst channel
-    r 2.8 H1  at (8.00,64.00): top  47.59 mm (R1 caps: ELE 25.55 + E 22.04); bottom 159.59 mm (ELE0 76.54 + E0 83.05)
-    r 2.8 H2  at (95.00,5.00): top  80.76 mm (R12 caps: ELE 36.64 + E 44.11); bottom 165.77 mm (ELE1 67.07 + E1 98.70)
-    r 2.8 H3  at (96.00,38.00): top  16.76 mm (R12 caps: ELE 5.02 + E 11.74); bottom  99.98 mm (ELE2 34.44 + E2 65.54)
-    r 2.8 H4  at (88.50,30.50): top  29.44 mm (R12 caps: ELE 10.97 + E 18.47); bottom 115.42 mm (ELE0 42.26 + E0 73.16)
-    r 3.5 H1  at (8.00,64.00): top  46.19 mm (R1 caps: ELE 24.85 + E 21.34); bottom 158.19 mm (ELE0 75.84 + E0 82.35)
-    r 3.5 H2  at (95.00,5.00): top  79.36 mm (R12 caps: ELE 35.94 + E 43.41); bottom 164.37 mm (ELE1 66.37 + E1 98.00)
-    r 3.5 H3  at (96.00,38.00): top  15.36 mm (R12 caps: ELE 4.32 + E 11.04); bottom  98.58 mm (ELE2 33.74 + E2 64.84)
-    r 3.5 H4  at (88.50,30.50): top  28.04 mm (R12 caps: ELE 10.27 + E 17.77); bottom 114.02 mm (ELE0 41.56 + E0 72.46)
+    r 2.8 H1  at (8.00,64.00): copper side  44.34 mm (ELE0 24.56 + E0 19.78)
+    r 2.8 H2  at (95.00,5.00): copper side  71.48 mm (ELE11 24.46 + E11 47.02)
+    r 2.8 H3  at (96.00,38.00): copper side  19.10 mm (ELE11 4.50 + E11 14.61)
+    r 2.8 H4  at (88.50,30.50): copper side  25.57 mm (ELE11 4.22 + E11 21.35)
+    r 3.5 H1  at (8.00,64.00): copper side  42.94 mm (ELE0 23.86 + E0 19.08)
+    r 3.5 H2  at (95.00,5.00): copper side  70.08 mm (ELE11 23.76 + E11 46.32)
+    r 3.5 H3  at (96.00,38.00): copper side  17.71 mm (ELE11 3.80 + E11 13.91)
+    r 3.5 H4  at (88.50,30.50): copper side  24.17 mm (ELE11 3.52 + E11 20.65)
 
-PASS (a) copper gap 13.04 mm vs rule 3.5 mm (4 kV)
-PASS (a) copper gap 13.04 mm vs rule 7.5 mm (8 kV)
-PASS (b) copper gap 10.92 mm vs rule 3.5 mm (4 kV)
-PASS (b) copper gap 10.92 mm vs rule 7.5 mm (8 kV)
-PASS (d) caps worst 4.00 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.00 mm, L 11.0-11.9, Lc 1.5-3.5 mm]
-PASS (d) caps worst 3.61 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.25 mm, L 11.0-11.9, Lc 1.5-3.5 mm]
-FAIL (d) caps worst 3.13 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.50 mm, L 11.0-11.9, Lc 1.5-3.5 mm]
-    (d) 4 kV rule met at every swept L and placement error: for Lc <= 3.0 mm
-    (d) 8 kV rule met at every swept L and placement error: for none of the swept Lc
-PASS (e) floating-metal bypass worst 15.36 mm vs rule 3.5 mm (4 kV); PASS vs 7.5 mm (8 kV)
-SUMMARY: copper PASS (4 kV rule, (a) and (b)); end caps PARTIAL at 4 kV over the swept ASSUMPTIONS; mounting metal PASS
-SUMMARY 8 kV: copper PASS; end caps FAIL (worst 3.13 mm vs 7.5 mm)
+(f) ADR-020 spark gap: electrode J2 pad <-> nearest GND copper (should be the edge track at y = 68.0)
+    E0    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E1    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E2    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E3    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E4    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E5    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E6    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E7    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E8    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E9    to edge track 1.401 mm; to any GND copper 1.401 mm
+    E10   to edge track 1.401 mm; to any GND copper 1.401 mm
+    E11   to edge track 1.401 mm; to any GND copper 1.401 mm
+
+PASS (a) copper gap 5.00 mm vs rule 3.5 mm (4 kV)
+FAIL (a) copper gap 5.00 mm vs rule 7.5 mm (8 kV)
+PASS (b) copper gap 5.29 mm vs rule 3.5 mm (4 kV)
+FAIL (b) copper gap 5.29 mm vs rule 7.5 mm (8 kV)
+PASS (d) terminations worst 4.40 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.00 mm]
+PASS (d) terminations worst 4.25 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.25 mm]
+PASS (d) terminations worst 3.79 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.50 mm]
+PASS (e) floating-metal bypass worst 17.71 mm vs rule 3.5 mm (4 kV); PASS vs 7.5 mm (8 kV)
+PASS (f) spark gap: 12 electrode pads, min 1.401 / max 1.401 mm vs 1.40 +/- 0.05 mm; nearest GND is the edge track
+SUMMARY: copper PASS (4 kV rule, (a) and (b)); terminations PASS at 4 kV over the swept ASSUMPTIONS; mounting metal PASS; spark gap PASS
+SUMMARY 8 kV: copper FAIL; terminations FAIL (worst 3.79 mm vs 7.5 mm)

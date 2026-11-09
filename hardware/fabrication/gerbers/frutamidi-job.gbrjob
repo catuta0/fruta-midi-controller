@@ -5,7 +5,7 @@
       "Application": "Pcbnew",
       "Version": "10.0.4"
     },
-    "CreationDate": "2026-11-08T01:09:36+00:00"
+    "CreationDate": "2026-11-09T13:13:00+00:00"
   },
   "GeneralSpecs": {
     "ProjectId": {
@@ -32,18 +32,13 @@
   ],
   "FilesAttributes": [
     {
-      "Path": "frutamidi-B_Cu.gbl",
-      "FileFunction": "Copper,L2,Bot",
+      "Path": "frutamidi-F_Cu.gtl",
+      "FileFunction": "Copper,L1,Top",
       "FilePolarity": "Positive"
     },
     {
-      "Path": "frutamidi-F_Silkscreen.gto",
-      "FileFunction": "Legend,Top",
-      "FilePolarity": "Positive"
-    },
-    {
-      "Path": "frutamidi-B_Mask.gbs",
-      "FileFunction": "SolderMask,Bot",
+      "Path": "frutamidi-F_Mask.gts",
+      "FileFunction": "SolderMask,Top",
       "FilePolarity": "Negative"
     },
     {

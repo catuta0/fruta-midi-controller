@@ -1,0 +1,232 @@
+(footprint "WirePads_1x03_P5.08mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "3 surface wire pads, 5.08 mm pitch, for an off-board potentiometer (pad 1 = 3V3, 2 = wiper, 3 = AGND)")
+	(property "Reference" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "3ee8e23b-eeac-4612-b6bd-7c8f95a3a078")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "7b248777-5631-4998-a67c-f85a6df8c2e2")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "e42fc116-a62f-4195-a285-55692cc2048f")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ffdd3b22-fd11-4159-8346-c71fcc5ffa8a")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.75 -1.75)
+		(end 1.75 -1.75)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "5a1cebd2-20a5-4250-a5fc-28f274698a57")
+	)
+	(fp_line
+		(start -1.75 11.91)
+		(end -1.75 -1.75)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "ed006a76-58dd-4773-9741-291f710a5b21")
+	)
+	(fp_line
+		(start 1.75 -1.75)
+		(end 1.75 11.91)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "62da3660-2555-4b5d-9e64-6c507c9529a1")
+	)
+	(fp_line
+		(start 1.75 11.91)
+		(end -1.75 11.91)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "b8d690e0-c63d-476f-ba5f-b10759649ca8")
+	)
+	(fp_line
+		(start -1.5 -1.5)
+		(end 1.5 -1.5)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "1c0054d0-6cc7-4f87-af94-b7bee4f6678f")
+	)
+	(fp_line
+		(start -1.5 1.5)
+		(end -1.5 -1.5)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "637b87aa-f4c3-4ede-bd59-b092de782429")
+	)
+	(fp_line
+		(start -1.5 3.58)
+		(end 1.5 3.58)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "bad04975-2374-4f9e-89c0-0e0976c4df81")
+	)
+	(fp_line
+		(start -1.5 6.58)
+		(end -1.5 3.58)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "0c28962e-faed-46eb-a05a-25853282d828")
+	)
+	(fp_line
+		(start -1.5 8.66)
+		(end 1.5 8.66)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "78cda432-47f1-44c8-9efc-da2070b8e241")
+	)
+	(fp_line
+		(start -1.5 11.66)
+		(end -1.5 8.66)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d3cffa8b-c6a0-41eb-b1ef-a8d47893d1ea")
+	)
+	(fp_line
+		(start 1.5 -1.5)
+		(end 1.5 1.5)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "2febdd3b-c680-4924-9a46-17898f4d978b")
+	)
+	(fp_line
+		(start 1.5 1.5)
+		(end -1.5 1.5)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "556cf436-5b84-4607-9b03-259f355183f4")
+	)
+	(fp_line
+		(start 1.5 3.58)
+		(end 1.5 6.58)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "2c9348bf-f694-40c6-93a6-f159f362c906")
+	)
+	(fp_line
+		(start 1.5 6.58)
+		(end -1.5 6.58)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "fd01e746-40ab-42de-bd76-28439d0a643d")
+	)
+	(fp_line
+		(start 1.5 8.66)
+		(end 1.5 11.66)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "f2e4f684-43a2-4fd7-aa1e-77ce2505e3e1")
+	)
+	(fp_line
+		(start 1.5 11.66)
+		(end -1.5 11.66)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "fbdc5f22-664c-4285-8839-2ba02f576cb4")
+	)
+	(pad "1" smd rect
+		(at 0 0)
+		(size 3 3)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "d450a5ef-f6fd-4514-97fd-20e213c0122f")
+	)
+	(pad "2" smd circle
+		(at 0 5.08)
+		(size 3 3)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "065d0410-effa-4f6e-9fc1-10c159ab310c")
+	)
+	(pad "3" smd circle
+		(at 0 10.16)
+		(size 3 3)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "a7a23a9b-cd0f-4c62-98a5-ac43e5f46807")
+	)
+	(embedded_fonts no)
+)
