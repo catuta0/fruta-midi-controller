@@ -1,0 +1,64 @@
+# sim_tvs_clamp.py  SIMULATION (model of sim_electrode.py). Worst-case ratio vs R=0 without clamp, C_ext 10..1000 pF
+clamp                                                R          10pF      20pF      50pF     100pF     200pF     500pF    1000pF   min   verdict
+none                                                 100       0.999     0.998     0.999     0.999     1.000     1.000     0.981   0.981 PASS
+none                                                 330       0.996     0.994     0.996     0.998     0.977     0.999     0.981   0.977 PASS
+none                                                 1000      0.966     0.981     0.970     0.972     0.974     0.979     0.962   0.962 PASS
+none                                                 3300      0.936     0.908     0.907     0.916     0.923     0.919     0.904   0.904 PASS
+Bourns CDSOD323-T05LC (1.0 pF typ, 5 uA max)         100       0.950     0.978     0.987     1.003     0.990     0.996     0.979   0.950 PASS
+Bourns CDSOD323-T05LC (1.0 pF typ, 5 uA max)         330       0.947     0.976     0.984     0.981     0.990     0.995     0.979   0.947 PASS
+Bourns CDSOD323-T05LC (1.0 pF typ, 5 uA max)         1000      0.938     0.970     0.959     0.976     0.966     0.976     0.960   0.938 PASS
+Bourns CDSOD323-T05LC (1.0 pF typ, 5 uA max)         3300      0.908     0.949     0.897     0.920     0.914     0.916     0.902   0.897 FAIL
+Nexperia PESD5V0U1BA (3.5 pF max, 100 nA max)        100       0.882     0.914     0.949     0.979     0.987     1.003     0.991   0.882 FAIL
+Nexperia PESD5V0U1BA (3.5 pF max, 100 nA max)        330       0.866     0.911     0.947     0.977     0.965     0.984     0.973   0.866 FAIL
+Nexperia PESD5V0U1BA (3.5 pF max, 100 nA max)        1000      0.857     0.906     0.922     0.953     0.962     0.965     0.954   0.857 FAIL
+Nexperia PESD5V0U1BA (3.5 pF max, 100 nA max)        3300      0.827     0.885     0.864     0.881     0.892     0.905     0.896   0.827 FAIL
+Nexperia PESD5V0S1BA (45 pF max, 100 nA max)         100       0.380     0.465     0.603     0.723     0.819     0.923     0.949   0.380 FAIL
+Nexperia PESD5V0S1BA (45 pF max, 100 nA max)         330       0.373     0.464     0.602     0.721     0.818     0.923     0.932   0.373 FAIL
+Nexperia PESD5V0S1BA (45 pF max, 100 nA max)         1000      0.370     0.449     0.586     0.720     0.801     0.890     0.914   0.370 FAIL
+Nexperia PESD5V0S1BA (45 pF max, 100 nA max)         3300      0.341     0.429     0.551     0.643     0.749     0.838     0.861   0.341 FAIL
+
+# Capacitance sweep at R = 3300 and R = 330 ohm, no leakage: largest C_d keeping the ratio >= 0.90
+  R 3300  C_d   0.0 pF: min ratio 0.904 PASS
+  R 3300  C_d   1.0 pF: min ratio 0.889 FAIL
+  R 3300  C_d   2.0 pF: min ratio 0.857 FAIL
+  R 3300  C_d   3.5 pF: min ratio 0.812 FAIL
+  R 3300  C_d   5.0 pF: min ratio 0.781 FAIL
+  R 3300  C_d  10.0 pF: min ratio 0.658 FAIL
+  R 3300  C_d  20.0 pF: min ratio 0.548 FAIL
+  R 3300  C_d  45.0 pF: min ratio 0.341 FAIL
+  R 3300  C_d 100.0 pF: min ratio 0.197 FAIL
+  -> R 3300 ohm: largest swept C_d with PASS = 0 pF
+  R 330   C_d   0.0 pF: min ratio 0.977 PASS
+  R 330   C_d   1.0 pF: min ratio 0.947 PASS
+  R 330   C_d   2.0 pF: min ratio 0.921 PASS
+  R 330   C_d   3.5 pF: min ratio 0.868 FAIL
+  R 330   C_d   5.0 pF: min ratio 0.836 FAIL
+  R 330   C_d  10.0 pF: min ratio 0.720 FAIL
+  R 330   C_d  20.0 pF: min ratio 0.581 FAIL
+  R 330   C_d  45.0 pF: min ratio 0.374 FAIL
+  R 330   C_d 100.0 pF: min ratio 0.214 FAIL
+  -> R 330 ohm: largest swept C_d with PASS = 2 pF
+
+# Leakage sweep at R = 3300 ohm, C_d = 0: largest I_leak keeping the ratio >= 0.90
+  I_leak     0 nA: min ratio 0.904 PASS
+  I_leak     5 nA: min ratio 0.904 PASS
+  I_leak   100 nA: min ratio 0.902 PASS
+  I_leak   300 nA: min ratio 0.898 FAIL
+  I_leak  1000 nA: min ratio 0.904 PASS
+  I_leak  3000 nA: min ratio 0.904 PASS
+  I_leak  5000 nA: min ratio 0.904 PASS
+  -> largest swept I_leak with PASS = 5000 nA (constant leakage only; a leakage that changes faster than the baseline filter is not covered)
+
+# Offset in counts from leakage at the nominal pair, R 3300 ohm, C_d 0 (CALCULATION on the model)
+  C_ext    10 pF CDC 31 uA CDT  2.0 us: I_leak     5 nA ->    0.1 counts (touch threshold 12)
+  C_ext    10 pF CDC 31 uA CDT  2.0 us: I_leak   100 nA ->    2.3 counts (touch threshold 12)
+  C_ext    10 pF CDC 31 uA CDT  2.0 us: I_leak  1000 nA ->   23.2 counts (touch threshold 12)
+  C_ext    10 pF CDC 31 uA CDT  2.0 us: I_leak  5000 nA ->  116.0 counts (touch threshold 12)
+  C_ext   100 pF CDC 63 uA CDT  4.0 us: I_leak     5 nA ->    0.1 counts (touch threshold 12)
+  C_ext   100 pF CDC 63 uA CDT  4.0 us: I_leak   100 nA ->    1.1 counts (touch threshold 12)
+  C_ext   100 pF CDC 63 uA CDT  4.0 us: I_leak  1000 nA ->   11.4 counts (touch threshold 12)
+  C_ext   100 pF CDC 63 uA CDT  4.0 us: I_leak  5000 nA ->   57.0 counts (touch threshold 12)
+  C_ext  1000 pF CDC 63 uA CDT 32.0 us: I_leak     5 nA ->    0.1 counts (touch threshold 12)
+  C_ext  1000 pF CDC 63 uA CDT 32.0 us: I_leak   100 nA ->    1.1 counts (touch threshold 12)
+  C_ext  1000 pF CDC 63 uA CDT 32.0 us: I_leak  1000 nA ->   10.8 counts (touch threshold 12)
+  C_ext  1000 pF CDC 63 uA CDT 32.0 us: I_leak  5000 nA ->   53.9 counts (touch threshold 12)

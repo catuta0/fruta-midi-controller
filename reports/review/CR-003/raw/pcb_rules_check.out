@@ -1,0 +1,28 @@
+PASS  REQ-027 tracks only on F.Cu :: 121 segments, layers ['F.Cu'], 0 arcs
+PASS  REQ-027 no copper object on B.Cu :: objects with (layer "B.Cu"): 0; copper pads on B.Cu or *.Cu: []
+PASS  REQ-027 no vias :: via objects: 0
+PASS  REQ-027 no copper pour (only rule areas) :: 2 zones: 2 keep-out rule areas, 0 copper zones
+PASS  REQ-027 every copper pad is surface-mount on F.Cu with no drill :: 127 copper pads; not smd on F.Cu: []; drilled: []
+PASS  REQ-027 every part on the copper side :: footprints not on F.Cu: []
+PASS  REQ-027 exactly 4 holes, all M3 NPTH on H1..H4 :: 4 drilled pads; NPTH ['H1', 'H2', 'H3', 'H4'] drill [3.2] mm
+PASS  REQ-027 drill file has the same 4 holes as the board :: tools [('1', '3.200')]; drill hits [(5.0, -65.0), (29.8, -4.0), (96.0, -4.0), (96.5, -58.0)]; board holes [(5.0, -65.0), (29.8, -4.0), (96.0, -4.0), (96.5, -58.0)]
+PASS  REQ-027 every multi-pad net is one F.Cu island (no extra wire bridge needed) :: 40 multi-pad nets; split: []; same-number pads joined inside the part only: ['SW1.1', 'SW1.2']
+PASS  REQ-027 wire links limited to the 2 I2C configuration links (J1 SCL/SDA to J3 S1..S7) :: J1 [('1', 'SCL'), ('2', 'SDA')]; J3 ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7']; connection footprints ['J1', 'J2', 'J3', 'JP1'] (J2 = electrode wires, JP1 = solder bridge)
+PASS  REQ-028 board outline 100 x 70 mm :: outline 100.000 x 70.000 mm (4 Edge.Cuts lines)
+PASS  REQ-029 track width >= 0.8 mm everywhere :: widths used [0.8, 1.0, 1.2] mm
+PASS  REQ-029 power tracks >= 1.2 mm :: power nets ['+3V3', '/S1', '/S7', 'GND']; below 1.2 mm: []
+PASS  REQ-029 signal tracks >= 1.0 mm except stubs <= 6.0 mm :: 5 segments below 1.0 mm, longest 5.08 mm, nets ['/S2', '/S3', '/S4', '/S5', '/S6']; too long: []
+PASS  REQ-029 copper clearance >= 0.6 mm between different nets (pads and tracks) :: minimum 0.720 mm between A1.21 [unconnected-(A1-GPIO16-Pad21)] and track#118 (77.00,95.60)-(77.00,113.75) w1.20 [GND] (etched text excluded, see DRC)
+PASS  REQ-029 copper >= 0.5 mm from the board edge (min_copper_edge_clearance, hardware/frutamidi.kicad_pro) :: minimum 1.100 mm at A1.1
+PASS  REQ-029 remaining holes: drill >= 0.8 mm, copper >= 0.5 mm from the hole edge (min_hole_clearance, frutamidi.kicad_pro) :: per hole (nearest copper): H2 4.76 mm to R14.1, H4 2.50 mm to track#3 (84.50,58.42)-(84.50,52.00) w1.20, H3 2.98 mm to J2.14, H1 12.34 mm to A1.20
+INFO  M3 metal head/washer overlap, nearest copper from hole centre minus radius (2.8, 3.5) mm: H2 head +3.56 / washer +2.86 mm, H4 head +1.30 / washer +0.60 mm, H3 head +1.78 / washer +1.08 mm, H1 head +11.14 / washer +10.44 mm
+PASS  REQ-029 every SMD land >= 1.0 mm in both directions :: smallest land 1.15 mm; below the rule: []
+PASS  REQ-029 land sizes match the v1.3 table (A1, A2, J1, J3, RV1, SW1, C1, R1..R16) :: 23 parts compared; mismatches: []
+PASS  REQ-029 no bare copper in the 2 Pico keep-out rule areas :: 2 keep-out polygons; copper inside: []
+PASS  ADR-026 R1-R12 on footprint R_2512_HomeEtch_G5.0mm :: R1..R12 not on it: []
+PASS  REQ-023 R1-R12 land gap >= 3.5 mm (4 kV rule) and = 5.0 mm (ADR-023) :: land gaps [5.0] mm
+PASS  ADR-021/ADR-023 JP1 is a 3-pad SMD bridge, pads 1.94 x 2.4 mm, pitch 3.81 mm, gap >= 1.8 mm :: SolderJumper_3_SMD_P3.81mm: types ['smd'], pitch [3.81, 3.81] mm, gaps [1.87, 1.87] mm
+PASS  ADR-023 J2 is 14 SMD solder-wire pads 3.0 x 4.5 mm at 5.08 mm pitch :: 14 pads, sizes [(3.0, 4.5)], types ['smd'], shapes ['oval', 'rect'], pitch [5.08] mm
+PASS  ADR-020 Ex <-> GND edge-track spark gap 1.40 +/- 0.05 mm :: 12 electrode pads; gap min 1.400 / max 1.400 mm; nearest GND track is the edge track for 12 of 12; per pad E0=1.400, E1=1.400, E2=1.400, E3=1.400, E4=1.400, E5=1.400, E6=1.400, E7=1.400, E8=1.400, E9=1.400, E10=1.400, E11=1.400
+INFO  nearest I2C copper to electrode copper (REQ-038): 3.30 mm between track#99 (94.46,70.90)-(138.81,70.90) w1.00 [/SDA] and A2.10 [/ELE8]
+SUMMARY: 25 checks, 25 PASS, 0 FAIL
