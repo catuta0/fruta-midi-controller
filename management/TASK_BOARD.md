@@ -23,3 +23,10 @@
 | T-082 | Report v1.2 final, manual, README | documentation-engineer | PASS | handoffs/documentation-engineer-T-082.md |
 | T-083 | releases/V1.2, merge, tag v1.2.0 | manager | DONE | releases/V1.2/ |
 | T-084 | GitHub release v1.2.0 | manager | DONE (user approved 2026-11-08) | https://github.com/catuta0/fruta-midi-controller/releases/tag/v1.2.0 |
+| T-090…T-101 | CR-003 SMD conversion, sourcing, checks, documents | electronics/systems/documentation | DONE | changes/CR-003.md, management/handoffs/ |
+| T-102 | CR-003 independent review | independent-reviewer | DONE (not ready) | reports/review/CR-003/findings.md |
+| T-103…T-107 | F3 fixes, records, documents, report | electronics/systems/documentation | PASS (F3-002, F3-006 accepted PARTIAL, ADR-028) | handoffs/*-T-103..T-107 |
+| T-108 | CR-003 independent re-review | independent-reviewer | DONE (ready after fixes) | reports/review/CR-003/findings-T-108.md |
+| T-109…T-113 | F4 fixes, rules, REQ-036 PASS, frozen-9, report | electronics/systems/documentation | PASS | handoffs/*-T-109..T-113 |
+| T-114 | releases/V1.3, merge, tag v1.3.0 | manager | DONE | releases/V1.3/ |
+| T-115 | GitHub release v1.3.0 | manager | WAITING (user approval) | — |
