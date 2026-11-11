@@ -1,0 +1,618 @@
+=== PAGE 1 ===
+DATA SHEET
+AUTOMOTIVE GRADE SURGE
+CHIP RESISTORS
+SR series
+20%, 10%, 5% 1%, 0.5%
+sizes 0201/0402/0603/0805/1206/1210/1218/2010/2512
+RoHS compliant & Halogen free
+Product specification – February 14, 2025 V.14
+=== PAGE 2 ===
+Product specification 2
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+SCOPE
+ORDERING INFORMATION - GLOBAL PART NUMBER
+This specification describes
+SR0201 to SR2512 chip resistors
+with lead-free terminations made by
+thick film process.
+APPLICATIONS
+Part number is identified by the series name, size, tolerance, packaging
+type, temperature coefficient, taping reel and resistance value.
+GLOBAL PART NUMBER
+SR XXXX X X X XX XXXX L
+(1) (2) (3) (4) (5) (6) (7)
+(1) SIZE
+⚫ Telecommunications
+⚫ Power supplies
+⚫ Car electronics
+FEATURES
+0201 / 0402 / 0603 / 0805 / 1206 / 1210 / 1218 / 2010 / 2512
+(2) TOLERANCE
+⚫ AEC-Q200 qualified
+⚫ Superior to RC series in pulse
+withstanding voltage and surge
+withstanding voltage.
+⚫ MSL class: MSL 1
+⚫ Halogen free epoxy
+⚫ RoHS compliant
+- Products with lead-free
+terminations meet RoHS
+requirements
+- Pb-glass contained in electrodes,
+resistor element and glass are
+exempted by RoHS
+⚫ Reduce environmentally
+hazardous waste
+⚫ High component and equipment
+reliability
+D = ± 0.5%
+F = ± 1%
+J = ± 5%
+K = ± 10%
+M = ± 20%
+(3) PACKAGING TYPE
+R = Paper taping reel (4) TEMPERATURE COEFFICIENT OF RESISTANCE
+K = Embossed taping reel
+– = Based on spec.
+(5) TAPING REEL & POWER
+07 = 7 inch dia. Reel & Standard power 13 = 13 inch dia. Reel 47 = 7 inch dia. Reel & 4xstandard power
+(6) RESISTANCE VALUE
+7W = 7 inch dia. Reel & 2 x standard power
+7T = 7 inch dia. Reel & 3 x standard power
+1 Ω ≤ R ≤ 1M Ω
+There are 2~4 digits indicated the resistance value. Letter R/K/M is decimal point, no need
+to mention the last zero after R/K/M, e.g.1K2, not 1K20.
+Detailed coding rules of resistance are shown in the table of “Resistance rule of global
+part number”.
+(7) DEFAULT CODE
+Letter L is the system default code for ordering only.
+(Note)
+Resistance rule of global part
+number
+Resistance coding
+rule Example
+ORDERING EXAMPLE
+The ordering code for an SR0805
+chip resistor, value 10 KΩ with
+±5% tolerance, supplied in 7-inch
+tape reel is: SR0805JR-0710KL.
+XRXX
+(1 to 9.76 Ω)
+1R = 1 Ω
+1R5 = 1.5 Ω
+9R76 = 9.76 Ω
+XXRX
+(10 to 97.6 Ω)
+10R = 10 Ω
+97R6 = 97.6 Ω
+XXXR
+(100 to 976 Ω) 100R = 100 Ω
+XKXX
+(1 to 9.76 KΩ)
+1K = 1,000 Ω
+9K76 = 9760 Ω
+XXKX
+(10 to 97.6 KΩ)
+10K = 10,000 Ω
+97K6= 97,600 Ω
+XXXK
+(100 KΩ) 100K = 100,000 Ω
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 3 ===
+Product specification 3
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+MARKING
+SR0201 / SR0402
+No Marking
+ynsc007
+Fig. 1
+SR1218
+YNSC099-1
+E-24 series: 3 digits
+First two digits for significant figure and 3rd digit for number of zeros
+Fig. 2 Value=10 KΩ
+SR0603 / SR0805 / SR1206 / SR1210 / SR2010 / SR2512
+E-24 series: 3 digits
+First two digits for significant figure and 3rd digit for number of zeros
+Fig. 3 Value=10 KΩ YNSC001
+NOTE
+For further marking information, please refer to data sheet “Chip resistors marking”
+.
+TAPING REEL & POWER
+Table 1
+POWER, W (P70)
+TYPE
+CODING
+07 7W 7T 47
+0201 1/20 1/10 - 1/5
+0402 1/16 1/8 1/5 -
+0603 1/10 1/5 1/4 1/3
+0805 1/8 1/4 1/3 1/2
+1206 1/4 1/2 3/4 1
+1210 1/2 1 - -
+1218 1 1.5 - -
+2010 3/4 1.25 - -
+2512 1 2 - -
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 4 ===
+Product specification 4
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+CONSTRUCTION
+The resistor is constructed on top of a high-grade ceramic body. Internal metal electrodes are added at each
+end and connected by a resistive glaze. The resistive glaze is covered by a lead-free glass. The composition
+of the glaze is adjusted to give the approximately required resistance value. The whole element is covered
+by a protective overcoat. The top of overcoat is marked with the resistance value. Finally, the two external
+terminations (Ni/matte tin) are added, as shown in Fig.4.
+O OU UT TL LI IN NE ES S
+For 2512 1%, 0.5%
+marking layer
+overcoat
+protective glass
+resistive layer
+inner electrode
+termination (Ni/matte tin)
+inner electrode
+ceramic substrate
+YNSC095
+Fig. 4-1 Chip resistor outlines
+YNSC095-1
+Fig. 4-2 Chip resistor outlines
+marking layer
+overcoat
+protective glass
+resistive layer
+inner electrode
+termination (Ni/matte tin)
+inner electrode
+resistive layer
+protective glass
+overcoat
+DIMENSIONS
+Table 2
+TYPE L (mm) W (mm) H (mm) I1 (mm) I2 (mm)
+SR0201 0.60± 0.03 0.30± 0.03 0.23± 0.03 0.12± 0.05 0.15± 0.05
+SR0402 1.00± 0.05 0.50± 0.05 0.35± 0.05 0.20± 0.10 0.25± 0.10
+SR0603 1.60± 0.10 0.80± 0.10 0.45± 0.10 0.25± 0.15 0.25± 0.15
+SR0805 2.00± 0.10 1.25± 0.10 0.50± 0.10 0.35± 0.20 0.35± 0.20
+SR1206 3.10± 0.10 1.60± 0.10 0.55± 0.10 0.45± 0.20 0.45± 0.20
+SR1210 3.10± 0.10 2.60± 0.15 0.55± 0.10 0.45± 0.15 0.50± 0.20
+SR1218 3.10± 0.10 4.60± 0.10 0.55± 0.10 0.45± 0.20 0.40± 0.20
+SR2010 5.00± 0.10 2.50± 0.15 0.55± 0.10 0.55± 0.15 0.55± 0.20
+SR2512 6.35± 0.10 3.10± 0.15 0.55± 0.10 0.60± 0.20 0.60± 0.20
+For dimension, please refer to Table 1 SR0201/0402
+I1
+W
+SR0603/0805/1206/
+1210/2010/2512
+I1
+W
+SR1218
+I1
+Side view for all type
+W
+H
+I2
+Fig. 5 Chip resistor dimensions
+L
+L L
+YNSC096_1
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 5 ===
+Product specification 5
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+ELECTRICAL CHARACTERISTICS
+Table 3
+CHARACTERISTICS
+TYPE POWER RESISTANCE
+RANGE
+Operating Temperature
+Max.
+Max.
+Dielectric
+Temperature
+Range
+Working
+Voltage
+Overload
+Voltage
+Withstanding
+Voltage
+Coefficient of
+Resistance
+1/20W
+SR0201
+1/10W
+25 V 50 V 50 V
+1/5W
+1Ω ≤ R < 10Ω
+-100~+350 ppm°C
+10Ω ≤ R ≤ 1MΩ
+± 200 ppm°C
+1/16W
+SR0402
+1/8W
+75 V 100 V 100 V
+1/5W
+1/10W
+1/5W
+SR0603
+150V 300V 300V
+1/4W
+1/3W
+1/8 W
+1/4W
+SR0805
+1/3W
+1/2W
+1/4 W
+1/2W
+SR1206
+E24/E96 0.5%, 1%
+E24 5%, 10%, 20%
+1Ω ≤ R ≤ 10MΩ
+for 0402, 0603, 0805,
+1206, 2010
+1Ω ≤ R ≤ 1MΩ
+for 0201, 1210, 1218,
+2512
+500V 1000V 1000V
+–55 °C to +155 °C
+500V 1000V 1000V
+3/4W
+10Ω ≤ R ≤ 10MΩ
+± 100 ppm/ °C
+1Ω ≤ R < 10Ω
+± 200 ppm/ °C
+1W
+SR1210
+1/2W 500V 1000V 1000V
+1W
+SR1218
+1W 1.5W
+200 V 400 V 500 V
+SR2010
+3/4W 1.25W
+200 V 400 V 500 V
+SR2512
+1 W 2W
+500 V 1000 V 1000 V
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 6 ===
+Product specification 6
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+FOOTPRINT AND SOLDERING PROFILES
+Recommended footprint and soldering profiles, please refer to data sheet “Chip resistors mounting”.
+PACKING STYLE AND PACKAGING QUANTITY
+Table 4 Packing style and packaging quantity
+PACKING STYLE REEL DIMENSION SR0201/0402 SR0603/0805/1206 SR1210 SR1218/2010/2512
+Paper taping reel (R) 7" (178 mm) 10,000 5,000 5,000 ---
+13" (330 mm) 50,000 20,000 20,000 ---
+Embossed taping reel (K) 7" (178 mm) --- --- --- 4,000
+NOTE
+1. For paper/embossed tape and reel specification/dimensions, please refer to data sheet “Chip resistors packing”.
+TEMPERATURE COEFFICIENT OF RESISTANCE
+O OP RESISTANCE
+FUNCTIONAL DESCRIPTION
+RANGE
+TI IN NG G T TE PE ER RA AT EM MP PE ER RA AT TU UR RE E R PT040
+RA AN NG GE E
+100 m to 910 m
+Range: –55 °C to +155 °C
+2
+P PO OW WE ER R R RA AT TI IN NG G
+± 200 ppm/°C
+PT060
+Each type rated power at 70 °C:
+3 ± 200 ppm/°C
+SR0201: 1/20W, 1/10W, 1/5W
+SR0402: 1/16W, 1/8W, 1/5W
+PT080
+SR0603: 1/10W, 1/5W, 1/4W, 1/3W
+± 200 ppm/°C
+5
+SR0805: 1/8W, 1/4W, 1/3W, 1/2W
+100 MΩ TO 910 MΩ
+PT120
+SR1206: 1/4W, 1/2W, 3/4W, 1W
+6 100 mΩ SR1210: 1/2W, 1W
+SR1218: 1W, 1.5W
+PT201
+SR2010: 3/4W, 1.25W
+0 ± 100 ppm/°C SR2512: 1W, 2W
+PT251
+RATED VOLTAGE
+± 100 ppm/°C 2
+The DC or AC (rms) continuous working voltage
+corresponding to the rated power is determined by
+the following formula:
+V = R) X (P
+or max. working voltage whichever is less
+Where
+V = Continuous rated DC or AC (rms) working voltage (V)
+P = Rated power (W)
+R = Resistance value (Ω)
+Pmax
+(%Prated)
+MRA632
+100
+50
+0
+> 100 mΩ
+55 50
+0
+70 100
+155
+Tamb ( C)
+Fig. 6 ± 75 ppm/°C
+Maximum dissipation (Pmax) in percentage of rated power
+as a function of the operating ambient temperature (Tamb)
+± 75 ppm/°C
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 7 ===
+Product specification 7
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+Pulse load Behavior
+Fig. 7-1 Pulse-Load behavior
+Fig. 7-2 Pulse-Load behavior
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 8 ===
+Product specification 8
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+Pulse load Behavior
+Fig. 7-3 Pulse-Load behavior
+Peak Continuous Pulse Power (SR series J/K/M tol)
+10,000.0
+1,000.0
+Permissible electric power (W)
+100.0
+10.0
+1.0
+0.1
+2512
+1218
+2010
+1210
+1206
+0805
+0603
+0402
+0201
+0.0
+0.000001 0.00001 0.0001 0.001 0.01 0.1 1
+Pulse duration（Sec）
+Maximum permissible peak continuous pulse power as a function of pulse duration
+Follow EN140401-802
+Paverage ≤ P( amb) Pulse-SR002
+Fig. 7-4 Pulse-Load behavior
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 9 ===
+Product specification 9
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+TESTS AND REQUIREMENTS
+1,000 hours at TA = 155 °C, unpowered Table 5 Test condition, procedure and requirements
+TEST TEST METHOD PROCEDURE REQUIREMENTS
+High Temperature
+Exposure
+AEC-Q200 Test 3
+MIL-STD-202 Method 108
+± (2.0%+0.05Ω) for D/F tol
+± (3.0%+0.05Ω) for others
+Moisture Resistance MIL-STD-202 Method 106 Each temperature / humidity cycle is defined at
+8 hours, 3 cycles / 24 hours for 10d. with 25 °C
+/ 65 °C 95% R.H, without steps 7a & 7b,
+unpowered
+± (0.5%+0.05Ω) for D/F tol
+± (2.0%+0.05Ω) for others
+Biased
+Humidity
+AEC-Q200 Test 7
+MIL-STD-202 Method 103
+1,000 hours; 85 °C / 85% RH
+10% of operating power
+Measurement at 24± 4 hours after test
+conclusion.
+± (1.0%+0.05Ω) for D/F tol
+± (3.0%+0.05Ω) for others
+Operational Life AEC-Q200 Test 8
+MIL-STD-202 Method 108
+1,000 hours at 125 °C, derated voltage applied
+for 1.5 hours on, 0.5 hour off, still-air required
+± (2.0%+0.05Ω) for D/F tol
+± (3.0%+0.05Ω) for others
+Resistance to
+Soldering Heat
+AEC-Q200 Test 15
+MIL-STD-202 Method 210
+Condition B, no pre-heat of samples
+Lead-free solder, 260± 5 °C, 10± 1 seconds
+immersion time
+Procedure 2 for SMD: devices fluxed and
+cleaned with isopropanol
+± (1.0%+0.05Ω)
+No visible damage
+Thermal Shock MIL-STD-202 Method 107 -55/+125 °C
+Number of cycles is 300. Devices mounted
+Maximum transfer time is 20 seconds.
+Dwell time is 15 minutes. Air – Air
+± (0.5%+0.05Ω) for D/F tol
+± (1.0%+0.05Ω) for others
+ESD AEC-Q200 Test 17
+AEC-Q200-002
+Human Body Model,
+1 pos. + 1 neg. discharges
+0201: 500V
+0402/0603: 1KV
+0805 and above: 2KV
+± (3.0%+0.05Ω)
+Solderability
+- Wetting
+AEC-Q200 Test 18
+J-STD-002
+Electrical Test not required Magnification 50X
+SMD conditions:
+(a) Method B, aging 4 hours at 155 °C dry heat,
+dipping at 235± 3 °C for 5± 0.5 seconds.
+(b) Method B, steam aging 8 hours, dipping at
+215± 3 °C for 5± 0.5 seconds.
+(c) Method D, steam aging 8 hours, dipping at
+260± 3 °C for 30± 0.5 seconds.
+Well tinned (≥95% covered)
+No visible damage
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 10 ===
+Product specification 10
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+TEST TEST METHOD PROCEDURE REQUIREMENTS
+Board Flex AEC-Q200 Test 21
+AEC-Q200-005
+Chips mounted on a 100mm x 40mm glass
+epoxy resin PCB (FR4)
+Bending for 0201/0402: 5 mm
+0603/0805: 3 mm
+1206 and above: 2 mm
+Holding time: minimum 60 seconds
+± (1.0%+0.05Ω)
+Temperature
+Coefficient of
+Resistance (T.C.R.)
+MIL-STD-202 Method 304 At +25/–55 °C and +25/+125 °C
+Formula:
+R2–R1
+T.C.R= ------------------------- × 106 (ppm/°C)
+R1(t2S–t1)
+Refer to table 2
+Where
+t1=+25 °C or specified room temperature
+t2=–55 °C or +125 °C test temperature
+R1=resistance at reference temperature in ohms
+R2=resistance at test temperature in ohms
+Short Time
+Overload
+IEC60115-1 8.1 2.5 times of rated voltage or maximum
+overload voltage whichever is less for 5 sec
+at room temperature
+± (2.0%+0.05Ω)
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 11 ===
+Product specification 11
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+REVISION HISTORY
+REVISION DATE CHANGE NOTIFICATION DESCRIPTION
+Version 14 Feb. 14, 2025 -
+- Extend resistance range of 0402,0603,0805,1206,2010 to 10Mohm.
+Version 13 Jul. 23, 2024 -
+- Upgrade the working voltage of 1206 and 1210 to 500V
+Version 12 Apr. 23, 2024 -
+- Add continuous pulse curve
+Version 11 Aug. 31, 2023 -
+- Upgrade the working voltage of 2512 to 500V
+Version 10 Aug. 02, 2022 -
+- Merge F/D tol
+Add size 0201
+Upgrade the working voltage of 0402 to 75V
+Upgrade the working voltage of 0603 to 150V
+Upgrade the working voltage of 0805 to 500V
+I2 dimension updated, for size 1206, size 2010, size 2512
+Version 9 Aug. 04, 2021 -
+- Upgrade to Automotive Grade
+Version 8 Jul. 22, 2019 -
+- Update power rating
+Version 7 Sep. 27, 2018 -
+- Extend resistance range of 0402 ~ 2512 to 1Mohm,
+- Tighten TCR of all sizes for 10Ω < R ≤ 1MΩ from ± 200 ppm/°C to
+± 100 ppm/°C
+- Add SR1210, SR1218, SR2010 7W (double power)
+Version 6 Oct. 02, 2017 -
+- Add SR0402 7T (triple power), SR0805 47 (quadruple power),
+SR2512 7W (double power)
+Version 5 Nov.11, 2016 -
+- Update 7T power for 1206
+Version 4 Sep. 01, 2015 -
+- Update SR0603 Dielectric Withstanding Voltage to 150V
+- Update 7T power for 0603/0805 & 7W for 1210
+Version 3 Jul. 31, 2015 -
+- Comply with AEC-Q200 standard
+Version 2 Jan. 06, 2014 -
+- Add SR0402/0603/1210
+- Update electrical characteristic
+Version 1 Mar 18, 2011 -
+- Change to dual brand datasheet that describes SR0805 to SR2512 with
+RoHS compliant
+- Define global part number
+Version 0 Oct 19, 2004 -
+-
+www.yageo.com
+Feb. 14, 2025 V.14
+=== PAGE 12 ===
+Product specification 12
+Chip Resistor Surface Mount
+12
+SR SERIES
+0201/0402/0603/0805/1206/1210/1218/2010/2512
+LEGAL DISCLAIMER
+YAGEO, its distributors and agents (collectively, “YAGEO”), hereby disclaims any and all liabilities for any
+errors, inaccuracies or incompleteness contained in any product related information, including but not limited
+to product specifications, datasheets, pictures and/or graphics. YAGEO may make changes, modifications and/or
+improvements to product related information at any time and without notice.
+YAGEO makes no representation, warranty, and/or guarantee about the fitness of its products for any
+particular purpose or the continuing production of any of its products. To the maximum extent permitted by
+law, YAGEO disclaims (i) any and all liability arising out of the application or use of any YAGEO product, (ii)
+any and all liability, including without limitation special, consequential or incidental damages, and (iii) any and all
+implied warranties, including warranties of fitness for a particular purpose, non -infringement and
+merchantability.
+YAGEO products are designed for general purpose applications under normal operation and usage conditions.
+Please contact YAGEO for the applications listed below which require especially high reliability for the
+prevention of defects which might directly cause damage to the third party's life, body or property: Aerospace
+equipment (artificial satellite, rocket, etc.), Atomic energy-related equipment, Aviation equipment, Disaster
+prevention equipment, crime prevention equipment, Electric heating apparatus, burning equipment, Highly
+public information network equipment, data-processing equipment , Medical devices, Military equipment, Power
+generation control equipment, Safety equipment, Traffic signal equipment, Transportation equipment and
+Undersea equipment, or for any other application or use in which the failure of YAGEO products could result
+in personal injury or death, or serious property damage. Particularly YAGEO Corporation and its affiliates
+do not recommend the use of commercial or automotive grade products for high reliability
+applications or manned space flight.
+Information provided here is intended to indicate product specifications only. YAGEO reserves all the rights
+for revising this content without further notification, as long as products are unchanged. Any product change
+will be announced by PCN.
+www.yageo.com
+Feb. 14, 2025 V.14

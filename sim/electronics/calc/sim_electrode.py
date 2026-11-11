@@ -92,8 +92,14 @@ def analyse(R, Ce):
     return dict(n=len(pairs), nominal=nominal, s_nom=sn, best=best, worst=worst)
 
 
-R_SWEEP = [0, 1e3, 2.2e3, 3.3e3, 4.7e3, 6.8e3, 10e3, 22e3, 47e3, 100e3]
+# T-092: 2.85k / 3k / 3.15k = HPWC2512 3k0 +-5 % (ADR-023, superseded); 3.135k / 3.465k = 3k3 +-5 % (ADR-025, superseded); T-096 / ADR-026: 3.267k / 3.3k / 3.333k = RC2512 3k3 +-1 %
+# T-094: 2.565k = 2k7 -5 %, 2.673k/2.727k = 2k7 +-1 %, 3.267k/3.333k = 3k3 +-1 %, 3.366k/3.399k = 3k3 +2 %/+3 %
+R_SWEEP = [0, 1e3, 2.2e3, 2.565e3, 2.673e3, 2.727e3, 2.85e3, 3e3, 3.135e3, 3.15e3, 3.267e3, 3.3e3, 3.333e3, 3.366e3, 3.399e3, 3.465e3, 4.7e3, 6.8e3, 10e3, 22e3, 47e3, 100e3]
 C_SWEEP = [10e-12, 20e-12, 50e-12, 100e-12, 200e-12, 500e-12, 1000e-12, 2000e-12]
+
+
+WORST_LIMIT = 0.90                                      # ADR-019 acceptance limit on the worst-case ratio
+R_LOW, R_NOM, R_HIGH = 3267.0, 3300.0, 3333.0           # RC2512FK-073K3L 3k3 +-1 % (SOURCE Mouser / YAGEO RC_L)
 
 
 def fmt_r(R):
@@ -141,6 +147,13 @@ def main():
         mw = min(r[4] for r in sub)
         print("R=%-6s min nominal ratio=%.3f  min worst-case ratio=%.3f  %s" %
               (fmt_r(R), mn, mw, "MEETS (>=0.90 nominal, >=0.80 worst)" if mn >= 0.9 and mw >= 0.8 else "does not meet"))
+    # T-096 / ADR-026: acceptance of R1-R12 on the 0.90 worst-case limit (the MEETS text above uses the older 0.80 worst criterion)
+    print()
+    print("# T-096 / ADR-026 R1-R12 = RC2512FK-073K3L 3k3 +-1 %%, limit: worst-case ratio >= %.2f, C_ext 10..1000 pF. SIMULATION" % WORST_LIMIT)
+    for R, name in ((R_LOW, "-1 % corner"), (R_NOM, "nominal"), (R_HIGH, "+1 % corner")):
+        sub = [r for r in rows if r[0] == R and r[1] <= 1000e-12]
+        w = min(r[4] for r in sub)
+        print("%s %s %.0f ohm: worst %.3f vs %.2f (SIMULATION)" % ("PASS" if w >= WORST_LIMIT else "FAIL", name, R, w, WORST_LIMIT))
     # simple IR-drop bound, independent of the simulation (CALCULATION)
     v_tl = TL / 256 * VDD
     print()

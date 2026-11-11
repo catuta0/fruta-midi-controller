@@ -1,0 +1,238 @@
+(footprint "R_1206_HomeEtch"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "1206 chip resistor, IPC-7351 reflow land usable by hand")
+	(property "Reference" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "d174be0d-09f2-4022-80eb-1175a186438a")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d29e3638-131c-477c-a3f8-6a3f30ec0c4f")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d33030ec-7810-4691-ac79-963f6feed4fb")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "cd07f64c-8af0-4999-9d4e-8291d2ea0d8c")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.45 -1.15)
+		(end 4.35 -1.15)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "10646606-a54b-410b-87ee-30792b7dc214")
+	)
+	(fp_line
+		(start -1.45 1.15)
+		(end -1.45 -1.15)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "f56b3cf1-abac-43c4-98b8-ca22da7fbc48")
+	)
+	(fp_line
+		(start 4.35 -1.15)
+		(end 4.35 1.15)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "6ce512a1-de3f-4ec7-bbee-23f83830c9b3")
+	)
+	(fp_line
+		(start 4.35 1.15)
+		(end -1.45 1.15)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "17f1ccc9-0c91-4de7-8bf7-8f9d5413f2a5")
+	)
+	(fp_line
+		(start -1.2 -0.9)
+		(end 0.575 -0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "4ee218ec-259d-411e-b5f2-20a60566bc4a")
+	)
+	(fp_line
+		(start -1.2 0.9)
+		(end -1.2 -0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "cbc56ca0-d70d-4d51-914e-bb64bb5e8864")
+	)
+	(fp_line
+		(start -0.15 -0.8)
+		(end 3.05 -0.8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "1e58507e-84ee-4c44-9a3e-26e5f76daba1")
+	)
+	(fp_line
+		(start -0.15 0.8)
+		(end -0.15 -0.8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "2f59edb5-946d-45fe-8ed1-6ff7ec094d06")
+	)
+	(fp_line
+		(start 0.575 -0.9)
+		(end 0.575 0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "2d457aff-88f1-40fa-a784-380b4408dd65")
+	)
+	(fp_line
+		(start 0.575 0.9)
+		(end -1.2 0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "8bf8b73d-959f-469a-9481-cc0dbb088e3e")
+	)
+	(fp_line
+		(start 2.325 -0.9)
+		(end 4.099999 -0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "7e57cd21-b51d-42b3-b1f3-b860ccd54e17")
+	)
+	(fp_line
+		(start 2.325 0.9)
+		(end 2.325 -0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "17b92ae8-68e4-465b-8330-bf1e11922b0d")
+	)
+	(fp_line
+		(start 3.05 -0.8)
+		(end 3.05 0.8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "9ff2a928-1461-4a86-af61-2d9f95cd6a6b")
+	)
+	(fp_line
+		(start 3.05 0.8)
+		(end -0.15 0.8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "2a695ffd-f782-47a2-a5fa-05f3ff0f57cc")
+	)
+	(fp_line
+		(start 4.099999 -0.9)
+		(end 4.099999 0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "5ede3acc-7c2c-462d-9f08-313dbc9d6472")
+	)
+	(fp_line
+		(start 4.099999 0.9)
+		(end 2.325 0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "1af74b33-dc2c-4ce6-af85-7d5a42324a13")
+	)
+	(pad "1" smd rect
+		(at -0.3125 0)
+		(size 1.775 1.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "6051d26b-c96b-47a6-9dc3-2dc7ff0d72f9")
+	)
+	(pad "2" smd rect
+		(at 3.2125 0)
+		(size 1.775 1.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "8dee0500-de86-4021-84fd-74862965fd39")
+	)
+	(embedded_fonts no)
+	(model "${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_1206_3216Metric.step"
+		(offset
+			(xyz 1.45 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

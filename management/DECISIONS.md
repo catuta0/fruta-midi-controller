@@ -124,3 +124,62 @@
 - F2-006 fixed: pcb_rules_check enforces the Ex ↔ GND spark gap 1.40 ± 0.05 mm (12/12 at 1.400 mm, MEASUREMENT on design file; mutation tests fail at 0.650 and −0.100 mm).
 - INTERFACES frozen-7 frozen by manager (documentation-only change: C1 drill/ring, spark-gap rule note, AGND ESD note).
 - No further independent re-review: changes are a drill size, wording and a new check, all reproduced by the manager (ERC 0, DRC 0/0/0, checks 85/85, 20/20, budgets 25/5).
+
+## ADR-023 — SMD conversion for home chemical etching (CR-003), 2026-11-09
+User decisions from the T-090 feasibility study (reports/electronics/smd_feasibility.md):
+- D-1 R1-R12: one TT Electronics HPWC2512 3k0 ±5 % per channel. 4 kV rating margin 1.24 and conductor gap margin 1.34 (CALCULATION from SOURCE chart and dimensions); 8 kV stays FAIL (R-006). 3k3 rejected: at +5 % the worst-choice sensitivity is 0.899, below the 0.90 limit of ADR-019 (CALCULATION). MPN, stock and price not confirmed.
+- D-2 RV1: off-board potentiometer on 3 wire pads. R-011 must be re-derived.
+- D-3 J2: solder-wire pads with hot-melt strain relief. WAGO 2060 rejected.
+- D-4 Holes: 4 M3 mounting holes stay; every other hole goes (133 to 4, MEASUREMENT for 133, design intent for 4).
+- Manager: A1 surface-soldered on castellations with an etched bare-copper keep-out; A2 pins butted on surface pads; SW1 Omron B3S-1000; R13-R16 and C1 in 1206; JP1 SMD 3-pad bridge; J1 stays as two insulated wire links on surface pads. Bare MPR121 rejected (0.40 mm pitch against the 0.6 mm clearance rule, SOURCE and REQ-029). Loss of socket rework accepted as a consequence of the user's request.
+- Single layer without new wire bridges is an estimate only until layout (T-091).
+
+## ADR-024 — R1-R12 changed to CMB 0207 3k3; BOM moved to Mouser (CR-003), 2026-11-09
+User decision after the T-095 quote comparison ("CMB, mudas a placa pronto"), replacing ADR-023 D-1:
+- R1-R12: Vishay CMB02070X3301GB200 (MELF 0207, 3k3 ±2 %). HPWC2512-3K0JT18 has no small-quantity offer (T-093); HPWC2512-3K3JT1 rejected by the user.
+- 1.2/50 us chart 5175 V at 3k3 (SOURCE, reading about ±5 %) against about 3636 V across R at 4 kV: margin 1.42 (CALCULATION). Worst-choice sensitivity at 3366 ohm 0.901 against the 0.90 limit (SIMULATION).
+- Accepted deviation, by the user: the conductor gap of the part is 3.2 mm (SOURCE) against the 3.5 mm flashover rule at 4 kV. A layout cannot change it. The check must report this as a deviation and must not be relaxed. REQ-023 stays PARTIAL; 8 kV FAIL (R-006).
+- All parts move to Mouser: the only shop able to supply the whole board on 2026-11-09 (T-095). One-board quote about 17.6 EUR, excluding shipping and taxes (CALCULATION from SOURCE prices).
+- Consequences: new MELF land pattern, re-layout of the R row, a hand-soldering procedure for a rolling part.
+
+## ADR-025 — R1-R12 HPWC2512 3k3 at Mouser (CR-003), 2026-11-09
+User decision ("ok pronto fica HPWC"), replacing ADR-024 on R1-R12 and ADR-023 D-1. ADR-024 stays valid only for moving the BOM to Mouser.
+- R1-R12: TT Electronics HPWC2512-3K3JT1, 3k3 ±5 %, existing 2512 land (G 5.0 mm). 12 for 15.00 EUR, stock 2381 (SOURCE, Mouser Portugal, 2026-11-09). One-board quote about 27.5 EUR, excluding shipping and taxes (CALCULATION).
+- 1.2/50 us chart reading about 4596 V against about 3636 V across R at 4 kV: margin about 1.26 (CALCULATION, chart reading). Conductor gap 4.4 mm (SOURCE) against the 3.5 mm rule: PASS at 4 kV. 8 kV FAIL (R-006).
+- Accepted deviation, by the user: at +5 % (3465 ohm) the worst-choice sensitivity is 0.885 against the 0.90 limit (SIMULATION). Mitigation: each resistor is measured before soldering and only those within the selection limit are used. The limit of 0.90 is not changed.
+- The ADR-024 MELF land and the accepted 3.2 mm gap no longer apply. Silicone over R1-R12 is optional only: neutral-cure electronics grade, never acetic-cure.
+
+## ADR-026 — R1-R12 standard 2512 3k3 1 % (CR-003), 2026-11-09
+User decision after discussing cost against the 4 kV target (user: pulse-proven parts are excessive for a hand-built instrument; "ok ok"). Supersedes ADR-025 on R1-R12.
+- R1-R12: Yageo RC2512FK-073K3L, 3k3 ±1 %, 1 W, 200 V rated. Mouser 603-RC2512FK-073K3L: 12 for 1.31 EUR at 0.109 EUR, stock 13, next delivery 2027-05-18 (SOURCE, Mouser Portugal, 2026-11-09). One-board quote about 13.8 EUR excluding shipping and taxes (CALCULATION).
+- Accepted by the user: no sourced pulse capability, so survival of a 4 kV strike is NOT PROVEN. The ±4 kV target of REQ-023 was itself an ASSUMPTION (IEC 61000-4-2 level 2, standard not read). Possible effects: resistance drift or a dead channel; in the worst case an arc reaches the module. Energy of a 4 kV IEC-style strike into R is about 1 mJ against 182 mJ behind the earlier 1.2/50 us chart criterion (CALCULATION, T-060/T-090).
+- REQ-023 stays PARTIAL at best; the physical ESD test decides. Selection by multimeter (ADR-025) no longer applies. Silicone stays optional.
+
+## ADR-027 — CR-003 rulings after T-099, 2026-11-11
+- D-1 REQ-032 basis: core BOM excluding shipping, consumables and tools, as in every earlier revision. VAT does not change the verdict: 14.84–16.84 EUR ex VAT, 18.25–20.71 EUR with 23 % VAT (ASSUMPTION), both under 30 EUR (CALCULATION, budgets.out revision 9). REQ-032: PASS on this basis; shipping stays NOT CONFIRMED and is reported beside it.
+- D-2 Plan B (R-018) accepted: if after the physical ESD series any R1-R12 reads outside 3234–3366 ohm, a channel stops detecting touch, or an arc crosses a resistor, move to the T-097 clamp (Bourns CDSOD323-T05LC) with R1-R12 at 1 kohm, after confirming its maximum capacitance and leakage.
+- D-3 R-016 accepted: Mouser stock 13 for 12 needed (one spare). The purchase list names a standard 3k3 ±1 % 2512 alternative on the same land.
+- D-4 INTERFACES frozen-8 frozen by the manager.
+- D-5 JP1 legend: etched ORIG/QT plus the assembly map is accepted (R-007, REQ-040 stays FAIL as an accepted risk). Project definition amendment was made in 410933d.
+
+## ADR-028 — CR-003 review dispositions for the T-103 board, 2026-11-11
+
+Context: independent review T-102 (reports/review/CR-003/findings.md, F3-001..F3-015); electronics fixes T-103 (management/handoffs/electronics-engineer-T-103.md); systems checks T-104.
+
+- D-1 Pico position (F3-002). The manager accepts the Pico end 0.11 mm short of flush, with the USB receptacle face 1.19 mm beyond the board edge (CALCULATION from SOURCE 1.30 mm; pcb_rules_check `ADR-028 D-1` PASS against the 1.0 mm cutting tolerance, an ASSUMPTION). Reason: flush would put the pin 1 and pin 40 (VBUS) lands 0.495 mm from the etched outline line, below the 0.6 mm clearance. The build checks the plug seat before soldering and measures the face after trimming (REQ-029 first-build list).
+- D-2 ORIG label (F3-006). The manager accepts the etched ORIG label where it is (left of JP1, beside the pad 2–1 gap) and the corrected text in hardware/README.md; no copper change. The manual must be corrected to the same text (interface_check `doc.manual.JP1_label_position`, FAIL until documentation T-105).
+- D-3 Pico variants (F3-003). The PCB supports the Raspberry Pi Pico (SC0915, recommended) and the Pico 2 only. Pico W and Pico 2 W are not supported on the PCB until their undersides are checked; the root README PCB firmware rows must say so (interface_check `doc.root_readme.pcb_variants`).
+- D-4 BOM consistency (F3-010). J1, J2, J3 and JP1 are copper only and excluded from the BOM; the RV1 knob is listed in hardware/README.md only; SW1 is the genuine B3S-1000 (ARATAS, formerly Omron Components). Cost unchanged: core 14.84–16.84 EUR ex VAT, ex shipping (budgets C1, C2 PASS).
+- D-5 R-016 alternative. Vishay CRCW25123K30FKEG (Mouser 71-CRCW25123K30FKEG) is named as the alternative; it may be used only after its datasheet is opened and check_gap (d) and sim_electrode are re-run with its body and termination values (+3.78 EUR for 12, CALCULATION).
+- D-6 Records (F3-009). INTERFACES moves to a frozen-9 proposal (T-104), frozen by the manager after review of the T-104 checks; the frozen-6 status note is moved to changelog_frozen_6. The ADR-026 stock date (2026-11-09) is to be read as superseded by the 2026-11-11 re-read (T96-S0b).
+- D-7 Residual items accepted for the first build, each on ASSUMPTION inputs and NOT RUN [PHYSICAL]: GND bounce 330 V for about 1 ns (R-010; budgets D1 PASS against the RP2040 FT-pin HBM equivalent, GP26/GP27 rating NOT CONFIRMED); SDA coupling 2.09 counts (R-017; budgets D2 PASS against the 3-count proposal); 35.6 N on the most loaded M3 screw at a 30 N USB pull (R-013; budgets D3 PASS against an unsourced 100 N ASSUMPTION).
+- D-8 INTERFACES frozen-9 is frozen by the manager after documentation T-105 and the CR-003 re-review, not before. Open for electronics: source an M3 nylon screw pull-through limit to replace the 100 N ASSUMPTION (budgets D3).
+
+## ADR-029 — CR-003 re-review (T-108) dispositions, 2026-11-11
+
+Context: independent re-review T-108 (reports/review/CR-003/findings-T-108.md): ready for the first build after fixes, no critical finding, no copper change needed.
+
+- D-1 USB strain relief (F4-001, R-013): epoxy beads on the two long sides of the Pico over pins 1-3 and 38-40, kept off the USB end face; no epoxy beyond the board edge; re-check that the plug seats fully after curing.
+- D-2 JP1 (F4-003): JP1 is bridged before the module is fitted; the text relies on the pad position and states that the ORIG label is hidden by the module. Moving the label is deferred to the next copper change.
+- D-3 RV1 (F4-005): the bushless PTV09A stays (cost); the guide gives a mounting method (for example a small piece of perfboard or hot glue behind the panel hole).
+- D-4 All other F4 findings are fixed as the reviewer suggested; design-file geometry is labelled CALCULATION, not MEASUREMENT.

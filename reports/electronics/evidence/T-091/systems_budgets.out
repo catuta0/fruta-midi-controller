@@ -1,0 +1,117 @@
+==========================================================================================
+(a) CURRENT BUDGET
+==========================================================================================
+  MPR121 IC (ESI 1 ms)                       0.100 .. 1.000 mA      SOURCE S-04 (393 uA avg @ CDC 63 uA, 1 mA peak); low end ASSUMPTION
+  Module LDO quiescent                       0.020 .. 0.100 mA      ASSUMPTION (MIC5225 / AP2112K datasheets not read)
+  Module power LED (R7 1k)                   1.100 .. 1.500 mA      CALCULATION (3.3-Vf)/1k, Vf 1.8..2.2 V ASSUMPTION
+  Module IRQ LED (10k)                       0.000 .. 0.150 mA      CALCULATION, worst case INT held low
+  Module I2C pull-ups (4 x 10k, lines low)   0.000 .. 1.320 mA      CALCULATION, worst case (S-06/S-07)
+  PCB I2C pull-ups R13/R14 4k7 (lines low)   0.000 .. 1.404 mA      CALCULATION; PCB build only (kicad_pcb R13/R14)
+  RP2040 I2C internal pull-ups               0.000 .. 0.132 mA      CALCULATION, RPU 50..80 kOhm SOURCE S-17 Table 625
+  Octave pot 10k +-20 %                      0.275 .. 0.412 mA      CALCULATION V/R
+  Button pull-up (pressed)                   0.000 .. 0.066 mA      CALCULATION, RPU >= 50 kOhm SOURCE S-17
+  Electrode series R1..R12 3k3               0.000 .. 0.000 mA      CALCULATION: no DC path (MPR121 charge current only, inside IDD)
+  External 3V3 load, 1 sensor                1.495 .. 6.085 mA  CALCULATION (sum)
+  External 3V3 load, 2 sensors               2.715 .. 10.155 mA  CALCULATION (+ second module, breadboard)
+PASS  A1 3V3 external load <= 300 mA with >= 50 % margin :: worst 10.15 mA (2 sensors) vs 300 mA, margin 96.6 %
+  VSYS range = 3.95 .. 5.25 V  CALCULATION VBUS - Vdiode
+PASS  A2 VBUS current <= 100 mA declared [Pico] :: 10.9 .. 55.6 mA (board 9.9 .. 45.0 mA: low SOURCE S-01 T3 (9.9 mA BOOTSEL USB active); high ASSUMPTION) ; margin 44 %
+PASS  A2 VBUS current <= 100 mA declared [Pico W] :: 10.9 .. 70.6 mA (board 9.9 .. 60.0 mA: low SOURCE S-01 T3 (Pico, no radio); high ASSUMPTION (CYW43 present, radio unused; Pico W datasheet not read)) ; margin 29 %
+PASS  A2 VBUS current <= 100 mA declared [Pico 2] :: 13.8 .. 60.6 mA (board 12.7 .. 50.0 mA: low SOURCE S-16 T2 (hello_usb 12.74 mA); high ASSUMPTION) ; margin 39 %
+PASS  A2 VBUS current <= 100 mA declared [Pico 2 W] :: 13.8 .. 75.6 mA (board 12.7 .. 65.0 mA: low SOURCE S-16 T2; high ASSUMPTION (Pico 2 W datasheet not read)) ; margin 24 %
+PASS  A3 VSYS within 1.8..5.5 V over USB VBUS 4.40..5.50 V :: VSYS 3.95 .. 5.25 V
+FAIL  A3b USB VBUS range inside Pico recommended VBUS 4.5..5.5 V :: USB low-power port min 4.40 V < Pico recommended 4.50 V (VSYS margin above 1.8 V stays 2.15 V)
+PASS  A4 MPR121 VDD inside 2.0..3.6 V (S-04 Table 5) :: VDD 3.10 .. 3.40 V (rail +-3 %, LDO dropout <= 0.1 V ASSUMPTION)
+  POT: zone 0.660 V, dead band 0.2 zone = 0.132 V; static ADC offset 0.030 V (shifts thresholds, not budgeted)  CALCULATION
+  POT: noise p-p 0.0151 V (ENOB 8.7) + DNL peak 0.0081 V (10 LSB12 ASSUMPTION) + 10-bit step 0.0032 V + ripple 0.010 V = 0.0364 V  CALCULATION
+  POT: DNL peak codes at ['0.412', '1.237', '2.062', '2.887'] V; nearest switch point 0.049 V away  CALCULATION
+PASS  A5 pot: ADC noise + DNL + quantisation + ripple < dead band (no octave chatter) :: 0.0364 V < 0.132 V, margin 0.096 V
+PASS  A6 I2C on ADC-capable GP26/27: pull-up rail = IOVDD :: R13/R14 and module VIN/VCC are on +3V3 (Pico pin 36)
+  POT C1: R_th max 3000 Ohm, C max 126.5 nF, tau 0.380 ms, settle to 1/2 LSB10 2.89 ms vs read period 30 ms (margin 10.4x)  CALCULATION
+PASS  A7 pot C1 filter: worst-case settling to 1/2 LSB10 x 5 <= read period :: tau 0.380 ms, settle 2.89 ms, read period 30 ms, margin 10.4x (criterion >= 5x ASSUMPTION)
+
+==========================================================================================
+(b) LATENCY BUDGET (firmware T-040: M1 burst read, non-blocking LED)
+==========================================================================================
+  AT burst plan worst mask 0x925 -> transactions [6, 3, 2, 1, 2, 1, 2, 1] (42 bus bytes incl. addr/reg; old per-pad path 45 B)  CALCULATION
+  f_SCL = 400 kHz: touched() 130 .. 160 us, AT pass worst plan 1085 .. 1325 us, loop idle 150 .. 260 us, loop with AT pass 1235 .. 1585 us  CALCULATION
+  f_SCL = 100 kHz: touched() 490 .. 520 us, AT pass worst plan 4100 .. 4340 us, loop idle 510 .. 620 us, loop with AT pass 4610 .. 4960 us  CALCULATION
+
+  f_SCL   sens  C [pF]   CDT     best [ms]    worst [ms]   jitter [ms] 
+  400k    1     20       1us     4.00         10.72        6.72        
+  400k    1     100      4us     4.00         10.72        6.72        
+  400k    1     200      8us     4.61         11.94        7.33        
+  400k    1     300      16us    9.22         21.15        11.94       
+  400k    1     500      32us    18.43        39.59        21.15       
+  400k    2     20       1us     4.00         12.35        8.35        
+  400k    2     100      4us     4.00         12.35        8.35        
+  400k    2     200      8us     4.61         13.56        8.95        
+  400k    2     300      16us    9.22         22.78        13.56       
+  400k    2     500      32us    18.43        41.21        22.78       
+  100k    1     20       1us     4.00         14.39        10.39       
+  100k    1     100      4us     4.00         14.39        10.39       
+  100k    1     200      8us     4.61         15.61        11.00       
+  100k    1     300      16us    9.22         24.82        15.61       
+  100k    1     500      32us    18.43        43.25        24.82       
+  100k    2     20       1us     4.00         19.68        15.68       
+  100k    2     100      4us     4.00         19.68        15.68       
+  100k    2     200      8us     4.61         20.90        16.29       
+  100k    2     300      16us    9.22         30.11        20.90       
+  100k    2     500      32us    18.43        48.54        30.11       
+PASS  B1 worst <= 15 ms [400 kHz, 1 sensor, C <= 100 pF] :: worst 10.72 ms
+PASS  B2 jitter <= 10 ms [400 kHz, 1 sensor, C <= 100 pF] :: jitter 6.72 ms
+PASS  B1 worst <= 15 ms [400 kHz, 2 sensors, C <= 100 pF] :: worst 12.35 ms
+PASS  B2 jitter <= 10 ms [400 kHz, 2 sensors, C <= 100 pF] :: jitter 8.35 ms
+PASS  B1 worst <= 15 ms [100 kHz, 1 sensor, C <= 100 pF] :: worst 14.39 ms
+FAIL  B2 jitter <= 10 ms [100 kHz, 1 sensor, C <= 100 pF] :: jitter 10.39 ms
+FAIL  B1 worst <= 15 ms [100 kHz, 2 sensors, C <= 100 pF] :: worst 19.68 ms
+FAIL  B2 jitter <= 10 ms [100 kHz, 2 sensors, C <= 100 pF] :: jitter 15.68 ms
+  ECR poll (T-044): 108 .. 138 us per sensor every 250 ms, included in the worst loop  CALCULATION
+  LOCKOUT: re-touch within 15 ms of the previous change of the same pad adds 0..15 ms -> worst 25.72 ms (400 kHz, 1 sensor, C <= 100 pF)  CALCULATION
+  DESIGN LIMIT 400 kHz, 1 sensor: targets met for electrode C <= 210 pF  CALCULATION
+  DESIGN LIMIT 100 kHz, 1 sensor: targets not met at any C (jitter)  CALCULATION
+  recalibrate() per sensor at 400 kHz: 178 transactions, 16.8 .. 22.1 ms (incl. 1 ms reset delay)  CALCULATION
+  recalibrate() per sensor at 100 kHz: 178 transactions, 58.8 .. 64.2 ms (incl. 1 ms reset delay)  CALCULATION
+  I2C breadboard R_eff 8.89 kOhm: C_b max 39.8 pF @400 kHz, 132.8 pF @100 kHz  CALCULATION
+  I2C PCB        R_eff 3.07 kOhm: C_b max 115.2 pF @400 kHz, 383.9 pF @100 kHz  CALCULATION
+  INFO breadboard without the ADR-009 pull-ups: t_r 452 ns at 60 pF (fails 300 ns above 39.8 pF)  CALCULATION
+PASS  B3 I2C rise time [breadboard + 4k7 (ADR-009), 400 kHz, C_b <= 60 pF] :: t_r 156 ns <= 300 ns
+PASS  B3 I2C rise time [breadboard + 4k7 (ADR-009), 100 kHz, C_b <= 60 pF] :: t_r 156 ns <= 1000 ns
+PASS  B3 I2C rise time [PCB, 400 kHz, C_b <= 60 pF] :: t_r 156 ns <= 300 ns
+PASS  B3 I2C rise time [PCB, 100 kHz, C_b <= 60 pF] :: t_r 156 ns <= 1000 ns
+PASS  B4 I2C low-level sink current <= 3 mA (S-13 fast-mode VOL spec) :: 1.40 mA
+PASS  B5 I2C low driven by Pico, seen by MPR121 (VIL 0.3*VDD_min) :: bus 0.742 V (+0.05 V shifter) vs VIL 0.930 V, margin 0.138 V
+PASS  B6 I2C low driven by MPR121, seen by RP2040 (VIL 0.8 V) :: pad 0.565 V vs 0.8 V, margin 0.235 V
+PASS  B7 I2C high seen by RP2040 (VIH 2.0 V) :: 3.30 V vs 2.0 V, margin 1.30 V
+PASS  B8 I2C high seen by MPR121 (VIH 0.7*VDD_max; module side pulled to its own VDD) :: module side high = VDD, margin 0.3*VDD >= 0.93 V (VIH up to 2.38 V)
+PASS  B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-17 IIOVDD_MAX) :: 15.5 mA per line at 3.4 V (2 lines 30.9 mA)
+  220 Ohm x 10 pF pad capacitance (ASSUMPTION) = 2.2 ns: negligible against 300 ns  CALCULATION
+  series 3k3: C   20 pF, tau 0.07 us vs CDT 1 us (ratio 0.07); IR at 63 uA = 0.208 V  CALCULATION
+  series 3k3: C  100 pF, tau 0.33 us vs CDT 4 us (ratio 0.08); IR at 63 uA = 0.208 V  CALCULATION
+  series 3k3: C  500 pF, tau 1.65 us vs CDT 32 us (ratio 0.05); IR at 63 uA = 0.208 V  CALCULATION
+  series 3k3: C 1000 pF, tau 3.30 us vs CDT 32 us (ratio 0.10); IR at 63 uA = 0.208 V  CALCULATION
+
+==========================================================================================
+(c) BOM COST (ADR-007 D-7 core definition)
+==========================================================================================
+  A1 Raspberry Pi Pico H (or Pico/W/2/2W + headers)    x1  5.00 .. 8.00 EUR   ASSUMPTION (hardware/README.md)
+  A2 Adafruit MPR121 breakout 1982                     x1  9.00 .. 12.00 EUR  ASSUMPTION; SOURCE S-05 USD 7.95 list (1-9 pcs) before EU shipping/VAT
+  Female header 1x20 (Pico socket)                     x2  1.00 .. 1.00 EUR   ASSUMPTION
+  Female header 1x13                                   x1  0.50 .. 0.50 EUR   ASSUMPTION
+  Female header 1x7                                    x1  0.40 .. 0.40 EUR   ASSUMPTION
+  J2 screw terminal 2-way 5.08 mm, interlocking        x7  2.00 .. 3.00 EUR   ASSUMPTION
+  SW1 tactile switch 6x6 mm                            x1  0.20 .. 0.20 EUR   ASSUMPTION
+  RV1 10k linear pot 9 mm + knob                       x1  1.00 .. 1.50 EUR   ASSUMPTION
+  R1..R12 3k3 1 % pulse-rated Vishay MBE04140C3301FC100 (DIN0414) x12 3.60 .. 7.92 EUR   SOURCE EE-S26 in reports/electronics/SOURCES_EE.md (sibling values 330R/330k: RS GBP 0.26, LCSC USD 0.30, qty 1-24); 3k3 equal price ASSUMPTION (CR-002, T-060)
+  C1 100 nF X7R 50 V radial 5.08 mm KEMET C322C104K5R5TA x1  0.20 .. 0.90 EUR   ASSUMPTION from distributor search EE-S30 in reports/electronics/SOURCES_EE.md (search extract, T-076, prices not verified; ADR-021)
+  R13/R14 4k7, R15/R16 220R, 0.25 W axial (Yageo MFR-12) x4  0.08 .. 0.20 EUR   ASSUMPTION
+  Single-sided copper clad 100x70 mm                   x1  1.00 .. 3.00 EUR   ASSUMPTION (part of the assembled board)
+  Core BOM (ADR-007 definition)                            23.98 .. 38.62 EUR  CALCULATION
+  excluded: Etchant/toner consumables                      0.50 .. 2.00 EUR  ASSUMPTION
+  excluded: Micro-USB data cable                           3.00 .. 3.00 EUR  ASSUMPTION
+  excluded: Crocodile leads x12 (optional)                 5.00 .. 10.00 EUR  ASSUMPTION
+  excluded: M3 hardware (optional)                         2.00 .. 2.00 EUR  ASSUMPTION
+FAIL  C1 core BOM upper bound <= 30 EUR :: core 23.98 .. 38.62 EUR
+
+SUMMARY: 30 checks, 25 PASS, 5 FAIL
+wrote reports/systems/budgets.md

@@ -16,5 +16,17 @@ MBE/SMA 0414 chart: log-log slope below the knee 0.496 (0.5 = constant V^2/R, en
   energy at the knee 182 mJ (same constant as at 3k3 -> 3k3 lies on the energy-limited branch)
   one IEC 4 kV strike puts 1.09 mJ into R (167x less than the rating pulse) and 3636 V across it, below the 5054 V plateau (1.39x); the 3k3 chart value 4083 V is used as the acceptance limit (conservative: it is an energy limit for a pulse whose tail T = 72 us is 132x the IEC tau 0.54 us)
   8 kV: 7273 V across R exceeds both the 3k3 chart value and the 5054 V plateau -> FAIL either way
-SELECTED: Vishay MBE/SMA 0414, 3k3 1 % (MBE04140C3301FC100): 4083 V >= 3636 V at 4 kV (PASS), < 7273 V at 8 kV (FAIL)
-ALTERNATIVE for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to +-20 % drift after 100 strikes
+V1.2 (superseded by ADR-023): Vishay MBE/SMA 0414, 3k3 1 % (MBE04140C3301FC100): 4083 V >= 3636 V at 4 kV (PASS), < 7273 V at 8 kV (FAIL)
+V1.2 alternative for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to +-20 % drift after 100 strikes
+
+# SMD board: YAGEO RC2512FK-073K3L 3k3 +-1 % (ADR-026). No sourced pulse capability for the IEC or the 1.2/50 us case.
+  R 3267 ohm: V_R 3633 V at 4 kV, 7266 V at 8 kV = 7.3x / 14.5x the 500 V overload voltage (SOURCE limit; CALCULATION)
+  R 3300 ohm: V_R 3636 V at 4 kV, 7273 V at 8 kV = 7.3x / 14.5x the 500 V overload voltage (SOURCE limit; CALCULATION)
+  R 3333 ohm: V_R 3640 V at 4 kV, 7279 V at 8 kV = 7.3x / 14.6x the 500 V overload voltage (SOURCE limit; CALCULATION)
+  energy into R: 1.09 mJ at 4 kV, 4.36 mJ at 8 kV; tau = 0.544 us; peak power 4007 W (4 kV), 16028 W (8 kV)   CALCULATION
+  old criterion (CR-002, 1.2/50 us chart): rating pulse energy 182 mJ (MBE0414 3k3 curve, above) and 231 mJ (HPWC2512 4596 V); one IEC 4 kV strike is 167x and 212x smaller   CALCULATION
+  film 5.15 x 2.70 x 0.010 mm: heat capacity 3.48e-04 J/K; adiabatic film rise 3.1 K (4 kV), 12.6 K (8 kV); with a x10 trim hot spot 31 K / 126 K
+  whole body 0.032 J/K: rise 0.034 K (4 kV); heat diffusion length in alumina during tau 2.3 um (ASSUMPTION alpha)   CALCULATION
+  mean field along the film 0.71 kV/mm at 4 kV (V_R / film length); the field across the laser-trim kerf is unknown
+RC2512FK-073K3L pulse capability at IEC 4 kV: NOT PROVEN (no sourced rating; energy and heating are small, the voltage is 7.3x the overload voltage; unknown: hot-spot or kerf breakdown, resistance drift, repeated strikes). 8 kV: NOT PROVEN.
+The Ex to GND 1.40 mm spark gap is a separate mechanism and is also unproven (check_gap.out, calc_gnd_bounce.out).

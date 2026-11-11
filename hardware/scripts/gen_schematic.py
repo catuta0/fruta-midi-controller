@@ -76,9 +76,9 @@ def module_symbol(full_name):
 		(exclude_from_sim no) (in_bom yes) (on_board yes)
 		(property "Reference" "A" (at 0 21.59 0) (effects (font (size 1.27 1.27))))
 		(property "Value" "Adafruit_MPR121_1982" (at 0 -22.86 0) (effects (font (size 1.27 1.27))))
-		(property "Footprint" "FrutaMIDI:Adafruit_MPR121_1982_Socket" (at 0 -25.4 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Footprint" "FrutaMIDI:Adafruit_MPR121_1982_SMD" (at 0 -25.4 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(property "Datasheet" "https://www.adafruit.com/product/1982" (at 0 -27.94 0) (effects (font (size 1.27 1.27)) (hide yes)))
-		(property "Description" "Adafruit MPR121 breakout (1982), original or STEMMA QT, socketed" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
+		(property "Description" "Adafruit MPR121 breakout (1982), original or STEMMA QT, header pins butted on surface pads" (at 0 0 0) (effects (font (size 1.27 1.27)) (hide yes)))
 		(symbol "Adafruit_MPR121_1982_0_1"
 			(rectangle (start -15.24 17.78) (end 15.24 -20.32) (stroke (width 0.254) (type default)) (fill (type background)))
 		)
@@ -219,10 +219,10 @@ class Sheet:
 	(paper "A3")
 	(title_block
 		(title "{title}")
-		(date "2026-11-07")
-		(rev "1.2")
+		(date "2026-11-09")
+		(rev "1.3")
 		(company "github.com/catuta0/fruta-midi-controller")
-		(comment 1 "Raspberry Pi Pico + Adafruit MPR121 (1982), single-sided PCB")
+		(comment 1 "Pico + MPR121 (1982), single-sided SMD PCB, copper on component side")
 	)
 	(lib_symbols
 {libs}
@@ -239,18 +239,17 @@ class Sheet:
 
 def build():
     """A3 sheet, one dashed frame per functional block. Signal flow left to right:
-    Pico -> I2C bus -> MPR121 module -> series resistors -> screw terminals."""
+    Pico -> I2C bus -> MPR121 module -> series resistors -> electrode wire pads."""
     s = Sheet()
 
     # ------------------------------------------------------------------ Raspberry Pi Pico
-    s.frame("1. Microcontroller: Raspberry Pi Pico (socketed)", 30.48, 78.74, 124.46, 190.50)
+    s.frame("1. Microcontroller: Raspberry Pi Pico (castellated)", 30.48, 78.74, 124.46, 190.50)
     s.text("I2C1: SDA = GP26, SCL = GP27 (Wire1).  Button = GP22.\n"
            "Potentiometer = GP28 (ADC2).  Build the firmware with FRUTAMIDI_PCB.", 31.75, 83.82)
     PX, PY = 76.20, 139.70
     pico = s.symbol("MCU_Module", "RaspberryPi_Pico", "A1", "RaspberryPi_Pico", PX, PY,
-                    "FrutaMIDI:RaspberryPi_Pico_Socket", ref_at=(-17.78, -40.64),
-                    fields={"Manufacturer": "Raspberry Pi", "MPN": "SC0915",
-                            "Socket": "2x female header 1x20, 2.54 mm (generic)"})
+                    "FrutaMIDI:RaspberryPi_Pico_Castellated_HomeEtch", ref_at=(-17.78, -40.64),
+                    fields={"Manufacturer": "Raspberry Pi", "MPN": "SC0915", "Mouser": "358-SC0915"})
     used = {"31": "SDA_PICO", "32": "SCL_PICO", "34": "POT", "33": "AGND", "29": "BTN", "36": "+3V3", "3": "GND"}
     for num, net in used.items():
         s.connect(pico, PX, PY, num, net)
@@ -263,52 +262,50 @@ def build():
     s.frame("2. I2C bus", 132.08, 35.56, 208.28, 91.44)
     s.text("R13/R14: 4.7k pull-ups to 3V3 (rise time at 400 kHz, T-050).\n"
            "R15/R16: 220R between the Pico pins and the bus (wrong-wire current limit, T-055).", 133.35, 40.64)
-    PU_FIELDS = {"Manufacturer": "Yageo", "MPN": "MFR-12FTF52-4K7"}
+    PU_FIELDS = {"Manufacturer": "YAGEO", "MPN": "RC1206FR-074K7L", "Mouser": "603-RC1206FR-074K7L"}   # T-096: 4k7 1 % 1206
     for k, net in enumerate(("SCL", "SDA")):
         rx, ry = 144.78 + 10.16 * k, 63.50
         r = s.symbol("Device", "R", "R%d" % (13 + k), "4k7", rx, ry,
-                     "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=PU_FIELDS, ref_at=(2.54, -1.27))
+                     "FrutaMIDI:R_1206_HomeEtch", fields=PU_FIELDS, ref_at=(2.54, -1.27))
         s.connect(r, rx, ry, "1", "+3V3")
         s.connect(r, rx, ry, "2", net)
-    SR_FIELDS = {"Manufacturer": "Yageo", "MPN": "MFR-12FTF52-220R"}
+    SR_FIELDS = {"Manufacturer": "YAGEO", "MPN": "RC1206FR-07220RL", "Mouser": "603-RC1206FR-07220RL"}   # T-096: 220R 1 % 1206
     for k, net in enumerate(("SCL", "SDA")):
         rx, ry = 180.34, 58.42 + 12.70 * k
         r = s.symbol("Device", "R", "R%d" % (15 + k), "220", rx, ry,
-                     "FrutaMIDI:R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch", fields=SR_FIELDS, ref_at=(0, -2.54), rot=90)
+                     "FrutaMIDI:R_1206_HomeEtch", fields=SR_FIELDS, ref_at=(0, -2.54), rot=90)
         s.connect(r, rx, ry, "1", net + "_PICO")
         s.connect(r, rx, ry, "2", net)
     JX, JY = 200.66, 81.28
-    j1 = s.symbol("Connector_Generic", "Conn_01x02", "J1", "CFG_SCL_SDA", JX, JY, "FrutaMIDI:Config_2pads",
-                  ref_at=(0, -3.81))
+    j1 = s.symbol("Connector_Generic", "Conn_01x02", "J1", "CFG_SCL_SDA", JX, JY, "FrutaMIDI:Config_2pads_SMD",
+                  ref_at=(0, -3.81), in_bom=False)        # T-103 (F3-010): copper only, like J2, J3 and JP1
     for num, net in (("1", "SCL"), ("2", "SDA")):
         s.connect(j1, JX, JY, num, net)
-    s.text("J1: holes for the two configuration wires", 165.10, 86.36)
+    s.text("J1: surface pads, 2 insulated wires", 165.10, 86.36)
 
     # ------------------------------------------------------------------ MPR121 module, electrodes, terminals
-    s.frame("3. Touch sensing: MPR121 module, electrode resistors, screw terminals", 213.36, 93.98, 340.36, 187.96)
+    s.frame("3. Touch sensing: MPR121 module, electrode resistors, electrode wire pads", 213.36, 93.98, 340.36, 187.96)
     MX, MY = 264.16, 139.70
     mod = s.symbol("FrutaMIDI", "Adafruit_MPR121_1982", "A2", "Adafruit_MPR121_1982", MX, MY,
-                   "FrutaMIDI:Adafruit_MPR121_1982_Socket", ref_at=(0, -22.86),
-                   fields={"Manufacturer": "Adafruit", "MPN": "1982",
-                           "Socket": "female header 1x13 + 1x07, 2.54 mm (generic)"})
+                   "FrutaMIDI:Adafruit_MPR121_1982_SMD", ref_at=(0, -22.86),
+                   fields={"Manufacturer": "Adafruit", "MPN": "1982", "Mouser": "485-1982"})
     s.connect(mod, MX, MY, "1", "GND")
     for k, num in enumerate(range(14, 21)):
         s.connect(mod, MX, MY, str(num), "S%d" % (k + 1))   # S1/S7 via JP1; SDA/SCL by hand wire from J1
 
     # T-050: series resistor per electrode (ESD current limit; 2.7 k <= R <= 3.3 k, sim/electronics/calc).
     # Drawn on the wire between the module pin (net ELEx) and the terminal (net Ex).
-    # T-060 / CR-002: pulse-rated part, 1.2/50 us rating 4.08 kV at 3k3 >= 3.64 kV across R at IEC 4 kV
-    # (sim/electronics/calc/calc_pulse_rated.py); DIN0414 body lying flat, 15.24 mm pitch (flashover gap).
-    R_FIELDS = {"Manufacturer": "Vishay Beyschlag", "MPN": "MBE04140C3301FC100"}
+    # T-096 / ADR-026: YAGEO RC2512FK-073K3L 3k3 1 %, 1 W, 200 V thick film. Land G 5.0 mm kept. No sourced pulse capability for the
+    # IEC or the 1.2/50 us case: NOT PROVEN against 3.6 kV across R at IEC 4 kV (calc_pulse_rated.out).
+    R_FIELDS = {"Manufacturer": "YAGEO", "MPN": "RC2512FK-073K3L", "Mouser": "603-RC2512FK-073K3L"}
     TX, TY = 325.12, MY - 2.54                              # terminal pin 2 (E0) level with module pin 2 (E0)
-    t = s.symbol("Connector", "Screw_Terminal_01x14", "J2", "Screw terminals 5.08 mm (7x 2-way)", TX, TY,
-                 "FrutaMIDI:TerminalBlock_5.08_1x14", ref_at=(0, -20.32),
-                 fields={"Manufacturer": "Phoenix Contact", "MPN": "1715721 (MKDS 1,5/ 2-5,08) x7"})
+    t = s.symbol("Connector_Generic", "Conn_01x14", "J2", "Electrode wire pads 5.08 mm", TX, TY,
+                 "FrutaMIDI:WirePads_1x14_P5.08mm", ref_at=(0, -20.32), in_bom=False)
     for i in range(12):
         mx, my, _ = s.pin_end(mod, MX, MY, str(2 + i))
         rx = 297.18
         r = s.symbol("Device", "R", "R%d" % (i + 1), "3k3", rx, my,
-                     "FrutaMIDI:R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch", fields=R_FIELDS, hide_ref=True,
+                     "FrutaMIDI:R_2512_HomeEtch_G5.0mm", fields=R_FIELDS, hide_ref=True,
                      rot=90)              # rows are 2.54 mm apart: designators are given by the column title
         r1x, r1y, _ = s.pin_end(r, rx, my, "1")
         r2x, r2y, _ = s.pin_end(r, rx, my, "2")
@@ -327,15 +324,15 @@ def build():
     s.power("GND", gx - 2.54, gy - 2.54, "#PWR91", 180)
     s.connect(t, TX, TY, "14", "GND")
 
-    # Q-row wire holes (J3) and the 3V3 selector (JP1)
+    # Q-row surface wire pads (J3) and the 3V3 selector (JP1)
     QHX, QHY = 231.14, 139.70
-    jq = s.symbol("Connector_Generic", "Conn_01x07", "J3", "WIRE_HOLES_S1_S7", QHX, QHY,
-                  "FrutaMIDI:WireHoles_1x07_P2.54mm", in_bom=False, ref_at=(0, -11.43))
+    jq = s.symbol("Connector_Generic", "Conn_01x07", "J3", "WIRE_PADS_S1_S7", QHX, QHY,
+                  "FrutaMIDI:WirePads_1x07_P2.54mm", in_bom=False, ref_at=(0, -11.43))
     for k in range(7):
         s.connect(jq, QHX, QHY, str(k + 1), "S%d" % (k + 1))
     QX, QY = 233.68, 114.30
     jp = s.symbol("Jumper", "SolderJumper_3_Open", "JP1", "3V3_ORIG_QT", QX, QY,          # turned over: 3V3 on top
-                  "FrutaMIDI:SolderJumper_3_THT_P3.81mm", in_bom=False, ref_at=(0, 3.81), mirror_x=True)
+                  "FrutaMIDI:SolderJumper_3_SMD_P3.81mm", in_bom=False, ref_at=(0, 3.81), mirror_x=True)
     s.connect(jp, QX, QY, "1", "S1")
     s.connect(jp, QX, QY, "2", "+3V3")
     s.connect(jp, QX, QY, "3", "S7")
@@ -344,40 +341,36 @@ def build():
            "  STEMMA QT module (current):      JP1 bridge 'QT'   (3V3 -> S7)   wires SDA -> S3   SCL -> S4\n"
            "Module GND enters through the electrode row (pin 1), the same on both revisions.",
            215.90, 165.10)
-    s.text("R1-R12: 3.3k in series with each electrode (ESD current limit, T-050);\npulse-rated DIN0414, lying flat (flashover gap, T-060).", 215.90, 180.34)
+    s.text("R1-R12: 3.3k in series with each electrode (ESD current limit, ADR-026);\nthick film 2512 1 %, pulse capability not proven, land gap 5.0 mm, no track under the body.", 215.90, 180.34)
 
     # ------------------------------------------------------------------ user controls and mounting holes
     s.frame("4. User controls and mounting holes", 30.48, 198.12, 124.46, 254.00)
     BX, BY = 50.80, 218.44
-    sw = s.symbol("Switch", "SW_Push", "SW1", "SW_Push_6mm", BX, BY, "FrutaMIDI:SW_PUSH_6mm",
-                  fields={"Manufacturer": "Omron", "MPN": "B3F-1000"})
+    sw = s.symbol("Switch", "SW_Push", "SW1", "B3S-1000", BX, BY, "FrutaMIDI:SW_SPST_B3S-1000_HomeEtch",
+                  fields={"Manufacturer": "Omron", "MPN": "B3S-1000", "Mouser": "653-B3S-1000"})
     s.connect(sw, BX, BY, "1", "BTN")
     s.connect(sw, BX, BY, "2", "GND")
     s.text("SCALE button", 45.72, 226.06)
     RX, RY = 96.52, 218.44
-    # T-076: symbol with the mounting-pin (MP) pin, so the two metal tabs of the RK09K can be tied to AGND
-    # (frame/shaft at the ADC ground: no floating metal under the user's hand next to the wiper).
-    rv = s.symbol("Device", "R_Potentiometer_MountingPin", "RV1", "10k lin (B10K)", RX, RY,
-                  "FrutaMIDI:Potentiometer_RK09K_Vertical", ref_at=(-5.08, -5.08),
-                  fields={"Manufacturer": "Alps Alpine", "MPN": "RK09K series, 10k linear (B), vertical"})
+    # T-091 / ADR-023 D-2: off-board potentiometer on 3 surface wire pads; no MP pin on the board, the frame is not
+    # tied to AGND here (R-011, reports/electronics).
+    rv = s.symbol("Device", "R_Potentiometer", "RV1", "10k lin (B10K)", RX, RY,
+                  "FrutaMIDI:WirePads_1x03_P5.08mm", ref_at=(-5.08, -5.08),
+                  fields={"Manufacturer": "Bourns", "MPN": "PTV09A-4015F-B103", "Mouser": "652-PTV09A-4015FB103"})   # T-096: 10k linear, insulated flat shaft, off-board on wires
     s.connect(rv, RX, RY, "1", "+3V3")
     s.connect(rv, RX, RY, "2", "POT")
     s.connect(rv, RX, RY, "3", "AGND")
-    s.connect(rv, RX, RY, "MP", "AGND")
-    s.text("OCTAVE potentiometer", 101.60, 223.52)
-    # T-076: C1 100 nF wiper filter (ADC source impedance / pickup); C322 case = 5.08 mm lead spacing (SOURCE EE-S29)
+    s.text("OCTAVE pot (off-board, 3 wires)", 101.60, 223.52)
+    # T-091 / ADR-023: C1 100 nF 1206 X7R 50 V wiper filter, near the Pico (datasheet not opened)
     CX, CY = 111.76, 236.22
-    c1 = s.symbol("Device", "C", "C1", "100n X7R 50V", CX, CY, "FrutaMIDI:C_Radial_KEMET_C322_P5.08mm_HomeEtch",
-                  ref_at=(2.54, -1.27), fields={"Manufacturer": "KEMET", "MPN": "C322C104K5R5TA"})
+    c1 = s.symbol("Device", "C", "C1", "100n X7R 50V", CX, CY, "FrutaMIDI:C_1206_HomeEtch",
+                  ref_at=(2.54, -1.27), fields={"Manufacturer": "Samsung", "MPN": "CL31B104KBCNNNC", "Mouser": "187-CL31B104KBCNNNC"})
     s.connect(c1, CX, CY, "1", "POT")
     s.connect(c1, CX, CY, "2", "AGND")
-    s.text("C1: wiper to AGND, next to RV1", 88.90, 243.84)
+    s.text("C1: wiper to AGND, near Pico", 88.90, 243.84)
     for k in range(4):
         s.symbol("Mechanical", "MountingHole", "H%d" % (k + 1), "M3", 43.18 + 12.70 * k, 243.84,
                  "FrutaMIDI:MountingHole_3.2mm_M3", in_bom=False)
-
-    # The female-header sockets are part of how A1 and A2 are mounted, so they are recorded in the
-    # "Socket" field of those two symbols (exported as a BOM column), not drawn as unconnected symbols.
 
     s.write(os.path.join(HW, PROJECT + ".kicad_sch"), "FrutaMIDI — capacitive MIDI controller")
 

@@ -1,21 +1,29 @@
-PASS  REQ-027 tracks only on B.Cu :: 120 segments, layers ['B.Cu']
+PASS  REQ-027 tracks only on F.Cu :: 121 segments, layers ['F.Cu'], 0 arcs
+PASS  REQ-027 no copper object on B.Cu :: objects with (layer "B.Cu"): 0; copper pads on B.Cu or *.Cu: []
 PASS  REQ-027 no vias :: via objects: 0
-PASS  REQ-027 no copper zones (no ground pour) :: zones: 0
-PASS  REQ-027 through-hole only (no SMD pads) :: smd pads: 0
-PASS  REQ-029 track width >= 0.8 mm (stubs) / signal 1.0 / power 1.2 :: widths used [0.8, 1.0, 1.2] mm
+PASS  REQ-027 no copper pour (only rule areas) :: 3 zones: 3 keep-out rule areas, 0 copper zones
+PASS  REQ-027 every copper pad is surface-mount on F.Cu with no drill :: 127 copper pads; not smd on F.Cu: []; drilled: []
+PASS  REQ-027 every part on the copper side :: footprints not on F.Cu: []
+PASS  REQ-027 exactly 4 holes, all M3 NPTH on H1..H4 :: 4 drilled pads; NPTH ['H1', 'H2', 'H3', 'H4'] drill [3.2] mm
+PASS  REQ-027 drill file has the same 4 holes as the board :: tools [('1', '3.200')]; drill hits [(5.0, -65.0), (29.8, -4.0), (96.0, -4.0), (96.5, -58.0)]; board holes [(5.0, -65.0), (29.8, -4.0), (96.0, -4.0), (96.5, -58.0)]
+PASS  REQ-027 every multi-pad net is one F.Cu island (no extra wire bridge needed) :: 40 multi-pad nets; split: []; same-number pads joined inside the part only: ['SW1.1', 'SW1.2']
+PASS  REQ-027 wire links limited to the 2 I2C configuration links (J1 SCL/SDA to J3 S1..S7) :: J1 [('1', 'SCL'), ('2', 'SDA')]; J3 ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7']; connection footprints ['J1', 'J2', 'J3', 'JP1'] (J2 = electrode wires, JP1 = solder bridge)
 PASS  REQ-028 board outline 100 x 70 mm :: outline 100.000 x 70.000 mm (4 Edge.Cuts lines)
-PASS  REQ-029 annular ring >= 0.4 mm [Adafruit_MPR121_1982_Socket] :: min ring 0.40 mm (pad 1 rect 1.8x2.4 drill 1.0 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [C_Radial_KEMET_C322_P5.08mm_HomeEtch] :: min ring 0.55 mm (pad 1 circle 2.0x2.0 drill 0.9 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [Config_2pads] :: min ring 0.65 mm (pad 1 rect 2.2x2.2 drill 0.9 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [Potentiometer_RK09K_Vertical] :: min ring 0.40 mm (pad 1 rect 2.6x1.8 drill 1.0 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [R_Axial_DIN0204_P2.54mm_Vertical_HomeEtch] :: min ring 0.40 mm (pad 1 circle 1.6x1.6 drill 0.8 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [R_Axial_DIN0414_P15.24mm_Horizontal_HomeEtch] :: min ring 0.55 mm (pad 1 circle 2.2x2.2 drill 1.1 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [RaspberryPi_Pico_Socket] :: min ring 0.40 mm (pad 1 rect 2.4x1.8 drill 1.0 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [SW_PUSH_6mm] :: min ring 0.65 mm (pad 1 circle 2.4x2.4 drill 1.1 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [SolderJumper_3_THT_P3.81mm] :: min ring 0.57 mm (pad 1 rect 1.94x2.4 drill 0.8 offset 0.0/0.0)
-PASS  REQ-029 annular ring >= 0.4 mm [TerminalBlock_5.08_1x14] :: min ring 0.80 mm (pad 1 rect 3.0x4.5 drill 1.4 offset 0.0/0.75)
-PASS  REQ-029 annular ring >= 0.4 mm [WireHoles_1x07_P2.54mm] :: min ring 0.45 mm (pad 1 circle 1.8x1.8 drill 0.9 offset 0.0/0.0)
-PASS  ADR-021 JP1 pad gap >= 1.8 mm :: SolderJumper_3_THT_P3.81mm: pitch [3.81, 3.81] mm, pad-to-pad copper gaps [1.87, 1.87] mm
-PASS  ADR-021 J2 pads 3.0 x 4.5 mm :: 14 pads, sizes [(3.0, 4.5)], shapes ['oval', 'rect'], drill offsets [0.75] mm
+PASS  REQ-029 track width >= 0.8 mm everywhere :: widths used [0.8, 1.0, 1.2] mm
+PASS  REQ-029 power tracks >= 1.2 mm :: power nets ['+3V3', '/S1', '/S7', 'GND']; below 1.2 mm: []
+PASS  REQ-029 signal tracks >= 1.0 mm except stubs <= 6.0 mm :: 5 segments below 1.0 mm, longest 5.08 mm, nets ['/S2', '/S3', '/S4', '/S5', '/S6']; too long: []
+PASS  REQ-029 copper clearance >= 0.6 mm between different nets (pads and tracks) :: minimum 0.680 mm between C1.2 [/AGND] and track#94 (73.58,71.80)-(88.50,71.80) w1.00 [/SCL_PICO] (etched text excluded, see DRC)
+PASS  REQ-029 copper >= 0.5 mm from the board edge (min_copper_edge_clearance, hardware/frutamidi.kicad_pro) :: minimum 0.680 mm at A1.1
+PASS  REQ-029 remaining holes: drill >= 0.8 mm, copper >= 0.5 mm from the hole edge (min_hole_clearance, frutamidi.kicad_pro) :: per hole (nearest copper): H4 2.50 mm to track#2 (84.50,58.42)-(84.50,52.00) w1.20, H2 4.69 mm to R14.1, H3 2.98 mm to J2.14, H1 12.86 mm to A1.20
+INFO  M3 metal head/washer overlap, nearest copper from hole centre minus radius (2.8, 3.5) mm: H4 head +1.30 / washer +0.60 mm, H2 head +3.49 / washer +2.79 mm, H3 head +1.78 / washer +1.08 mm, H1 head +11.66 / washer +10.96 mm
+PASS  REQ-029 every SMD land >= 1.0 mm in both directions :: smallest land 1.30 mm; below the rule: []
+PASS  REQ-029 land sizes match the v1.3 table after T-103 (A1, A2, J1, J3, RV1, SW1, C1, R1..R16) :: 23 parts compared; mismatches: []
+PASS  REQ-029 no bare copper in the 3 Pico keep-out rule areas :: 3 keep-out polygons; copper inside: []
+PASS  ADR-028 D-1 Pico end inside the board and USB face >= 1.0 mm beyond the edge :: A1 at (4.50, 1.48); Pico end 0.11 mm inside the edge; face 1.19 mm beyond it
+PASS  ADR-026 R1-R12 on footprint R_2512_HomeEtch_G5.0mm :: R1..R12 not on it: []
+PASS  REQ-023 R1-R12 land gap >= 3.5 mm (4 kV rule) and = 5.0 mm (ADR-023) :: land gaps [5.0] mm
+PASS  ADR-021/ADR-023 JP1 is a 3-pad SMD bridge, pads 1.94 x 2.4 mm, pitch 3.81 mm, gap >= 1.8 mm :: SolderJumper_3_SMD_P3.81mm: types ['smd'], pitch [3.81, 3.81] mm, gaps [1.87, 1.87] mm
+PASS  ADR-023 J2 is 14 SMD solder-wire pads 3.0 x 4.5 mm at 5.08 mm pitch :: 14 pads, sizes [(3.0, 4.5)], types ['smd'], shapes ['oval', 'rect'], pitch [5.08] mm
 PASS  ADR-020 Ex <-> GND edge-track spark gap 1.40 +/- 0.05 mm :: 12 electrode pads; gap min 1.400 / max 1.400 mm; nearest GND track is the edge track for 12 of 12; per pad E0=1.400, E1=1.400, E2=1.400, E3=1.400, E4=1.400, E5=1.400, E6=1.400, E7=1.400, E8=1.400, E9=1.400, E10=1.400, E11=1.400
-SUMMARY: 20 checks, 20 PASS, 0 FAIL
+INFO  nearest I2C copper to electrode copper (REQ-038): 3.30 mm between track#99 (93.94,70.90)-(138.81,70.90) w1.00 [/SDA] and A2.10 [/ELE8]
+SUMMARY: 26 checks, 26 PASS, 0 FAIL

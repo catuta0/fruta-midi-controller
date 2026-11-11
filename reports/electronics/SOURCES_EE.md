@@ -37,3 +37,70 @@ value comes from a search-engine extract of the document; it was not opened, so 
 | EE-S28 | Raspberry Pi RP2040 datasheet, ESD table (page 616), local extract `sim/systems/datasheets/rp2040-datasheet-gpio-dc.txt` | HBM 4 kV (JEDEC JS-001-2012), "Digital (FT) pins only"; CDM 500 V (JESD22-C101E); no separate HBM value found for the ADC-capable GPIO26–29 | Read (T-073, local extract) |
 | EE-S29 | KEMET "Multilayer Ceramic Capacitors / Axial & Radial" catalogue (Golden Max conformally coated radial, older CA-suffix edition), mirror https://sy-dep-epc-lpc.web.cern.ch/components/datasheets/epc-lpc%20(converters)/C320%20CERAMIC%20CAPACITOR%20(KEMET).pdf, sha256 935cb3bf0b1fb26f904310cd0a6922dba2a582930437383a4b88c8b72e8fb8ba; text extracted from the PDF content streams, excerpt `reports/electronics/evidence/T-076/kemet_golden_max_extract.txt` (T-076) | Dimensions table: C320 L .200 (5.08) / H .260 (6.60) / T .125 (3.18) max, **LS .100 (2.54)**, lead .020 (0.51); **C322 same body, LS .200 (5.08 mm)**, lead 0.51 mm; note "Case Sizes C320/C322/C323 are identical electrically". 50 V X7R C32x range includes .1 µF = C32(2)C104(K)5R5 (X7R table). Code: K = ±10 %, 5 = 50 V, R = X7R (±15 % over −55…+125 °C). So the manager's example C320C104K5R5TA has 2.54 mm leads; the 5.08 mm part is **C322C104K5R5TA**. The current "TA" suffix (vs "CA" in this edition) is ASSUMED to be the lead-free version of the same part (distributor listings use TA) | Read (old edition; check current KEMET page before ordering) |
 | EE-S30 | Distributor listings for C322C104K5R5TA (search extract, T-076): Cytech USD 0.372 at 1+, LCSC USD 0.382, RS UK GBP 0.212 at 50+, myMectronic USD 0.87–0.90 | ≈0.20–0.90 € per piece at quantity 1 | Search, not verified |
+
+## SMD board sources (T-090, added to this list in T-092)
+
+"Read" means the document was opened locally and the value found in it. PDFs and full sha256 values: `reports/electronics/evidence/T-090/datasheets/`; pages read through `evidence/T-090/chartread.py` and `pdfpages.swift`.
+
+| ID | Source | Values used | How |
+|---|---|---|---|
+| T90-S1 | Raspberry Pi Pico datasheet RP-008307-DS-2, sha256 757ff485...aa89eb, `sim/systems/datasheets/pico-datasheet.pdf` | Figures 3, 5, 6: castellation land 16.18 / 22.58 mm, 1.6 mm pad, 2.54 mm pitch; TP positions; USB shell pads; module end to pin 1 column 1.37 mm | Read (pages 7, 10, 11 rendered) |
+| T90-S2 | TT Electronics HPWC Series 09.23, sha256 1088aba0...eb1a, `evidence/T-090/datasheets/tt_hpwc_0923.pdf` | 2512: L 6.5 ±0.3, A 0.6 ±0.3, W 3.2 ±0.2, B min 4.4 mm; ±5 %; 1.2/50 µs chart: 4352-4472 V at 2850 Ω, 4472 V at 3000 Ω, 4596 V at 3150 Ω and at 3300 Ω (chartread_raw.txt) (raster chart, ±5 % reading ASSUMPTION, `evidence/T-090/charts/chartread_raw.txt`) | Read |
+| T90-S3 | Vishay CMA 0204, CMB 0207, doc. 28956 rev. 29-Mar-2023, sha256 3bd3f934...8c61 | Dimensions, ESD, chart (rejected option) | Read |
+| T90-S4 | Vishay MMU 0102, MMA 0204, MMB 0207, doc. 28963 rev. 02-Jun-2026, sha256 07bf424d...7969 | Chart, dimensions (rejected option) | Read |
+| T90-S5 | Vishay MMA 0204 HV, MMB 0207 HV, doc. 28880, sha256 0f8dca2b...6519 | Range 340 kΩ-10 MΩ (excluded) | Read |
+| T90-S6 | Vishay Recommended Solder Pad Dimensions, doc. 28950 rev. 12-Jul-2022, sha256 9e2b145c...144e | 1206 land G 1.75, Y 1.15, X 1.80 mm; 0207 lands | Read |
+| T90-S7 | Vishay CMA/CMB product overview, doc. 48636, sha256 b6cc6a9f...c4 | Cross-check only | Read |
+| T90-S8 | NXP MPR121 datasheet Rev 4, sha256 a02ff161...55c | QFN-20 pitch 0.40, terminal 0.20 mm (bare chip rejected) | Read (same document as EE-S01) |
+| T90-S9 | Omron B3S catalogue, sha256 c6391ce5...289b | SW1 land 9.5 / 6.4 / 4.5 / 1.3 mm, height, force | Read |
+| T90-S10 | Adafruit Eagle `Adafruit MPR121 Breakout.brd` | Board 33.02 × 19.05 mm, drills, no bottom-side parts, bottom copper and vias | Read through WebFetch (truncated, then read with offset). STEMMA QT board bottom side NOT opened |
+| T90-S11 | Adafruit product page 1982 | Header included, 2021 revision | Read through WebFetch |
+
+### Not opened (stated as ASSUMPTION wherever used)
+
+| Item | Used for | Status |
+|---|---|---|
+| KEMET C1206C104K5RACTU (C1, 1206 X7R) | Tolerance ±10 %, X7R ±15 % in calc_pot_rc | **Datasheet NOT opened** (certificate error on the KEMET site, T-090); EIA class figures |
+| Generic 1206 thick-film resistors R13-R16 | 1206 land only | **No datasheet opened**; land from T90-S6 |
+| HPWC2512-3K0JT18 orderable MPN | BOM | Built from the T90-S2 pattern; **stock and price NOT confirmed** |
+| FR-4 copper peel strength 0.8-1.05 N/mm | T-090 pry margins | **IPC-4101 NOT opened**, recalled; home-etched and heated copper may be lower |
+| FR-4 modulus 22 GPa, Poisson 0.15 | calc_usb_pry | **No laminate datasheet opened**, typical values |
+| ISO 7045 M3 pan head 5.6 mm, ISO 7089 M3 washer 7.0 mm, ISO 273 fine clearance 3.2 mm | Screw-head and washer clearance | **Standards NOT opened**, recalled |
+| IEC 61000-4-2 (EE-S16), IEC 60664-1 F.2 (EE-S25), IPC-2221B (EE-S15) | ESD source, flashover rule, track rise | **Standards NOT opened**, recalled (as before) |
+| Off-board potentiometer (ADR-023 D-2) | R-011, pot RC | Superseded by T94-S7 (T-094): RK09D1130C2P |
+
+## LCSC-only BOM study (T-094, opened 2026-11-09)
+
+Distributor data (Cxxxxx, stock, price, minimum and multiple) and the list of pages not opened: `evidence/T-094/distributor_pages.txt`.
+
+| ID | Document | Data used | Status |
+|---|---|---|---|
+| T94-S1 | Vishay CRCW-HP e3, doc. 20043 rev. 17-Mar-2026, sha256 08344ee1...6505, `evidence/T-094/datasheets/vishay_crcw_hp_20043.pdf` | Pulse voltage chart: Umax 1750 V at t up to about 1 ms, not 1.2/50 µs; dimensions | Read |
+| T94-S2 | TE CRGP 9-1773463-9 CIS WR 03/2018, https://www.lcsc.com/datasheet/C2082816.pdf | One-pulse power chart (50 rectangular impulses, 2512 about 2000 W up to 10 µs, chart reading); max overload 1000 V; termination dimensions | Read in the LCSC viewer, pages 1-7, no local copy |
+| T94-S3 | Bourns CMP, sha256 66189cdc...6401, `evidence/T-094/datasheets/bourns_cmp.pdf` | Power against pulse duration only, no 1.2/50 µs chart | Read |
+| T94-S4 | Yageo SR, sha256 5fa9b7ab...a8f5, `evidence/T-094/datasheets/yageo_sr_20105.pdf` | Pulse power figures, ESD 2 kV HBM, no 1.2/50 µs chart | Read |
+| T94-S5 | hanxia HX 6x6x4.3WS drawing, https://www.lcsc.com/datasheet/C25168849.pdf | Lead span 6.7 mm (rejected: different land) | Page 1 only |
+| T94-S6 | Alps RK09K1130AP5 product page, https://tech.alpsalpine.com/e/products/detail/RK09K1130AP5/ | Insulated shaft series, shaft type Driver, LM1 15 mm, 10 kΩ, taper 1B, 0.05 W, 20 V DC (rejected: driver shaft is not a knob shaft) | Read (web page; PDF catalogue NOT opened) |
+| T94-S7 | Alps RK09D1130C2P product page, https://tech.alpsalpine.com/e/products/detail/RK09D1130C2P/ | Insulated shaft series, shaft type Flat, LM1 25 mm, with collar, 10 kΩ, taper 1B, 0.05 W, 20 V DC | Read, first part of the page (web page; PDF catalogue NOT opened) |
+
+| Item | Used for | Status |
+|---|---|---|
+| FOJAN FRC1206F4701TS, FRC1206F2200TS, Samsung CL31B104KBCNNNC | R13-R16, C1 | LCSC listing parameters only; **manufacturer datasheets NOT opened**; 1206 land from T90-S6 |
+| ZX-PZ2.54-1-16PZZ | A2 header (optional) | LCSC listing only; **drawing NOT opened** |
+| TME, DigiKey, Farnell pages | Fallback information | **NOT opened** (see the evidence file) |
+
+## T-096 (2026-11-09)
+
+| Id | Source | Used for | Status |
+|---|---|---|---|
+| T96-S0 | YAGEO RC_L series datasheet V.11 (May 15 / Jul. 7, 2020), sha256 6b39ec0f...a197, `evidence/T-096/datasheets/yageo_rc_group51.pdf` (copy hosted by rcscomponents.kiev.ua; the yageo.com links returned 404) | RC2512 Table 1: L 6.35 ±0.10, W 3.10 ±0.15, H 0.55 ±0.10, I1 0.60 ±0.20, I2 0.50 ±0.20 mm; Table 2, 1 W row: max working 200 V, max overload 500 V, dielectric withstanding 500 V. No pulse, surge or ESD rating | Text extracted (`evidence/T-096/text/`) |
+| T96-S0b | Mouser Portugal page, RC2512FK-073K3L, Mouser No. 603-RC2512FK-073K3L | 3.3 kΩ 1 % 1 W 200 V, 6.35 x 3.1 x 0.55 mm; stock 13, 68,000 on order expected 18 May 2027; 1 at 0.189, 10 at 0.109 EUR | Read 2026-11-09 and again 2026-11-11 (unchanged) |
+| T96-S1 | Mouser Portugal page, HPWC2512-3K3JT1 (ADR-025, superseded by ADR-026), Mouser No. 756-HPWC2512-3K3JT1 | 3.3 kΩ 5 % 2512 2 W 500 V; stock 2,381; 1 at 2.05, 10 at 1.25, 25 at 1.01, 100 at 0.90 EUR | Read 2026-11-09 |
+| T96-S2 | Mouser Portugal page, PTV09A-4015F-B103, Mouser No. 652-PTV09A-4015FB103 | 10 kΩ ±20 %, linear, 50 mW, flatted 6 mm shaft 15 mm, carbon, insulated shaft; stock 772; 1 at 0.765 EUR | Read 2026-11-09. The Mouser number has no hyphen before B103 |
+| T96-S3 | Bourns PTV09 series datasheet, sha256 411cdb6a...8558, `evidence/T-096/datasheets/bourns_ptv09.pdf` | ±20 %; residual resistance "500 ohms or ±1 % max."; 0.05 W; 20 VDC; 280° ±10°; insulated shaft; ordering code; -4 = horizontal, bushingless | Text extracted, page 2 drawing inspected. No numeric linearity tolerance in the datasheet |
+| T96-S4 | Mouser Portugal page, Chip Quik EGS10C-20G, Mouser No. 910-EGS10C-20G | Optional silicone candidate; stock 601; 1 at 4.26 EUR | Listing only; **datasheet NOT opened, cure type NOT CONFIRMED** |
+| T96-S5 | Mouser numbers, stock and prices (re-read 2026-11-11: SC0915 3.44 EUR stock 9,200; 1982 6.84 EUR stock 168; RC1206FR-074K7L and -07220RL 0.086 EUR; CL31B104KBCNNNC 0.12 EUR; B3S-1000 0.697 EUR; PTV09A-4015F-B103 0.765 EUR stock 752; SPK-016A 0.327 EUR) of 358-SC0915, 485-1982, 603-RC1206FR-074K7L, 603-RC1206FR-07220RL, 187-CL31B104KBCNNNC, 653-B3S-1000, 179-SPK-016A | BOM | T-095 / ADR-024 list; 358-SC0915 and 485-1982 figures come from the user's own check. Manufacturer datasheets of the YAGEO resistors and the Samsung capacitor **NOT opened**. Knob bore against the flatted shaft **NOT CONFIRMED** |
+| T103-S1 | Raspberry Pi Pico 2 datasheet (copy in `sim/systems/datasheets/`, page 10, Figure 5; rendered `reports/electronics/evidence/T-103/pico2/p11.png`) | Pico 2 SMT footprint: TP7 1V1 at (11.5, 30.5), test points (8, 38/40.5/43), (9.5/11.5, 49.8), (10.5, 46.5), 1.5 x 1.5 mm; USB shell pads A (7.775, 49.5), B (13.225, 49.5) 1.1 x 1.8 mm, C (8.075, 46.47), D (12.925, 46.47) 1.05 x 1.45 mm; origin bottom left | Read (no download, local copy) |
+| T103-S2 | Mouser Portugal, 653-B3S-1000 and the Aratas manufacturer page | Maker shown "Aratas"; maker page: "ARATAS, formerly Omron Components"; Omron datasheet link; stock 10,507; 0.697 EUR | Read 2026-11-11 |
+| T103-S3 | Mouser Portugal, 71-CRCW25123K30FKEG (Vishay CRCW25123K30FKEG) | "3.3K OHM 1%" 2512; stock 4,500; 1 at 0.731, 10 at 0.424, 25 at 0.328 EUR | Read 2026-11-11. Vishay datasheet **NOT opened**: dimensions and rating NOT CONFIRMED for this part number |
+| T103-S4 | Mouser Portugal, 603-RC2512FK-073K3L | Stock 13; 68,000 expected 18 May 2027 | Re-read 2026-11-11 |

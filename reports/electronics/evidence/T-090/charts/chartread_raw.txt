@@ -1,0 +1,149 @@
+# chartread.py raw results (MEASUREMENT on datasheet chart renderings, T-090; 400 dpi HPWC crop, 340 dpi Vishay pages)
+# Calibration: HPWC decades x 10/100/1k/10k = 402.5/591/780.5/969 px, y 10000/1000/100/10 V = 99/267.5/436/605.5 px
+# CMB 0207 p5: x 2 ohm=557.5, 200k=2109; y 10000 V=2541.5, 10 V=3113. MMB 0207 p8: x 20 ohm=557.5, 200k=1799; y 10000 V=2603, 10 V=3175
+HPWC R=3300: 7 rows
+image 1300 800 column 878.1 for R = 3300.0
+  y_px 156 count 4 V 4596
+  y_px 169 count 2 V 3849
+  y_px 170 count 3 V 3797
+  y_px 227 count 2 V 1745
+  y_px 228 count 2 V 1722
+  y_px 275 count 2 V 907
+  y_px 276 count 2 V 895
+HPWC R=3150: 7 rows
+image 1300 800 column 874.3 for R = 3150.0
+  y_px 156 count 3 V 4596
+  y_px 171 count 2 V 3746
+  y_px 172 count 2 V 3695
+  y_px 228 count 2 V 1722
+  y_px 229 count 2 V 1698
+  y_px 276 count 2 V 895
+  y_px 277 count 3 V 882
+HPWC R=3000: 6 rows
+image 1300 800 column 870.3 for R = 3000.0
+  y_px 158 count 5 V 4472
+  y_px 172 count 2 V 3695
+  y_px 173 count 2 V 3645
+  y_px 230 count 3 V 1675
+  y_px 231 count 2 V 1653
+  y_px 278 count 3 V 871
+HPWC R=2850: 7 rows
+image 1300 800 column 866.1 for R = 2850.0
+  y_px 158 count 2 V 4472
+  y_px 160 count 2 V 4352
+  y_px 174 count 3 V 3596
+  y_px 175 count 2 V 3547
+  y_px 232 count 3 V 1630
+  y_px 279 count 2 V 859
+  y_px 280 count 3 V 847
+HPWC R=1650: 8 rows
+image 1300 800 column 821.2 for R = 1650.0
+  y_px 173 count 3 V 3645
+  y_px 174 count 2 V 3596
+  y_px 192 count 3 V 2813
+  y_px 193 count 2 V 2775
+  y_px 251 count 2 V 1258
+  y_px 252 count 2 V 1241
+  y_px 296 count 3 V 681
+  y_px 297 count 2 V 672
+HPWC R=1600: 8 rows
+image 1300 800 column 818.7 for R = 1600.0
+  y_px 174 count 3 V 3596
+  y_px 175 count 2 V 3547
+  y_px 193 count 2 V 2775
+  y_px 194 count 3 V 2737
+  y_px 252 count 3 V 1241
+  y_px 253 count 2 V 1224
+  y_px 297 count 2 V 672
+  y_px 298 count 3 V 663
+HPWC R=1500: 7 rows
+image 1300 800 column 813.4 for R = 1500.0
+  y_px 176 count 4 V 3499
+  y_px 195 count 2 V 2700
+  y_px 196 count 3 V 2664
+  y_px 254 count 3 V 1208
+  y_px 255 count 2 V 1191
+  y_px 299 count 2 V 654
+  y_px 300 count 3 V 645
+HPWC R=1100: 7 rows
+image 1300 800 column 788.0 for R = 1100.0
+  y_px 184 count 2 V 3137
+  y_px 186 count 2 V 3053
+  y_px 206 count 3 V 2324
+  y_px 264 count 2 V 1054
+  y_px 266 count 2 V 1025
+  y_px 309 count 2 V 570
+  y_px 310 count 2 V 563
+image 2890 3740 column 1555.9 for R = 3300.0
+  y_px 2542 count 5 V 9940
+  y_px 2584 count 5 V 5983
+  y_px 2595 count 2 V 5238
+  y_px 2596 count 3 V 5175
+  y_px 2761 count 5 V 704
+  y_px 2922 count 5 V 101
+  y_px 2931 count 5 V 90
+  y_px 2998 count 5 V 40
+  y_px 3111 count 5 V 10
+image 2890 3740 column 1543.0 for R = 3000.0
+  y_px 2542 count 3 V 9940
+  y_px 2584 count 4 V 5983
+  y_px 2599 count 3 V 4991
+  y_px 2761 count 3 V 704
+  y_px 2922 count 4 V 101
+  y_px 2931 count 3 V 90
+  y_px 2998 count 3 V 40
+  y_px 3111 count 4 V 10
+image 2890 3740 column 1462.5 for R = 1650.0
+  y_px 2542 count 5 V 9940
+  y_px 2584 count 5 V 5983
+  y_px 2624 count 4 V 3689
+  y_px 2761 count 5 V 704
+  y_px 2922 count 5 V 101
+  y_px 2931 count 5 V 90
+  y_px 2998 count 5 V 40
+  y_px 3111 count 5 V 10
+image 2890 3740 column 1458.3 for R = 1600.0
+  y_px 2542 count 5 V 9940
+  y_px 2584 count 5 V 5983
+  y_px 2625 count 3 V 3645
+  y_px 2761 count 5 V 704
+  y_px 2922 count 5 V 101
+  y_px 2931 count 5 V 90
+  y_px 2998 count 5 V 40
+  y_px 3111 count 5 V 10
+image 2890 3740 column 1407.8 for R = 1100.0
+  y_px 2542 count 5 V 9940
+  y_px 2584 count 5 V 5983
+  y_px 2640 count 2 V 3040
+  y_px 2641 count 3 V 3004
+  y_px 2761 count 5 V 704
+  y_px 2922 count 5 V 101
+  y_px 2931 count 5 V 90
+  y_px 2998 count 5 V 40
+  y_px 3111 count 5 V 10
+image 2890 3740 column 1245.8 for R = 3300.0
+  y_px 2611 count 5 V 9079
+  y_px 2632 count 5 V 7045
+  y_px 2748 count 4 V 1736
+  y_px 2793 count 5 V 1008
+  y_px 2851 count 5 V 500
+  y_px 2927 count 5 V 200
+  y_px 3002 count 5 V 81
+  y_px 3042 count 5 V 50
+image 2890 3740 column 1152.3 for R = 1650.0
+  y_px 2611 count 5 V 9079
+  y_px 2632 count 5 V 7045
+  y_px 2776 count 3 V 1238
+  y_px 2851 count 5 V 500
+  y_px 2927 count 5 V 200
+  y_px 3002 count 5 V 81
+  y_px 3042 count 5 V 50
+image 2890 3740 column 1097.7 for R = 1100.0
+  y_px 2611 count 5 V 9079
+  y_px 2632 count 5 V 7045
+  y_px 2792 count 2 V 1020
+  y_px 2793 count 3 V 1008
+  y_px 2851 count 5 V 500
+  y_px 2927 count 5 V 200
+  y_px 3002 count 5 V 81
+  y_px 3042 count 5 V 50

@@ -1,0 +1,25 @@
+# compute_quote.py T-095  CALCULATION; rate 1.1193 USD per EUR (SOURCE, ECB, 2026-11-09)
+LCSC lines
+  R13-14 FRC1206F4701TS       100 x 0.0040 USD = 0.400 USD = 0.357 EUR
+  R15-16 FRC1206F2200TS       100 x 0.0046 USD = 0.460 USD = 0.411 EUR
+  C1 CL31B104KBCNNNC           20 x 0.0143 USD = 0.286 USD = 0.256 EUR
+  SW1 B3S-1000                  5 x 0.3650 USD = 1.825 USD = 1.630 EUR
+  RV1 RK09D1130C2P              1 x 0.7417 USD = 0.742 USD = 0.663 EUR
+LCSC common lines: 3.713 USD = 3.32 EUR
+  R1-R12 CRGP2512F3K3         4.031 USD = 3.60 EUR; with common lines 6.92 EUR; with Pico 2 15.30 EUR
+  R1-R12 CMB02070X3301GB200   11.663 USD = 10.42 EUR; with common lines 13.74 EUR; with Pico 2 22.12 EUR
+Pico 2 alternative: 8.38 EUR
+Adafruit 1982 listed price, stock 0, not orderable: 19.37 EUR
+Hypothetical if the module were in stock, CRGP and Pico 2, no knob: 34.67 EUR
+Mouser lines
+  A1 SC0915                     1 x 3.440 EUR = 3.440 EUR
+  A2 Adafruit 1982              1 x 6.840 EUR = 6.840 EUR
+  R13-14 RC1206FR-074K7L        2 x 0.086 EUR = 0.172 EUR
+  R15-16 RC1206FR-07220RL       2 x 0.086 EUR = 0.172 EUR
+  C1 CL31B104KBCNNNC            1 x 0.120 EUR = 0.120 EUR
+  SW1 B3S-1000                  1 x 0.697 EUR = 0.697 EUR
+  RV1 PTV09A-4015F-B103         1 x 0.765 EUR = 0.765 EUR
+  Knob SPK-016A                 1 x 0.327 EUR = 0.327 EUR
+Mouser common lines: 12.533 EUR
+  R1-R12 HPWC2512-3K3JT1      15.00 EUR; total 27.53 EUR
+  R1-R12 CMB02070X3301GB200   5.06 EUR; total 17.60 EUR

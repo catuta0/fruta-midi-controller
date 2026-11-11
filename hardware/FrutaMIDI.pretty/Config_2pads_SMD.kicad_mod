@@ -1,0 +1,208 @@
+(footprint "Config_2pads_SMD"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "2 surface pads for the I2C configuration wires: SCL (pad 1), SDA (pad 2)")
+	(property "Reference" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "5d08cbd8-d861-4e11-b770-db4cbed7bd7b")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "feacf469-0c58-46bf-ac84-51d15d545789")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "d2ffb408-71f7-47af-823d-ca3305fb22ef")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ab5cec10-f9e5-4974-8a82-4fb392132039")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd exclude_from_bom)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.6 -3.2)
+		(end 5.41 -3.2)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "48da8a8f-5032-4f86-a470-9af630dde2c8")
+	)
+	(fp_line
+		(start -1.6 1.6)
+		(end -1.6 -3.2)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "1e90b279-e0e9-4d03-b77b-b85a8e1271bd")
+	)
+	(fp_line
+		(start 5.41 -3.2)
+		(end 5.41 1.6)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "5e595895-ede6-4d02-ab0d-e2067e9f5b16")
+	)
+	(fp_line
+		(start 5.41 1.6)
+		(end -1.6 1.6)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "776ca4db-9f3d-4513-9706-229efae788ce")
+	)
+	(fp_line
+		(start -1.1 -1.1)
+		(end 1.1 -1.1)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "22ce7415-b813-4692-8ba8-87743847b3ad")
+	)
+	(fp_line
+		(start -1.1 1.1)
+		(end -1.1 -1.1)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "8fb81ca9-b119-47f7-a853-835ce4d77528")
+	)
+	(fp_line
+		(start 1.1 -1.1)
+		(end 1.1 1.1)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "ca2def03-27a9-4514-952c-e447be65e8b2")
+	)
+	(fp_line
+		(start 1.1 1.1)
+		(end -1.1 1.1)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d57f120a-4fa8-40e7-8fc8-0f7b1c00165e")
+	)
+	(fp_line
+		(start 2.71 -1.1)
+		(end 4.91 -1.1)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "e00f9101-97b0-4c5b-abc2-3ed10950a03d")
+	)
+	(fp_line
+		(start 2.71 1.1)
+		(end 2.71 -1.1)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "26c02eab-c378-4b6b-95ef-65d5ca04da2b")
+	)
+	(fp_line
+		(start 4.91 -1.1)
+		(end 4.91 1.1)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "214ffec0-5d65-4518-a3e6-eb3ac34b4af8")
+	)
+	(fp_line
+		(start 4.91 1.1)
+		(end 2.71 1.1)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "1feb85b2-d2f4-4fcf-bc25-4f6b5d58e605")
+	)
+	(fp_text user "SCL"
+		(at 0 -2.3 0)
+		(layer "F.Fab")
+		(uuid "71b1a17e-ae46-44b4-b52b-e5d2a5b7bbac")
+		(effects
+			(font
+				(size 0.9 0.9)
+				(thickness 0.135)
+			)
+		)
+	)
+	(fp_text user "SDA"
+		(at 3.81 -2.3 0)
+		(layer "F.Fab")
+		(uuid "9565bc3b-88de-4f82-a481-ea64c3cb5262")
+		(effects
+			(font
+				(size 0.9 0.9)
+				(thickness 0.135)
+			)
+		)
+	)
+	(pad "1" smd rect
+		(at 0 0)
+		(size 2.2 2.2)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "5c0fe881-371c-4d97-8793-a3d49ed74b33")
+	)
+	(pad "2" smd circle
+		(at 3.81 0)
+		(size 2.2 2.2)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(uuid "7eb5c773-0a0e-47ca-99e6-8120b1b365e6")
+	)
+	(embedded_fonts no)
+)

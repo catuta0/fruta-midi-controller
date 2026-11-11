@@ -1,5 +1,7 @@
 # Project definition — FrutaMIDI
 
+> **Amendment, 2026-11-09 (CR-003, ADR-023):** from v1.3 the PCB is surface-mount on one copper layer on the component side, with 4 M3 holes only, for home chemical etching. Statements below about through-hole parts, sockets or screw terminals describe releases up to V1.2.
+
 Status: collected in Phase A on 2026-10-30. This is a starting assumption, not a verified specification.
 
 ## Product / system

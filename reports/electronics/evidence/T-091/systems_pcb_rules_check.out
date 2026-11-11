@@ -1,0 +1,10 @@
+FAIL  REQ-027 tracks only on B.Cu :: 120 segments, layers ['F.Cu']
+PASS  REQ-027 no vias :: via objects: 0
+PASS  REQ-027 no copper zones (no ground pour) :: zones: 0
+FAIL  REQ-027 through-hole only (no SMD pads) :: smd pads: 127
+PASS  REQ-029 track width >= 0.8 mm (stubs) / signal 1.0 / power 1.2 :: widths used [0.8, 1.0, 1.2] mm
+PASS  REQ-028 board outline 100 x 70 mm :: outline 100.000 x 70.000 mm (4 Edge.Cuts lines)
+FAIL  ADR-021 JP1 pad gap >= 1.8 mm :: SolderJumper_3_SMD_P3.81mm: pitch [] mm, pad-to-pad copper gaps [] mm
+FAIL  ADR-021 J2 pads 3.0 x 4.5 mm :: 0 pads, sizes [], shapes [], drill offsets [] mm
+FAIL  ADR-020 Ex <-> GND edge-track spark gap 1.40 +/- 0.05 mm :: J2 or GND tracks not found by parser
+SUMMARY: 9 checks, 4 PASS, 5 FAIL

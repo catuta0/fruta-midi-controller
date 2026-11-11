@@ -1,0 +1,10 @@
+power/I2C row S1..S7: pad y 9.46..11.86; strip y 9.39..11.93; module outline y 8.12..27.17; pad length outside strip 0.00 mm, outside module 0.00 mm
+electrode row GND,E0..E11: pad y 24.70..27.10; strip y 24.63..27.17; module outline y 8.12..27.17; pad length outside strip 0.00 mm, outside module 0.00 mm
+Pico USB-end edge y 0.63 mm; receptacle face y -0.67 mm -> 0.67 mm beyond the board edge (CALCULATION)
+Pico 2 TP7 centre (14.39, 21.13), x 13.64..15.14; right GND rail edge x 18.80 -> gap 3.66 mm; outside both keep-out rule areas (TP area y<=14.98, SWD y>=47.83)
+A1 pin 30 (RUN) land right edge x 25.68, SW1 pad 1L (BTN) left edge x 26.75 -> gap 1.07 mm; y overlap 27.33..28.20
+JP1 pad1 S1/ORIG y 14.77..16.71
+JP1 pad2 3V3 y 10.96..12.90
+JP1 pad3 S7/QT y 7.15..9.09
+etched ORIG text centre (74.0, 13.2), height 1.8 -> y 12.30..14.10 (between pad 2 and pad 1, left of JP1); etched QT centre (78.5, 5.0) -> y 4.0..6.0 (above pad 3)
+IEC 150 pF x 4 kV = 600 nC; HBM 100 pF x 2 kV = 200 nC; ratio 3.0; tau IEC (3300+330) x 150 pF = 0.54 us, HBM 1500 x 100 pF = 0.15 us

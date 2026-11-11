@@ -1,0 +1,5 @@
+# measure_i2c_gap.py  MEASUREMENT on hardware/frutamidi.kicad_pcb
+net /SCL       smallest gap to any E0-E11 pad of A2: 12.187 mm (pad 13)
+net /SCL_PICO  smallest gap to any E0-E11 pad of A2: 5.300 mm (pad 2)
+net /SDA       smallest gap to any E0-E11 pad of A2: 3.300 mm (pad 2)
+net /SDA_PICO  smallest gap to any E0-E11 pad of A2: 18.323 mm (pad 2)

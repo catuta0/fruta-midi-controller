@@ -29,6 +29,8 @@ PASS  A5 pot: ADC noise + DNL + quantisation + ripple < dead band (no octave cha
 PASS  A6 I2C on ADC-capable GP26/27: pull-up rail = IOVDD :: R13/R14 and module VIN/VCC are on +3V3 (Pico pin 36)
   POT C1: R_th max 3000 Ohm, C max 126.5 nF, tau 0.380 ms, settle to 1/2 LSB10 2.89 ms vs read period 30 ms (margin 10.4x)  CALCULATION
 PASS  A7 pot C1 filter: worst-case settling to 1/2 LSB10 x 5 <= read period :: tau 0.380 ms, settle 2.89 ms, read period 30 ms, margin 10.4x (criterion >= 5x ASSUMPTION)
+  POT wires: 25.0 pF on C1 (0.028 % of 90 nF); IR drop per wire 26.8 uV at 0.41 mA, length 0.50 m, R 0.13 ohm/m (ASSUMPTIONS)  CALCULATION
+PASS  A8 off-board pot wires: capacitance <= 1 % of C1 and IR drop <= 1 % of the dead band :: 25.0 pF vs 90.0 nF; 26.8 uV vs dead band 0.132 V (hum and interference pickup on the wires NOT analysed)
 
 ==========================================================================================
 (b) LATENCY BUDGET (firmware T-040: M1 burst read, non-blocking LED)
@@ -86,32 +88,48 @@ PASS  B7 I2C high seen by RP2040 (VIH 2.0 V) :: 3.30 V vs 2.0 V, margin 1.30 V
 PASS  B8 I2C high seen by MPR121 (VIH 0.7*VDD_max; module side pulled to its own VDD) :: module side high = VDD, margin 0.3*VDD >= 0.93 V (VIH up to 2.38 V)
 PASS  B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-17 IIOVDD_MAX) :: 15.5 mA per line at 3.4 V (2 lines 30.9 mA)
   220 Ohm x 10 pF pad capacitance (ASSUMPTION) = 2.2 ns: negligible against 300 ns  CALCULATION
-  series 3k3: C   20 pF, tau 0.07 us vs CDT 1 us (ratio 0.07); IR at 63 uA = 0.208 V  CALCULATION
-  series 3k3: C  100 pF, tau 0.33 us vs CDT 4 us (ratio 0.08); IR at 63 uA = 0.208 V  CALCULATION
-  series 3k3: C  500 pF, tau 1.65 us vs CDT 32 us (ratio 0.05); IR at 63 uA = 0.208 V  CALCULATION
-  series 3k3: C 1000 pF, tau 3.30 us vs CDT 32 us (ratio 0.10); IR at 63 uA = 0.208 V  CALCULATION
+  series 3k3 +1%: C   20 pF, tau 0.07 us vs CDT 1 us (ratio 0.07); IR at 63 uA = 0.210 V  CALCULATION
+  series 3k3 +1%: C  100 pF, tau 0.33 us vs CDT 4 us (ratio 0.08); IR at 63 uA = 0.210 V  CALCULATION
+  series 3k3 +1%: C  500 pF, tau 1.67 us vs CDT 32 us (ratio 0.05); IR at 63 uA = 0.210 V  CALCULATION
+  series 3k3 +1%: C 1000 pF, tau 3.33 us vs CDT 32 us (ratio 0.10); IR at 63 uA = 0.210 V  CALCULATION
 
 ==========================================================================================
 (c) BOM COST (ADR-007 D-7 core definition)
 ==========================================================================================
-  A1 Raspberry Pi Pico H (or Pico/W/2/2W + headers)    x1  5.00 .. 8.00 EUR   ASSUMPTION (hardware/README.md)
-  A2 Adafruit MPR121 breakout 1982                     x1  9.00 .. 12.00 EUR  ASSUMPTION; SOURCE S-05 USD 7.95 list (1-9 pcs) before EU shipping/VAT
-  Female header 1x20 (Pico socket)                     x2  1.00 .. 1.00 EUR   ASSUMPTION
-  Female header 1x13                                   x1  0.50 .. 0.50 EUR   ASSUMPTION
-  Female header 1x7                                    x1  0.40 .. 0.40 EUR   ASSUMPTION
-  J2 screw terminal 2-way 5.08 mm, interlocking        x7  2.00 .. 3.00 EUR   ASSUMPTION
-  SW1 tactile switch 6x6 mm                            x1  0.20 .. 0.20 EUR   ASSUMPTION
-  RV1 10k linear pot 9 mm + knob                       x1  1.00 .. 1.50 EUR   ASSUMPTION
-  R1..R12 3k3 1 % pulse-rated Vishay MBE04140C3301FC100 (DIN0414) x12 3.60 .. 7.92 EUR   SOURCE EE-S26 in reports/electronics/SOURCES_EE.md (sibling values 330R/330k: RS GBP 0.26, LCSC USD 0.30, qty 1-24); 3k3 equal price ASSUMPTION (CR-002, T-060)
-  C1 100 nF X7R 50 V radial 5.08 mm KEMET C322C104K5R5TA x1  0.20 .. 0.90 EUR   ASSUMPTION from distributor search EE-S30 in reports/electronics/SOURCES_EE.md (search extract, T-076, prices not verified; ADR-021)
-  R13/R14 4k7, R15/R16 220R, 0.25 W axial (Yageo MFR-12) x4  0.08 .. 0.20 EUR   ASSUMPTION
-  Single-sided copper clad 100x70 mm                   x1  1.00 .. 3.00 EUR   ASSUMPTION (part of the assembled board)
-  Core BOM (ADR-007 definition)                            23.98 .. 38.62 EUR  CALCULATION
+  A1 Raspberry Pi Pico SC0915 (358-SC0915)                     x1  3.44 .. 3.44 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  A2 Adafruit MPR121 breakout 1982 (485-1982)                  x1  6.84 .. 6.84 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  R1..R12 YAGEO RC2512FK-073K3L 3k3 1 % (603-RC2512FK-073K3L)  x12 1.31 .. 1.31 EUR   SOURCE T96-S0b (10+ tier 0.109; 1 pc 0.189), ex VAT
+  R13/R14 RC1206FR-074K7L, R15/R16 RC1206FR-07220RL            x4  0.34 .. 0.34 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  C1 Samsung CL31B104KBCNNNC 100 nF 1206 (187-CL31B104KBCNNNC) x1  0.12 .. 0.12 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  SW1 Omron B3S-1000 (653-B3S-1000)                            x1  0.70 .. 0.70 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  RV1 Bourns PTV09A-4015F-B103 (652-PTV09A-4015FB103)          x1  0.77 .. 0.77 EUR   SOURCE T96-S2/T96-S5 (Mouser PT, ex VAT)
+  Knob Same Sky SPK-016A (179-SPK-016A)                        x1  0.33 .. 0.33 EUR   SOURCE T96-S5; bore fit on the flatted shaft NOT CONFIRMED
+  Single-sided copper clad 100x70 mm                           x1  1.00 .. 3.00 EUR   ASSUMPTION (part of the assembled board; no price opened)
+  Mouser lines only                                                13.84 .. 13.84 EUR  CALCULATION (T-096 quotes 13.84 EUR)
+  Core BOM (ADR-007 definition)                                    14.84 .. 16.84 EUR  CALCULATION (ex VAT, ex shipping)
+  INFO core with VAT 23 % (ASSUMPTION rate): 18.25 .. 20.71 EUR  CALCULATION; shipping NOT CONFIRMED (no Mouser checkout opened)
+  excluded: Shipping (Mouser PT, one order)                NOT CONFIRMED
+  excluded: VAT                                            NOT CONFIRMED
   excluded: Etchant/toner consumables                      0.50 .. 2.00 EUR  ASSUMPTION
   excluded: Micro-USB data cable                           3.00 .. 3.00 EUR  ASSUMPTION
+  excluded: Electrode, pot and link wire, hot-melt, epoxy  1.00 .. 3.00 EUR  ASSUMPTION
   excluded: Crocodile leads x12 (optional)                 5.00 .. 10.00 EUR  ASSUMPTION
-  excluded: M3 hardware (optional)                         2.00 .. 2.00 EUR  ASSUMPTION
-FAIL  C1 core BOM upper bound <= 30 EUR :: core 23.98 .. 38.62 EUR
+  excluded: M3 nylon hardware (optional)                   2.00 .. 2.00 EUR  ASSUMPTION
+PASS  C1 core BOM upper bound <= 30 EUR (ex VAT, ex shipping) :: core 14.84 .. 16.84 EUR
+  INFO plan B (T-097, not adopted): +6.18 EUR -> core 21.02 .. 23.02 EUR  CALCULATION
+  INFO R1..R12 stock 13 at Mouser PT for 12 needed (SOURCE T96-S0b, 2026-11-11); next delivery 2027-05-18
+PASS  C2 budget BOM = fabrication BOM (Mouser numbers and quantities); knob only in the README :: bom-kicad.csv 8 lines / 21 parts, budget 21 parts; differences []; knob in README True
+  INFO R-016 alternative Vishay CRCW25123K30FKEG: 12 x 0.424 = 5.09 EUR, +3.78 EUR -> core 18.62 .. 20.62 EUR  CALCULATION (body size NOT CONFIRMED)
 
-SUMMARY: 30 checks, 25 PASS, 5 FAIL
+==========================================================================================
+(d) BOARD-LEVEL ITEMS (sim/electronics/calc outputs, T-103 board)
+==========================================================================================
+  GND bounce module-Pico 330 V for about 1 ns; per I2C line <= 1.49 A, <= 0.90 nC  CALCULATION on ASSUMPTION inputs (calc_gnd_bounce.out)
+PASS  D1 injected I2C current and charge within the RP2040 HBM 4 kV equivalent (FT-pin rating; GP26/GP27 NOT CONFIRMED) :: 1.49 A vs 2.67 A (0.56x), 0.90 nC vs 400 nC; bounce 330 V / ~1 ns
+  SDA to electrode pad 36.6 fF; SDA full-swing step 2.09 counts against TOUCH_THRESHOLD 12  CALCULATION (calc_i2c_coupling.out, current layout)
+PASS  D2 SDA coupling step <= 3 counts (half RELEASE_THRESHOLD, REQ-038 proposal) :: 2.09 counts (36.6 fF), touch threshold 12, margin 5.7x to the touch threshold
+  USB pry 30 N: largest screw force 35.6 N  CALCULATION on ASSUMPTION inputs (calc_usb_pry.out); castellation peel margin 0.57-0.75 at 30 N unchanged (R-013)
+PASS  D3 largest M3 screw force at a 30 N USB pull <= 100 N (ASSUMPTION limit, not sourced) :: 35.6 N, 1.2x the applied 30 N
+
+SUMMARY: 35 checks, 31 PASS, 4 FAIL
 wrote reports/systems/budgets.md

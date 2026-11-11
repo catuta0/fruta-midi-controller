@@ -1,0 +1,12 @@
+== M1_A2_short_lands exit 1
+FAIL  T-103 A2 every land >= 1.0 mm of copper outside the body/strip outline :: min -1.34 mm (pad 14)
+SUMMARY: 65 checks, 64 PASS, 1 FAIL
+== M2_A1_moved_in exit 1
+FAIL  T-103 USB receptacle face >= 1.0 mm beyond the board edge (cutting tolerance) :: module end y 1.11 mm, face y -0.19 mm: 0.19 mm beyond the edge y 0
+SUMMARY: 65 checks, 64 PASS, 1 FAIL
+== M3_track_on_TP7 exit 1
+FAIL  T-103 copper >= 0.6 mm from every Pico 2 underside feature (11 features, Fig. 5) :: worst -0.50 mm at TP7 1V1: track (63.39,70.61)-(65.39,70.61) []; TP7 -0.50 mm
+SUMMARY: 65 checks, 64 PASS, 1 FAIL
+== M4_C1_short_lands exit 1
+FAIL  T-103 C1 every land >= 1.0 mm of copper outside the body/strip outline :: min 0.32 mm (pad 2)
+SUMMARY: 65 checks, 64 PASS, 1 FAIL

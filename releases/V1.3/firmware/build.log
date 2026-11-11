@@ -1,0 +1,21 @@
+# FrutaMIDI v1.3 firmware build log (chat2, pcgate, arduino-cli 1.5.1, 2026-11-11)
+# pcb- builds for Pico W / Pico 2 W were built but are not shipped: those boards are not supported on the v1.3 PCB (ADR-028 D-3).
+Sketch uses 90316 bytes (4%) of program storage space. Maximum is 2093056 bytes.
+BUILT plain rpipico
+Sketch uses 91196 bytes (4%) of program storage space. Maximum is 2093056 bytes.
+BUILT pcb rpipico
+Sketch uses 349048 bytes (16%) of program storage space. Maximum is 2093056 bytes.
+BUILT plain rpipicow
+Sketch uses 349848 bytes (16%) of program storage space. Maximum is 2093056 bytes.
+BUILT pcb rpipicow
+Sketch uses 88616 bytes (2%) of program storage space. Maximum is 4186112 bytes.
+BUILT plain rpipico2
+Sketch uses 89184 bytes (2%) of program storage space. Maximum is 4186112 bytes.
+BUILT pcb rpipico2
+Sketch uses 346628 bytes (8%) of program storage space. Maximum is 4186112 bytes.
+BUILT plain rpipico2w
+Sketch uses 347196 bytes (8%) of program storage space. Maximum is 4186112 bytes.
+BUILT pcb rpipico2w
+Sketch uses 13638 bytes (47%) of program storage space. Maximum is 28672 bytes.
+BUILT leonardo
+ALL BUILDS OK

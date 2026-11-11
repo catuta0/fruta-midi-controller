@@ -1,4 +1,4 @@
-"""System budgets for FrutaMIDI (systems-engineer). Revision 7 (T-077, CR-002 C1 100 nF wiper filter: BOM row and settling check A7); revision 6 T-070 (R1..R12 price); revision 3 T-011, revision 2 was T-010, revision 1 T-009.
+"""System budgets for FrutaMIDI (systems-engineer). Revision 10 (T-104, T-103 board: BOM coverage check C2, board-level items D1-D3); revision 9 (T-099, ADR-026 YAGEO RC2512 3k3 R1..R12, Mouser BOM of T-096, PTV09A pot); revision 8 (T-093, CR-003 / ADR-023 SMD BOM, 3k0 R1..R12, off-board pot check A8); revision 7 (T-077, CR-002 C1 100 nF wiper filter: BOM row and settling check A7); revision 6 T-070 (R1..R12 price); revision 3 T-011, revision 2 was T-010, revision 1 T-009.
 
 T-011 changes: aftertouch burst plan = run-based reads from fm_mpr121.h (worst case over all 4096 masks);
 RP2040 pull-up 50..80 kOhm and IO levels from SOURCE S-17 (RP2040 datasheet Table 625); I2C series
@@ -142,10 +142,11 @@ check("A5 pot: ADC noise + DNL + quantisation + ripple < dead band (no octave ch
 # GP26/GP27 are ADC-capable pins with a reverse diode to IOVDD (S-01 sec. 4.2): input <= IOVDD + 0.3 V.
 # PCB pull-ups (R13/R14, module host side) go to the same +3V3 rail -> no over-voltage, no back-feed. CALCULATION.
 check("A6 I2C on ADC-capable GP26/27: pull-up rail = IOVDD", True, "R13/R14 and module VIN/VCC are on +3V3 (Pico pin 36)")
-# A7 (T-077, ADR-021): C1 100 nF (KEMET C322C104K5R5TA) from the wiper (POT) to AGND forms a low-pass with the
+# A7 (T-077, ADR-021): C1 100 nF (Samsung CL31B104KBCNNNC, T-096) from the wiper (POT) to AGND forms a low-pass with the
 # pot Thevenin resistance. R_th = R*a*(1-a), maximum R/4 at mid travel. Inputs as in sim/electronics/calc/calc_pot_rc.py:
-POT_R = rng(10e3 * 0.8, 10e3 * 1.2)                 # ASSUMPTION: 10 kOhm +-20 % (typical carbon-track tolerance)
-C1_F = rng(100e-9 * 0.9, 100e-9 * 1.10 * 1.15)      # SOURCE EE-S29 (K = +-10 %, X7R +-15 % over temperature)
+POT_R = rng(10e3 * 0.8, 10e3 * 1.2)                 # SOURCE T96-S3: Bourns PTV09 10 kOhm +-20 %
+C1_F = rng(100e-9 * 0.9, 100e-9 * 1.10 * 1.15)      # ASSUMPTION: K = +-10 %, X7R +-15 % over temperature (Samsung
+                                                    # CL31B104KBCNNNC, T-096; its datasheet was not opened)
 POT_READ_S = 30e-3                                  # SOURCE firmware/FrutaMIDI/fm_pot.h POT_READ_MS = 30
 rth_max = POT_R[1] / 4
 tau_c1 = rth_max * C1_F[1]
@@ -156,6 +157,17 @@ print("  POT C1: R_th max %.0f Ohm, C max %.1f nF, tau %.3f ms, settle to 1/2 LS
 check("A7 pot C1 filter: worst-case settling to 1/2 LSB10 x 5 <= read period", 5 * t_settle <= POT_READ_S,
       "tau %.3f ms, settle %.2f ms, read period %.0f ms, margin %.1fx (criterion >= 5x ASSUMPTION)"
       % (tau_c1 * 1e3, t_settle * 1e3, POT_READ_S * 1e3, POT_READ_S / t_settle))
+# A8 (T-093, ADR-023 D-2): RV1 is off-board on 3 wires. Wire capacitance adds to C1; wire resistance drops in series with the pot current.
+WIRE_LEN_M = rng(0.05, 0.5)                         # ASSUMPTION: enclosure-dependent, not specified by the design; to be measured on the build
+WIRE_C_F_PER_M = 50e-12                             # ASSUMPTION: same value as risk R-008
+WIRE_R_OHM_PER_M = 0.13                             # ASSUMPTION: 0.13 mm2 copper (about 26 AWG)
+i_pot = V33 / POT_R[0]                              # worst pot current, A
+wire_c = WIRE_LEN_M[1] * WIRE_C_F_PER_M
+wire_ir = i_pot * WIRE_LEN_M[1] * WIRE_R_OHM_PER_M
+print("  POT wires: %.1f pF on C1 (%.3f %% of 90 nF); IR drop per wire %.1f uV at %.2f mA, length %.2f m, R %.2f ohm/m (ASSUMPTIONS)  CALCULATION"
+      % (wire_c * 1e12, 100 * wire_c / C1_F[0], wire_ir * 1e6, i_pot * 1e3, WIRE_LEN_M[1], WIRE_R_OHM_PER_M))
+check("A8 off-board pot wires: capacitance <= 1 % of C1 and IR drop <= 1 % of the dead band", wire_c <= 0.01 * C1_F[0] and wire_ir <= 0.01 * dead_v,
+      "%.1f pF vs %.1f nF; %.1f uV vs dead band %.3f V (hum and interference pickup on the wires NOT analysed)" % (wire_c * 1e12, C1_F[0] * 1e9, wire_ir * 1e6, dead_v))
 assert abs(V33 / 10.0 - 0.33) < 1e-12     # known-answer smoke case (T-006)
 
 # =============================================================================================
@@ -373,12 +385,12 @@ check("B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-
 tau_pad = RS_I2C * 10e-12 * 1e9
 print("  220 Ohm x 10 pF pad capacitance (ASSUMPTION) = %.1f ns: negligible against 300 ns  CALCULATION" % tau_pad)
 
-# Electrode series resistor 3k3 (T-050): RC and IR drop against the MPR121 charge (S-04 CDC/CDT)
-R_S = 3.3e3
+# Electrode series resistor 3k3 1 % (ADR-026; worst case +1 % = 3.333 kOhm, SOURCE T96-S0b): RC and IR drop against the MPR121 charge (S-04 CDC/CDT)
+R_S = 3.3e3 * 1.01
 for c_pf in (20, 100, 500, 1000):
     cdt = cdt_for(c_pf) or 32
     tau = R_S * c_pf * 1e-12 * 1e6
-    print("  series 3k3: C %4d pF, tau %.2f us vs CDT %g us (ratio %.2f); IR at 63 uA = %.3f V  CALCULATION"
+    print("  series 3k3 +1%%: C %4d pF, tau %.2f us vs CDT %g us (ratio %.2f); IR at 63 uA = %.3f V  CALCULATION"
           % (c_pf, tau, cdt, tau / cdt, 63e-6 * R_S))
 
 # =============================================================================================
@@ -388,33 +400,102 @@ print()
 print("=" * 90)
 print("(c) BOM COST (ADR-007 D-7 core definition)")
 print("=" * 90)
+# All prices: Mouser Portugal, EUR excluding VAT and shipping, one board, read 2026-11-11 by the electronics engineer (T-096).
+# SOURCE ids T96-S0b, T96-S2 and T96-S5 are in reports/electronics/SOURCES_EE.md (cited by S-48 in requirements/SOURCES_SYSTEMS.md).
+# Single prices, so each line is a point value; the only range is the copper clad (ASSUMPTION).
 BOM = [
-    ("A1 Raspberry Pi Pico H (or Pico/W/2/2W + headers)", 1, rng(5.0, 8.0), "ASSUMPTION (hardware/README.md)"),
-    ("A2 Adafruit MPR121 breakout 1982", 1, rng(9.0, 12.0), "ASSUMPTION; SOURCE S-05 USD 7.95 list (1-9 pcs) before EU shipping/VAT"),
-    ("Female header 1x20 (Pico socket)", 2, rng(0.5, 0.5), "ASSUMPTION"),
-    ("Female header 1x13", 1, rng(0.5, 0.5), "ASSUMPTION"),
-    ("Female header 1x7", 1, rng(0.4, 0.4), "ASSUMPTION"),
-    ("J2 screw terminal 2-way 5.08 mm, interlocking", 7, rng(2.0 / 7, 3.0 / 7), "ASSUMPTION"),
-    ("SW1 tactile switch 6x6 mm", 1, rng(0.2, 0.2), "ASSUMPTION"),
-    ("RV1 10k linear pot 9 mm + knob", 1, rng(1.0, 1.5), "ASSUMPTION"),
-    ("R1..R12 3k3 1 % pulse-rated Vishay MBE04140C3301FC100 (DIN0414)", 12, rng(0.30, 0.66),
-     "SOURCE EE-S26 in reports/electronics/SOURCES_EE.md (sibling values 330R/330k: RS GBP 0.26, LCSC USD 0.30, qty 1-24); 3k3 equal price ASSUMPTION (CR-002, T-060)"),
-    ("C1 100 nF X7R 50 V radial 5.08 mm KEMET C322C104K5R5TA", 1, rng(0.20, 0.90),
-     "ASSUMPTION from distributor search EE-S30 in reports/electronics/SOURCES_EE.md (search extract, T-076, prices not verified; ADR-021)"),
-    ("R13/R14 4k7, R15/R16 220R, 0.25 W axial (Yageo MFR-12)", 4, rng(0.02, 0.05), "ASSUMPTION"),
-    ("Single-sided copper clad 100x70 mm", 1, rng(1.0, 3.0), "ASSUMPTION (part of the assembled board)"),
+    ("A1 Raspberry Pi Pico SC0915 (358-SC0915)", 1, rng(3.44), "SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)"),
+    ("A2 Adafruit MPR121 breakout 1982 (485-1982)", 1, rng(6.84), "SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)"),
+    ("R1..R12 YAGEO RC2512FK-073K3L 3k3 1 % (603-RC2512FK-073K3L)", 12, rng(0.109), "SOURCE T96-S0b (10+ tier 0.109; 1 pc 0.189), ex VAT"),
+    ("R13/R14 RC1206FR-074K7L, R15/R16 RC1206FR-07220RL", 4, rng(0.086), "SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)"),
+    ("C1 Samsung CL31B104KBCNNNC 100 nF 1206 (187-CL31B104KBCNNNC)", 1, rng(0.12), "SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)"),
+    ("SW1 Omron B3S-1000 (653-B3S-1000)", 1, rng(0.697), "SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)"),
+    ("RV1 Bourns PTV09A-4015F-B103 (652-PTV09A-4015FB103)", 1, rng(0.765), "SOURCE T96-S2/T96-S5 (Mouser PT, ex VAT)"),
+    ("Knob Same Sky SPK-016A (179-SPK-016A)", 1, rng(0.327), "SOURCE T96-S5; bore fit on the flatted shaft NOT CONFIRMED"),
+    ("Single-sided copper clad 100x70 mm", 1, rng(1.0, 3.0), "ASSUMPTION (part of the assembled board; no price opened)"),
 ]
-EXCLUDED = [("Etchant/toner consumables", rng(0.5, 2.0)), ("Micro-USB data cable", rng(3.0, 3.0)),
-            ("Crocodile leads x12 (optional)", rng(5.0, 10.0)), ("M3 hardware (optional)", rng(2.0, 2.0))]
+EXCLUDED = [("Shipping (Mouser PT, one order)", None), ("VAT", None),
+            ("Etchant/toner consumables", rng(0.5, 2.0)), ("Micro-USB data cable", rng(3.0, 3.0)),
+            ("Electrode, pot and link wire, hot-melt, epoxy", rng(1.0, 3.0)), ("Crocodile leads x12 (optional)", rng(5.0, 10.0)), ("M3 nylon hardware (optional)", rng(2.0, 2.0))]
 core = (0.0, 0.0)
 for name, q, (lo, hi), lab in BOM:
     line = (q * lo, q * hi)
     core = add(core, line)
-    print("  %-52s x%-2d %-18s %s" % (name, q, fmt(line, "EUR", 2), lab))
-print("  %-56s %s  CALCULATION" % ("Core BOM (ADR-007 definition)", fmt(core, "EUR", 2)))
+    print("  %-60s x%-2d %-18s %s" % (name, q, fmt(line, "EUR", 2), lab))
+mouser = (core[0] - 1.0, core[1] - 3.0)
+print("  %-64s %s  CALCULATION (T-096 quotes 13.84 EUR)" % ("Mouser lines only", fmt(mouser, "EUR", 2)))
+print("  %-64s %s  CALCULATION (ex VAT, ex shipping)" % ("Core BOM (ADR-007 definition)", fmt(core, "EUR", 2)))
+VAT_PT = 0.23                       # ASSUMPTION: Portuguese standard rate; not checked against the Mouser checkout
+core_vat = (core[0] * (1 + VAT_PT), core[1] * (1 + VAT_PT))
+print("  INFO core with VAT %.0f %% (ASSUMPTION rate): %s  CALCULATION; shipping NOT CONFIRMED (no Mouser checkout opened)" % (VAT_PT * 100, fmt(core_vat, "EUR", 2)))
 for n, r in EXCLUDED:
-    print("  excluded: %-46s %s  ASSUMPTION" % (n, fmt(r, "EUR", 2)))
-check("C1 core BOM upper bound <= 30 EUR", core[1] <= 30.0, "core %s" % fmt(core, "EUR", 2))
+    print("  excluded: %-46s %s" % (n, "NOT CONFIRMED" if r is None else fmt(r, "EUR", 2) + "  ASSUMPTION"))
+check("C1 core BOM upper bound <= 30 EUR (ex VAT, ex shipping)", core[1] <= 30.0, "core %s" % fmt(core, "EUR", 2))
+PLANB_DELTA = 6.18                  # SOURCE T-097 handoff (CALCULATION there): 12 x CDSOD323-T05LC added, R1..R12 to 1 kOhm
+print("  INFO plan B (T-097, not adopted): +%.2f EUR -> core %s  CALCULATION" % (PLANB_DELTA, fmt((core[0] + PLANB_DELTA, core[1] + PLANB_DELTA), "EUR", 2)))
+print("  INFO R1..R12 stock 13 at Mouser PT for 12 needed (SOURCE T96-S0b, 2026-11-11); next delivery 2027-05-18")
+
+# C2 (T-104, F3-010): the budget BOM covers the fabrication BOM exactly; the knob is the only README-only part
+import csv as _csv, os as _os, re as _re
+_ROOT = _os.environ.get("FM_BUDGETS_ROOT") or _os.path.normpath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", ".."))
+# FM_BUDGETS_ROOT (mutation tests only): read the BOM, README and calc outputs from a scratch tree and write budgets.md there
+BUDGET_MOUSER = {"358-SC0915": 1, "485-1982": 1, "603-RC2512FK-073K3L": 12, "603-RC1206FR-074K7L": 2, "603-RC1206FR-07220RL": 2,
+                 "187-CL31B104KBCNNNC": 1, "653-B3S-1000": 1, "652-PTV09A-4015FB103": 1}   # the BOM lines above, by Mouser number
+README_ONLY = {"179-SPK-016A": 1}                                                          # knob: no schematic symbol (T-103)
+csv_mouser = {}
+for row in _csv.DictReader(open(_os.path.join(_ROOT, "hardware", "fabrication", "bom-kicad.csv"), encoding="utf-8")):
+    csv_mouser[row["Mouser"]] = csv_mouser.get(row["Mouser"], 0) + int(row["Qty"])
+hw_readme_txt = open(_os.path.join(_ROOT, "hardware", "README.md"), encoding="utf-8").read()
+bom_q = sum(q for name, q, _, _ in BOM if not name.startswith(("Knob", "Single-sided")))
+check("C2 budget BOM = fabrication BOM (Mouser numbers and quantities); knob only in the README", csv_mouser == BUDGET_MOUSER and bom_q == sum(BUDGET_MOUSER.values())
+      and all(m in hw_readme_txt and m not in csv_mouser for m in README_ONLY),
+      "bom-kicad.csv %d lines / %d parts, budget %d parts; differences %s; knob in README %s"
+      % (len(csv_mouser), sum(csv_mouser.values()), bom_q, sorted(set(csv_mouser.items()) ^ set(BUDGET_MOUSER.items())), all(m in hw_readme_txt for m in README_ONLY)))
+ALT_EACH = 0.424                    # SOURCE T-103 (Mouser PT 71-CRCW25123K30FKEG, 10+ tier, 2026-11-11, ex VAT); datasheet NOT opened
+alt_delta = 12 * ALT_EACH - 12 * 0.109
+print("  INFO R-016 alternative Vishay CRCW25123K30FKEG: 12 x %.3f = %.2f EUR, +%.2f EUR -> core %s  CALCULATION (body size NOT CONFIRMED)"
+      % (ALT_EACH, 12 * ALT_EACH, alt_delta, fmt((core[0] + alt_delta, core[1] + alt_delta), "EUR", 2)))
+
+# =============================================================================================
+# (d) BOARD-LEVEL ITEMS FROM THE ELECTRONICS CALCULATIONS (T-104, after T-103); values read from the .out files
+# =============================================================================================
+print()
+print("=" * 90)
+print("(d) BOARD-LEVEL ITEMS (sim/electronics/calc outputs, T-103 board)")
+print("=" * 90)
+def _read(name):
+    try: return open(_os.path.join(_ROOT, "sim", "electronics", "calc", name), encoding="utf-8").read()
+    except OSError: return ""
+gb = _read("calc_gnd_bounce.out")
+m_v = _re.search(r"Worst case: module GND - Pico GND bounce ([\d.]+) V", gb)
+m_i = _re.search(r"<= ([\d.]+) A, <= ([\d.]+) nC per line", gb)
+HBM_I, HBM_Q = 2.67, 400.0          # SOURCE EE-S28 via calc_gnd_bounce: RP2040 HBM 4 kV, digital FT pins only (GP26/GP27 NOT CONFIRMED, R-010)
+if m_v and m_i:
+    vb, ii, qq = float(m_v.group(1)), float(m_i.group(1)), float(m_i.group(2))
+    print("  GND bounce module-Pico %.0f V for about 1 ns; per I2C line <= %.2f A, <= %.2f nC  CALCULATION on ASSUMPTION inputs (calc_gnd_bounce.out)" % (vb, ii, qq))
+    check("D1 injected I2C current and charge within the RP2040 HBM 4 kV equivalent (FT-pin rating; GP26/GP27 NOT CONFIRMED)", ii <= HBM_I and qq <= HBM_Q,
+          "%.2f A vs %.2f A (%.2fx), %.2f nC vs %.0f nC; bounce %.0f V / ~1 ns" % (ii, HBM_I, ii / HBM_I, qq, HBM_Q, vb))
+else:
+    check("D1 injected I2C current and charge within the RP2040 HBM 4 kV equivalent (FT-pin rating; GP26/GP27 NOT CONFIRMED)", False, "values not found in calc_gnd_bounce.out")
+ic = _read("calc_i2c_coupling.out")
+m_c = _re.findall(r"cell 0\.40 mm \(\d+ cells\): C\(SDA to pad\) ([\d.]+) fF", ic)
+m_n = _re.findall(r"= ([\d.]+) ADC counts \(touch threshold (\d+) counts\)", ic)
+COUPLE_MAX = 3.0                    # ASSUMPTION (REQ-038 proposal): half of RELEASE_THRESHOLD 6 (SOURCE FrutaMIDI.ino)
+if m_c and m_n:
+    cf, cnt, thr = float(m_c[-1]), float(m_n[-1][0]), int(m_n[-1][1])
+    print("  SDA to electrode pad %.1f fF; SDA full-swing step %.2f counts against TOUCH_THRESHOLD %d  CALCULATION (calc_i2c_coupling.out, current layout)" % (cf, cnt, thr))
+    check("D2 SDA coupling step <= %.0f counts (half RELEASE_THRESHOLD, REQ-038 proposal)" % COUPLE_MAX, cnt <= COUPLE_MAX, "%.2f counts (%.1f fF), touch threshold %d, margin %.1fx to the touch threshold" % (cnt, cf, thr, thr / cnt))
+else:
+    check("D2 SDA coupling step <= %.0f counts (half RELEASE_THRESHOLD, REQ-038 proposal)" % COUPLE_MAX, False, "values not found in calc_i2c_coupling.out")
+up = _read("calc_usb_pry.out")
+m_p = _re.search(r"F = 30 N:[^\n]*\n\s*largest screw force: T-091 [\d.]+ N; current ([\d.]+) N", up)
+SCREW_MAX = 100.0                   # ASSUMPTION (not sourced): allowable axial load on one M3 nylon screw in 1.6 mm FR-4, kept low for pull-through
+if m_p:
+    fs = float(m_p.group(1))
+    print("  USB pry 30 N: largest screw force %.1f N  CALCULATION on ASSUMPTION inputs (calc_usb_pry.out); castellation peel margin 0.57-0.75 at 30 N unchanged (R-013)" % fs)
+    check("D3 largest M3 screw force at a 30 N USB pull <= %.0f N (ASSUMPTION limit, not sourced)" % SCREW_MAX, fs <= SCREW_MAX, "%.1f N, %.1fx the applied 30 N" % (fs, fs / 30.0))
+else:
+    check("D3 largest M3 screw force at a 30 N USB pull <= %.0f N (ASSUMPTION limit, not sourced)" % SCREW_MAX, False, "value not found in calc_usb_pry.out")
 
 print()
 print("SUMMARY: %d checks, %d PASS, %d FAIL" % (len(checks), checks.count(True), checks.count(False)))
@@ -422,11 +503,11 @@ print("SUMMARY: %d checks, %d PASS, %d FAIL" % (len(checks), checks.count(True),
 # ---------------------------------------------------------------------------------------------
 # Generated report (review F-008): every number in reports/systems/budgets.md comes from this run.
 import os
-OUT_MD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "reports", "systems", "budgets.md")
+OUT_MD = os.path.join(os.environ["FM_BUDGETS_ROOT"], "budgets.md") if os.environ.get("FM_BUDGETS_ROOT") else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "reports", "systems", "budgets.md")
 L = []
 L.append("# FrutaMIDI system budgets")
 L.append("")
-L.append("Generated by `sim/systems/budgets.py` (revision 7, T-077, CR-002: pulse-rated R1..R12, C1 wiper filter). Do not edit by hand: re-run the script. Raw output: `sim/systems/budgets.out`.")
+L.append("Generated by `sim/systems/budgets.py` (revision 10, T-104: T-103 board, BOM coverage, board-level items; revision 9 T-099 Mouser BOM). Do not edit by hand: re-run the script. Raw output: `sim/systems/budgets.out`.")
 L.append("Labels: SOURCE ids refer to `requirements/SOURCES_SYSTEMS.md`. Everything here is CALCULATION unless marked; nothing is MEASURED.")
 L.append("")
 L.append("**Checks:** %d PASS, %d FAIL." % (checks.count(True), checks.count(False)))
@@ -476,7 +557,7 @@ L.append("The zone is %.3f V wide. The dead band is 0.2 zone = %.3f V each side 
          "The static offset of %.3f V (S-01 §4.3) moves every threshold together and is not budgeted. The nearest DNL-peak code is %.3f V from a switch point."
          % (zone_v, dead_v, noise_pp, ENOB, dnl_v, q10_v, ripple_v, err_v, adc_offset_v, near))
 L.append("")
-L.append("C1 wiper filter (ADR-021): R_th max %.0f Ohm (10 kOhm +20 %% ASSUMPTION, at mid travel), C max %.1f nF (SOURCE EE-S29, +10 %% tolerance, +15 %% X7R temperature), "
+L.append("C1 wiper filter (ADR-021, 1206 in v1.3): R_th max %.0f Ohm (10 kOhm +20 %%, SOURCE Bourns PTV09 T96-S3, at mid travel), C max %.1f nF (+10 %% tolerance, +15 %% X7R temperature; ASSUMPTION, the Samsung CL31B104KBCNNNC datasheet was not opened), "
          "tau %.3f ms, settling to 1/2 LSB at 10 bits %.2f ms against the %.0f ms read period (fm_pot.h), margin %.1fx." % (rth_max, C1_F[1] * 1e9, tau_c1 * 1e3, t_settle * 1e3, POT_READ_S * 1e3, POT_READ_S / t_settle))
 L.append("")
 L.append("## BOM (ADR-007 core definition)")
@@ -486,6 +567,17 @@ L.append("| --- | --- | --- | --- |")
 for name, q, (lo, hi), lab in BOM:
     L.append("| %s | %d | %.2f–%.2f | %s |" % (name, q, q * lo, q * hi, lab))
 L.append("| **Core total** | | **%.2f–%.2f** | CALCULATION |" % core)
+L.append("")
+L.append("Basis: Mouser Portugal prices read 2026-11-11 (T-096), EUR excluding VAT and shipping, one board. Mouser lines only: %.2f EUR. "
+         "With VAT at 23 %% (ASSUMPTION rate) the core is %.2f–%.2f EUR. Shipping is NOT CONFIRMED. Excluded by ADR-007 D-7: consumables, wire, hot-melt, epoxy, USB cable, optional leads and hardware." % (mouser[0], core_vat[0], core_vat[1]))
+L.append("")
+L.append("Plan B (T-097 TVS clamps and 1 kOhm R1..R12, not adopted) adds %.2f EUR: core %.2f–%.2f EUR." % (PLANB_DELTA, core[0] + PLANB_DELTA, core[1] + PLANB_DELTA))
+L.append("")
+L.append("R-016 alternative Vishay CRCW25123K30FKEG at 0.424 EUR (10+, T-103) adds %.2f EUR: core %.2f–%.2f EUR (body size NOT CONFIRMED)." % (alt_delta, core[0] + alt_delta, core[1] + alt_delta))
+L.append("")
+L.append("## Board-level items (T-104, from sim/electronics/calc outputs)")
+L.append("")
+L.append("See checks D1–D3 above: GND bounce and injected I2C charge against the RP2040 FT-pin HBM equivalent (GP26/GP27 NOT CONFIRMED), SDA coupling against the 3-count REQ-038 proposal, and the largest M3 screw force at a 30 N USB pull against an unsourced 100 N ASSUMPTION limit.")
 L.append("")
 open(OUT_MD, "w").write("\n".join(L) + "\n")
 print("wrote reports/systems/budgets.md")

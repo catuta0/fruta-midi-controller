@@ -1,0 +1,26 @@
+# calc_i2c.py  CALCULATION
+## MPR121 VDD when the module input is fed from Pico 3V3 (LDO in dropout)
+  AP2112K-3.3 (STEMMA QT)    VDD typ 3.295 V, worst-case min 3.192 V  (SOURCE Diodes AP2112 datasheet: 5 typ / 8 max mV at 10 mA)
+                             MPR121 VDD range 2.0..3.6 V (SOURCE Table 5): margin to 2.0 V = 1.19 V; to 3.6 V abs max = 0.20 V
+  MIC5225-3.3 (original)     VDD typ 3.250 V, worst-case min 3.100 V  (SOURCE 50 mV typ at 100 uA (Microchip DS20006683A via search, not opened); max 100 mV at <=3.3 mA is ASSUMPTION)
+                             MPR121 VDD range 2.0..3.6 V (SOURCE Table 5): margin to 2.0 V = 1.10 V; to 3.6 V abs max = 0.20 V
+  AUTOCONFIG limits are written for VDD=3.3 V (USL 200 = (3.3-0.7)/3.3*256 = 201.7). At VDD=3.10 V Eqn.1 gives USL=198.2: library USL 200 is 0.9% above -> charge field nearer the rail (headroom VDD-0.7 shrinks to 0.68 V).
+
+## I2C idle levels (Pico side = drain side of BSS138)
+  Pico 3V3 = 3.20 V: SDA/SCL idle on Pico side = VIN = 3.20 V (pull-up to the module VIN, which IS the Pico 3V3) -> never above RP2040 IOVDD (same rail).  MPR121 side idles at its VDD <= 3.20 V <= VDD+0.3 limit.
+  Pico 3V3 = 3.30 V: SDA/SCL idle on Pico side = VIN = 3.30 V (pull-up to the module VIN, which IS the Pico 3V3) -> never above RP2040 IOVDD (same rail).  MPR121 side idles at its VDD <= 3.30 V <= VDD+0.3 limit.
+  Pico 3V3 = 3.40 V: SDA/SCL idle on Pico side = VIN = 3.40 V (pull-up to the module VIN, which IS the Pico 3V3) -> never above RP2040 IOVDD (same rail).  MPR121 side idles at its VDD <= 3.40 V <= VDD+0.3 limit.
+  BSS138 gate = MPR121 VDD ~3.2-3.3 V; VGS(th) 0.8..1.5 V (SOURCE onsemi BSS138): switch conducts when the Pico pulls low. VIH(MPR121) = 0.7*VDD = 2.30 V; level shifter passes Pico high = 3.2..3.4 V on drain, chip side pulled to VDD by 10k.
+
+## Rise time on the Pico side, 30 -> 70 %% (t_r = 0.8473 R C), I2C fast mode limit 300 ns at 400 kHz (SOURCE MPR121 Table 7)
+  RP2040 pad                                                 5.0 pF  (ASSUMPTION (RP2040 pin capacitance not verified))
+  Pico trace + header                                        3.0 pF  (ASSUMPTION)
+  FrutaMIDI PCB track ~40 mm, single-sided                   2.0 pF  (ASSUMPTION ~0.5 pF/cm)
+  module header + trace                                      3.0 pF  (ASSUMPTION)
+  BSS138 drain (Coss 9.75..25 pF @25 V; x1.5 at low VDS)    25.0 pF  (SOURCE onsemi BSS138K typ / BSS138L max x ASSUMPTION factor)
+  C_bus (Pico side)                                         38.0 pF
+  module 10k only            R= 10000 ohm  t_r =   322 ns  -> 400 kHz FAIL;  100 kHz (1000 ns) PASS;  low-level sink = 0.68 mA (I2C limit 3 mA)
+  module 10k || PCB 4.7k     R=  3197 ohm  t_r =   103 ns  -> 400 kHz PASS;  100 kHz (1000 ns) PASS;  low-level sink = 1.40 mA (I2C limit 3 mA)
+  module 10k || PCB 2.2k     R=  1803 ohm  t_r =    58 ns  -> 400 kHz PASS;  100 kHz (1000 ns) PASS;  low-level sink = 2.23 mA (I2C limit 3 mA)
+  sensitivity: C_bus=20 pF, 10k only -> t_r = 169 ns
+  sensitivity: C_bus=50 pF, 10k only -> t_r = 424 ns

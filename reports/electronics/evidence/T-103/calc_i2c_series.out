@@ -1,0 +1,23 @@
+# calc_i2c_series.py  CALCULATION
+Bus pull-up R = 4k7 || 10k = 3197 ohm
+
+## Pico drives low (master: START, SCL, address/data bits)
+  sink current through 220R = 1.40 mA
+  bus/module low level = 0.4 + 1.40 mA * 220 = 0.709 V; at MPR121 0.712 V vs VIL = 0.3*3.100 = 0.930 V -> margin 0.218 V PASS
+  bus/module low level = 0.4 + 1.40 mA * 220 = 0.709 V; at MPR121 0.712 V vs VIL = 0.3*3.295 = 0.988 V -> margin 0.276 V PASS
+  note: I2C spec VOL 0.4 V applies at the driver pin (Pico), which is unchanged; the receiver threshold is what matters
+
+## MPR121 drives low (ACK, read data)
+  datasheet bound 0.5 V      Pico pin sees 0.514 V vs RP2040 VIL 0.8 V (ASSUMPTION) -> margin 0.286 V PASS
+  scaled to 1.40 mA          Pico pin sees 0.131 V vs RP2040 VIL 0.8 V (ASSUMPTION) -> margin 0.669 V PASS
+
+## Rise time at 400 kHz (t_r = 0.8473 * R * C, limit 300 ns, SOURCE EE-S01 Table 7)
+  C_bus 20 pF: bus t_r =  54.2 ns, at Pico pin <=  56.6 ns -> PASS
+  C_bus 40 pF: bus t_r = 108.4 ns, at Pico pin <= 110.8 ns -> PASS
+  C_bus 60 pF: bus t_r = 162.5 ns, at Pico pin <= 165.0 ns -> PASS
+
+## Fault: J1 hand wire placed on a supply pin (S1/S2 original = VIN/3V3o, S6/S7 QT = 3V3o/VCC)
+  Pico drives low into 3.4 V: I = 3.4 / 220 = 15.5 mA (+ bus pull-ups shorted to the rail: no current)
+  Without R15/R16 the current is limited only by the pad driver (not bounded by any figure in hand).
+  Wire on GND (S3 orig / S5 QT): bus held low, pull-up current 1.06 mA, no damage; I2C fails -> firmware 'not found' LED.
+  Wire on IRQ/INT/ADDR: no supply contact, I2C fails or address changes; no damage.

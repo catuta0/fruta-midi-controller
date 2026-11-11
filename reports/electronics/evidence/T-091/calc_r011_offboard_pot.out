@@ -1,0 +1,27 @@
+# calc_r011_offboard_pot.py  CALCULATION (T-091, inputs: SOURCE recalled / ASSUMPTION, see header)
+Strike cases (frame not tied to the board):
+  A plastic shaft + insulating knob: no conductive contact point; the discharge must find a lug by air or creepage.
+  B metal shaft, frame floating: frame-to-lug gap breaks down at far below 4 kV (rule 3.5 mm vs gap 0.5..2.0 mm ASSUMPTION): gap below the 3.5 mm rule at every value in the sweep
+    so the strike is expected to reach a lug: lug 1 (3V3), 2 (wiper) or 3 (AGND), no series resistor on any of the three wires.
+  C metal shaft, frame tied to the AGND wire by the builder: V1.2 path with a longer wire (frame to AGND without series R).
+
+4 kV: Q = C_esd V = 0.60 uC; first peak (IEC) 15.0 A; resistive plateau 12.1 A; energy 0.5 C V^2 = 1.20 mJ
+  strike into the wiper net, all charge into C1: dV_C1 = 6.0 V (5.5 V at C1 +10 %), above the 3.3 V rail by 2.7 V; above the 3.6 V ADC input maximum assumed for RP2040 pads (ASSUMPTION, R-010)
+  so clamping into the ADC pad diodes is expected; peak diode current bounded by the source impedance, not by the board
+  strike into AGND / 3V3 lug: AGND/3V3 wire is in series with Pico pin 33/36, no resistor, no C1 in the path for 3V3
+    wire L 40 nH: L di/dt (0.8 Ipk / 0.8 ns) = 600 V, capped by the 4000 V source: 600 V across the wire before the arc settles
+    wire L 360 nH: L di/dt (0.8 Ipk / 0.8 ns) = 5400 V, capped by the 4000 V source: 4000 V across the wire before the arc settles
+8 kV: Q = C_esd V = 1.20 uC; first peak (IEC) 30.0 A; resistive plateau 24.2 A; energy 0.5 C V^2 = 4.80 mJ
+  strike into the wiper net, all charge into C1: dV_C1 = 12.0 V (10.9 V at C1 +10 %), above the 3.3 V rail by 8.7 V; above the 3.6 V ADC input maximum assumed for RP2040 pads (ASSUMPTION, R-010)
+  so clamping into the ADC pad diodes is expected; peak diode current bounded by the source impedance, not by the board
+  strike into AGND / 3V3 lug: AGND/3V3 wire is in series with Pico pin 33/36, no resistor, no C1 in the path for 3V3
+    wire L 40 nH: L di/dt (0.8 Ipk / 0.8 ns) = 1200 V, capped by the 8000 V source: 1200 V across the wire before the arc settles
+    wire L 360 nH: L di/dt (0.8 Ipk / 0.8 ns) = 10800 V, capped by the 8000 V source: 8000 V across the wire before the arc settles
+
+Result (CALCULATION, order of magnitude only):
+  - Moving the pot off the board removes the V1.2 hard copper link from the frame to AGND (tabs) (design fact, ADR-023).
+  - A metal shaft is still NOT protected: the discharge finds a lug across a sub-3.5 mm internal gap, then a wire with no series R.
+  - The extra wire inductance (40-360 nH) slows the edge but does not limit the 0.6-1.2 uC charge delivered.
+  - C1 holds a wiper strike to 6-12 V (order of magnitude) for that charge; this does not prove the ADC pad survives.
+Unquantified, remains open: RP2040 pad rating and latch-up (R-010), bought-pot internal gap, wire length, any metal enclosure.
+Recommendation carried to the manual: insulated (plastic) shaft and insulating knob. Physical ESD step 2b (R-011) unchanged.

@@ -1,0 +1,32 @@
+# calc_power.py  CALCULATION
+## Load on Pico 3V3 (pin 36) through PCB tracks, worst case (both LED variants counted)
+  MPR121 IDD run, ESI 1 ms, CDC 63 uA                                   0.393 mA  (SOURCE MPR121 Table 5 (typ; no max given); superseded by peak)
+  MPR121 peak during measurement                                        1.000 mA  (SOURCE MPR121 Table 5 (peak, used instead of 393 uA))
+  LDO quiescent (AP2112 max 80 uA; MIC5225 ASSUMPTION <=100 uA)         0.100 mA  (SOURCE AP2112 / ASSUMPTION)
+  Original rev.: red IRQ LED via 1k from 3.3V (Vf 1.8 V ASSUMPTION)     1.500 mA  (CALCULATION)
+  STEMMA QT rev.: green power LED via 10k (Vf 2.0 V ASSUMPTION)         0.130 mA  (CALCULATION)
+  I2C pull-ups low (2 lines x (10k host + 10k chip side))               1.320 mA  (CALCULATION, Adafruit schematics)
+  Octave pot 10k across 3V3-AGND                                        0.330 mA  (CALCULATION)
+  Button pressed: RP2040 internal pull-up (50 k min, ASSUMPTION)        0.066 mA  (CALCULATION)
+  TOTAL (worst case)                                                    4.446 mA
+  Pico 3V3 pin recommendation < 300 mA (SOURCE pico.pinout.xyz / Pico datasheet): margin 67x
+
+## IPC-2221 external layer, 35 um Cu. CALCULATION
+  3V3/GND power track 1.2 mm                           I=   0.0044 A  dT=  4.61e-06 C   I(dT=10C)=2.73 A
+  signal track 1.0 mm (I2C, button, pot)               I=   0.0010 A  dT=  2.09e-07 C   I(dT=10C)=2.39 A
+  module S-row stub 0.8 mm                             I=   0.0044 A  dT=  8.98e-06 C   I(dT=10C)=2.03 A
+  electrode track 1.0 mm (63 uA charge)                I=   0.0001 A  dT=  3.91e-10 C   I(dT=10C)=2.39 A
+  BOUND: 0.8 mm carrying full Pico 3V3 limit 300 mA    I=   0.3000 A  dT=  1.29e-01 C   I(dT=10C)=2.03 A
+  3V3 path 120 mm x 1.2 mm: R = 49.1 mOhm, drop at 4.4 mA = 0.218 mV (CALCULATION, length ASSUMPTION)
+
+## Dissipation. CALCULATION
+  Octave pot 10k: P = V^2/R = 1.16 mW vs 50 mW rating (SOURCE Alps RK09K1130A5R page, V1.2 part; the off-board pot needs an equal or higher rating, ASSUMPTION) -> margin 43x
+  Series R 3k0 (HPWC2512, ADR-023), DC: P = (63 uA)^2 * 3k0 = 1.19e-05 W (negligible)
+  Series R 3k0, one IEC 8 kV contact pulse: E = 4.32 mJ in 0.50 us (CALCULATION); pulse rating: calc_pulse_rated.out
+  Board total from 3V3: P = 14.7 mW
+
+## Clearance vs voltage
+  Highest steady voltage on the PCB: 3.3 V (VBUS stays on the Pico). IPC-2221B Table 6-1, B2 (external,
+  uncoated, <= 3050 m), 0-15 V: 0.10 mm minimum (SOURCE). Design rule 0.6 mm -> margin 6x.
+  ESD transient 4 kV: uniform-field air breakdown ~3 kV/mm (ASSUMPTION) -> arcs across gaps < 1.3 mm; J2 wire-pad pitch 5.08 mm, electrode track gaps >= 0.6 mm: arcing between adjacent E tracks is possible at 4 kV. Gaps across the series R and to the module nets: calc_flashover.out and check_gap.out.
+  ESD transient 8 kV: uniform-field air breakdown ~3 kV/mm (ASSUMPTION) -> arcs across gaps < 2.7 mm; J2 wire-pad pitch 5.08 mm, electrode track gaps >= 0.6 mm: arcing between adjacent E tracks is possible at 8 kV. Gaps across the series R and to the module nets: calc_flashover.out and check_gap.out.

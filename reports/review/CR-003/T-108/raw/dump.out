@@ -1,0 +1,169 @@
+FP A1 FrutaMIDI:RaspberryPi_Pico_Castellated_HomeEtch at (54.5,51.48) rot 0.0 npads=40
+   pad   1 smd      rect      (53.200,51.480) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO0-Pad1) rr=0
+   pad   2 smd      rect      (53.200,54.020) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO1-Pad2) rr=0
+   pad   3 smd      rect      (53.200,56.560) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad   4 smd      rect      (53.200,59.100) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO2-Pad4) rr=0
+   pad   5 smd      rect      (53.200,61.640) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO3-Pad5) rr=0
+   pad   6 smd      rect      (53.200,64.180) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO4-Pad6) rr=0
+   pad   7 smd      rect      (53.200,66.720) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO5-Pad7) rr=0
+   pad   8 smd      rect      (53.200,69.260) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad   9 smd      rect      (53.200,71.800) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO6-Pad9) rr=0
+   pad  10 smd      rect      (53.200,74.340) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO7-Pad10) rr=0
+   pad  11 smd      rect      (53.200,76.880) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO8-Pad11) rr=0
+   pad  12 smd      rect      (53.200,79.420) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO9-Pad12) rr=0
+   pad  13 smd      rect      (53.200,81.960) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad  14 smd      rect      (53.200,84.500) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO10-Pad14) rr=0
+   pad  15 smd      rect      (53.200,87.040) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO11-Pad15) rr=0
+   pad  16 smd      rect      (53.200,89.580) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO12-Pad16) rr=0
+   pad  17 smd      rect      (53.200,92.120) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO13-Pad17) rr=0
+   pad  18 smd      rect      (53.200,94.660) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad  19 smd      rect      (53.200,97.200) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO14-Pad19) rr=0
+   pad  20 smd      rect      (53.200,99.740) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO15-Pad20) rr=0
+   pad  21 smd      rect      (73.580,99.740) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO16-Pad21) rr=0
+   pad  22 smd      rect      (73.580,97.200) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO17-Pad22) rr=0
+   pad  23 smd      rect      (73.580,94.660) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad  24 smd      rect      (73.580,92.120) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO18-Pad24) rr=0
+   pad  25 smd      rect      (73.580,89.580) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO19-Pad25) rr=0
+   pad  26 smd      rect      (73.580,87.040) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO20-Pad26) rr=0
+   pad  27 smd      rect      (73.580,84.500) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-GPIO21-Pad27) rr=0
+   pad  28 smd      rect      (73.580,81.960) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad  29 smd      rect      (73.580,79.420) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/BTN rr=0
+   pad  30 smd      rect      (73.580,76.880) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-RUN-Pad30) rr=0
+   pad  31 smd      rect      (73.580,74.340) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SDA_PICO rr=0
+   pad  32 smd      rect      (73.580,71.800) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SCL_PICO rr=0
+   pad  33 smd      rect      (73.580,69.260) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/AGND rr=0
+   pad  34 smd      rect      (73.580,66.720) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/POT rr=0
+   pad  35 smd      rect      (73.580,64.180) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-ADC_VREF-Pad35) rr=0
+   pad  36 smd      rect      (73.580,61.640) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=+3V3 rr=0
+   pad  37 smd      rect      (73.580,59.100) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-3V3_EN-Pad37) rr=0
+   pad  38 smd      rect      (73.580,56.560) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad  39 smd      rect      (73.580,54.020) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-VSYS-Pad39) rr=0
+   pad  40 smd      rect      (73.580,51.480) 4.2x1.6 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=unconnected-(A1-VBUS-Pad40) rr=0
+FP J3 FrutaMIDI:WirePads_1x07_P2.54mm at (102.4,55.58) rot 0.0 npads=7
+   pad   1 smd      circle    (102.400,55.580) 1.8x1.8 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S1 rr=0
+   pad   2 smd      circle    (104.940,55.580) 1.8x1.8 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S2 rr=0
+   pad   3 smd      circle    (107.480,55.580) 1.8x1.8 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S3 rr=0
+   pad   4 smd      circle    (110.020,55.580) 1.8x1.8 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S4 rr=0
+   pad   5 smd      circle    (112.560,55.580) 1.8x1.8 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S5 rr=0
+   pad   6 smd      circle    (115.100,55.580) 1.8x1.8 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S6 rr=0
+   pad   7 smd      circle    (117.640,55.580) 1.8x1.8 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S7 rr=0
+FP R10 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (129.07,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (129.070,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE9 rr=0
+   pad   2 smd      rect      (129.070,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E9 rr=0
+FP RV1 FrutaMIDI:WirePads_1x03_P5.08mm at (84.5,58.42) rot 0.0 npads=3
+   pad   1 smd      rect      (84.500,58.420) 3.0x3.0 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=+3V3 rr=0
+   pad   2 smd      circle    (84.500,63.500) 3.0x3.0 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/POT rr=0
+   pad   3 smd      circle    (84.500,68.580) 3.0x3.0 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/AGND rr=0
+FP R14 FrutaMIDI:R_1206_HomeEtch at (138.81,54.9) rot -90.0 npads=2
+   pad   1 smd      rect      (138.810,54.587) 1.775x1.8 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=+3V3 rr=0
+   pad   2 smd      rect      (138.810,58.112) 1.775x1.8 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SDA rr=0
+FP R5 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (103.67,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (103.670,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE4 rr=0
+   pad   2 smd      rect      (103.670,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E4 rr=0
+FP R16 FrutaMIDI:R_1206_HomeEtch at (77.6,74.34) rot 0.0 npads=2
+   pad   1 smd      rect      (77.287,74.340) 1.775x1.8 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SDA_PICO rr=0
+   pad   2 smd      rect      (80.812,74.340) 1.775x1.8 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SDA rr=0
+FP R3 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (93.51,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (93.510,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE2 rr=0
+   pad   2 smd      rect      (93.510,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E2 rr=0
+FP R9 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (123.99,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (123.990,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE8 rr=0
+   pad   2 smd      rect      (123.990,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E8 rr=0
+FP J1 FrutaMIDI:Config_2pads_SMD at (135.0,62.5) rot 0.0 npads=2
+   pad   1 smd      rect      (135.000,62.500) 2.2x2.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SCL rr=0
+   pad   2 smd      circle    (138.810,62.500) 2.2x2.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SDA rr=0
+FP R15 FrutaMIDI:R_1206_HomeEtch at (135.0,68.5) rot 90.0 npads=2
+   pad   1 smd      rect      (135.000,68.812) 1.775x1.8 r90.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SCL_PICO rr=0
+   pad   2 smd      rect      (135.000,65.287) 1.775x1.8 r90.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SCL rr=0
+FP A2 FrutaMIDI:Adafruit_MPR121_1982_SMD at (110.02,67.645) rot 0.0 npads=20
+   pad   1 smd      rect      (94.780,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad   2 smd      rect      (97.320,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE0 rr=0
+   pad   3 smd      rect      (99.860,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE1 rr=0
+   pad   4 smd      rect      (102.400,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE2 rr=0
+   pad   5 smd      rect      (104.940,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE3 rr=0
+   pad   6 smd      rect      (107.480,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE4 rr=0
+   pad   7 smd      rect      (110.020,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE5 rr=0
+   pad   8 smd      rect      (112.560,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE6 rr=0
+   pad   9 smd      rect      (115.100,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE7 rr=0
+   pad  10 smd      rect      (117.640,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE8 rr=0
+   pad  11 smd      rect      (120.180,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE9 rr=0
+   pad  12 smd      rect      (122.720,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE10 rr=0
+   pad  13 smd      rect      (125.260,76.800) 1.8x4.2 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE11 rr=0
+   pad  14 smd      rect      (102.400,59.102) 1.8x5.515 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S1 rr=0
+   pad  15 smd      rect      (104.940,59.102) 1.8x5.515 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S2 rr=0
+   pad  16 smd      rect      (107.480,59.102) 1.8x5.515 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S3 rr=0
+   pad  17 smd      rect      (110.020,59.102) 1.8x5.515 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S4 rr=0
+   pad  18 smd      rect      (112.560,59.102) 1.8x5.515 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S5 rr=0
+   pad  19 smd      rect      (115.100,59.102) 1.8x5.515 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S6 rr=0
+   pad  20 smd      rect      (117.640,59.102) 1.8x5.515 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S7 rr=0
+FP R2 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (88.43,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (88.430,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE1 rr=0
+   pad   2 smd      rect      (88.430,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E1 rr=0
+FP H4 FrutaMIDI:MountingHole_3.2mm_M3 at (79.8,54.0) rot 0.0 npads=1
+   pad     np_thru_hole circle    (79.800,54.000) 3.2x3.2 r0.0 ['*.Cu', '*.Mask'] net= rr=0
+FP R7 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (113.83,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (113.830,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE6 rr=0
+   pad   2 smd      rect      (113.830,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E6 rr=0
+FP H1 FrutaMIDI:MountingHole_3.2mm_M3 at (55.0,115.0) rot 0.0 npads=1
+   pad     np_thru_hole circle    (55.000,115.000) 3.2x3.2 r0.0 ['*.Cu', '*.Mask'] net= rr=0
+FP R4 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (98.59,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (98.590,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE3 rr=0
+   pad   2 smd      rect      (98.590,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E3 rr=0
+FP R13 FrutaMIDI:R_1206_HomeEtch at (135.0,54.9) rot -90.0 npads=2
+   pad   1 smd      rect      (135.000,54.587) 1.775x1.8 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=+3V3 rr=0
+   pad   2 smd      rect      (135.000,58.112) 1.775x1.8 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/SCL rr=0
+FP R6 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (108.75,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (108.750,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE5 rr=0
+   pad   2 smd      rect      (108.750,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E5 rr=0
+FP H3 FrutaMIDI:MountingHole_3.2mm_M3 at (146.5,108.0) rot 0.0 npads=1
+   pad     np_thru_hole circle    (146.500,108.000) 3.2x3.2 r0.0 ['*.Cu', '*.Mask'] net= rr=0
+FP R11 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (134.149999,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (134.150,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE10 rr=0
+   pad   2 smd      rect      (134.150,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E10 rr=0
+FP SW1 FrutaMIDI:SW_SPST_B3S-1000_HomeEtch at (81.5,79.71) rot 0.0 npads=4
+   pad   1 smd      rect      (77.525,77.460) 1.55x1.3 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/BTN rr=0
+   pad   1 smd      rect      (85.475,77.460) 1.55x1.3 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/BTN rr=0
+   pad   2 smd      rect      (77.525,81.960) 1.55x1.3 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad   2 smd      rect      (85.475,81.960) 1.55x1.3 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+FP R8 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (118.91,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (118.910,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE7 rr=0
+   pad   2 smd      rect      (118.910,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E7 rr=0
+FP R1 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (83.35,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (83.350,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE0 rr=0
+   pad   2 smd      rect      (83.350,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E0 rr=0
+FP JP1 FrutaMIDI:SolderJumper_3_SMD_P3.81mm at (129.5,65.739999) rot 90.0 npads=3
+   pad   1 smd      rect      (129.500,65.740) 1.94x2.4 r90.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S1 rr=0
+   pad   2 smd      rect      (129.500,61.930) 1.94x2.4 r90.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=+3V3 rr=0
+   pad   3 smd      rect      (129.500,58.120) 1.94x2.4 r90.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/S7 rr=0
+FP R12 FrutaMIDI:R_2512_HomeEtch_G5.0mm at (139.23,99.0) rot -90.0 npads=2
+   pad   1 smd      rect      (139.230,99.000) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/ELE11 rr=0
+   pad   2 smd      rect      (139.230,105.900) 1.9x3.35 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E11 rr=0
+FP H2 FrutaMIDI:MountingHole_3.2mm_M3 at (146.0,54.0) rot 0.0 npads=1
+   pad     np_thru_hole circle    (146.000,54.000) 3.2x3.2 r0.0 ['*.Cu', '*.Mask'] net= rr=0
+FP C1 FrutaMIDI:C_1206_HomeEtch at (80.0,66.42) rot -90.0 npads=2
+   pad   1 smd      rect      (80.000,66.058) 1.875x1.8 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/POT rr=0
+   pad   2 smd      rect      (80.000,69.683) 1.875x1.8 r270.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/AGND rr=0
+FP J2 FrutaMIDI:WirePads_1x14_P5.08mm at (77.0,113.75) rot 0.0 npads=14
+   pad   1 smd      rect      (77.000,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+   pad   2 smd      oval      (82.080,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E0 rr=0
+   pad   3 smd      oval      (87.160,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E1 rr=0
+   pad   4 smd      oval      (92.240,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E2 rr=0
+   pad   5 smd      oval      (97.320,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E3 rr=0
+   pad   6 smd      oval      (102.400,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E4 rr=0
+   pad   7 smd      oval      (107.480,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E5 rr=0
+   pad   8 smd      oval      (112.560,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E6 rr=0
+   pad   9 smd      oval      (117.640,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E7 rr=0
+   pad  10 smd      oval      (122.720,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E8 rr=0
+   pad  11 smd      oval      (127.800,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E9 rr=0
+   pad  12 smd      oval      (132.880,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E10 rr=0
+   pad  13 smd      oval      (137.960,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=/E11 rr=0
+   pad  14 smd      oval      (143.040,113.750) 3.0x4.5 r0.0 ['F.Cu', 'F.Mask', 'F.Paste'] net=GND rr=0
+segments 121 layers {'F.Cu'} widths [0.8, 1.0, 1.2]
+vias 0
+gr_line Edge.Cuts [['start', '50', '50'], ['end', '150', '50'], ['stroke', ['width', '0.15'], ['type', 'default']]]
+gr_line Edge.Cuts [['start', '50', '120'], ['end', '50', '50'], ['stroke', ['width', '0.15'], ['type', 'default']]]
+gr_line Edge.Cuts [['start', '150', '50'], ['end', '150', '120'], ['stroke', ['width', '0.15'], ['type', 'default']]]
+gr_line Edge.Cuts [['start', '150', '120'], ['end', '50', '120'], ['stroke', ['width', '0.15'], ['type', 'default']]]
+gr_text F.Cu ORIG
+gr_text F.Cu FrutaMIDI v1.3
+gr_text F.Cu QT

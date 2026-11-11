@@ -1,0 +1,73 @@
+T-094 distributor pages opened 2026-11-09 (browser pane, public catalogue pages, no account, no cart, no form, no order).
+Prices as listed, ex shipping and tax. Text below is copied from the pages (values only). All numbers: SOURCE.
+
+== LCSC (https://www.lcsc.com/, prices in USD) ==
+Page URL pattern: https://www.lcsc.com/product-detail/<C-number>.html, or search https://www.lcsc.com/search?q=<MPN>
+
+R1-R12 candidates (none passes the pulse criterion, see the handoff):
+- C2082816 CRGP2512F3K3 TE Connectivity, 3.3k 1 % 2W 2512, In-Stock 130, Min 1, Mult 1; 1+ 0.4252, 10+ 0.3359, 30+ 0.2962, 100+ 0.2482. Reel 4000.
+- C2082813 CRGP2512F2K7 TE Connectivity, 2.7k 1 % 2W 2512, In-Stock 5; 1+ 0.4139, 10+ 0.3269.
+- C2075397 CRGP2512F3K9 TE, stock 0 (Pre/New).
+- C1710378 CRCW25123K00FKEGHP Vishay, 3k 1 % 1.5W 500V, stock 0 (Pre/New); 1+ 0.176.
+- C1702735 CRCW25123K00JNEGHP Vishay, 3k 5 %, stock 0 (Pre/New); 1+ 0.1422.
+- C2075738 CRCW25123K30FKEGHP Vishay, 3.3k 1 %, stock 0 (LCSC stock) ; other suppliers 10,000, MOQ 2000 at 0.3049, lead 13-15 business days.
+- C1722297 CRGS2512J3K3 TE, 3.3k 5 %, stock 0 (Pre/New); 1+ 0.2803.
+- C876889 SR2512JK-073KL Yageo, 3k 5 % 1W, stock 0 (Pre/New); 1+ 0.0863.
+- HPWC2512 search: "0 results found for HPWC2512".
+- CMP2512-FX-3001ELF search: "No results"; only CMP2512-FX-1001ELF C4184171 listed.
+- AS25J3001ET search: "No results".
+- PWC2512-3K0 search: no exact match.
+- Cheap ordinary 2512 3k (no pulse data in datasheet): C2934109 FRC2512J302 TS FOJAN 3k 5 % 1W, stock 20,240, 20+ 0.0182; C728188 AC2512FK-073KL Yageo.
+
+Other lines:
+- C2907387 FRC1206F4701TS FOJAN 4.7k 1 % 250mW 1206, In-Stock 502,700, Minimum 100, Multiple 100; 100+ 0.0040 (ex price 0.0045), line total 0.40.
+- C17936 1206W4F4701T5E UNI-ROYAL, stock 1,200,700; 100+ 0.0078, total 0.78 (alternative).
+- C2933642 FRC1206F2200TS FOJAN 220R 1 % 250mW 1206, In-Stock 61,400, Minimum 100, Multiple 100; 100+ 0.0046, total 0.46.
+- C17957 1206W4F2200T5E UNI-ROYAL, stock 16,200; 100+ 0.0057, total 0.57 (alternative).
+- C24497 CL31B104KBCNNNC Samsung 100nF 10 % 50V X7R 1206, In-Stock 448,600, Minimum 20, Multiple 20; 20+ 0.0143, total 0.29.
+- C110253 1206B104K500NT FH, stock 209,740; 20+ 0.0199 (alternative, dearer).
+- C82601 CC1206KRX7R9BB104 Yageo, min 50; 50+ 0.0234 (alternative, dearer).
+- C2733655 B3S-1000 OMRON, In-Stock 2,705, Minimum 5, Multiple 5; 5+ 0.365, total 1.83.
+- C180420 B3S-1000P OMRON, stock 14,490; 5+ 0.3869 (alternative).
+- C25168849 HX 6x6x4.3WS hanxia, stock 6,900, Min 5, Mult 5, 5+ 0.1167 (total 0.58), op. force 2.5 N, life 200k; drawing lead span 6.7 mm (does not fit the B3S land; see handoff).
+- C470295 RK09K1130AP5 ALPSALPINE, 10k 20 % 50mW, In-Stock 2,730, Minimum 1, Multiple 1; 1+ 0.634, 10+ 0.5217. Taper not stated on LCSC page; linear per DigiKey and RS listings (search extract, Alps datasheet not opened: LCSC PDF viewer returned 0 pages).
+- C361173 RK09D1130C2P ALPSALPINE 10k 20 % 50mW 20V, In-Stock 12,164, Minimum 1, Multiple 1; 1+ 0.7417, 10+ 0.6145 (chosen for RV1: insulated flat shaft, see the Alps page below).
+- C5710902 PTV09A-4015F-B103 Bourns, stock 86; 1+ 1.5928.
+- C7501270 ZX-PZ2.54-1-16PZZ Megastar, 16-pin 2.54 mm header strip, Insulation Height 2.5 mm, In-Stock 282,515, Minimum 5, Multiple 5; 5+ 0.0774, total 0.39.
+- C2337 2.54-1*40P BOOMELE; 5+ 0.1631, total 0.82 (alternative).
+- C2895846 PZ254V-11-40P XFCN; 5+ 0.2216 (alternative).
+- Knob: search "knob" gives only "Other Suppliers" listings (price breaks from 20+ or more, e.g. C20280636 Grayhill 112+ 1.3884): no in-stock knob at LCSC for a 6 mm shaft found.
+
+Pico and module:
+- SC0915 search: "No results". C20110268 SC0919 Raspberry Pi, In-Stock 7, 1+ 9.4018, category RF/wireless, variant not confirmed on the page.
+- C41407547 Raspberry Pi Pico 2 (RP2350), In-Stock 356, 1+ 9.3787.
+- C7203003 Raspberry Pi Pico W, In-Stock 270, 1+ 12.8614.
+- C17523394 Adafruit 1982 (MPR121 module), stock 0 (Pre/New), 1+ 21.6846.
+- C91322 MPR121QR2 bare chip, In-Stock 1,807, 1+ 2.7337 (rejected, ADR-023, QFN 0.40 mm pitch).
+- "MPR121 breakout module" search: only the bare chip.
+
+Shipping cost: LCSC help URL redirected to the home page; shipping cost for Portugal not readable without a cart. NOT CONFIRMED.
+
+== Mouser Portugal (https://pt.mouser.com/, EUR, fallback information) ==
+- HPWC2512-3K3JT1 TT Electronics, 2,381 In Stock, Minimum 1, Multiple 1: 1 at 2,05; 10 at 1,25; 25 at 1,01; 100 at 0,90. Page opened (product detail).
+- HPWC2512-3K0JT1 (3k0 5 %): Non-Stocked, Lead 30 weeks, 3,000 at 0,736 minimum. HPWC2512-2K7JT1: Non-Stocked, 3,000 at 0,736. Search page opened (HPWC2512-3K, HPWC2512-2K).
+- PWC2512-3K0JT1 / -3K0FT1: Non-Stocked 26 weeks, 3,000 or 3,600 minimum.
+- CRCW25123K00FKEGHP Vishay 3k 1 %, 2,397 In Stock, Minimum 1: 1 at 1,01; 10 at 0,58; 25 at 0,453. Product page opened.
+- CRCW25123K00JNEGHP 1,817 In Stock; 1 at 1,01. CRCW25123K30FKEGHP 2,445 In Stock; 1 at 0,645. Search page opened.
+- CRGP2512F3K3 8,062 In Stock; 1 at 0,464. CRGP2512F2K7 8,990; 1 at 0,533. CRGP3K0 not listed in search. Search page opened.
+- CRGS2512J3K3 Non-Stocked. CMP2512-FX-3K search: only 390k and 33R.
+
+== Not opened ==
+- TME: bot-verification page on https://www.tme.eu/ ("Performing security verification"); left and not retried.
+- DigiKey Portugal: browser navigation refused; not retried. WebFetch earlier (before the refusal) showed only HPWC2512-33RJT1, marketplace.
+- Farnell: WebFetch timed out; browser navigation overridden by a page redirect; not retried. Findchips listing (via WebFetch) for CRGS2512J3K3 shows Farnell stock 7928.
+- RS: not attempted.
+
+== Datasheets ==
+- Vishay CRCW-HP e3 doc 20043 rev 17-Mar-2026: datasheets/vishay_crcw_hp_20043.pdf, sha256 08344ee1d3a73720ab55cfab1efe943e87be702d86ec2a1f10eedfdf52396505. Render: render/p6.png (pulse voltage chart).
+- TE CRGP 9-1773463-9 CIS WR 03/2018: read in the LCSC viewer (https://www.lcsc.com/datasheet/C2082816.pdf, screenshots only), pages 1-7.
+- Bourns CMP datasheet, Yageo SR datasheet: datasheets/bourns_cmp.pdf, datasheets/yageo_sr_20105.pdf, text in render/.
+- hanxia HX 6x6x4.3WS drawing: LCSC viewer, page 1 only (https://www.lcsc.com/datasheet/C25168849.pdf).
+- Alps RK09K datasheet: LCSC viewer failed (0 pages). NOT OPENED.
+- Alps product page RK09K1130AP5, https://tech.alpsalpine.com/e/products/detail/RK09K1130AP5/ opened 2026-11-09 (browser pane): series "9mm Size Insulated Shaft Snap-in Type RK09K/RK09D Series"; vertical; shaft type Driver; LM1 15.0 mm; no detent; 10 kOhm; taper 1B; +/-20 %; 0.05 W; 50 V AC, 20 V DC; voltage proof 250 V AC 1 min; 5,000 cycles; hand soldering 350 C max, 3 s, 1 time. Cautions on the page: insulated shafts are synthetic resin such as polycarbonate; all metal lugs to be soldered into a substrate before use; output-side impedance more than 100 times total resistance.
+- Alps product page RK09D1130C2P, https://tech.alpsalpine.com/e/products/detail/RK09D1130C2P/ opened 2026-11-09 (browser pane): series "9mm Size Insulated Shaft Snap-in Type RK09K/RK09D Series"; vertical; collar with; shaft type Flat; LM1 25.0 mm; no detent; 10 kOhm; taper 1B; +/-20 %; 0.05 W; 50 V AC, 20 V DC; 300 degrees +/-5. Chosen for RV1 instead of C470295 because a Driver shaft does not take a knob.

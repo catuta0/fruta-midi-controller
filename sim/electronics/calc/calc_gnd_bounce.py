@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""T-073 / C2-005: ESD strike on a terminal that arcs across the 1.40 mm E-pad <-> GND edge-track gap.
+"""T-073 / C2-005, inductances updated T-092 for the SMD board (no sockets): ESD strike on a terminal that arcs across the
+1.40 mm E-pad <-> GND edge-track gap.
 
-Every J2 electrode pad is 1.40 mm (MEASUREMENT, check_gap.out (c)) from the GND track along the bottom edge. That
+Every J2 electrode pad is 1.40 mm (CALCULATION (design file), check_gap.out (c)) from the GND track along the bottom edge. That
 is below the breakdown distance of every model in calc_flashover.out at 3.6 kV, so a 4 kV contact strike most
 likely arcs to GND instead of driving 1.1 A through Rx into the MPR121 pin. This script estimates what the arc
 current does on the way out (to the host through the Pico USB GND), in particular the voltage between the MPR121
 module GND and the Pico GND (the only difference that reaches IC pins; a common rise of the whole board is not).
 
-Runs with the KiCad Python (pcbnew): GND track lengths are MEASUREMENT on hardware/frutamidi.kicad_pcb.
+Runs with the KiCad Python (pcbnew): GND track lengths are CALCULATION (design file) on hardware/frutamidi.kicad_pcb.
 Labels: SOURCE (EE-S16 IEC 61000-4-2 values from memory, not re-read; EE-S28 RP2040 ESD; EE-S01 MPR121 ESD),
 ASSUMPTION (inductances, stated with a sweep), CALCULATION (everything else).
 """
@@ -29,9 +30,17 @@ I_PK = 3.75 * KV * 1.15           # A, upper tolerance
 TR = (0.6e-9, 1.0e-9)             # s, rise time range
 I30 = 2.0 * KV
 # ASSUMPTION: 1.2 mm track without a ground plane 0.7 ... 1.0 nH/mm (thin-strip partial inductance, order of
-# magnitude 1 nH/mm); female socket + male header pin of the Pico 3 ... 10 nH. To be checked only by the ESD test.
+# magnitude 1 nH/mm). To be checked only by the ESD test.
 L_MM = (0.7e-9, 1.0e-9)
-L_PIN = (3e-9, 10e-9)
+# T-092, board without sockets (ADR-023). Series elements between the board trunk and the two IC grounds (ASSUMPTION):
+#   Pico castellation joint: 0.5 ... 1.5 nH (short solder fillet + module edge plating, about 1 mm at 0.5 ... 1.5 nH/mm)
+#   MPR121 module header pin on the pad (T-103, F3-001 option a): exposed leg 3.0 mm + strip 2.5 mm (ASSUMPTION, standard
+#     2.54 mm header) + through the 1.6 mm module board (ASSUMPTION) = 7.1 mm at 0.7 ... 1.2 nH/mm = 5.0 ... 8.5 nH
+#     (T-092 had 4.1 mm, 2.9 ... 4.9 nH, with the strip butted on the pad)
+# V1.2 used 3 ... 10 nH for female socket + male header pin.
+L_CAST = (0.5e-9, 1.5e-9)
+L_MODPIN = (5.0e-9, 8.5e-9)
+L_PIN = (L_CAST[0] + L_MODPIN[0], L_CAST[1] + L_MODPIN[1])
 R_SER, V_CLAMP = 220.0, 1.5       # R15/R16 (SOURCE schematic); two diode drops in the path (ASSUMPTION)
 HBM_RP2040_KV = 4.0               # SOURCE EE-S28: RP2040 HBM 4 kV (JEDEC JS-001, "Digital (FT) pins only"), CDM 500 V
 HBM_C, HBM_R = 100e-12, 1500.0    # HBM network (JEDEC JS-001, SOURCE from memory)
@@ -80,8 +89,13 @@ def main():
             pads[(fp.GetReference(), p.GetNumber())] = (round(p.GetPosition().x * TOMM - ox, 3),
                                                         round(p.GetPosition().y * TOMM - oy, 3))
     p23 = pads[("A1", "23")]
-    mod_gnd = pads[("A2", "1")]
-    print("# calc_gnd_bounce.py  CALCULATION (T-073, C2-005) on %s (KiCad %s)" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
+    # T-103: the A2 land now runs outward past the pin, so take the header pin position (module centre - 15.24, + 8.255 mm,
+    # SOURCE Adafruit 1982 via T-090), where the GND track starts, instead of the land centre
+    fa2 = board.FindFootprintByReference("A2")
+    mod_gnd = (round(fa2.GetPosition().x * TOMM - ox - 15.24, 3), round(fa2.GetPosition().y * TOMM - oy + 8.255, 3))
+    print("# calc_gnd_bounce.py  CALCULATION (T-073, C2-005; T-092 no sockets) on %s (KiCad %s)" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
+    print("# series elements (ASSUMPTION): castellation %.1f-%.1f nH + module header pin %.1f-%.1f nH = %.1f-%.1f nH (V1.2: 3-10 nH socket + header)"
+          % (L_CAST[0] * 1e9, L_CAST[1] * 1e9, L_MODPIN[0] * 1e9, L_MODPIN[1] * 1e9, L_PIN[0] * 1e9, L_PIN[1] * 1e9))
     # node where the module GND branch joins the terminal trunk: the vertex shared by the module->Pico and
     # terminal->Pico shortest paths that is farthest from the Pico
     l_mod, path_mod = shortest(g, mod_gnd, p23)
@@ -90,7 +104,7 @@ def main():
     shared = [v for v in path_t0 if v in set(path_mod)]
     n = shared[0]
     l_np23, _ = shortest(g, n, p23)
-    print("GND path lengths (MEASUREMENT, design file): J2 pad 1 (GND terminal) -> Pico pin 23 %.2f mm; module GND pin ->"
+    print("GND path lengths (CALCULATION (design file)): J2 pad 1 (GND terminal) -> Pico pin 23 %.2f mm; module GND pin ->"
           " Pico pin 23 %.2f mm; shared section from node (%.2f,%.2f) to pin 23 %.2f mm" % (l_t0, l_mod, n[0], n[1], l_np23))
     # longest arc path: farthest electrode pad along the edge track to J2 pad 1
     edge_y = max(v[1] for v in g)
@@ -130,7 +144,7 @@ def main():
                                                               i2c / i_hbm))
     print("  NOT CONFIRMED: GP26/GP27 (I2C1 on the PCB) are ADC-capable pins; the extracted RP2040 table gives HBM 4 kV for"
           " FT pins and CDM 500 V, no separate HBM value for these pins was found (EE-S28)")
-    print("  without the arc (strike through Rx into the MPR121 pin): pin current %.2f A (calc_esd_variants), bounce"
+    print("  without the arc (strike through Rx into the MPR121 pin): pin current %.2f A (R 3k3 + 330 ohm source, CALCULATION), bounce"
           " scaled by %.2f -> %.0f V" % (KV * 1e3 / 3630, KV * 1e3 / 3630 / I_PK, vb * KV * 1e3 / 3630 / I_PK))
     print("DECISION INPUT: the 1.40 mm gap acts as a spark gap to GND at every terminal; it keeps the strike off the"
           " MPR121 pin; residual risk = %.0f V / ~1 ns GND bounce between module and Pico (ASSUMPTION-based), not measured"

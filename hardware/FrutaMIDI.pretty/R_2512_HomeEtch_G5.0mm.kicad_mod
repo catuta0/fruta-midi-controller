@@ -1,0 +1,238 @@
+(footprint "R_2512_HomeEtch_G5.0mm"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "2512 chip resistor (YAGEO RC2512FK-073K3L), land 1.9 x 3.35 mm, copper gap 5.0 mm (flashover rule)")
+	(property "Reference" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "a627001c-8117-48e8-8788-40c491db454a")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "a7db438f-7098-4e56-a954-b74899851cdc")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "5ec3d033-beec-44c9-9e9d-b38b62139963")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "b4975713-a27f-41f7-990f-7ab2068b5e28")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.2 -1.925)
+		(end 8.1 -1.925)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "c13d148a-f0d6-4466-8087-73e933c63eb3")
+	)
+	(fp_line
+		(start -1.2 1.925)
+		(end -1.2 -1.925)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "faad74d8-d356-485e-97a6-b0af52551389")
+	)
+	(fp_line
+		(start 8.1 -1.925)
+		(end 8.1 1.925)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "20ebd5d1-e07d-4b7d-98c8-ddeff40b9269")
+	)
+	(fp_line
+		(start 8.1 1.925)
+		(end -1.2 1.925)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "6ce95456-13f8-4404-8d0e-783cfd8a44a0")
+	)
+	(fp_line
+		(start -0.95 -1.675)
+		(end 0.95 -1.675)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "c7ddf176-1d7e-4440-b7ff-05d6b281f0b5")
+	)
+	(fp_line
+		(start -0.95 1.675)
+		(end -0.95 -1.675)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "ab4cd574-b5b7-47c7-b99d-e73f655da985")
+	)
+	(fp_line
+		(start 0.275 -1.55)
+		(end 6.625 -1.55)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "a755593c-39c0-4977-a34b-6a7ba0e028b4")
+	)
+	(fp_line
+		(start 0.275 1.55)
+		(end 0.275 -1.55)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "edba45a2-e29e-4d2a-b544-026cc73fef62")
+	)
+	(fp_line
+		(start 0.95 -1.675)
+		(end 0.95 1.675)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "4559297c-08e4-4927-94d0-fb0520182930")
+	)
+	(fp_line
+		(start 0.95 1.675)
+		(end -0.95 1.675)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "b29b2843-a4be-4ad5-9557-4177e1bb5d8b")
+	)
+	(fp_line
+		(start 5.95 -1.675)
+		(end 7.85 -1.675)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "e5b11a58-fcc2-4da9-91d7-8899be9e59d5")
+	)
+	(fp_line
+		(start 5.95 1.675)
+		(end 5.95 -1.675)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "2b928fdb-f4d6-43de-a4ce-41dbb38b1ebb")
+	)
+	(fp_line
+		(start 6.625 -1.55)
+		(end 6.625 1.55)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "07a75814-7b0d-4f80-84af-53b7369c06ac")
+	)
+	(fp_line
+		(start 6.625 1.55)
+		(end 0.275 1.55)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "80d9f816-3c17-48d4-9a77-7d2d89b65387")
+	)
+	(fp_line
+		(start 7.85 -1.675)
+		(end 7.85 1.675)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "607d2ab0-ff0c-418e-b93d-bb36338fb80d")
+	)
+	(fp_line
+		(start 7.85 1.675)
+		(end 5.95 1.675)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "bf72f917-7b89-4882-8a76-26002b0170d1")
+	)
+	(pad "1" smd rect
+		(at 0 0)
+		(size 1.9 3.35)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "73b8ac88-dfc0-4dba-81f1-7850a623937d")
+	)
+	(pad "2" smd rect
+		(at 6.9 0)
+		(size 1.9 3.35)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "8e54ee1a-0190-4345-b8ad-3693269d2be0")
+	)
+	(embedded_fonts no)
+	(model "${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_2512_6332Metric.step"
+		(offset
+			(xyz 3.45 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)

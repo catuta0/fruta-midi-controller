@@ -1,4 +1,5 @@
-% FrutaMIDI engineering report (skeleton T-031; v1.2 update T-072, CR-002; final re-review update T-082).
+% FrutaMIDI engineering report (skeleton T-031; v1.2 update T-072, CR-002; final re-review update T-082;
+% v1.3 update T-105, CR-003 SMD board).
 % Each section lives in sections/*.tex so specialists' results can be dropped in.
 % Rule: every number must come from management/metrics.json or a cited report,
 % with its label (SOURCE, CALCULATION, SIMULATION, MEASUREMENT, ASSUMPTION).
@@ -37,9 +38,9 @@
 
 \title{FrutaMIDI: capacitive USB MIDI controller\\[2pt]\large Engineering report}
 \author{FrutaMIDI engineering project}
-\date{FrutaMIDI v1.2 (change request CR-002), interfaces frozen-7, requirements draft-9, 2026-11-08\\[2pt]
-\small Prepared for release V1.2 (git tag \texttt{v1.2.0}); not yet released.
-Previous release: V1\_BASELINE (git tag \texttt{v1.1.0-baseline})}
+\date{FrutaMIDI v1.3 (change request CR-003), interfaces frozen-9 (frozen), requirements draft-16, 2026-11-11\\[2pt]
+\small Branch \texttt{change/CR-003} at \texttt{f0c016b} plus the T-109/T-111 fixes; v1.3 is not released.
+Previous release: V1.2 (git tag \texttt{v1.2.0})}
 
 \begin{document}
 \maketitle
@@ -47,9 +48,19 @@ Previous release: V1\_BASELINE (git tag \texttt{v1.1.0-baseline})}
 \begin{abstract}
 FrutaMIDI is a USB MIDI controller that sends notes when a user touches conductive
 objects wired to a Raspberry Pi Pico and an Adafruit MPR121 capacitive sensor
-module, built on a breadboard or on a single-sided home-etched PCB (v1.2).
+module, built on a breadboard or on a single-sided home-etched PCB.
 This report collects the requirements, decisions, interfaces, analyses and host
-tests for FrutaMIDI v1.2. Version 1.2 (change request CR-002) replaces the
+tests for FrutaMIDI. \textbf{Version 1.3} (change request CR-003,
+Section~\ref{sec:cr003}) converts the PCB to surface-mount parts on one copper
+layer on the component side, for home chemical etching without drilling: 4
+mounting holes remain instead of 133. The electrode resistors become standard
+2512 chip resistors whose survival of a 4\,kV discharge is not proven, a choice
+the user accepted to keep the core BOM at 14.84--16.84\,EUR excluding VAT and
+shipping (\lbl{CALCULATION}). An independent review (T-102) found the first
+layout not ready for a first build; its fifteen findings were fixed or ruled
+(ADR-028). A second independent re-review (T-108) found it ready for the first
+build after ten assembly-text and label fixes, which were made (ADR-029). The sections after Section~\ref{sec:cr003} keep the v1.2 analyses for
+traceability. Version 1.2 (change request CR-002) replaced the
 electrode series resistors by pulse-rated parts lying flat. By analysis of the
 design files, a \qty{4}{\kilo\volt} contact discharge should then neither arc
 across a resistor nor exceed its pulse rating; this has not been tested. A
@@ -72,6 +83,7 @@ lists what remains to be measured.
 
 \input{sections/01_introduction}
 \input{sections/02_requirements}
+\input{sections/02b_pcb_v13_smd}
 \input{sections/03_architecture}
 \input{sections/04_interfaces}
 \input{sections/05_electronics}

@@ -1,31 +1,27 @@
 #!/usr/bin/env python3
-"""T-060 / CR-002: MEASUREMENT (on the design file) of the copper gaps that an ESD strike on an electrode could arc
-across, compared with the CALCULATION rule of calc_flashover.py.
+"""T-091 / CR-003 (SMD board, supersedes the T-060 THT version in git history): CALCULATION (design file) of the
+copper gaps that an ESD strike on an electrode could arc across, compared with the CALCULATION rule of calc_flashover.py.
 
 Runs with the KiCad Python (pcbnew):
   /Applications/KiCad/KiCad.app/Contents/Frameworks/Python.framework/Versions/Current/bin/python3 \
       sim/electronics/calc/check_gap.py > sim/electronics/calc/check_gap.out
 
-What is measured on hardware/frutamidi.kicad_pcb (B.Cu copper: pads and tracks; edge-to-edge distance):
+What is measured on hardware/frutamidi.kicad_pcb (F.Cu copper: pads and tracks; edge-to-edge distance):
   (a) ELEx <-> Ex, same channel x (copper around the series resistor);
   (b) Ex <-> every copper item of another net that leads to the MPR121 or the Pico (ELEy of any channel, S1..S7,
-      SDA/SCL, 3V3, button, pot ...), i.e. every net except E0..E11 and GND;
+      SDA/SCL, 3V3, button, pot, AGND ...), i.e. every net except E0..E11 and GND;
   (c) reported only: Ex <-> Ey (an arc between two electrodes still passes a series resistor) and Ex <-> GND
       (an arc to GND bypasses no IC pin; it diverts the discharge to ground, see calc_gnd_bounce.py).
-T-073 / C2-002, top side (component side, no copper): the closest metal of a resistor lying flat is its end caps.
-  (d) E cap <-> ELE cap of the same resistor and E cap of Rk <-> ELE cap of any other Rm (cross-channel), with a
-      bounded sweep of the unknown dimensions (CALCULATION from the footprint pad positions):
-        body length L: 11.9 mm = Lmax (SOURCE EE-S17b dimensions table) and 11.0 mm (ASSUMPTION: no Lmin given;
-          check with a caliper on the first parts);
-        cap length Lc: 1.5 ... 3.5 mm (ASSUMPTION: the Vishay drawing gives no cap length; check on a part);
-        cap diameter = Dmax 4.2 mm (SOURCE; worst case for the cross-channel gap);
-        axial placement error of a hand-fitted body: 0, +-0.25 and +-0.5 mm per part (ASSUMPTION), worst sign per pair;
-        the protective lacquer over the caps (SOURCE EE-S17b, description) is ignored (bare metal, conservative).
-      The leads leave each cap axially outwards (towards its own pad), so they are never closer than the caps.
-  (e) floating metal at the mounting holes H1..H4 (screw head / washer on top, spacer on the bottom), radius
-      2.8 ... 3.5 mm (ASSUMPTION: ISO 7045 M3 pan head dk 5.6 mm, ISO 7089 M3 washer 7.0 mm): an arc
-      ELEx -> screw -> Ex bypasses Rx; reported as the sum of the two gaps (ASSUMPTION: two series gaps need
-      at least the breakdown of one gap of the summed length), worst channel, top (caps) and bottom (copper).
+  (d) metal terminations of the 2512 chips (T-096 / ADR-026: YAGEO RC2512FK-073K3L; CALCULATION from the land positions): E termination
+      <-> ELE termination of the same chip and of any other chip, with L 6.35 +-0.10 mm, termination length A = I1 0.60 +-0.20 (top) /
+      I2 0.50 +-0.20 (bottom) swept 0.3 ... 0.8 mm, W 3.10 +-0.15 mm (SOURCE YAGEO RC_L V.11 Table 1; L min - 2 I1 max = 4.65 mm)
+      and a hand-placement error along the axis 0, +-0.25, +-0.5 mm per part
+      (ASSUMPTION), worst sign per pair.
+  (e) floating metal at the mounting holes H1..H4 (screw head / washer on the copper side, radius 2.8 ... 3.5 mm,
+      ASSUMPTION ISO 7045 M3 pan head dk 5.6 mm, ISO 7089 M3 washer 7.0 mm): an arc ELEx -> screw -> Ex bypasses Rx;
+      reported as the sum of the two gaps (ASSUMPTION: two series gaps need at least the breakdown of one gap of the
+      summed length), worst channel, against copper and terminations. The reverse side has no copper any more.
+  (f) ADR-020 spark gap: each electrode J2 pad <-> GND edge track, 1.40 +/- 0.05 mm.
 Pads are converted to polygons by KiCad (maxError 1 um); tracks are capsules. Distances in mm.
 Ties in the worst pair are broken by reference, then pad (C2-011), so the reported pair is deterministic.
 """
@@ -39,10 +35,12 @@ import pcbnew
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 PCB = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "hardware", "frutamidi.kicad_pcb")   # optional: other board file
 RULE_4KV, RULE_8KV = 3.5, 7.5          # mm, from calc_flashover.out (CALCULATION)
-D_MAX, L_MAX = 4.2, 11.9               # mm, MBE/SMA 0414 Dmax, Lmax (SOURCE EE-S17b)
-L_SWEEP = (11.0, L_MAX)                # mm, body length (11.0 ASSUMPTION, see docstring)
-LC_SWEEP = (1.5, 2.0, 2.5, 3.0, 3.5)   # mm, cap length (ASSUMPTION)
-DELTAS = (0.0, 0.25, 0.5)              # mm, axial placement error per part (ASSUMPTION; README asks for <= 0.25)
+W_MAX = 3.25                           # mm, RC2512 body width upper bound (W_LABEL)
+W_LABEL = "SOURCE YAGEO RC_L V.11 Table 1: W 3.10 +- 0.15 mm"
+L_SWEEP = (6.25, 6.45)                 # mm, body length (SOURCE YAGEO RC_L V.11: 6.35 +- 0.10)
+A_SWEEP = (0.3, 0.8)                   # mm, termination length (SOURCE YAGEO RC_L V.11: I1 0.60 +- 0.20, I2 0.50 +- 0.20)
+DELTAS = (0.0, 0.25, 0.5)              # mm, axial placement error per part (ASSUMPTION; hand soldering)
+SPARK_NOM, SPARK_TOL = 1.40, 0.05      # mm, ADR-020
 SCREW_R = (2.8, 3.5)                   # mm, screw head / washer / spacer radius (ASSUMPTION)
 TOMM = 1e-6
 
@@ -77,17 +75,17 @@ class Item:
 def items(board):
     out = []
     for t in board.GetTracks():
-        if t.GetLayer() != pcbnew.B_Cu:
+        if t.GetLayer() != pcbnew.F_Cu:
             continue
         a, b = t.GetStart(), t.GetEnd()
         out.append(Item(t.GetNetname(), "track (%.2f,%.2f)-(%.2f,%.2f)" % (a.x * TOMM, a.y * TOMM, b.x * TOMM, b.y * TOMM),
                         [((a.x * TOMM, a.y * TOMM), (b.x * TOMM, b.y * TOMM))], t.GetWidth() * TOMM / 2))
     for fp in board.GetFootprints():
         for p in fp.Pads():
-            if not p.IsOnLayer(pcbnew.B_Cu) or p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:
+            if not p.IsOnLayer(pcbnew.F_Cu) or p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH:
                 continue                                   # mounting holes carry no copper
             ps = pcbnew.SHAPE_POLY_SET()
-            p.TransformShapeToPolygon(ps, pcbnew.B_Cu, 0, 1000, pcbnew.ERROR_INSIDE)
+            p.TransformShapeToPolygon(ps, pcbnew.F_Cu, 0, 1000, pcbnew.ERROR_INSIDE)
             segs = []
             for k in range(ps.OutlineCount()):
                 ol = ps.Outline(k)
@@ -149,16 +147,16 @@ def resistors(board, ox, oy):
     return sorted(out)
 
 
-def caps(p1, p2, L, Lc, shift):
-    """ELE cap and E cap outlines of a body of length L centred between p1 (ELE) and p2 (E), moved `shift` mm
-    along the axis towards p2. The footprints are vertical (checked)."""
+def terms(p1, p2, L, A, shift):
+    """ELE and E termination outlines of a chip of length L, termination length A, centred between pad centres p1 (ELE)
+    and p2 (E), moved `shift` mm along the axis towards p2. The footprints are vertical (checked)."""
     if abs(p1[0] - p2[0]) > 1e-6:
         raise SystemExit("resistor axis not vertical")
     x, yc = p1[0], (p1[1] + p2[1]) / 2 + shift
     s = 1 if p2[1] > p1[1] else -1
     top, bot = yc - s * L / 2, yc + s * L / 2
-    ele = rect(x - D_MAX / 2, min(top, top + s * Lc), x + D_MAX / 2, max(top, top + s * Lc))
-    e = rect(x - D_MAX / 2, min(bot, bot - s * Lc), x + D_MAX / 2, max(bot, bot - s * Lc))
+    ele = rect(x - W_MAX / 2, min(top, top + s * A), x + W_MAX / 2, max(top, top + s * A))
+    e = rect(x - W_MAX / 2, min(bot, bot - s * A), x + W_MAX / 2, max(bot, bot - s * A))
     return ele, e
 
 
@@ -169,9 +167,10 @@ def main():
     ox, oy = origin.x * TOMM, origin.y * TOMM
     e_items = sorted([i for i in its if chan(i.net)[0] == "E"], key=lambda i: natkey(i.desc))
     others = sorted([i for i in its if chan(i.net)[0] != "E"], key=lambda i: natkey(i.desc))
-    print("# check_gap.py  MEASUREMENT on the design file %s (KiCad %s)" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
+    print("# check_gap.py  CALCULATION (design file) %s (KiCad %s)" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
     print("# rule (calc_flashover.out): 4 kV %.1f mm, 8 kV %.1f mm; coordinates relative to the board corner" % (RULE_4KV, RULE_8KV))
-    print("# copper = B.Cu pads and tracks (MEASUREMENT); caps/screws = CALCULATION with the ASSUMPTIONS in the header")
+    print("# copper = F.Cu pads and tracks (CALCULATION (design file)); terminations/screws = CALCULATION with the ASSUMPTIONS in the header")
+    print("# W_MAX = %.1f mm (%s)" % (W_MAX, W_LABEL))
     worst = {k: (float("inf"), None) for k in ("a", "b", "EE", "GND")}
     per_ch = {}
     for e in e_items:
@@ -207,64 +206,81 @@ def main():
         d, w = worst[key]
         print("%-44s min %6.2f mm   %s" % (name, d, fmt(" <-> ".join(w)) if w else ""))
 
-    # ---- (d) end caps of the flat resistors (top side)
+    # ---- (d) terminations of the 2512 chips
     rs = resistors(board, ox, oy)
     print()
-    print("(d) end caps of R1..R12 lying flat (top side), D = %.1f mm, %d resistors; gap in mm" % (D_MAX, len(rs)))
-    print("    %-6s %-6s %-6s %12s %12s   worst cross-channel pair" % ("L", "Lc", "delta", "same-ch", "cross-ch"))
+    print("(d) terminations of R1..R12 (RC2512, W %.2f mm, %d resistors); gap in mm" % (W_MAX, len(rs)))
+    print("    %-6s %-6s %-6s %12s %12s   worst cross-channel pair" % ("L", "A", "delta", "same-ch", "cross-ch"))
     cap_rows = []
     for L in L_SWEEP:
-        for Lc in LC_SWEEP:
+        for A in A_SWEEP:
             for delta in DELTAS:
                 same = (float("inf"), None)
                 cross = (float("inf"), None)
                 shifts = (-delta, 0.0, delta) if delta else (0.0,)
                 for ch, ref, p1, p2 in rs:
-                    ele, e = caps(p1, p2, L, Lc, 0.0)
+                    ele, e = terms(p1, p2, L, A, 0.0)
                     d = segdist(ele, e)
                     if better(d, (ref, ref), same):
                         same = (d, (ref, ref))
                 for ch, ref, p1, p2 in rs:
                     for ch2, ref2, q1, q2 in rs:
                         if ref2 == ref or abs(p1[0] - q1[0]) > 15.0:
-                            continue                      # only near neighbours can be closest (5.08 mm row pitch)
+                            continue
                         for sa in shifts:
                             for sb in shifts:
-                                d = segdist(caps(p1, p2, L, Lc, sa)[1], caps(q1, q2, L, Lc, sb)[0])
-                                pair = ("%s E-cap" % ref, "%s ELE-cap" % ref2)
+                                d = segdist(terms(p1, p2, L, A, sa)[1], terms(q1, q2, L, A, sb)[0])
+                                pair = ("%s E-term" % ref, "%s ELE-term" % ref2)
                                 if better(d, pair, cross):
                                     cross = (d, pair)
-                cap_rows.append((L, Lc, delta, same[0], cross[0]))
-                print("    %-6.1f %-6.1f %-6.2f %12.2f %12.2f   %s <-> %s" % (L, Lc, delta, same[0], cross[0], *cross[1]))
+                cap_rows.append((L, A, delta, same[0], cross[0]))
+                print("    %-6.2f %-6.2f %-6.2f %12.2f %12.2f   %s <-> %s" % (L, A, delta, same[0], cross[0], *cross[1]))
 
-    # ---- (e) floating metal at the mounting holes
+    # ---- (e) floating metal at the mounting holes (copper side only)
     print()
     print("(e) floating metal at H1..H4 (radius %.1f / %.1f mm): bypass ELEx -> metal -> Ex = sum of the two gaps, worst channel"
           % SCREW_R)
     holes = sorted([(fp.GetReference(), fp.GetPosition().x * TOMM - ox, fp.GetPosition().y * TOMM - oy)
                     for fp in board.GetFootprints() if re.fullmatch(r"H\d", fp.GetReference())])
     hole_rows = []
+    wL, wA = min(L_SWEEP), max(A_SWEEP)
     for r in SCREW_R:
         for href, hx, hy in holes:
-            sc = circle(hx, hy, r)
-            # top side: caps at the worst sweep corner (longest caps, shortest body, no shift)
-            top_best = (float("inf"), None)
-            for ch, ref, p1, p2 in rs:
-                ele, e = caps(p1, p2, min(L_SWEEP), max(LC_SWEEP), 0.0)
-                s_ = segdist(sc, ele) + segdist(sc, e)
-                if s_ < top_best[0]:
-                    top_best = (s_, "%s caps: ELE %.2f + E %.2f" % (ref, segdist(sc, ele), segdist(sc, e)))
-            # bottom side: spacer vs copper; ELEx (or any non-E sensitive net) + Ex
+            sc = circle(hx + ox, hy + oy, r)
             hc = Item("", "", sc, 0.0)
-            bot_best = (float("inf"), None)
+            best = (float("inf"), None)
             for ch in range(12):
                 de = min([dist(hc, i) for i in e_items if i.net == "/E%d" % ch] or [float("inf")])
                 dl = min([dist(hc, i) for i in others if i.net == "/ELE%d" % ch] or [float("inf")])
-                if de + dl < bot_best[0]:
-                    bot_best = (de + dl, "ELE%d %.2f + E%d %.2f" % (ch, dl, ch, de))
-            hole_rows.append((r, href, top_best[0], bot_best[0]))
-            print("    r %.1f %-3s at (%.2f,%.2f): top %6.2f mm (%s); bottom %6.2f mm (%s)"
-                  % (r, href, hx, hy, top_best[0], top_best[1], bot_best[0], bot_best[1]))
+                rr = [x for x in rs if x[0] == ch]
+                if rr:
+                    _, ref, p1, p2 = rr[0]
+                    ele, e = terms(p1, p2, wL, wA, 0.0)
+                    sc0 = circle(hx, hy, r)
+                    dl = min(dl, segdist(sc0, ele))
+                    de = min(de, segdist(sc0, e))
+                if de + dl < best[0]:
+                    best = (de + dl, "ELE%d %.2f + E%d %.2f" % (ch, dl, ch, de))
+            hole_rows.append((r, href, best[0]))
+            print("    r %.1f %-3s at (%.2f,%.2f): copper side %6.2f mm (%s)" % (r, href, hx, hy, best[0], best[1]))
+
+    # ---- (f) spark gap ADR-020
+    print()
+    print("(f) ADR-020 spark gap: electrode J2 pad <-> nearest GND copper (should be the edge track at y = 68.0)")
+    edge_tracks = [i for i in others if i.net == "GND" and i.desc.startswith("track") and abs(i.segs[0][0][1] - i.segs[0][1][1]) < 1e-3
+                   and i.segs[0][0][1] - oy > 65.0]
+    gnd_all = [i for i in others if i.net == "GND"]
+    spark = []
+    for e in e_items:
+        if not e.desc.startswith("J2 pad"):
+            continue
+        d_edge = min(dist(e, g) for g in edge_tracks)
+        d_any = min(dist(e, g) for g in gnd_all)
+        spark.append((e.net, d_edge, d_any))
+    spark.sort(key=lambda x: int(x[0].split("E")[-1]))
+    for net, d_edge, d_any in spark:
+        print("    %-5s to edge track %.3f mm; to any GND copper %.3f mm" % (net.lstrip("/"), d_edge, d_any))
+    spark_ok = len(spark) == 12 and all(abs(d - SPARK_NOM) <= SPARK_TOL + 1e-9 and abs(a - d) < 1e-6 for _, d, a in spark)
 
     # ---- verdicts
     print()
@@ -277,26 +293,22 @@ def main():
             print("%s %s gap %.2f mm vs rule %.1f mm (%s)" % (res, name, d, rule, lvl))
     cap_nom = min(min(r[3], r[4]) for r in cap_rows if r[2] == 0.0)
     cap_all = min(min(r[3], r[4]) for r in cap_rows)
-    cap_by_d = [(min(min(r[3], r[4]) for r in cap_rows if r[2] == dl), "placement error +-%.2f mm" % dl) for dl in DELTAS]
-    for v, what in cap_by_d:
-        print("%s (d) caps worst %.2f mm vs rule %.1f mm (4 kV); %s vs %.1f mm (8 kV)   [%s, L %.1f-%.1f, Lc %.1f-%.1f mm]"
-              % ("PASS" if v >= RULE_4KV else "FAIL", v, RULE_4KV, "PASS" if v >= RULE_8KV else "FAIL", RULE_8KV,
-                 what, min(L_SWEEP), max(L_SWEEP), min(LC_SWEEP), max(LC_SWEEP)))
-    for rule, lvl in ((RULE_4KV, "4 kV"), (RULE_8KV, "8 kV")):
-        good = [lc for lc in LC_SWEEP if all(min(r[3], r[4]) >= rule for r in cap_rows if r[1] == lc)]
-        print("    (d) %s rule met at every swept L and placement error: %s" %
-              (lvl, "for Lc <= %.1f mm" % max(good) if good else "for none of the swept Lc"))
-    hole_min = min(min(r[2], r[3]) for r in hole_rows)
+    for dl in DELTAS:
+        v = min(min(r[3], r[4]) for r in cap_rows if r[2] == dl)
+        print("%s (d) terminations worst %.2f mm vs rule %.1f mm (4 kV); %s vs %.1f mm (8 kV)   [placement error +-%.2f mm]"
+              % ("PASS" if v >= RULE_4KV else "FAIL", v, RULE_4KV, "PASS" if v >= RULE_8KV else "FAIL", RULE_8KV, dl))
+    hole_min = min(r[2] for r in hole_rows)
     print("%s (e) floating-metal bypass worst %.2f mm vs rule %.1f mm (4 kV); %s vs %.1f mm (8 kV)"
           % ("PASS" if hole_min >= RULE_4KV else "FAIL", hole_min, RULE_4KV, "PASS" if hole_min >= RULE_8KV else "FAIL", RULE_8KV))
-    # caps: PASS if the rule holds over the whole sweep, PARTIAL if it fails only with the placement error, else FAIL
+    print("%s (f) spark gap: %d electrode pads, min %.3f / max %.3f mm vs %.2f +/- %.2f mm; nearest GND is the edge track"
+          % ("PASS" if spark_ok else "FAIL", len(spark), min(x[1] for x in spark), max(x[1] for x in spark), SPARK_NOM, SPARK_TOL))
     cap_st = "PASS" if cap_all >= RULE_4KV else ("PARTIAL" if cap_nom >= RULE_4KV else "FAIL")
-    print("SUMMARY: copper %s (4 kV rule, (a) and (b)); end caps %s at 4 kV over the swept ASSUMPTIONS; mounting metal %s"
-          % ("PASS" if ok else "FAIL", cap_st, "PASS" if hole_min >= RULE_4KV else "FAIL"))
-    print("SUMMARY 8 kV: copper %s; end caps %s (worst %.2f mm vs %.1f mm)"
+    print("SUMMARY: copper %s (4 kV rule, (a) and (b)); terminations %s at 4 kV over the swept ASSUMPTIONS; mounting metal %s; spark gap %s"
+          % ("PASS" if ok else "FAIL", cap_st, "PASS" if hole_min >= RULE_4KV else "FAIL", "PASS" if spark_ok else "FAIL"))
+    print("SUMMARY 8 kV: copper %s; terminations %s (worst %.2f mm vs %.1f mm)"
           % ("PASS" if min(worst["a"][0], worst["b"][0]) >= RULE_8KV else "FAIL",
              "PASS" if cap_all >= RULE_8KV else "FAIL", cap_all, RULE_8KV))
-    return 0 if ok else 1
+    return 0 if ok and spark_ok else 1
 
 
 if __name__ == "__main__":

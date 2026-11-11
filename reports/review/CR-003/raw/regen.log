@@ -1,0 +1,3 @@
+ok
+./src/common/stdpbase.cpp(59): assert ""traits"" failed in Get(): create wxApp before calling this
+/private/tmp/claude-501/-Users-rod-fruta-midi-controller/fc71da27-7efd-493b-b926-53a55223488c/scratchpad/run/hardware/frutamidi.kicad_pcb

@@ -1,0 +1,22 @@
+# calc_gnd_bounce.py  CALCULATION (T-073, C2-005; T-092 no sockets) on hardware/frutamidi.kicad_pcb (KiCad 10.0.4)
+# series elements (ASSUMPTION): castellation 0.5-1.5 nH + module header pin 5.0-8.5 nH = 5.5-10.0 nH (V1.2: 3-10 nH socket + header)
+GND path lengths (MEASUREMENT, design file): J2 pad 1 (GND terminal) -> Pico pin 23 22.51 mm; module GND pin -> Pico pin 23 31.42 mm; shared section from node (27.00,45.60) to pin 23 4.36 mm
+Arc entry: E pad -> edge track (y = 68.00) -> J2 pad 1: up to 65.2 mm (E11); this section and the trunk to the node are common to module and Pico (whole-board rise, no differential at IC pins)
+
+IEC 61000-4-2 4 kV contact (SOURCE EE-S16 from memory, upper tolerance): Ipk 17.2 A, tr 0.6-1.0 ns, I(30 ns) 8 A
+case (ASSUMPTION)                   L_diff nH di/dt A/ns  Vb peak V   I2C peak A     I2C Q nC
+0.7 nH/mm, pin 6 nH, tr 0.6 ns            8.6       23.0        197         0.89         0.53
+0.7 nH/mm, pin 6 nH, tr 1.0 ns            8.6       13.8        118         0.53         0.53
+0.7 nH/mm, pin 10 nH, tr 0.6 ns          13.1       23.0        300         1.36         0.81
+0.7 nH/mm, pin 10 nH, tr 1.0 ns          13.1       13.8        180         0.81         0.81
+1.0 nH/mm, pin 6 nH, tr 0.6 ns            9.9       23.0        227         1.02         0.61
+1.0 nH/mm, pin 6 nH, tr 1.0 ns            9.9       13.8        136         0.61         0.61
+1.0 nH/mm, pin 10 nH, tr 0.6 ns          14.4       23.0        330         1.49         0.90
+1.0 nH/mm, pin 10 nH, tr 1.0 ns          14.4       13.8        198         0.89         0.89
+
+Worst case: module GND - Pico GND bounce 330 V for ~1 ns; after the first peak (slope to I(30 ns)) 4.4 V
+  through R15/R16 (220 ohm, then the BSS138 level shifters on the module): <= 1.49 A, <= 0.90 nC per line
+  RP2040 HBM 4 kV (SOURCE EE-S28, stated for digital FT pins only) = 2.67 A peak, 400 nC -> injected charge 0.2 % of the HBM charge, peak 0.56x the HBM peak
+  NOT CONFIRMED: GP26/GP27 (I2C1 on the PCB) are ADC-capable pins; the extracted RP2040 table gives HBM 4 kV for FT pins and CDM 500 V, no separate HBM value for these pins was found (EE-S28)
+  without the arc (strike through Rx into the MPR121 pin): pin current 1.10 A (R 3k3 + 330 ohm source, CALCULATION), bounce scaled by 0.06 -> 21 V
+DECISION INPUT: the 1.40 mm gap acts as a spark gap to GND at every terminal; it keeps the strike off the MPR121 pin; residual risk = 330 V / ~1 ns GND bounce between module and Pico (ASSUMPTION-based), not measured

@@ -1,0 +1,238 @@
+(footprint "C_1206_HomeEtch"
+	(version 20260206)
+	(generator "pcbnew")
+	(generator_version "10.0")
+	(layer "F.Cu")
+	(descr "1206 chip capacitor, IPC-7351 reflow land usable by hand")
+	(property "Reference" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(uuid "10c848cc-543b-421d-bf18-d2c889842d62")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Value" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "1cafe017-9ba9-4db3-b953-f3b1fc65cac0")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Datasheet" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "db0b29f1-7046-4e57-94a1-240df06806f3")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(property "Description" ""
+		(at 0 0 0)
+		(layer "F.Fab")
+		(hide yes)
+		(uuid "ec132c6a-123d-4254-baad-1e6c1149d055")
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+		)
+	)
+	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
+	(fp_line
+		(start -1.55 -1.15)
+		(end 4.45 -1.15)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "093af8bd-fcdf-45c9-82ca-96e78804d31b")
+	)
+	(fp_line
+		(start -1.55 1.15)
+		(end -1.55 -1.15)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "e0cb9577-b507-4179-ad30-17b559629885")
+	)
+	(fp_line
+		(start 4.45 -1.15)
+		(end 4.45 1.15)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "69aa7cc1-6563-4c62-be12-0ab44a8038f4")
+	)
+	(fp_line
+		(start 4.45 1.15)
+		(end -1.55 1.15)
+		(stroke
+			(width 0.05)
+			(type default)
+		)
+		(layer "F.CrtYd")
+		(uuid "9fd53c83-a45a-486f-9f2e-c36910ee07cd")
+	)
+	(fp_line
+		(start -1.3 -0.9)
+		(end 0.575 -0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "f6dee541-3200-44b4-b315-ceae0f90068a")
+	)
+	(fp_line
+		(start -1.3 0.9)
+		(end -1.3 -0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "8628cdee-7d7c-4581-a404-8406b59c588d")
+	)
+	(fp_line
+		(start -0.15 -0.8)
+		(end 3.05 -0.8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "2846d1e1-6a13-4fdc-baff-58bd7f833851")
+	)
+	(fp_line
+		(start -0.15 0.8)
+		(end -0.15 -0.8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "d748720b-ee5e-4f20-9625-d89324854093")
+	)
+	(fp_line
+		(start 0.575 -0.9)
+		(end 0.575 0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "56e8ec25-9317-4349-9174-99a4929c5d93")
+	)
+	(fp_line
+		(start 0.575 0.9)
+		(end -1.3 0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "96999d47-ee9a-440a-91d3-018f3492e0ba")
+	)
+	(fp_line
+		(start 2.325 -0.9)
+		(end 4.2 -0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "bbb9cc7e-7ccd-4625-8046-48910cd5d5ab")
+	)
+	(fp_line
+		(start 2.325 0.9)
+		(end 2.325 -0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "8dc9dd54-9090-4925-b6a4-c7ed629e7d83")
+	)
+	(fp_line
+		(start 3.05 -0.8)
+		(end 3.05 0.8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "f30c0bcc-e75e-44ba-b2d8-1b0174aab2f9")
+	)
+	(fp_line
+		(start 3.05 0.8)
+		(end -0.15 0.8)
+		(stroke
+			(width 0.1)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "7fcc4ca3-6c6e-4448-94e5-2467993ad7e6")
+	)
+	(fp_line
+		(start 4.2 -0.9)
+		(end 4.2 0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "389d92c9-97dd-47ee-99ae-e84fd4433ecd")
+	)
+	(fp_line
+		(start 4.2 0.9)
+		(end 2.325 0.9)
+		(stroke
+			(width 0.08)
+			(type default)
+		)
+		(layer "F.Fab")
+		(uuid "5e62a09e-5c13-4da3-8dc4-3926912c668b")
+	)
+	(pad "1" smd rect
+		(at -0.3625 0)
+		(size 1.875 1.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "5782abad-96f9-43bf-95b7-b13b2f05a758")
+	)
+	(pad "2" smd rect
+		(at 3.2625 0)
+		(size 1.875 1.8)
+		(layers "F.Cu" "F.Mask" "F.Paste")
+		(thermal_bridge_angle 45)
+		(uuid "641815e3-8a3c-4f04-8d73-25227a319d17")
+	)
+	(embedded_fonts no)
+	(model "${KICAD10_3DMODEL_DIR}/Capacitor_SMD.3dshapes/C_1206_3216Metric.step"
+		(offset
+			(xyz 1.45 0 0)
+		)
+		(scale
+			(xyz 1 1 1)
+		)
+		(rotate
+			(xyz 0 0 0)
+		)
+	)
+)
