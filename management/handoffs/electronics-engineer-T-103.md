@@ -85,7 +85,7 @@ Branch change/CR-003 at fd7140b (working tree). reports/review/CR-003/findings.m
 - A2 lands beyond the outline: 1.73 mm (electrode row) and 1.775 mm (S row) (MEASUREMENT on the design file).
 - Module height: underside 5.5 mm, board top 7.1 mm (CALCULATION on ASSUMPTIONS 3.0 + 2.5 + 1.6 mm).
 - GND bounce worst 330 V for about 1 ns (was 236 V), from the longer module pin path 7.1 mm giving 5.0-8.5 nH (CALCULATION on ASSUMPTIONS).
-- SDA-to-pad capacitance 36.6 fF (was 33.0 fF); SDA step 2.09 ADC counts against a 12-count threshold (SIMULATION).
+- SDA-to-pad capacitance 36.6 fF (was 33.0 fF); SDA step 2.09 ADC counts against a 12-count threshold (CALCULATION, calc_i2c_coupling.py; corrected by the manager in T-106).
 - USB pry: largest screw force 35.6 N at 30 N; deflection ratio 11.9 (CALCULATION, calc_usb_pry.out with the new load point).
 
 ## Assumptions

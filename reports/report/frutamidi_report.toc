@@ -1,72 +1,95 @@
 \contentsline {section}{\numberline {1}Introduction and scope}{3}{section.1}%
+\contentsline {paragraph}{How to read this report.}{3}{section*.2}%
 \contentsline {subsection}{\numberline {1.1}Scope}{3}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Document conventions}{3}{subsection.1.2}%
 \contentsline {section}{\numberline {2}Requirements and verification status}{3}{section.2}%
-\contentsline {paragraph}{Summary.}{3}{section*.2}%
-\contentsline {section}{\numberline {3}Architecture and decisions}{14}{section.3}%
-\contentsline {subsection}{\numberline {3.1}System overview}{14}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Architecture options}{14}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Decisions}{14}{subsection.3.3}%
-\contentsline {paragraph}{Change requests.}{16}{section*.3}%
-\contentsline {section}{\numberline {4}Interfaces}{16}{section.4}%
-\contentsline {section}{\numberline {5}Electronics analysis}{18}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Schematic and PCB checks}{18}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Datasheet checks and budgets}{20}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Bill of materials and cost}{20}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Electrode path (critical block)}{21}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}ESD flashover around the series resistor and pulse rating (CR-002)}{22}{subsection.5.5}%
-\contentsline {paragraph}{Mechanism.}{22}{section*.6}%
-\contentsline {paragraph}{Correction of an earlier claim.}{22}{section*.7}%
-\contentsline {paragraph}{Breakdown sweep and gap rule.}{22}{section*.8}%
-\contentsline {paragraph}{Part selection.}{22}{section*.9}%
-\contentsline {paragraph}{Layout (v1.2).}{23}{section*.10}%
-\contentsline {paragraph}{Gaps in the design file.}{23}{section*.11}%
-\contentsline {paragraph}{End caps on the component side (T-073, finding C2-002).}{24}{section*.12}%
-\contentsline {paragraph}{Mounting metal (T-073, finding C2-009).}{24}{section*.13}%
-\contentsline {paragraph}{E$x$ $\leftrightarrow $ GND 1.40\,mm kept as an intentional spark gap (T-073, finding C2-005, ADR-020).}{24}{section*.14}%
-\contentsline {paragraph}{Knob and shaft discharge into AGND (finding F2-002, risk R-011).}{25}{section*.15}%
-\contentsline {paragraph}{8\,kV deferred.}{25}{section*.16}%
-\contentsline {paragraph}{Status.}{25}{section*.17}%
-\contentsline {subsection}{\numberline {5.6}I\textsuperscript {2}C bus}{25}{subsection.5.6}%
-\contentsline {subsection}{\numberline {5.7}Octave potentiometer filter and AGND (ADR-021)}{26}{subsection.5.7}%
-\contentsline {paragraph}{C1 holes (T-080, finding F2-001).}{26}{section*.18}%
-\contentsline {paragraph}{Knob clearance over C1 (finding F2-005).}{26}{section*.19}%
-\contentsline {paragraph}{ADC settling.}{26}{section*.20}%
-\contentsline {paragraph}{C2 (1\,\textmu F at the module) not added.}{27}{section*.21}%
-\contentsline {subsection}{\numberline {5.8}Safety statement}{27}{subsection.5.8}%
-\contentsline {section}{\numberline {6}Firmware design and tests}{27}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Design}{27}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Latency budget}{28}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Build and tests}{28}{subsection.6.3}%
-\contentsline {section}{\numberline {7}Host software and tests}{28}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Design}{28}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Tests}{29}{subsection.7.2}%
-\contentsline {section}{\numberline {8}Independent review findings}{29}{section.8}%
-\contentsline {paragraph}{Summary.}{29}{section*.22}%
-\contentsline {paragraph}{Highlight: defect found while fixing F-005.}{29}{section*.23}%
-\contentsline {paragraph}{What the review did not cover.}{30}{section*.24}%
-\contentsline {subsection}{\numberline {8.1}CR-002 independent re-review}{30}{subsection.8.1}%
-\contentsline {paragraph}{Summary.}{30}{section*.25}%
-\contentsline {paragraph}{Highlights.}{31}{section*.26}%
-\contentsline {paragraph}{Re-checks after the fixes (T-073, c901ad8).}{32}{section*.27}%
-\contentsline {paragraph}{What the re-review did not cover.}{32}{section*.28}%
-\contentsline {subsection}{\numberline {8.2}Manager PCB design review (analisar-pcb) of v1.2}{32}{subsection.8.2}%
-\contentsline {paragraph}{Re-checks after the changes (a216c1b, f457bfe).}{33}{section*.29}%
-\contentsline {subsection}{\numberline {8.3}CR-002 final independent re-review (T-079)}{33}{subsection.8.3}%
-\contentsline {paragraph}{Summary.}{33}{section*.30}%
-\contentsline {paragraph}{Re-checks after the fixes (T-080/T-081, a51dfff).}{34}{section*.31}%
-\contentsline {section}{\numberline {9}Limitations}{34}{section.9}%
-\contentsline {paragraph}{No hardware tests.}{34}{section*.32}%
-\contentsline {paragraph}{Analysis-only results.}{34}{section*.33}%
-\contentsline {paragraph}{Open FAILs and accepted risks.}{34}{section*.34}%
-\contentsline {paragraph}{Main assumptions}{35}{section*.35}%
-\contentsline {paragraph}{Process limitations.}{35}{section*.36}%
-\contentsline {subsection}{\numberline {9.1}Risk register}{35}{subsection.9.1}%
-\contentsline {section}{\numberline {10}Physical validation plan}{36}{section.10}%
-\contentsline {section}{\numberline {11}Reproducibility}{39}{section.11}%
-\contentsline {subsection}{\numberline {11.1}Toolchain}{39}{subsection.11.1}%
-\contentsline {subsection}{\numberline {11.2}How to rebuild}{39}{subsection.11.2}%
-\contentsline {section}{\numberline {12}Change history}{40}{section.12}%
-\contentsline {paragraph}{What did not change in v1.2.}{42}{section*.37}%
-\contentsline {paragraph}{Requirement status after CR-002.}{42}{section*.38}%
-\contentsline {section}{\numberline {A}Sources}{42}{appendix.A}%
+\contentsline {paragraph}{Summary.}{3}{section*.3}%
+\contentsline {section}{\numberline {3}PCB v1.3: single-sided SMD board (CR-003)}{17}{section.3}%
+\contentsline {paragraph}{Status.}{18}{section*.4}%
+\contentsline {subsection}{\numberline {3.1}Reasons for the change}{18}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Board geometry after the review fixes (T-103)}{19}{subsection.3.2}%
+\contentsline {paragraph}{Checks on the design files (T-103, T-104, T-105).}{19}{section*.6}%
+\contentsline {subsection}{\numberline {3.3}Bill of materials and cost}{20}{subsection.3.3}%
+\contentsline {paragraph}{Supply.}{20}{section*.7}%
+\contentsline {paragraph}{How the resistor was chosen.}{20}{section*.8}%
+\contentsline {subsection}{\numberline {3.4}ESD analysis of the electrode path}{21}{subsection.3.4}%
+\contentsline {paragraph}{What the numbers show and do not show.}{21}{section*.9}%
+\contentsline {paragraph}{Plan B and its trigger (ADR-027 D-2, risk R-018).}{21}{section*.10}%
+\contentsline {paragraph}{Board-level residual items (ADR-028 D-7).}{22}{section*.11}%
+\contentsline {subsection}{\numberline {3.5}Independent review T-102 and dispositions}{22}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}First-build measurement list}{23}{subsection.3.6}%
+\contentsline {subsection}{\numberline {3.7}Requirement status for CR-003 (draft-14)}{24}{subsection.3.7}%
+\contentsline {section}{\numberline {4}Architecture and decisions}{24}{section.4}%
+\contentsline {paragraph}{v1.3 note.}{24}{section*.12}%
+\contentsline {subsection}{\numberline {4.1}System overview}{24}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Architecture options}{25}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Decisions}{25}{subsection.4.3}%
+\contentsline {paragraph}{Change requests.}{27}{section*.13}%
+\contentsline {section}{\numberline {5}Interfaces}{27}{section.5}%
+\contentsline {paragraph}{v1.3 note.}{27}{section*.14}%
+\contentsline {section}{\numberline {6}Electronics analysis}{29}{section.6}%
+\contentsline {paragraph}{v1.3 note.}{29}{section*.15}%
+\contentsline {subsection}{\numberline {6.1}Schematic and PCB checks}{29}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Datasheet checks and budgets}{31}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Bill of materials and cost}{31}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Electrode path (critical block)}{32}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}ESD flashover around the series resistor and pulse rating (CR-002)}{33}{subsection.6.5}%
+\contentsline {paragraph}{Mechanism.}{33}{section*.18}%
+\contentsline {paragraph}{Correction of an earlier claim.}{33}{section*.19}%
+\contentsline {paragraph}{Breakdown sweep and gap rule.}{33}{section*.20}%
+\contentsline {paragraph}{Part selection.}{33}{section*.21}%
+\contentsline {paragraph}{Layout (v1.2).}{34}{section*.22}%
+\contentsline {paragraph}{Gaps in the design file.}{34}{section*.23}%
+\contentsline {paragraph}{End caps on the component side (T-073, finding C2-002).}{35}{section*.24}%
+\contentsline {paragraph}{Mounting metal (T-073, finding C2-009).}{35}{section*.25}%
+\contentsline {paragraph}{E$x$ $\leftrightarrow $ GND 1.40\,mm kept as an intentional spark gap (T-073, finding C2-005, ADR-020).}{35}{section*.26}%
+\contentsline {paragraph}{Knob and shaft discharge into AGND (finding F2-002, risk R-011).}{36}{section*.27}%
+\contentsline {paragraph}{8\,kV deferred.}{36}{section*.28}%
+\contentsline {paragraph}{Status.}{36}{section*.29}%
+\contentsline {subsection}{\numberline {6.6}I\textsuperscript {2}C bus}{36}{subsection.6.6}%
+\contentsline {subsection}{\numberline {6.7}Octave potentiometer filter and AGND (ADR-021)}{37}{subsection.6.7}%
+\contentsline {paragraph}{C1 holes (T-080, finding F2-001).}{37}{section*.30}%
+\contentsline {paragraph}{Knob clearance over C1 (finding F2-005).}{37}{section*.31}%
+\contentsline {paragraph}{ADC settling.}{37}{section*.32}%
+\contentsline {paragraph}{C2 (1\,\textmu F at the module) not added.}{38}{section*.33}%
+\contentsline {subsection}{\numberline {6.8}Safety statement}{38}{subsection.6.8}%
+\contentsline {section}{\numberline {7}Firmware design and tests}{38}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Design}{38}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Latency budget}{39}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Build and tests}{39}{subsection.7.3}%
+\contentsline {section}{\numberline {8}Host software and tests}{39}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Design}{39}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Tests}{40}{subsection.8.2}%
+\contentsline {section}{\numberline {9}Independent review findings}{40}{section.9}%
+\contentsline {paragraph}{v1.3 note.}{40}{section*.34}%
+\contentsline {paragraph}{Summary.}{40}{section*.35}%
+\contentsline {paragraph}{Highlight: defect found while fixing F-005.}{40}{section*.36}%
+\contentsline {paragraph}{What the review did not cover.}{41}{section*.37}%
+\contentsline {subsection}{\numberline {9.1}CR-002 independent re-review}{41}{subsection.9.1}%
+\contentsline {paragraph}{Summary.}{41}{section*.38}%
+\contentsline {paragraph}{Highlights.}{42}{section*.39}%
+\contentsline {paragraph}{Re-checks after the fixes (T-073, c901ad8).}{43}{section*.40}%
+\contentsline {paragraph}{What the re-review did not cover.}{43}{section*.41}%
+\contentsline {subsection}{\numberline {9.2}Manager PCB design review (analisar-pcb) of v1.2}{43}{subsection.9.2}%
+\contentsline {paragraph}{Re-checks after the changes (a216c1b, f457bfe).}{44}{section*.42}%
+\contentsline {subsection}{\numberline {9.3}CR-002 final independent re-review (T-079)}{44}{subsection.9.3}%
+\contentsline {paragraph}{Summary.}{44}{section*.43}%
+\contentsline {paragraph}{Re-checks after the fixes (T-080/T-081, a51dfff).}{45}{section*.44}%
+\contentsline {section}{\numberline {10}Limitations}{45}{section.10}%
+\contentsline {paragraph}{v1.3 limitations.}{45}{section*.45}%
+\contentsline {paragraph}{No hardware tests.}{45}{section*.46}%
+\contentsline {paragraph}{Analysis-only results.}{45}{section*.47}%
+\contentsline {paragraph}{Open FAILs and accepted risks.}{46}{section*.48}%
+\contentsline {paragraph}{Main assumptions}{46}{section*.49}%
+\contentsline {paragraph}{Process limitations.}{46}{section*.50}%
+\contentsline {subsection}{\numberline {10.1}Risk register}{47}{subsection.10.1}%
+\contentsline {section}{\numberline {11}Physical validation plan}{48}{section.11}%
+\contentsline {paragraph}{v1.3 note.}{48}{section*.51}%
+\contentsline {section}{\numberline {12}Reproducibility}{50}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Toolchain}{50}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}How to rebuild}{50}{subsection.12.2}%
+\contentsline {section}{\numberline {13}Change history}{51}{section.13}%
+\contentsline {paragraph}{What did not change in v1.2.}{53}{section*.52}%
+\contentsline {paragraph}{Requirement status after CR-002.}{54}{section*.53}%
+\contentsline {paragraph}{Requirement status after CR-003.}{54}{section*.54}%
+\contentsline {section}{\numberline {A}Sources}{54}{appendix.A}%

@@ -261,9 +261,9 @@
       "name": "v1.3_plan_b_window",
       "value": "3234-3366",
       "unit": "ohm",
-      "label": "SIMULATION",
+      "label": "ASSUMPTION",
       "revision": "CR-003 (d7da0c2)",
-      "evidence": "management/RISKS.md R-018, ADR-027 D-2"
+      "evidence": "management/RISKS.md R-018, ADR-027 D-2; window +-2 % is an ASSUMPTION (ADR-027 D-2), based on the 0.901 sensitivity at 3366 ohm (SIMULATION, T-094); relabelled T-106"
     },
     {
       "name": "v1.3_pico_anchor_y",

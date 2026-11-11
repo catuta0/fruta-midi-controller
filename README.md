@@ -12,7 +12,7 @@ The MPR121 detects the touch, the Pico turns it into MIDI notes and the computer
 - **Breadboard:** no soldering. This README.
 - **Single-sided PCB, version 1.3**, for etching at home with the chemical method, with KiCad schematic, BOM and assembly guide: [`hardware/`](hardware/).
   The board has one copper layer, on the component side, and every part is surface-mounted (SMD), so the only holes are the 4 optional M3 mounting holes. All parts are sold by Mouser; one board costs about 13.84 EUR at Mouser Portugal prices of 2026-11-11, excluding shipping and tax (a calculation from list prices). What to know before you start (details in the [assembly guide](hardware/README.md)):
-  - The **Pico and the MPR121 module are soldered flat** onto surface pads, with no sockets. Flash the firmware before soldering the Pico. Replacing a failed one means desoldering it, which is harder than with sockets.
+  - The **Pico and the MPR121 module are soldered flat** onto surface pads, with no sockets. Only the Pico (SC0915) and the Pico 2 are supported on the PCB, not Pico W or Pico 2 W. Flash the firmware before soldering the Pico. Replacing a failed one means desoldering it, which is harder than with sockets.
   - The **USB end** of the Pico gets a small bead of 2-part epoxy; use a strain-relieved USB cable and do not lever on the plug.
   - **Electrode wires** are soldered onto pads and held with hot-melt glue. The **octave potentiometer** sits off the board on 3 wires: use one with an insulated shaft and a plastic knob.
   - Module configuration: **JP1** is a surface solder bridge (ORIG or QT) and **J1** takes two short wire links.
@@ -45,11 +45,13 @@ Works on Windows 10/11 and macOS; you do not need to install anything.
    | Board | Breadboard | FrutaMIDI PCB |
    | --- | --- | --- |
    | Raspberry Pi Pico | `FrutaMIDI-rpipico.uf2` | `FrutaMIDI-pcb-rpipico.uf2` |
-   | Raspberry Pi Pico W | `FrutaMIDI-rpipicow.uf2` | `FrutaMIDI-pcb-rpipicow.uf2` |
+   | Raspberry Pi Pico W | `FrutaMIDI-rpipicow.uf2` | `FrutaMIDI-pcb-rpipicow.uf2` (not supported on the v1.3 PCB, see below) |
    | Raspberry Pi Pico 2 | `FrutaMIDI-rpipico2.uf2` | `FrutaMIDI-pcb-rpipico2.uf2` |
-   | Raspberry Pi Pico 2 W | `FrutaMIDI-rpipico2w.uf2` | `FrutaMIDI-pcb-rpipico2w.uf2` |
+   | Raspberry Pi Pico 2 W | `FrutaMIDI-rpipico2w.uf2` | `FrutaMIDI-pcb-rpipico2w.uf2` (not supported on the v1.3 PCB, see below) |
 
    The PCB uses different pins from the breadboard, so each build has its own file.
+
+   The v1.3 PCB supports only the Raspberry Pi Pico (SC0915, recommended) and the Pico 2. Pico W and Pico 2 W are not supported on the PCB until their undersides have been checked against the keep-outs under the Pico ([assembly guide, A1](hardware/README.md#bill-of-materials)). On the breadboard all four boards work.
 
 3. Hold the Pico's **BOOTSEL** button while you plug in the USB cable. A drive called **RPI-RP2** (Pico 2: **RP2350**) appears in Windows File Explorer or the Mac Finder.
 4. Drag the `.uf2` onto that drive. The Pico restarts by itself and the drive disappears: this is normal.

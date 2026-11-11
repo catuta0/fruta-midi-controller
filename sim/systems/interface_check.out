@@ -109,8 +109,8 @@ PASS  doc.hw_readme.RV1_insulated :: RV1: PTV09A with insulated shaft, insulatin
 PASS  doc.hw_readme.pico_variants :: A1 row names SC0915 and Pico 2 and excludes Pico W / Pico 2 W; firmware rows for W variants say not supported on this PCB
 PASS  doc.hw_readme.R016_alternative :: Vishay CRCW25123K30FKEG named with its Mouser number and the datasheet caveat (ADR-027 D-3, R-016)
 PASS  doc.hw_readme.knob_and_sw1_notes :: knob listed in the README only and said so; SW1 maker note (ARATAS, formerly Omron)
-FAIL  doc.manual.JP1_label_position :: ORIG is etched left of JP1 beside the pad 2-1 gap (ADR-028 D-2); 'ORIG etched below' in the manual: True, in hardware/README.md: False
-FAIL  doc.root_readme.pcb_variants :: PCB firmware rows for Pico W / Pico 2 W without 'not supported' (root README or manual): ['| Raspberry Pi Pico W | `FrutaMIDI-rpipicow.uf2` | `FrutaMIDI-pcb-rpipicow.uf2` |', '| Raspberry Pi Pico 2 W | `FrutaMIDI-rpipico2w.uf2` | `FrutaMIDI-pcb-rpipico2w.uf2` |']
+PASS  doc.manual.JP1_label_position :: ORIG is etched left of JP1 beside the pad 2-1 gap (ADR-028 D-2); 'ORIG etched below' in the manual: False, in hardware/README.md: False
+PASS  doc.root_readme.pcb_variants :: PCB firmware rows for Pico W / Pico 2 W without 'not supported' (root README or manual): []
 PASS  doc.hw_readme.JP1_smd :: JP1 described as surface bridge with the 1.87 mm gap
 PASS  doc.manual.matches_v1.3 :: docs/manual/MANUAL.md: 'version 1.2' present: False; stale v1.2 terms: []
 PASS  doc.root_readme.matches_v1.3 :: README.md stale PCB terms: []
@@ -126,5 +126,5 @@ PASS  doc.hw_readme.SCL :: SCL pin 32 GP27
 PASS  doc.hw_readme.Button :: Button pin 29 GP22
 PASS  doc.hw_readme.Potentiometer :: Potentiometer pin 34 GP28
 SUMMARY hardware/firmware: 90 checks, 90 PASS, 0 FAIL
-SUMMARY documentation: 31 checks, 29 PASS, 2 FAIL
-SUMMARY: 121 checks, 119 PASS, 2 FAIL
+SUMMARY documentation: 31 checks, 31 PASS, 0 FAIL
+SUMMARY: 121 checks, 121 PASS, 0 FAIL

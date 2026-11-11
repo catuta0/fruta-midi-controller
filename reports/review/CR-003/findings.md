@@ -30,4 +30,22 @@ Requirement cross-check: REQ-023 PARTIAL (agree); REQ-025 PARTIAL with reservati
 Not run: mutation tests (result seen, not re-run); Eagle files and Pico W / Pico 2 W data (offline); YAGEO RC2512 PDF; anything physical.
 
 ## Dispositions (manager)
-To be filled after the fixes (T-103 electronics, T-104 systems, T-105 documentation).
+Fixes: T-103 electronics, T-104 systems, T-105 documentation; decisions ADR-028. Commit f6693c9 plus the T-105 documentation.
+
+| ID | Disposition | Evidence |
+| --- | --- | --- |
+| F3-001 | FIXED (design files): option (a) on all 20 pins, header strip against the module, lands 1.73-1.78 mm beyond the module outline (CALCULATION); strip and pin lengths are ASSUMPTION, first-build measurement. | check_smd "land beyond body" PASS, mutation M1 FAIL as expected |
+| F3-002 | PARTIAL, accepted (ADR-028 D-1): Pico end 0.11 mm short of flush, USB face 1.19 mm beyond the edge; flush would put VBUS 0.495 mm from the outline. Cut oversize and trim; plug-seat check. | check_smd USB face PASS (1.0 mm tolerance ASSUMPTION), mutation M2 |
+| F3-003 | FIXED: TP7 and all 11 Pico 2 underside features kept out (worst 2.14 mm); PCB scoped to Pico SC0915 and Pico 2; Pico W / Pico 2 W not supported (ADR-028 D-3). | check_smd, mutation M3; interface_check doc.root_readme.pcb_variants PASS |
+| F3-004 | FIXED: analysis.md section 8 for RC2512FK-073K3L (pulse NOT PROVEN); 7.1/7.2 superseded; README link fixed. | analysis.md |
+| F3-005 | FIXED: charge 3.0x and duration 3.6x stated beside the margin (README, analysis 8.3, REQ-023). | |
+| F3-006 | FIXED in text (ADR-028 D-2): README and manual describe the real ORIG position; copper unchanged (0.49 mm room below pad 1). | interface_check doc.manual.JP1_label_position PASS |
+| F3-007 | FIXED: post-solder continuity checks in README and manual. | |
+| F3-008 | FIXED: pin-1 mark level with pin 1, square in pad 1 on the assembly map. | render/ |
+| F3-009 | FIXED: records reconciled (REQ-027/029/030, INTERFACES status note, ADR-028 D-6 for the stock date); INTERFACES frozen-9 freeze after re-review (D-8). | interface_check 121/121 |
+| F3-010 | FIXED: J1-J3, JP1 copper-only, excluded; knob in README only; SW1 genuine (ARATAS, formerly Omron Components). | budgets C2 PASS |
+| F3-011..F3-013 | FIXED: README text. | |
+| F3-014 | FIXED: 1206 lands >= 1.05 mm beyond the body (CALCULATION, C1 body ASSUMPTION). | check_smd, mutation M4 |
+| F3-015 | ACCEPTED, no action. | |
+
+Side effects accepted for the first build (ADR-028 D-7): GND bounce 330 V for about 1 ns, SDA coupling 2.09 counts, 35.6 N screw load; all on ASSUMPTION inputs, NOT RUN [PHYSICAL].

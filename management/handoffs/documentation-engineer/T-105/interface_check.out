@@ -1,0 +1,130 @@
+firmware pins: {'pcb': {'PIN_SDA': 26, 'PIN_SCL': 27, 'PIN_BUTTON': 22, 'PIN_POT': 28, 'I2C_BUS': 'Wire1'}, 'breadboard': {'PIN_SDA': 4, 'PIN_SCL': 5, 'PIN_BUTTON': 15, 'PIN_POT': 26, 'I2C_BUS': 'Wire'}}
+footprints: ['A1', 'A2', 'C1', 'H1', 'H2', 'H3', 'H4', 'J1', 'J2', 'J3', 'JP1', 'R1', 'R10', 'R11', 'R12', 'R13', 'R14', 'R15', 'R16', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'R8', 'R9', 'RV1', 'SW1']
+PASS  fw.pcb.i2c_instance :: Wire1 SDA=GP26 SCL=GP27
+PASS  fw.breadboard.i2c_instance :: Wire SDA=GP4 SCL=GP5
+PASS  fw.pcb.PIN_SDA_vs_pcb :: GP26 -> Pico pin 31 net SDA_PICO -> ['R16'] ['220'] -> SDA
+PASS  fw.pcb.PIN_SCL_vs_pcb :: GP27 -> Pico pin 32 net SCL_PICO -> ['R15'] ['220'] -> SCL
+PASS  fw.pcb.PIN_BUTTON_vs_pcb :: GP22 -> Pico pin 29, PCB A1 pad 29 net {'BTN'} (expected BTN)
+PASS  fw.pcb.PIN_POT_vs_pcb :: GP28 -> Pico pin 34, PCB A1 pad 34 net {'POT'} (expected POT)
+PASS  pcb.A1.pin36 :: pad 36 net {'+3V3'}, Pico function 3V3
+PASS  pcb.A1.pin33 :: pad 33 net {'AGND'}, Pico function AGND
+PASS  pcb.A1.gnd_pins :: pads [3, 8, 13, 18, 23, 28, 38] -> [{'GND'}, {'GND'}, {'GND'}, {'GND'}, {'GND'}, {'GND'}, {'GND'}]
+PASS  pcb.A1.no_other_nets :: other connected pads: {}
+PASS  pcb.AGND_membership :: AGND pads [('A1', '33'), ('C1', '2'), ('RV1', '3')] (allowed exactly [('A1', '33'), ('C1', '2'), ('RV1', '3')])
+PASS  pcb.AGND_no_shared_pad :: AGND pads carrying a second net: []
+PASS  pcb.AGND_parts_not_on_GND :: parts with an AGND pad that also have a GND pad (would be a second AGND-GND link): []
+PASS  pcb.RV1 :: RV1 1/2/3 = [{'+3V3'}, {'POT'}, {'AGND'}]
+PASS  pcb.RV1_offboard_3_pads :: RV1 pads ['1', '2', '3'], types {'1': {'smd'}, '2': {'smd'}, '3': {'smd'}} (ADR-023 D-2: off-board pot on 3 wire pads, no mounting tabs on the board)
+PASS  pcb.C1_wiper_filter :: C1 1/2 = [{'POT'}, {'AGND'}], value '100n X7R 50V' (ADR-021: 100 nF POT to AGND; ADR-023: 1206)
+PASS  pcb.POT_membership :: POT pads [('A1', '34'), ('C1', '1'), ('RV1', '2')]
+PASS  pcb.SW1 :: SW1 nets ['BTN', 'GND'] (active low, firmware INPUT_PULLUP)
+PASS  fw.button_pullup :: button read active-low with internal pull-up
+PASS  pcb.A2.pin1 :: module row pin 1 = Adafruit GND, PCB net {'GND'}
+PASS  pcb.A2.pin2 :: module pin 2 = Adafruit E0, net ELE0 -> series ['R1'] -> terminal net E0
+PASS  pcb.A2.pin3 :: module pin 3 = Adafruit E1, net ELE1 -> series ['R2'] -> terminal net E1
+PASS  pcb.A2.pin4 :: module pin 4 = Adafruit E2, net ELE2 -> series ['R3'] -> terminal net E2
+PASS  pcb.A2.pin5 :: module pin 5 = Adafruit E3, net ELE3 -> series ['R4'] -> terminal net E3
+PASS  pcb.A2.pin6 :: module pin 6 = Adafruit E4, net ELE4 -> series ['R5'] -> terminal net E4
+PASS  pcb.A2.pin7 :: module pin 7 = Adafruit E5, net ELE5 -> series ['R6'] -> terminal net E5
+PASS  pcb.A2.pin8 :: module pin 8 = Adafruit E6, net ELE6 -> series ['R7'] -> terminal net E6
+PASS  pcb.A2.pin9 :: module pin 9 = Adafruit E7, net ELE7 -> series ['R8'] -> terminal net E7
+PASS  pcb.A2.pin10 :: module pin 10 = Adafruit E8, net ELE8 -> series ['R9'] -> terminal net E8
+PASS  pcb.A2.pin11 :: module pin 11 = Adafruit E9, net ELE9 -> series ['R10'] -> terminal net E9
+PASS  pcb.A2.pin12 :: module pin 12 = Adafruit E10, net ELE10 -> series ['R11'] -> terminal net E10
+PASS  pcb.A2.pin13 :: module pin 13 = Adafruit E11, net ELE11 -> series ['R12'] -> terminal net E11
+PASS  pcb.J2.T1 :: terminal 1 net {'GND'} (expected GND)
+PASS  pcb.J2.T2 :: terminal 2 net {'E0'} (expected E0)
+PASS  pcb.J2.T3 :: terminal 3 net {'E1'} (expected E1)
+PASS  pcb.J2.T4 :: terminal 4 net {'E2'} (expected E2)
+PASS  pcb.J2.T5 :: terminal 5 net {'E3'} (expected E3)
+PASS  pcb.J2.T6 :: terminal 6 net {'E4'} (expected E4)
+PASS  pcb.J2.T7 :: terminal 7 net {'E5'} (expected E5)
+PASS  pcb.J2.T8 :: terminal 8 net {'E6'} (expected E6)
+PASS  pcb.J2.T9 :: terminal 9 net {'E7'} (expected E7)
+PASS  pcb.J2.T10 :: terminal 10 net {'E8'} (expected E8)
+PASS  pcb.J2.T11 :: terminal 11 net {'E9'} (expected E9)
+PASS  pcb.J2.T12 :: terminal 12 net {'E10'} (expected E10)
+PASS  pcb.J2.T13 :: terminal 13 net {'E11'} (expected E11)
+PASS  pcb.J2.T14 :: terminal 14 net {'GND'} (expected GND)
+PASS  pcb.J2_solder_pads :: J2 14 pads, types ['smd'] (ADR-023 D-3: solder-wire pads, no terminal blocks)
+INFO  PCB I2C pull-ups to +3V3: {'SDA': ['R14'], 'SCL': ['R13']}
+PASS  pcb.JP1_selector :: JP1 1/2/3 = [{'S1'}, {'+3V3'}, {'S7'}] (expected S1/+3V3/S7)
+PASS  pcb.JP1_smd_bridge :: JP1 pad types {'1': {'smd'}, '2': {'smd'}, '3': {'smd'}} (ADR-023: SMD solder bridge, no holes)
+PASS  pcb.JP1_targets :: ORIG side S1 = VIN (original), QT side S7 = VCC (STEMMA QT)
+INFO  JP1 wrong choice: original+QT side -> 3V3 on S7 = IRQ ; QT+ORIG side -> 3V3 on S1 = ADDR (no GND reachable)
+PASS  pcb.JP1_no_gnd_reachable :: S1/S7 are never GND in either revision
+PASS  pcb.JP1_legend :: etched F.Cu: ['ORIG', 'QT']; explanatory legend on the assembly map (F.Fab), not on the board: ['ORIG', 'ORIG = no white connectors', 'QT', 'QT = 2 white connectors'] (ADR-009 D-10, ADR-023 no silkscreen)
+PASS  pcb.J1 :: J1 1/2 = [{'SCL'}, {'SDA'}]
+PASS  pcb.J1_J3_smd :: J1 types {'1': {'smd'}, '2': {'smd'}}, J3 pads ['1', '2', '3', '4', '5', '6', '7'] types ['smd']
+PASS  pcb.A2.S1_isolated_net :: S1 net {'S1'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S2_isolated_net :: S2 net {'S2'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S3_isolated_net :: S3 net {'S3'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S4_isolated_net :: S4 net {'S4'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S5_isolated_net :: S5 net {'S5'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S6_isolated_net :: S6 net {'S6'} (only joined to J1 by a hand wire)
+PASS  pcb.A2.S7_isolated_net :: S7 net {'S7'} (only joined to J1 by a hand wire)
+PASS  sch.S1_label :: schematic 'VIN/ADDR' vs Eagle-derived original=VIN qt=ADDR
+PASS  sch.S2_label :: schematic '3V3o/INT' vs Eagle-derived original=3V3 qt=INT
+PASS  sch.S3_label :: schematic 'GND/SDA' vs Eagle-derived original=GND qt=SDA
+PASS  sch.S4_label :: schematic 'ADDR/SCL' vs Eagle-derived original=ADDR qt=SCL
+PASS  sch.S5_label :: schematic 'SDA/GND' vs Eagle-derived original=SDA qt=GND
+PASS  sch.S6_label :: schematic 'SCL/3V3o' vs Eagle-derived original=SCL qt=3V3
+PASS  sch.S7_label :: schematic 'IRQ/VCC' vs Eagle-derived original=IRQ qt=VCC
+PASS  doc.hw_readme.jp1_and_wires.original :: README (JP1, SDA, SCL)=('ORIG', 'S5', 'S6'), derived=('ORIG', 'S5', 'S6')
+INFO  original: S-row = ['VIN', '3V3', 'GND', 'ADDR', 'SDA', 'SCL', 'IRQ'] ; module GND at S3 (not reachable by JP1)
+PASS  doc.hw_readme.jp1_and_wires.stemma_qt :: README (JP1, SDA, SCL)=('QT', 'S3', 'S4'), derived=('QT', 'S3', 'S4')
+INFO  stemma_qt: S-row = ['ADDR', 'INT', 'SDA', 'SCL', 'GND', '3V3', 'VCC'] ; module GND at S5 (not reachable by JP1)
+PASS  doc.hw_readme.R15_R16 :: hardware/README.md lists R15/R16 220 Ohm I2C series resistors
+PASS  pcb.label_v1.3 :: F.Cu label texts ['FrutaMIDI v1.3']; all revision texts ['FrutaMIDI v1.3', 'FrutaMIDI v1.3 assembly map, component side, pin 1 marked 1'] (expected one 'FrutaMIDI v1.3')
+PASS  pcb.R1_R12_footprint :: R1..R12 footprint FrutaMIDI:R_2512_HomeEtch_G5.0mm (mismatches: {})
+PASS  pcb.R1_R12_MPN :: R1..R12 MPN YAGEO RC2512FK-073K3L in gen_schematic.py and on the PCB (mismatches: {})
+PASS  pcb.R1_R12_Mouser :: R1..R12 Mouser number 603-RC2512FK-073K3L (mismatches: {})
+PASS  pcb.R1_R12_value :: R1..R12 value 3k3 (ADR-026; mismatches: {})
+PASS  pcb.part.A1 :: footprint FrutaMIDI:RaspberryPi_Pico_Castellated_HomeEtch, MPN 'SC0915', Mouser '358-SC0915' (expected FrutaMIDI:RaspberryPi_Pico_Castellated_HomeEtch, 'SC0915', '358-SC0915')
+PASS  pcb.part.A2 :: footprint FrutaMIDI:Adafruit_MPR121_1982_SMD, MPN '1982', Mouser '485-1982' (expected FrutaMIDI:Adafruit_MPR121_1982_SMD, '1982', '485-1982')
+PASS  pcb.part.C1 :: footprint FrutaMIDI:C_1206_HomeEtch, MPN 'CL31B104KBCNNNC', Mouser '187-CL31B104KBCNNNC' (expected FrutaMIDI:C_1206_HomeEtch, 'CL31B104KBCNNNC', '187-CL31B104KBCNNNC')
+PASS  pcb.part.J1 :: footprint FrutaMIDI:Config_2pads_SMD, MPN None, Mouser None (expected FrutaMIDI:Config_2pads_SMD, None, None)
+PASS  pcb.part.J2 :: footprint FrutaMIDI:WirePads_1x14_P5.08mm, MPN None, Mouser None (expected FrutaMIDI:WirePads_1x14_P5.08mm, None, None)
+PASS  pcb.part.J3 :: footprint FrutaMIDI:WirePads_1x07_P2.54mm, MPN None, Mouser None (expected FrutaMIDI:WirePads_1x07_P2.54mm, None, None)
+PASS  pcb.part.JP1 :: footprint FrutaMIDI:SolderJumper_3_SMD_P3.81mm, MPN None, Mouser None (expected FrutaMIDI:SolderJumper_3_SMD_P3.81mm, None, None)
+PASS  pcb.part.R13 :: footprint FrutaMIDI:R_1206_HomeEtch, MPN 'RC1206FR-074K7L', Mouser '603-RC1206FR-074K7L' (expected FrutaMIDI:R_1206_HomeEtch, 'RC1206FR-074K7L', '603-RC1206FR-074K7L')
+PASS  pcb.part.R14 :: footprint FrutaMIDI:R_1206_HomeEtch, MPN 'RC1206FR-074K7L', Mouser '603-RC1206FR-074K7L' (expected FrutaMIDI:R_1206_HomeEtch, 'RC1206FR-074K7L', '603-RC1206FR-074K7L')
+PASS  pcb.part.R15 :: footprint FrutaMIDI:R_1206_HomeEtch, MPN 'RC1206FR-07220RL', Mouser '603-RC1206FR-07220RL' (expected FrutaMIDI:R_1206_HomeEtch, 'RC1206FR-07220RL', '603-RC1206FR-07220RL')
+PASS  pcb.part.R16 :: footprint FrutaMIDI:R_1206_HomeEtch, MPN 'RC1206FR-07220RL', Mouser '603-RC1206FR-07220RL' (expected FrutaMIDI:R_1206_HomeEtch, 'RC1206FR-07220RL', '603-RC1206FR-07220RL')
+PASS  pcb.part.RV1 :: footprint FrutaMIDI:WirePads_1x03_P5.08mm, MPN 'PTV09A-4015F-B103', Mouser '652-PTV09A-4015FB103' (expected FrutaMIDI:WirePads_1x03_P5.08mm, 'PTV09A-4015F-B103', '652-PTV09A-4015FB103')
+PASS  pcb.part.SW1 :: footprint FrutaMIDI:SW_SPST_B3S-1000_HomeEtch, MPN 'B3S-1000', Mouser '653-B3S-1000' (expected FrutaMIDI:SW_SPST_B3S-1000_HomeEtch, 'B3S-1000', '653-B3S-1000')
+PASS  pcb.part.H1_H4 :: ['H1', 'H2', 'H3', 'H4'] footprint ['FrutaMIDI:MountingHole_3.2mm_M3']
+PASS  pcb.no_extra_parts :: footprints outside the v1.3 parts list: []
+PASS  fab.copper_only_excluded_from_bom :: excluded on the board (holes aside) ['J1', 'J2', 'J3', 'JP1'], expected ['J1', 'J2', 'J3', 'JP1']; copper-only items with an MPN: []
+PASS  fab.bom_matches_board :: BOM refs 21, Mouser column True; mismatches []; missing []; extra []
+PASS  doc.hw_readme.mentions_JP1 :: hardware/README.md describes the JP1 3V3 selector
+PASS  doc.hw_readme.no_J1_3V3_wire :: hardware/README.md must not instruct a J1 3V3 wire / J1 3V3 hole
+PASS  doc.hw_readme.continuity_through_series_R :: electrode pad to module pin passes through ['R1']; README line: Resistance between each electrode pad of J2 and the matching pin pad of the 1×13 module row: about **3.3 kΩ** (3267–3333 Ω, plus your meter'
+PASS  doc.hw_readme.version :: title line '# FrutaMIDI: single-sided SMD PCB (version 1.3)'; 'v1.2' present: False
+PASS  doc.hw_readme.R1_R12_part :: RC2512FK-073K3L, its Mouser number and 3.3 kOhm stated; stale R1-R12 terms: []
+PASS  doc.hw_readme.mouser_numbers :: Mouser numbers of the parts table missing from hardware/README.md: []
+PASS  doc.hw_readme.only_4_holes :: rule table says only the 4 M3 holes; bit 3.2 mm; no other drill size named
+PASS  doc.hw_readme.no_sockets :: 1 mentions of sockets, not 'no sockets': []; female headers or screw terminals mentioned: False
+PASS  doc.hw_readme.RV1_insulated :: RV1: PTV09A with insulated shaft, insulating knob required, metal-shaft warning present (R-011)
+PASS  doc.hw_readme.pico_variants :: A1 row names SC0915 and Pico 2 and excludes Pico W / Pico 2 W; firmware rows for W variants say not supported on this PCB
+PASS  doc.hw_readme.R016_alternative :: Vishay CRCW25123K30FKEG named with its Mouser number and the datasheet caveat (ADR-027 D-3, R-016)
+PASS  doc.hw_readme.knob_and_sw1_notes :: knob listed in the README only and said so; SW1 maker note (ARATAS, formerly Omron)
+PASS  doc.manual.JP1_label_position :: ORIG is etched left of JP1 beside the pad 2-1 gap (ADR-028 D-2); 'ORIG etched below' in the manual: False, in hardware/README.md: False
+PASS  doc.root_readme.pcb_variants :: PCB firmware rows for Pico W / Pico 2 W without 'not supported' (root README or manual): []
+PASS  doc.hw_readme.JP1_smd :: JP1 described as surface bridge with the 1.87 mm gap
+PASS  doc.manual.matches_v1.3 :: docs/manual/MANUAL.md: 'version 1.2' present: False; stale v1.2 terms: []
+PASS  doc.root_readme.matches_v1.3 :: README.md stale PCB terms: []
+PASS  doc.links.README.md :: broken relative links: []
+PASS  doc.links.hardware/README.md :: broken relative links: []
+PASS  doc.README.GP4 :: GP4 at physical pin 6
+PASS  doc.README.GP5 :: GP5 at physical pin 7
+PASS  doc.README.GP15 :: GP15 at physical pin 20
+PASS  doc.README.GP26 :: GP26 at physical pin 31
+PASS  doc.README_vs_fw_breadboard :: firmware breadboard SDA/SCL/BTN/POT = GP4/GP5/GP15/GP26, README GP4/GP5/GP15/GP26
+PASS  doc.hw_readme.SDA :: SDA pin 31 GP26
+PASS  doc.hw_readme.SCL :: SCL pin 32 GP27
+PASS  doc.hw_readme.Button :: Button pin 29 GP22
+PASS  doc.hw_readme.Potentiometer :: Potentiometer pin 34 GP28
+SUMMARY hardware/firmware: 90 checks, 90 PASS, 0 FAIL
+SUMMARY documentation: 31 checks, 31 PASS, 0 FAIL
+SUMMARY: 121 checks, 121 PASS, 0 FAIL

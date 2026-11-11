@@ -4,11 +4,12 @@
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction and scope}{3}{section.1}\protected@file@percent }
 \newlabel{sec:intro}{{1}{3}{Introduction and scope}{section.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{How to read this report.}{3}{section*.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Scope}{3}{subsection.1.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Document conventions}{3}{subsection.1.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2}Requirements and verification status}{3}{section.2}\protected@file@percent }
 \newlabel{sec:requirements}{{2}{3}{Requirements and verification status}{section.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{Summary.}{3}{section*.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Summary.}{3}{section*.3}\protected@file@percent }
 \gdef \LT@i {\LT@entry 
     {1}{39.42035pt}\LT@entry 
     {1}{174.4381pt}\LT@entry 
@@ -17,191 +18,261 @@
     {4}{128.91788pt}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Requirements and verification status (generated from requirements/\allowbreak  {}requirements.csv).}}{4}{table.1}\protected@file@percent }
 \newlabel{tab:requirements}{{1}{4}{Requirements and verification status (generated from requirements/\allowbreak {}requirements.csv)}{table.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}PCB v1.3: single-sided SMD board (CR-003)}{17}{section.3}\protected@file@percent }
+\newlabel{sec:cr003}{{3}{17}{PCB v1.3: single-sided SMD board (CR-003)}{section.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Status.}{18}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Reasons for the change}{18}{subsection.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces PCB v1.3 after T-103, KiCad renders, not photos (\nolinkurl  {hardware/fabrication/images/board-top.png} and \nolinkurl  {board-3d.png}). The Pico USB end is at the top edge; R1--R12 and the J2 wire pads are along the bottom. The module itself is not modelled: only its header pins are drawn, raised 3.0\,mm (the cut-pin length, \textsc  {\small  ASSUMPTION}), standing on the two rows of lands in the centre.}}{18}{figure.caption.5}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:board-v13}{{1}{18}{PCB v1.3 after T-103, KiCad renders, not photos (\nolinkurl {hardware/fabrication/images/board-top.png} and \nolinkurl {board-3d.png}). The Pico USB end is at the top edge; R1--R12 and the J2 wire pads are along the bottom. The module itself is not modelled: only its header pins are drawn, raised 3.0\,mm (the cut-pin length, \lbl {ASSUMPTION}), standing on the two rows of lands in the centre}{figure.caption.5}{}}
 \gdef \LT@ii {\LT@entry 
+    {1}{194.20169pt}\LT@entry 
+    {1}{124.36096pt}\LT@entry 
+    {1}{130.46779pt}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Board geometry after the review fixes (T-103)}{19}{subsection.3.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces v1.3 board values after T-103 (from \nolinkurl  {management/metrics.json}).}}{19}{table.2}\protected@file@percent }
+\newlabel{tab:v13-geometry}{{2}{19}{v1.3 board values after T-103 (from \nolinkurl {management/metrics.json})}{table.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Checks on the design files (T-103, T-104, T-105).}{19}{section*.6}\protected@file@percent }
+\gdef \LT@iii {\LT@entry 
+    {1}{62.18394pt}\LT@entry 
+    {1}{215.41534pt}\LT@entry 
+    {1}{37.8704pt}\LT@entry 
+    {1}{139.57462pt}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Bill of materials and cost}{20}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:v13-bom}{{3.3}{20}{Bill of materials and cost}{subsection.3.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces v1.3 core BOM (budgets revision 10).}}{20}{table.3}\protected@file@percent }
+\newlabel{tab:v13-bom}{{3}{20}{v1.3 core BOM (budgets revision 10)}{table.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Supply.}{20}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{How the resistor was chosen.}{20}{section*.8}\protected@file@percent }
+\gdef \LT@iv {\LT@entry 
+    {1}{203.30852pt}\LT@entry 
+    {1}{142.57462pt}\LT@entry 
+    {1}{103.15425pt}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}ESD analysis of the electrode path}{21}{subsection.3.4}\protected@file@percent }
+\newlabel{sec:v13-esd}{{3.4}{21}{ESD analysis of the electrode path}{subsection.3.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces ESD numbers for R1--R12 = RC2512FK-073K3L (analysis.md section 8).}}{21}{table.4}\protected@file@percent }
+\newlabel{tab:v13-esd}{{4}{21}{ESD numbers for R1--R12 = RC2512FK-073K3L (analysis.md section 8)}{table.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{What the numbers show and do not show.}{21}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Plan B and its trigger (ADR-027 D-2, risk R-018).}{21}{section*.10}\protected@file@percent }
+\gdef \LT@v {\LT@entry 
+    {1}{34.8704pt}\LT@entry 
+    {1}{37.8704pt}\LT@entry 
+    {1}{142.57462pt}\LT@entry 
+    {1}{188.09486pt}\LT@entry 
+    {1}{48.52718pt}}
+\@writefile{toc}{\contentsline {paragraph}{Board-level residual items (ADR-028 D-7).}{22}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Independent review T-102 and dispositions}{22}{subsection.3.5}\protected@file@percent }
+\newlabel{sec:cr003-review}{{3.5}{22}{Independent review T-102 and dispositions}{subsection.3.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces CR-003 review findings and dispositions (ADR-028).}}{22}{table.5}\protected@file@percent }
+\newlabel{tab:review-cr003}{{5}{22}{CR-003 review findings and dispositions (ADR-028)}{table.5}{}}
+\gdef \LT@vi {\LT@entry 
+    {1}{30.31352pt}\LT@entry 
+    {1}{151.68144pt}\LT@entry 
+    {1}{128.91785pt}\LT@entry 
+    {1}{144.12456pt}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.6}First-build measurement list}{23}{subsection.3.6}\protected@file@percent }
+\newlabel{sec:v13-first-build}{{3.6}{23}{First-build measurement list}{subsection.3.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces v1.3 first-build measurements (all NOT RUN).}}{23}{table.6}\protected@file@percent }
+\newlabel{tab:v13-first-build}{{6}{23}{v1.3 first-build measurements (all NOT RUN)}{table.6}{}}
+\gdef \LT@vii {\LT@entry 
+    {1}{48.52718pt}\LT@entry 
+    {1}{115.26108pt}\LT@entry 
+    {1}{56.07712pt}\LT@entry 
+    {1}{235.17198pt}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.7}Requirement status for CR-003 (draft-14)}{24}{subsection.3.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces CR-003 requirements in draft-14.}}{24}{table.7}\protected@file@percent }
+\newlabel{tab:v13-req}{{7}{24}{CR-003 requirements in draft-14}{table.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Architecture and decisions}{24}{section.4}\protected@file@percent }
+\newlabel{sec:architecture}{{4}{24}{Architecture and decisions}{section.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{v1.3 note.}{24}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}System overview}{24}{subsection.4.1}\protected@file@percent }
+\gdef \LT@viii {\LT@entry 
     {1}{94.04742pt}\LT@entry 
     {1}{119.81102pt}\LT@entry 
     {1}{119.81102pt}\LT@entry 
     {1}{116.81102pt}}
-\@writefile{toc}{\contentsline {section}{\numberline {3}Architecture and decisions}{14}{section.3}\protected@file@percent }
-\newlabel{sec:architecture}{{3}{14}{Architecture and decisions}{section.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}System overview}{14}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Architecture options}{14}{subsection.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Decisions}{14}{subsection.3.3}\protected@file@percent }
-\gdef \LT@iii {\LT@entry 
+\gdef \LT@ix {\LT@entry 
     {1}{43.97029pt}\LT@entry 
     {1}{288.24911pt}\LT@entry 
     {1}{112.26108pt}}
-\@writefile{toc}{\contentsline {paragraph}{Change requests.}{16}{section*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4}Interfaces}{16}{section.4}\protected@file@percent }
-\newlabel{sec:interfaces}{{4}{16}{Interfaces}{section.4}{}}
-\gdef \LT@iv {\LT@entry 
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Architecture options}{25}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Decisions}{25}{subsection.4.3}\protected@file@percent }
+\gdef \LT@x {\LT@entry 
     {1}{94.04742pt}\LT@entry 
     {1}{279.14923pt}\LT@entry 
     {1}{71.28383pt}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Electronics analysis}{18}{section.5}\protected@file@percent }
-\newlabel{sec:electronics}{{5}{18}{Electronics analysis}{section.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Schematic and PCB checks}{18}{subsection.5.1}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces FrutaMIDI v1.2, component side (KiCad 3D render). R1--R12 lie flat in one row above the screw terminals; JP1 stands upright (QT top, ORIG bottom) to the right of the module on a 3.81\,mm pitch (ADR-021), with J1 and R13--R15 next to it. C1 (\qty {100}{\nano \farad }) sits just above the octave potentiometer RV1. Mounting hole H3 sits at the right edge above R12, at (96, 38)\,mm since T-073. Render at a51dfff (T-080 regeneration; only the C1 drill and 3D model scale changed since a216c1b). {\small  [\nolinkurl  {hardware/fabrication/images/board-top.png}]}}}{19}{figure.caption.4}\protected@file@percent }
-\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:board-top}{{1}{19}{FrutaMIDI v1.2, component side (KiCad 3D render). R1--R12 lie flat in one row above the screw terminals; JP1 stands upright (QT top, ORIG bottom) to the right of the module on a 3.81\,mm pitch (ADR-021), with J1 and R13--R15 next to it. C1 (\qty {100}{\nano \farad }) sits just above the octave potentiometer RV1. Mounting hole H3 sits at the right edge above R12, at (96, 38)\,mm since T-073. Render at a51dfff (T-080 regeneration; only the C1 drill and 3D model scale changed since a216c1b). \ev {hardware/fabrication/images/board-top.png}}{figure.caption.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces FrutaMIDI v1.2, copper side (bottom view). The ELE fan-out runs at 45\textdegree {} above the resistor row; the E side runs straight down to J2, whose pads are 3.0\,$\times $\,4.5\,mm ovals extended towards the back of the block (ADR-021). Render at a51dfff. {\small  [\nolinkurl  {hardware/fabrication/images/board-copper.png}]}}}{20}{figure.caption.5}\protected@file@percent }
-\newlabel{fig:board-copper}{{2}{20}{FrutaMIDI v1.2, copper side (bottom view). The ELE fan-out runs at 45\textdegree {} above the resistor row; the E side runs straight down to J2, whose pads are 3.0\,$\times $\,4.5\,mm ovals extended towards the back of the block (ADR-021). Render at a51dfff. \ev {hardware/fabrication/images/board-copper.png}}{figure.caption.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Datasheet checks and budgets}{20}{subsection.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Bill of materials and cost}{20}{subsection.5.3}\protected@file@percent }
-\gdef \LT@v {\LT@entry 
+\@writefile{toc}{\contentsline {paragraph}{Change requests.}{27}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Interfaces}{27}{section.5}\protected@file@percent }
+\newlabel{sec:interfaces}{{5}{27}{Interfaces}{section.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{v1.3 note.}{27}{section*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Electronics analysis}{29}{section.6}\protected@file@percent }
+\newlabel{sec:electronics}{{6}{29}{Electronics analysis}{section.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{v1.3 note.}{29}{section*.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Schematic and PCB checks}{29}{subsection.6.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces FrutaMIDI v1.2, component side (KiCad 3D render). R1--R12 lie flat in one row above the screw terminals; JP1 stands upright (QT top, ORIG bottom) to the right of the module on a 3.81\,mm pitch (ADR-021), with J1 and R13--R15 next to it. C1 (\qty {100}{\nano \farad }) sits just above the octave potentiometer RV1. Mounting hole H3 sits at the right edge above R12, at (96, 38)\,mm since T-073. Render at a51dfff (T-080 regeneration; only the C1 drill and 3D model scale changed since a216c1b). {\small  [\nolinkurl  {hardware/fabrication/images/board-top.png}]}}}{30}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:board-top}{{2}{30}{FrutaMIDI v1.2, component side (KiCad 3D render). R1--R12 lie flat in one row above the screw terminals; JP1 stands upright (QT top, ORIG bottom) to the right of the module on a 3.81\,mm pitch (ADR-021), with J1 and R13--R15 next to it. C1 (\qty {100}{\nano \farad }) sits just above the octave potentiometer RV1. Mounting hole H3 sits at the right edge above R12, at (96, 38)\,mm since T-073. Render at a51dfff (T-080 regeneration; only the C1 drill and 3D model scale changed since a216c1b). \ev {hardware/fabrication/images/board-top.png}}{figure.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces FrutaMIDI v1.2, copper side (bottom view). The ELE fan-out runs at 45\textdegree {} above the resistor row; the E side runs straight down to J2, whose pads are 3.0\,$\times $\,4.5\,mm ovals extended towards the back of the block (ADR-021). Render at a51dfff. {\small  [\nolinkurl  {hardware/fabrication/images/board-copper.png}]}}}{31}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:board-copper}{{3}{31}{FrutaMIDI v1.2, copper side (bottom view). The ELE fan-out runs at 45\textdegree {} above the resistor row; the E side runs straight down to J2, whose pads are 3.0\,$\times $\,4.5\,mm ovals extended towards the back of the block (ADR-021). Render at a51dfff. \ev {hardware/fabrication/images/board-copper.png}}{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Datasheet checks and budgets}{31}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Bill of materials and cost}{31}{subsection.6.3}\protected@file@percent }
+\gdef \LT@xi {\LT@entry 
     {1}{185.09486pt}\LT@entry 
     {1}{83.39066pt}\LT@entry 
     {1}{83.39066pt}\LT@entry 
     {1}{94.04742pt}}
-\gdef \LT@vi {\LT@entry 
+\gdef \LT@xii {\LT@entry 
     {1}{130.46779pt}\LT@entry 
     {1}{53.29872pt}\LT@entry 
     {1}{53.29872pt}\LT@entry 
     {1}{56.24892pt}\LT@entry 
     {1}{130.46779pt}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Electrode path (critical block)}{21}{subsection.5.4}\protected@file@percent }
-\gdef \LT@vii {\LT@entry 
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Electrode path (critical block)}{32}{subsection.6.4}\protected@file@percent }
+\gdef \LT@xiii {\LT@entry 
     {1}{230.62206pt}\LT@entry 
     {1}{106.15425pt}\LT@entry 
     {1}{103.15425pt}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}ESD flashover around the series resistor and pulse rating (CR-002)}{22}{subsection.5.5}\protected@file@percent }
-\newlabel{sec:esd}{{5.5}{22}{ESD flashover around the series resistor and pulse rating (CR-002)}{subsection.5.5}{}}
-\@writefile{toc}{\contentsline {paragraph}{Mechanism.}{22}{section*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Correction of an earlier claim.}{22}{section*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Breakdown sweep and gap rule.}{22}{section*.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Part selection.}{22}{section*.9}\protected@file@percent }
-\gdef \LT@viii {\LT@entry 
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}ESD flashover around the series resistor and pulse rating (CR-002)}{33}{subsection.6.5}\protected@file@percent }
+\newlabel{sec:esd}{{6.5}{33}{ESD flashover around the series resistor and pulse rating (CR-002)}{subsection.6.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Mechanism.}{33}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Correction of an earlier claim.}{33}{section*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Breakdown sweep and gap rule.}{33}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Part selection.}{33}{section*.21}\protected@file@percent }
+\gdef \LT@xiv {\LT@entry 
     {1}{166.88815pt}\LT@entry 
     {1}{106.15425pt}\LT@entry 
     {1}{166.88815pt}}
-\gdef \LT@ix {\LT@entry 
+\gdef \LT@xv {\LT@entry 
     {1}{144.12456pt}\LT@entry 
     {1}{101.60431pt}\LT@entry 
     {1}{83.39066pt}\LT@entry 
     {1}{116.81102pt}}
-\@writefile{toc}{\contentsline {paragraph}{Layout (v1.2).}{23}{section*.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Gaps in the design file.}{23}{section*.11}\protected@file@percent }
-\gdef \LT@x {\LT@entry 
+\@writefile{toc}{\contentsline {paragraph}{Layout (v1.2).}{34}{section*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Gaps in the design file.}{34}{section*.23}\protected@file@percent }
+\gdef \LT@xvi {\LT@entry 
     {1}{94.04742pt}\LT@entry 
     {1}{74.28383pt}\LT@entry 
     {1}{97.04742pt}\LT@entry 
     {1}{74.28383pt}\LT@entry 
     {1}{71.28383pt}}
-\@writefile{toc}{\contentsline {paragraph}{End caps on the component side (T-073, finding C2-002).}{24}{section*.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Mounting metal (T-073, finding C2-009).}{24}{section*.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{E$x$ $\leftrightarrow $ GND 1.40\,mm kept as an intentional spark gap (T-073, finding C2-005, ADR-020).}{24}{section*.14}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Knob and shaft discharge into AGND (finding F2-002, risk R-011).}{25}{section*.15}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{8\,kV deferred.}{25}{section*.16}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Status.}{25}{section*.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}I\textsuperscript  {2}C bus}{25}{subsection.5.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Octave potentiometer filter and AGND (ADR-021)}{26}{subsection.5.7}\protected@file@percent }
-\newlabel{sec:pot-filter}{{5.7}{26}{Octave potentiometer filter and AGND (ADR-021)}{subsection.5.7}{}}
-\@writefile{toc}{\contentsline {paragraph}{C1 holes (T-080, finding F2-001).}{26}{section*.18}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Knob clearance over C1 (finding F2-005).}{26}{section*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{ADC settling.}{26}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{C2 (1\,\textmu F at the module) not added.}{27}{section*.21}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Safety statement}{27}{subsection.5.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Firmware design and tests}{27}{section.6}\protected@file@percent }
-\newlabel{sec:firmware}{{6}{27}{Firmware design and tests}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Design}{27}{subsection.6.1}\protected@file@percent }
-\gdef \LT@xi {\LT@entry 
+\@writefile{toc}{\contentsline {paragraph}{End caps on the component side (T-073, finding C2-002).}{35}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Mounting metal (T-073, finding C2-009).}{35}{section*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{E$x$ $\leftrightarrow $ GND 1.40\,mm kept as an intentional spark gap (T-073, finding C2-005, ADR-020).}{35}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Knob and shaft discharge into AGND (finding F2-002, risk R-011).}{36}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{8\,kV deferred.}{36}{section*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Status.}{36}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}I\textsuperscript  {2}C bus}{36}{subsection.6.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Octave potentiometer filter and AGND (ADR-021)}{37}{subsection.6.7}\protected@file@percent }
+\newlabel{sec:pot-filter}{{6.7}{37}{Octave potentiometer filter and AGND (ADR-021)}{subsection.6.7}{}}
+\@writefile{toc}{\contentsline {paragraph}{C1 holes (T-080, finding F2-001).}{37}{section*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Knob clearance over C1 (finding F2-005).}{37}{section*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{ADC settling.}{37}{section*.32}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{C2 (1\,\textmu F at the module) not added.}{38}{section*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Safety statement}{38}{subsection.6.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Firmware design and tests}{38}{section.7}\protected@file@percent }
+\newlabel{sec:firmware}{{7}{38}{Firmware design and tests}{section.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Design}{38}{subsection.7.1}\protected@file@percent }
+\gdef \LT@xvii {\LT@entry 
     {1}{57.62706pt}\LT@entry 
     {1}{233.62206pt}\LT@entry 
     {1}{60.62706pt}\LT@entry 
     {1}{94.04742pt}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Latency budget}{28}{subsection.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Build and tests}{28}{subsection.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Host software and tests}{28}{section.7}\protected@file@percent }
-\newlabel{sec:host}{{7}{28}{Host software and tests}{section.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Design}{28}{subsection.7.1}\protected@file@percent }
-\gdef \LT@xii {\LT@entry 
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Latency budget}{39}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Build and tests}{39}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Host software and tests}{39}{section.8}\protected@file@percent }
+\newlabel{sec:host}{{8}{39}{Host software and tests}{section.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Design}{39}{subsection.8.1}\protected@file@percent }
+\gdef \LT@xviii {\LT@entry 
     {1}{34.8704pt}\LT@entry 
     {1}{37.8704pt}\LT@entry 
     {1}{188.09486pt}\LT@entry 
     {1}{110.7042pt}\LT@entry 
     {1}{80.39066pt}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Tests}{29}{subsection.7.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}Independent review findings}{29}{section.8}\protected@file@percent }
-\newlabel{sec:review}{{8}{29}{Independent review findings}{section.8}{}}
-\@writefile{toc}{\contentsline {paragraph}{Summary.}{29}{section*.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Highlight: defect found while fixing F-005.}{29}{section*.23}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Review findings, dispositions and re-review verdicts.}}{29}{table.12}\protected@file@percent }
-\newlabel{tab:review}{{12}{29}{Review findings, dispositions and re-review verdicts}{table.12}{}}
-\@writefile{toc}{\contentsline {paragraph}{What the review did not cover.}{30}{section*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}CR-002 independent re-review}{30}{subsection.8.1}\protected@file@percent }
-\newlabel{sec:cr002-review}{{8.1}{30}{CR-002 independent re-review}{subsection.8.1}{}}
-\@writefile{toc}{\contentsline {paragraph}{Summary.}{30}{section*.25}\protected@file@percent }
-\gdef \LT@xiii {\LT@entry 
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Tests}{40}{subsection.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Independent review findings}{40}{section.9}\protected@file@percent }
+\newlabel{sec:review}{{9}{40}{Independent review findings}{section.9}{}}
+\@writefile{toc}{\contentsline {paragraph}{v1.3 note.}{40}{section*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Summary.}{40}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Highlight: defect found while fixing F-005.}{40}{section*.36}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces Review findings, dispositions and re-review verdicts.}}{40}{table.18}\protected@file@percent }
+\newlabel{tab:review}{{18}{40}{Review findings, dispositions and re-review verdicts}{table.18}{}}
+\@writefile{toc}{\contentsline {paragraph}{What the review did not cover.}{41}{section*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}CR-002 independent re-review}{41}{subsection.9.1}\protected@file@percent }
+\newlabel{sec:cr002-review}{{9.1}{41}{CR-002 independent re-review}{subsection.9.1}{}}
+\@writefile{toc}{\contentsline {paragraph}{Summary.}{41}{section*.38}\protected@file@percent }
+\gdef \LT@xix {\LT@entry 
     {1}{34.8704pt}\LT@entry 
     {1}{33.31352pt}\LT@entry 
     {1}{210.85846pt}\LT@entry 
     {1}{166.88815pt}}
-\@writefile{toc}{\contentsline {paragraph}{Highlights.}{31}{section*.26}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces CR-002 re-review findings and dispositions (ADR-020).}}{31}{table.13}\protected@file@percent }
-\newlabel{tab:review-cr002}{{13}{31}{CR-002 re-review findings and dispositions (ADR-020)}{table.13}{}}
-\gdef \LT@xiv {\LT@entry 
+\@writefile{toc}{\contentsline {paragraph}{Highlights.}{42}{section*.39}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {19}{\ignorespaces CR-002 re-review findings and dispositions (ADR-020).}}{42}{table.19}\protected@file@percent }
+\newlabel{tab:review-cr002}{{19}{42}{CR-002 re-review findings and dispositions (ADR-020)}{table.19}{}}
+\gdef \LT@xx {\LT@entry 
     {1}{21.2067pt}\LT@entry 
     {1}{133.46779pt}\LT@entry 
     {1}{201.75163pt}\LT@entry 
     {1}{89.49748pt}}
-\@writefile{toc}{\contentsline {paragraph}{Re-checks after the fixes (T-073, c901ad8).}{32}{section*.27}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{What the re-review did not cover.}{32}{section*.28}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Manager PCB design review (analisar-pcb) of v1.2}{32}{subsection.8.2}\protected@file@percent }
-\newlabel{sec:manager-pcb-review}{{8.2}{32}{Manager PCB design review (analisar-pcb) of v1.2}{subsection.8.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Manager PCB design review of v1.2: items and dispositions (ADR-021).}}{32}{table.14}\protected@file@percent }
-\newlabel{tab:review-manager-pcb}{{14}{32}{Manager PCB design review of v1.2: items and dispositions (ADR-021)}{table.14}{}}
-\@writefile{toc}{\contentsline {paragraph}{Re-checks after the changes (a216c1b, f457bfe).}{33}{section*.29}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}CR-002 final independent re-review (T-079)}{33}{subsection.8.3}\protected@file@percent }
-\newlabel{sec:final-review}{{8.3}{33}{CR-002 final independent re-review (T-079)}{subsection.8.3}{}}
-\@writefile{toc}{\contentsline {paragraph}{Summary.}{33}{section*.30}\protected@file@percent }
-\gdef \LT@xv {\LT@entry 
+\@writefile{toc}{\contentsline {paragraph}{Re-checks after the fixes (T-073, c901ad8).}{43}{section*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{What the re-review did not cover.}{43}{section*.41}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Manager PCB design review (analisar-pcb) of v1.2}{43}{subsection.9.2}\protected@file@percent }
+\newlabel{sec:manager-pcb-review}{{9.2}{43}{Manager PCB design review (analisar-pcb) of v1.2}{subsection.9.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {20}{\ignorespaces Manager PCB design review of v1.2: items and dispositions (ADR-021).}}{43}{table.20}\protected@file@percent }
+\newlabel{tab:review-manager-pcb}{{20}{43}{Manager PCB design review of v1.2: items and dispositions (ADR-021)}{table.20}{}}
+\@writefile{toc}{\contentsline {paragraph}{Re-checks after the changes (a216c1b, f457bfe).}{44}{section*.42}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}CR-002 final independent re-review (T-079)}{44}{subsection.9.3}\protected@file@percent }
+\newlabel{sec:final-review}{{9.3}{44}{CR-002 final independent re-review (T-079)}{subsection.9.3}{}}
+\@writefile{toc}{\contentsline {paragraph}{Summary.}{44}{section*.43}\protected@file@percent }
+\gdef \LT@xxi {\LT@entry 
     {1}{34.8704pt}\LT@entry 
     {1}{33.31352pt}\LT@entry 
     {1}{210.85846pt}\LT@entry 
     {1}{166.88815pt}}
-\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces CR-002 final re-review findings and dispositions (ADR-022).}}{34}{table.15}\protected@file@percent }
-\newlabel{tab:review-final}{{15}{34}{CR-002 final re-review findings and dispositions (ADR-022)}{table.15}{}}
-\@writefile{toc}{\contentsline {paragraph}{Re-checks after the fixes (T-080/T-081, a51dfff).}{34}{section*.31}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Limitations}{34}{section.9}\protected@file@percent }
-\newlabel{sec:limitations}{{9}{34}{Limitations}{section.9}{}}
-\@writefile{toc}{\contentsline {paragraph}{No hardware tests.}{34}{section*.32}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Analysis-only results.}{34}{section*.33}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Open FAILs and accepted risks.}{34}{section*.34}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Main assumptions}{35}{section*.35}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Process limitations.}{35}{section*.36}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}Risk register}{35}{subsection.9.1}\protected@file@percent }
-\newlabel{sec:risks}{{9.1}{35}{Risk register}{subsection.9.1}{}}
-\gdef \LT@xvi {\LT@entry 
+\@writefile{lot}{\contentsline {table}{\numberline {21}{\ignorespaces CR-002 final re-review findings and dispositions (ADR-022).}}{45}{table.21}\protected@file@percent }
+\newlabel{tab:review-final}{{21}{45}{CR-002 final re-review findings and dispositions (ADR-022)}{table.21}{}}
+\@writefile{toc}{\contentsline {paragraph}{Re-checks after the fixes (T-080/T-081, a51dfff).}{45}{section*.44}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}Limitations}{45}{section.10}\protected@file@percent }
+\newlabel{sec:limitations}{{10}{45}{Limitations}{section.10}{}}
+\@writefile{toc}{\contentsline {paragraph}{v1.3 limitations.}{45}{section*.45}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{No hardware tests.}{45}{section*.46}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Analysis-only results.}{45}{section*.47}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Open FAILs and accepted risks.}{46}{section*.48}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Main assumptions}{46}{section*.49}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Process limitations.}{46}{section*.50}\protected@file@percent }
+\gdef \LT@xxii {\LT@entry 
     {1}{34.8704pt}\LT@entry 
     {1}{165.33821pt}\LT@entry 
     {1}{42.42035pt}\LT@entry 
     {1}{147.12456pt}\LT@entry 
     {1}{57.62706pt}}
-\@writefile{toc}{\contentsline {section}{\numberline {10}Physical validation plan}{36}{section.10}\protected@file@percent }
-\newlabel{sec:validation}{{10}{36}{Physical validation plan}{section.10}{}}
-\gdef \LT@xvii {\LT@entry 
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.1}Risk register}{47}{subsection.10.1}\protected@file@percent }
+\newlabel{sec:risks}{{10.1}{47}{Risk register}{subsection.10.1}{}}
+\gdef \LT@xxiii {\LT@entry 
     {1}{34.8704pt}\LT@entry 
     {1}{101.60431pt}\LT@entry 
     {1}{128.91785pt}\LT@entry 
     {1}{138.01773pt}\LT@entry 
     {1}{48.52718pt}}
-\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces Physical validation plan (all NOT RUN).}}{37}{table.17}\protected@file@percent }
-\newlabel{tab:validation}{{17}{37}{Physical validation plan (all NOT RUN)}{table.17}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {11}Reproducibility}{39}{section.11}\protected@file@percent }
-\newlabel{sec:repro}{{11}{39}{Reproducibility}{section.11}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.1}Toolchain}{39}{subsection.11.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {11.2}How to rebuild}{39}{subsection.11.2}\protected@file@percent }
-\gdef \LT@xviii {\LT@entry 
+\@writefile{toc}{\contentsline {section}{\numberline {11}Physical validation plan}{48}{section.11}\protected@file@percent }
+\newlabel{sec:validation}{{11}{48}{Physical validation plan}{section.11}{}}
+\@writefile{toc}{\contentsline {paragraph}{v1.3 note.}{48}{section*.51}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {23}{\ignorespaces Physical validation plan (all NOT RUN).}}{48}{table.23}\protected@file@percent }
+\newlabel{tab:validation}{{23}{48}{Physical validation plan (all NOT RUN)}{table.23}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {12}Reproducibility}{50}{section.12}\protected@file@percent }
+\newlabel{sec:repro}{{12}{50}{Reproducibility}{section.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.1}Toolchain}{50}{subsection.12.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.2}How to rebuild}{50}{subsection.12.2}\protected@file@percent }
+\gdef \LT@xxiv {\LT@entry 
     {1}{48.52718pt}\LT@entry 
     {1}{256.38564pt}\LT@entry 
     {1}{139.57462pt}}
-\@writefile{toc}{\contentsline {section}{\numberline {12}Change history}{40}{section.12}\protected@file@percent }
-\newlabel{sec:changes}{{12}{40}{Change history}{section.12}{}}
-\gdef \LT@xix {\LT@entry 
+\@writefile{toc}{\contentsline {section}{\numberline {13}Change history}{51}{section.13}\protected@file@percent }
+\newlabel{sec:changes}{{13}{51}{Change history}{section.13}{}}
+\@writefile{toc}{\contentsline {paragraph}{What did not change in v1.2.}{53}{section*.52}\protected@file@percent }
+\gdef \LT@xxv {\LT@entry 
     {1}{48.52718pt}\LT@entry 
     {1}{389.96027pt}}
-\@writefile{toc}{\contentsline {paragraph}{What did not change in v1.2.}{42}{section*.37}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Requirement status after CR-002.}{42}{section*.38}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {A}Sources}{42}{appendix.A}\protected@file@percent }
-\newlabel{app:sources}{{A}{42}{Sources}{appendix.A}{}}
-\gdef \@abspage@last{42}
+\@writefile{toc}{\contentsline {paragraph}{Requirement status after CR-002.}{54}{section*.53}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Requirement status after CR-003.}{54}{section*.54}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Sources}{54}{appendix.A}\protected@file@percent }
+\newlabel{app:sources}{{A}{54}{Sources}{appendix.A}{}}
+\gdef \@abspage@last{54}

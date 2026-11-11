@@ -1,6 +1,14 @@
 \section{Limitations}
 \label{sec:limitations}
 
+\paragraph{v1.3 limitations.} In addition to the items below: the pulse capability
+of the v1.3 electrode resistors is NOT PROVEN (ADR-026); hand-soldering the Pico
+castellations and the butted module pins has not been tried; the module height,
+pin length and cutting tolerance are \lbl{ASSUMPTION}s (first-build list,
+Section~\ref{sec:v13-first-build}); Pico~W and Pico~2~W are not supported on the
+PCB; the D3 screw-force limit of 100\,N is unsourced; shipping cost is NOT
+CONFIRMED.
+
 \paragraph{No hardware tests.} Nothing has been built, flashed, powered or
 measured. Building and measuring hardware is out of scope for this project
 (risk R-004, ``Certain'', ``High'') \ev{management/RISKS.md}. Every
@@ -62,7 +70,7 @@ Section~\ref{sec:validation}):
         \ev{reports/firmware/coverage.md}.
 \end{itemize}
 
-\paragraph{Process limitations.} Requirements are draft-9 (T-081), not baselined.
+\paragraph{Process limitations.} Requirements are draft-14 (T-106), not baselined.
 The independent re-review of the CR-002 changes is reported in
 Section~\ref{sec:cr002-review}; the later manager PCB review and its fixes
 (ADR-021, Section~\ref{sec:manager-pcb-review}) were reviewed independently in the

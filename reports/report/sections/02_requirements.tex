@@ -1,30 +1,29 @@
 \section{Requirements and verification status}
 \label{sec:requirements}
 
-Source: \ev{management/REQUIREMENTS.md}, revision draft-9 (T-081, CR-002),
-proposed and not yet baselined. Draft-6 updated the evidence of REQ-023, REQ-028,
-REQ-029 and REQ-032 for the pulse-rated R1--R12; draft-7 (T-074) refreshed the
-evidence after the re-review fixes; draft-8 updates the evidence of REQ-006, REQ-029,
-REQ-032 and REQ-036 for the manager PCB review follow-up (ADR-021); draft-9
-applies the final re-review (T-079, ADR-022): REQ-023 gains the knob/shaft strike
-(test step 2b, risk R-011), REQ-032 cites the ADR-021 addendum cost acceptance, and
-the REQ-029 evidence adds the spark-gap check. No status changed. Methods: A analysis, S simulation, I inspection, T test.
-By the project rule, a requirement whose analysis or inspection passes while its
-physical test is NOT RUN is PARTIAL (ADR-009).
+Source: \ev{management/REQUIREMENTS.md} and \ev{requirements/requirements.csv},
+revision draft-14 (T-106, 2026-11-11, after documentation T-105; draft-13, T-104,
+covered the T-103 board after the CR-003 review, ADR-028), proposed and not yet
+baselined. Drafts 10 to 14 rewrote REQ-027, REQ-029
+and REQ-030 for the SMD board (ADR-023) and updated the evidence of REQ-006,
+REQ-023, REQ-025, REQ-028, REQ-032, REQ-036 and REQ-038. Status changes during
+CR-003: REQ-036 PASS to FAIL (draft-10, documents still described V1.2) and back to
+PASS (draft-14, interface\_check 121/121 after T-105); REQ-032 FAIL to PARTIAL
+(draft-11) to PASS (draft-12, on the basis ruled by ADR-027 D-1).
+Methods: A analysis, S simulation, I inspection, T test. By the project rule, a
+requirement whose analysis or inspection passes while its physical test is NOT RUN
+is PARTIAL (ADR-009). Nothing was raised to PASS on hardware grounds.
 
-\paragraph{Summary.} Of 42 requirements (counts unchanged by CR-002): PASS 17, PARTIAL 18, FAIL 3, NOT RUN 4
-\ev{management/REQUIREMENTS.md}.
+\paragraph{Summary.} Of 42 requirements: PASS 18, PARTIAL 18, FAIL 2, NOT RUN 4
+\ev{requirements/requirements.csv}.
 \begin{itemize}[noitemsep]
-  \item FAIL: REQ-018 VBUS range (the USB low-power-port minimum of 4.40\,V is below the Pico's recommended 4.50\,V, \lbl{SOURCE} S-01, S-10); REQ-032 core BOM cost, 23.98--38.62\,EUR against $\le$ 30\,EUR
-        (\lbl{CALCULATION}, budgets revision~7; nearly all prices \lbl{ASSUMPTION}),
-        upper bound over the target by 8.62\,EUR (was 0.40\,EUR before CR-002); the
-        R1--R12 increase is accepted for ESD safety (ADR-019 D-3) and the C1 increase
-        (0.20--0.90\,EUR, \lbl{ASSUMPTION}) by the ADR-021 addendum, the status stays FAIL; REQ-040 JP1
+  \item FAIL: REQ-018 VBUS range (the USB low-power-port minimum of 4.40\,V is below
+        the Pico's recommended 4.50\,V, \lbl{SOURCE} S-01, S-10); REQ-040 JP1
         wrong-position tolerance, kept FAIL with accepted residual risk R-007
-        (ADR-013) \ev{requirements/requirements.csv}.
-  \item NOT RUN (physical only): REQ-010 status
-        LED, REQ-011 USB MIDI class compliance, REQ-037 sensing range, REQ-038
-        false triggers and crosstalk.
+        (ADR-027 D-5).
+  \item NOT RUN (physical only): REQ-010 status LED, REQ-011 USB MIDI class
+        compliance, REQ-037 sensing range, REQ-038 false triggers and crosstalk.
+  \item The CR-003 rows are discussed in Section~\ref{sec:cr003}.
 \end{itemize}
 
 The table below is generated from \nolinkurl{requirements/requirements.csv} by

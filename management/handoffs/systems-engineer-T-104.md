@@ -106,3 +106,13 @@ Next actions:
 - Documentation T-105: correct the manual JP1 text and the T-103 assembly steps, and mark the root README PCB rows for Pico W and Pico 2 W as not supported.
 - Systems: re-run interface_check after T-105 and set REQ-036.
 - Electronics: open the CRCW25123K30FKEG datasheet.
+
+# T-106 — systems-engineer (after documentation T-105)
+
+Status: PASS for the three items. Nothing is committed.
+- interface_check: `SUMMARY documentation: 31 checks, 31 PASS, 0 FAIL`, `SUMMARY: 121 checks, 121 PASS, 0 FAIL`.
+- REQ-036 is now PASS (draft-14) in REQUIREMENTS.md and requirements.csv. Totals: PASS 18, PARTIAL 18, FAIL 2 (REQ-018, REQ-040), NOT RUN 4, BLOCKED 0, total 42.
+- metrics.json: `v1.3_plan_b_window` relabelled from SIMULATION to ASSUMPTION (ADR-027 D-2).
+- SDA coupling label: no change. The 36.6 fF and 2.09 counts come from sim/electronics/calc/calc_i2c_coupling.py, whose docstring and output header both say "CALCULATION" (method of moments). The metrics, budgets and this handoff already say CALCULATION. The electronics T-103 handoff (line 88) calls the result SIMULATION, so that handoff is mislabelled. Reported, not changed: it is not my file.
+- budgets: `SUMMARY: 35 checks, 31 PASS, 4 FAIL` (unchanged baseline FAILs).
+- Mutations (T-106 copy of the harness): `MUTATION SUMMARY: 86 proved, 0 not proved`. The two T-104 inverse proofs (each check passes on a corrected copy) became MUT-BAD once the documents were fixed. That is expected: those proofs only work while the document fails. They were replaced by forward mutations on stale copies, all proved. The T-104 record is unchanged.
