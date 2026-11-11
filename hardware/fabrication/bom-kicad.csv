@@ -2,7 +2,6 @@
 "A1","RaspberryPi_Pico","FrutaMIDI:RaspberryPi_Pico_Castellated_HomeEtch","Raspberry Pi","SC0915","358-SC0915","1"
 "A2","Adafruit_MPR121_1982","FrutaMIDI:Adafruit_MPR121_1982_SMD","Adafruit","1982","485-1982","1"
 "C1","100n X7R 50V","FrutaMIDI:C_1206_HomeEtch","Samsung","CL31B104KBCNNNC","187-CL31B104KBCNNNC","1"
-"J1","CFG_SCL_SDA","FrutaMIDI:Config_2pads_SMD","","","","1"
 "R1-R12","3k3","FrutaMIDI:R_2512_HomeEtch_G5.0mm","YAGEO","RC2512FK-073K3L","603-RC2512FK-073K3L","12"
 "R13,R14","4k7","FrutaMIDI:R_1206_HomeEtch","YAGEO","RC1206FR-074K7L","603-RC1206FR-074K7L","2"
 "R15,R16","220","FrutaMIDI:R_1206_HomeEtch","YAGEO","RC1206FR-07220RL","603-RC1206FR-07220RL","2"

@@ -118,6 +118,18 @@ PASS  B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-1
 PASS  C1 core BOM upper bound <= 30 EUR (ex VAT, ex shipping) :: core 14.84 .. 16.84 EUR
   INFO plan B (T-097, not adopted): +6.18 EUR -> core 21.02 .. 23.02 EUR  CALCULATION
   INFO R1..R12 stock 13 at Mouser PT for 12 needed (SOURCE T96-S0b, 2026-11-11); next delivery 2027-05-18
+PASS  C2 budget BOM = fabrication BOM (Mouser numbers and quantities); knob only in the README :: bom-kicad.csv 8 lines / 21 parts, budget 21 parts; differences []; knob in README True
+  INFO R-016 alternative Vishay CRCW25123K30FKEG: 12 x 0.424 = 5.09 EUR, +3.78 EUR -> core 18.62 .. 20.62 EUR  CALCULATION (body size NOT CONFIRMED)
 
-SUMMARY: 31 checks, 27 PASS, 4 FAIL
+==========================================================================================
+(d) BOARD-LEVEL ITEMS (sim/electronics/calc outputs, T-103 board)
+==========================================================================================
+  GND bounce module-Pico 330 V for about 1 ns; per I2C line <= 1.49 A, <= 0.90 nC  CALCULATION on ASSUMPTION inputs (calc_gnd_bounce.out)
+PASS  D1 injected I2C current and charge within the RP2040 HBM 4 kV equivalent (FT-pin rating; GP26/GP27 NOT CONFIRMED) :: 1.49 A vs 2.67 A (0.56x), 0.90 nC vs 400 nC; bounce 330 V / ~1 ns
+  SDA to electrode pad 36.6 fF; SDA full-swing step 2.09 counts against TOUCH_THRESHOLD 12  CALCULATION (calc_i2c_coupling.out, current layout)
+PASS  D2 SDA coupling step <= 3 counts (half RELEASE_THRESHOLD, REQ-038 proposal) :: 2.09 counts (36.6 fF), touch threshold 12, margin 5.7x to the touch threshold
+  USB pry 30 N: largest screw force 35.6 N  CALCULATION on ASSUMPTION inputs (calc_usb_pry.out); castellation peel margin 0.57-0.75 at 30 N unchanged (R-013)
+PASS  D3 largest M3 screw force at a 30 N USB pull <= 100 N (ASSUMPTION limit, not sourced) :: 35.6 N, 1.2x the applied 30 N
+
+SUMMARY: 35 checks, 31 PASS, 4 FAIL
 wrote reports/systems/budgets.md

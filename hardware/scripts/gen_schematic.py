@@ -278,7 +278,7 @@ def build():
         s.connect(r, rx, ry, "2", net)
     JX, JY = 200.66, 81.28
     j1 = s.symbol("Connector_Generic", "Conn_01x02", "J1", "CFG_SCL_SDA", JX, JY, "FrutaMIDI:Config_2pads_SMD",
-                  ref_at=(0, -3.81))
+                  ref_at=(0, -3.81), in_bom=False)        # T-103 (F3-010): copper only, like J2, J3 and JP1
     for num, net in (("1", "SCL"), ("2", "SDA")):
         s.connect(j1, JX, JY, num, net)
     s.text("J1: surface pads, 2 insulated wires", 165.10, 86.36)

@@ -7,7 +7,7 @@
 	(property "Reference" ""
 		(at 0 0 0)
 		(layer "F.Fab")
-		(uuid "7627963c-414e-430e-bfa7-7be04cc7adc8")
+		(uuid "de85a70b-ffd1-40f2-a8f6-2981fb1e26eb")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -18,7 +18,7 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "bec990d3-2be3-4a39-87d5-2bd08ff6be30")
+		(uuid "1178dca0-2d17-4f04-bc77-7b3eeb26e85c")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -29,7 +29,7 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "41916ed7-d5d1-41b3-b397-da9faf1a1409")
+		(uuid "37d38249-e123-4ee1-8962-e1d490b52a7e")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -40,14 +40,14 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "4ebd355b-6d2c-47c0-a78d-cbbf799a630c")
+		(uuid "b93bd86f-5723-4dad-a7a8-84ca2ead1d3b")
 		(effects
 			(font
 				(size 1.27 1.27)
 			)
 		)
 	)
-	(attr smd)
+	(attr smd exclude_from_bom)
 	(duplicate_pad_numbers_are_jumpers no)
 	(fp_line
 		(start -1.6 -3.2)
@@ -57,7 +57,7 @@
 			(type default)
 		)
 		(layer "F.CrtYd")
-		(uuid "b51b958e-f265-4fff-b3f2-c0a533264c1d")
+		(uuid "18827b47-5614-4766-80d9-f4ff4519f4b1")
 	)
 	(fp_line
 		(start -1.6 1.6)
@@ -67,7 +67,7 @@
 			(type default)
 		)
 		(layer "F.CrtYd")
-		(uuid "2d58789b-3ab0-4d43-8c2f-c3aea9bfe809")
+		(uuid "c33f4e82-e07d-4822-a5c7-636f1e751afe")
 	)
 	(fp_line
 		(start 5.41 -3.2)
@@ -77,7 +77,7 @@
 			(type default)
 		)
 		(layer "F.CrtYd")
-		(uuid "b9a95652-addd-4995-97e0-354773269bc1")
+		(uuid "975de749-0776-429e-89f6-efddbfe70895")
 	)
 	(fp_line
 		(start 5.41 1.6)
@@ -87,7 +87,7 @@
 			(type default)
 		)
 		(layer "F.CrtYd")
-		(uuid "18f8d822-ee6d-4821-912d-21e08f4c706b")
+		(uuid "7412c0b5-0f2c-466f-8dfa-56b072dd6a34")
 	)
 	(fp_line
 		(start -1.1 -1.1)
@@ -97,7 +97,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "710c93e9-bbc9-4894-a763-7da25e2a47f4")
+		(uuid "b59941f7-c90b-4ce5-b161-a9ba17c3e30a")
 	)
 	(fp_line
 		(start -1.1 1.1)
@@ -107,7 +107,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "39bcca06-0bca-4833-847a-cea9bf486945")
+		(uuid "8d69dbf3-84f0-4d51-80b6-e238507b0540")
 	)
 	(fp_line
 		(start 1.1 -1.1)
@@ -117,7 +117,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "e15d5ee1-722f-4240-a7e7-6978c12966c0")
+		(uuid "0df4f18e-eca4-4bc3-b492-2ec7c0cb41b7")
 	)
 	(fp_line
 		(start 1.1 1.1)
@@ -127,7 +127,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "fb60fd2a-a678-42ef-a6d2-b98da36a0e0c")
+		(uuid "10c84584-1942-467d-9d81-9e5526c8b587")
 	)
 	(fp_line
 		(start 2.71 -1.1)
@@ -137,7 +137,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "223bd976-595c-4017-9e2e-d18fab6b57d8")
+		(uuid "6182012d-d04c-4659-aa8a-4415dbb26eba")
 	)
 	(fp_line
 		(start 2.71 1.1)
@@ -147,7 +147,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "c3ec561e-5e5e-4245-bca9-8e6be5859625")
+		(uuid "d3c55620-72b7-436c-aa9d-ef82f0697df8")
 	)
 	(fp_line
 		(start 4.91 -1.1)
@@ -157,7 +157,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "901e0641-aa10-4345-a1c5-76fb2812225b")
+		(uuid "c9088582-6f44-4c02-aba4-78254c954854")
 	)
 	(fp_line
 		(start 4.91 1.1)
@@ -167,12 +167,12 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "b1491e96-a58c-4580-9c4e-63d24c93e1f3")
+		(uuid "7e760666-54f9-4bdb-a124-d2742d2e91b4")
 	)
 	(fp_text user "SCL"
 		(at 0 -2.3 0)
 		(layer "F.Fab")
-		(uuid "b9098d36-72f6-45ba-98c1-b4aae38877ab")
+		(uuid "744e3a37-c42c-4bef-b9b0-9ebbd2b78663")
 		(effects
 			(font
 				(size 0.9 0.9)
@@ -183,7 +183,7 @@
 	(fp_text user "SDA"
 		(at 3.81 -2.3 0)
 		(layer "F.Fab")
-		(uuid "a8eb0724-a8b4-4ee1-ba88-5204345de111")
+		(uuid "7ea30d56-2b74-4881-9009-adf5c748d121")
 		(effects
 			(font
 				(size 0.9 0.9)
@@ -196,13 +196,13 @@
 		(size 2.2 2.2)
 		(layers "F.Cu" "F.Mask" "F.Paste")
 		(thermal_bridge_angle 45)
-		(uuid "faa5472d-c7f0-4ae0-b521-e0fac029e9fb")
+		(uuid "d109e83e-d37b-4f1a-a851-fd92489910cb")
 	)
 	(pad "2" smd circle
 		(at 3.81 0)
 		(size 2.2 2.2)
 		(layers "F.Cu" "F.Mask" "F.Paste")
-		(uuid "27a33065-41e9-445c-a909-fa12b66aa495")
+		(uuid "4f662cdf-1b09-4307-8d61-1e4a8fc8fdbc")
 	)
 	(embedded_fonts no)
 )

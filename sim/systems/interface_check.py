@@ -354,8 +354,18 @@ for row in csv.DictReader(open(bom_path, encoding="utf-8")):
         if got[0] != row["Footprint"] or got[1] != (row["MPN"] or None) or got[2] != (row.get("Mouser") or None):
             bom_bad.append((r, row["Footprint"], row["MPN"], row.get("Mouser"), got))
 want_bom = set(PARTS) | set(r_el)
-want_bom -= {"J2", "J3", "JP1"}                  # copper-only items, excluded from the BOM by the generator (T-091)
+COPPER_ONLY = {"J1", "J2", "J3", "JP1"}         # copper-only items, excluded from the BOM by the generator (T-091; J1 since T-103, F3-010)
+want_bom -= COPPER_ONLY
 bom_cols = open(bom_path, encoding="utf-8").readline()
+# F3-010 (T-104): the board's exclude_from_bom flags must equal the copper-only set (holes aside), and copper-only items carry no MPN
+excl = set()
+for m in re.finditer(r'\n\t\(footprint "[^"]+"', pcb):
+    e = pcb.find("\n\t(footprint", m.end()); blk = pcb[m.start():e if e > 0 else len(pcb)]
+    a_ = re.search(r'\(attr ([^)]*)\)', blk); r_ = re.search(r'\(property "Reference" "([^"]+)"', blk)
+    if a_ and r_ and "exclude_from_bom" in a_.group(1).split() and not re.fullmatch(r"H\d+", r_.group(1)): excl.add(r_.group(1))
+mpn_on_copper = sorted(r for r in COPPER_ONLY if PARTS.get(r, (None, None, None))[1] or fp_info.get(r, (None, None, None))[1])
+check("fab.copper_only_excluded_from_bom", excl == COPPER_ONLY and not mpn_on_copper,
+      "excluded on the board (holes aside) %s, expected %s; copper-only items with an MPN: %s" % (sorted(excl), sorted(COPPER_ONLY), mpn_on_copper))
 check("fab.bom_matches_board", not bom_bad and bom_refs == want_bom and '"Mouser"' in bom_cols, "BOM refs %d, Mouser column %s; mismatches %s; missing %s; extra %s"
       % (len(bom_refs), '"Mouser"' in bom_cols, bom_bad, sorted(want_bom - bom_refs), sorted(bom_refs - want_bom)))
 
@@ -386,6 +396,22 @@ check("doc.hw_readme.no_sockets", not sock_bad and "female" not in hw_readme.low
 check("doc.hw_readme.RV1_insulated", "PTV09A-4015F-B103" in hw_readme and "insulated flatted shaft" in hw_readme
       and "insulated shaft and an insulating knob" in hw_readme and "metal shaft is not protected" in hw_readme,
       "RV1: PTV09A with insulated shaft, insulating knob required, metal-shaft warning present (R-011)")
+# T-104 (F3-003, F3-010, ADR-027 D-3): supported Pico variants, the R-016 alternative, the knob and SW1 maker notes
+a1_row = next((l for l in hw_readme.split("\n") if l.startswith("| A1 |")), "")
+check("doc.hw_readme.pico_variants", "SC0915" in a1_row and "Pico 2" in a1_row and "Pico W and Pico 2 W are not supported" in a1_row
+      and len([l for l in hw_readme.split("\n") if re.search(r"^\| Raspberry Pi Pico (2 )?W ", l)]) >= 2
+      and all("not supported on this PCB" in l for l in hw_readme.split("\n") if re.search(r"^\| Raspberry Pi Pico (2 )?W ", l)),
+      "A1 row names SC0915 and Pico 2 and excludes Pico W / Pico 2 W; firmware rows for W variants say not supported on this PCB")
+check("doc.hw_readme.R016_alternative", "CRCW25123K30FKEG" in hw_readme and "71-CRCW25123K30FKEG" in hw_readme and "datasheet has not been checked" in hw_readme,
+      "Vishay CRCW25123K30FKEG named with its Mouser number and the datasheet caveat (ADR-027 D-3, R-016)")
+check("doc.hw_readme.knob_and_sw1_notes", "179-SPK-016A" in hw_readme and "knob is also not in `bom-kicad.csv`" in hw_readme and "ARATAS, formerly Omron" in hw_readme,
+      "knob listed in the README only and said so; SW1 maker note (ARATAS, formerly Omron)")
+# T-104 (F3-006 / ADR-028 D-2, F3-003): the manual and root README must follow the corrected JP1 label text and the PCB variant scope
+check("doc.manual.JP1_label_position", not re.search(r"ORIG\*\* etched below", manual) and not re.search(r"ORIG\*\* etched below", hw_readme),
+      "ORIG is etched left of JP1 beside the pad 2-1 gap (ADR-028 D-2); 'ORIG etched below' in the manual: %s, in hardware/README.md: %s"
+      % (bool(re.search(r"ORIG\*\* etched below", manual)), bool(re.search(r"ORIG\*\* etched below", hw_readme))))
+w_pcb = [l.strip()[:90] for txt in (readme, manual) for l in txt.split("\n") if re.search(r"FrutaMIDI-pcb-rpipico2?w\.uf2", l) and "not supported" not in l]
+check("doc.root_readme.pcb_variants", not w_pcb, "PCB firmware rows for Pico W / Pico 2 W without 'not supported' (root README or manual): %s" % w_pcb)
 check("doc.hw_readme.JP1_smd", "3-pad solder bridge" in hw_readme and "1.87 mm" in hw_readme, "JP1 described as surface bridge with the 1.87 mm gap")
 # The user manual and the root README must describe the same board (REQ-036). They are not owned by the systems engineer.
 stale = lambda txt: sorted({w for w in ("PCB v1.2", "MBE0414", "DIN0414", "HPWC", "screw-terminal pads", "screw terminals", "Drill R1", "S holes") if w in txt})

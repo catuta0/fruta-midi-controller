@@ -1,10 +1,11 @@
 {
-  "revision": "frozen-8 (CR-003 SMD board; frozen by the manager 2026-11-11, ADR-027 D-4)",
-  "frozen": true,
+  "revision": "frozen-9 proposal (T-104, T-103 board after the CR-003 review, ADR-028; proposed by systems-engineer, freeze by the manager)",
+  "frozen": false,
   "owner": "systems-engineer",
+  "changelog_frozen_9": "frozen-9 proposed by systems-engineer (T-104, 2026-11-11) from the T-103 board (CR-003 review fixes F3-001..F3-014) and ADR-028, for the manager to freeze or reject. Changes from frozen-8 are mechanical and BOM only; pin map, nets, terminal map, I2C, USB MIDI and firmware build flags are unchanged. (1) A2 lands lengthened outward with the inner edges unchanged (F3-001): electrode row 13 x 1.8 x 4.2 mm, 1.73 mm beyond the module outline; S row 7 x 1.8 x 5.515 mm, 1.775 mm beyond, overlapping its own J3 pad (same net). Module underside about 5.5 mm and module board top about 7.1 mm above the copper (CALCULATION on ASSUMPTIONS: pin 3.0 mm, strip 2.5 mm, module board 1.6 mm). (2) A1 moved to (4.50, 1.48) (F3-002, ADR-028 D-1): Pico end 0.11 mm inside the board edge, USB receptacle face 1.19 mm beyond it (pcb_rules_check ADR-028 D-1, CALCULATION from SOURCE 1.30 mm). (3) Third keep-out for the Pico 2 TP7 (1V1) and the shell-pad keep-out widened (F3-003); supported A1 variants are Pico (SC0915) and Pico 2 only; Pico W and Pico 2 W are not supported on the PCB. (4) 1206 lands lengthened outward (F3-014): R13..R16 1.775 x 1.8 mm, C1 1.875 x 1.8 mm, inner gap 1.75 mm; R13/R14 to y 4.90, R15 to y 18.50, R16 to y 24.34, C1 to y 16.42, SW1 to y 29.71. (5) J1 excluded from the BOM (F3-010): J1, J2, J3 and JP1 are copper only; the RV1 knob is listed in hardware/README.md only. Evidence: sim/systems/pcb_rules_check.out, interface_check.out, budgets.out and management/handoffs/systems-engineer/T-104/mutation_results.txt. These are design-file checks, not hardware validation.",
   "changelog_frozen_8": "frozen-8 revised by systems-engineer (T-099, 2026-11-11) on ADR-024 (BOM to Mouser), ADR-026 (R1..R12) and the T-094..T-098 board at 5c92ca3, for the manager to freeze or reject. Changes from the T-093 proposal: R1..R12 are YAGEO RC2512FK-073K3L (3k3 1 %, 1 W, 2512, Mouser 603-RC2512FK-073K3L) on footprint FrutaMIDI:R_2512_HomeEtch_G5.0mm (T-098 rename of R_2512_HPWC_G5.0mm, land geometry unchanged); series resistance is back to 3k3, as in frozen-7, with no firmware or net impact; pulse capability NOT PROVEN and accepted (ADR-026); R13..R16 YAGEO RC1206 and C1 Samsung CL31B104KBCNNNC; RV1 Bourns PTV09A-4015F-B103 (insulated flatted shaft) with knob Same Sky SPK-016A; every part carries MPN and Mouser fields on the board and in the BOM; R15 moved to (85.00, 18.90) and SDA re-routed 3.30 mm from the electrode pads (T-094); H1..H4 as set in T-092. The T-093 proposal text follows. frozen-8 proposed by systems-engineer (T-093, 2026-11-09) from ADR-023, CR-003 and the T-091/T-092 SMD board, for the manager to freeze or reject. Changes from frozen-7 are footprints, mounting and copper side only: copper moved from B.Cu to F.Cu on one layer, every part surface-mounted, only the 4 M3 NPTH holes remain; A1 surface-soldered on castellations, no socket; A2 pins butted on 1.8 x 2.4 mm surface pads, no socket; R1..R12 are TT HPWC2512-3K0JT18 (3k0 5 %, 2512, land gap 5.0 mm); R13..R16 and C1 in 1206; J2 is 14 solder-wire pads 3.0 x 4.5 mm instead of screw terminals; RV1 is off-board on 3 wire pads, with no mounting tabs on the board, so the AGND membership is A1 pin 33, RV1 pin 3 and C1 pin 2; JP1 is a 3-pad SMD solder bridge; J1 and J3 are surface pads; the ORIG and QT labels are etched on F.Cu, and the longer legend is only on the assembly map (F.Fab) because the board has no silkscreen. Pin map, nets, terminal map order, I2C, USB MIDI and firmware build flags are unchanged. The 'silk' fields of IF-TERMINALS now mean the assembly-map label. Series resistance changes from 3k3 to 3k0 (ADR-023 D-1) with no firmware or net impact. Evidence: sim/systems/pcb_rules_check.out, sim/systems/interface_check.out. These are design-file checks, not hardware validation.",
   "changelog_frozen_7": "frozen-7 prepared by systems-engineer (T-081, 2026-11-08) on the T-079 final re-review dispositions. Changes from frozen-6 (documentation of the mechanical record only; pinout, nets, terminal map, I2C, USB MIDI and firmware build flags unchanged): C1 drill 0.8 -> 0.9 mm (ring 0.60 -> 0.55 mm, electronics T-080, F2-001); J2 Ex <-> GND edge-track spark gap 1.40 +/- 0.05 mm is now enforced by sim/systems/pcb_rules_check.py (F2-006); RV1 knob/shaft ESD path noted (risk R-011, F2-002).",
-  "status_note": "frozen-6 prepared by systems-engineer (T-077, 2026-11-07) on manager assignment under ADR-021, input a216c1b (freeze by the manager per T-077 assignment). Changes from frozen-5: C1 100 nF X7R 50 V (KEMET C322C104K5R5TA, 5.08 mm leads) from the pot wiper (POT) to AGND; RV1 mounting tabs (MP) on AGND; AGND membership is now exactly A1 pin 33, RV1 pin 3, RV1 MP and C1 pin 2; JP1 footprint SolderJumper_3_THT_P3.81mm (pitch 3.81 mm, pad gap 1.87 mm); J2 pads 3.0 x 4.5 mm oval (pad 1 rect), drill 1.4 mm offset 0.75 mm towards the block back. Pinout, terminal map, I2C, USB MIDI and build flags are unchanged. Evidence on a216c1b: sim/systems/interface_check.out 'SUMMARY: 85 checks, 85 PASS, 0 FAIL' (pcb.AGND_membership, pcb.AGND_no_shared_pad, pcb.AGND_parts_not_on_GND, pcb.RV1_MP, pcb.C1_wiper_filter, pcb.POT_membership PASS); sim/systems/pcb_rules_check.out 'SUMMARY: 19 checks, 19 PASS, 0 FAIL' (ADR-021 JP1 pad gap >= 1.8 mm PASS at 1.87 mm; ADR-021 J2 pads 3.0 x 4.5 mm PASS); sim/systems/budgets.out 'SUMMARY: 30 checks, 25 PASS, 5 FAIL' (A7 C1 settling PASS; the 5 FAILs are the pre-existing A3b, three 100 kHz latency rows and the BOM cost). These are design-file checks, not hardware validation.",
+  "status_note": "frozen-9 proposal (T-104), pending the manager's freeze. frozen-8 was frozen by the manager on 2026-11-11 (ADR-027 D-4); its text is kept in changelog_frozen_8. The frozen-6 note that stood here until T-104 is kept in changelog_frozen_6 (F3-009).",
   "sources": "requirements/SOURCES_SYSTEMS.md",
   "interfaces": [
     {
@@ -675,7 +676,7 @@
         },
         "hazard": "a data wire on a supply pad is current-limited by R15/R16 to 15.5 mA per line (REQ-024 PASS)"
       },
-      "mounting": "No socket. Supplied male header soldered to the module, pins cut almost flush with the strip and butted on 20 surface pads; plastic strip is the stand-off, about 2.5 mm (ASSUMPTION, not measured; risk R-014)."
+      "mounting": "No socket. Supplied male header soldered to the module and butted on 20 surface pads that extend 1.73-1.775 mm beyond the module outline, so each joint can be reached and inspected from outside (T-103, F3-001). Module underside about 5.5 mm above the copper (exposed pin 3.0 mm + plastic strip 2.5 mm), module board top about 7.1 mm (board 1.6 mm): CALCULATION on ASSUMPTIONS, not measured (risk R-014; first-build measurement list in REQ-025/REQ-029)."
     },
     {
       "id": "IF-CONTROLS",
@@ -755,7 +756,7 @@
         "USE_POT": "false (breadboard) / true (PCB)",
         "SERIAL_DEBUG": false
       },
-      "note": "Firmware T-041..T-043 complete: reports/firmware/T-043/checks.log (268 host tests passed)."
+      "note": "Firmware T-041..T-043 complete: reports/firmware/T-043/checks.log (268 host tests passed). PCB builds (FrutaMIDI-pcb-<board>.uf2) exist for Pico W and Pico 2 W, but those boards are not supported on the PCB (T-103, F3-003); they remain breadboard-only."
     },
     {
       "id": "IF-PCB-AUX",
@@ -788,7 +789,7 @@
           "1": "SCL",
           "2": "SDA"
         },
-        "note": "2 surface pads for the 2 I2C configuration wires to J3"
+        "note": "2 surface pads for the 2 I2C configuration wires to J3; copper only, excluded from the BOM since T-103 (F3-010)"
       }
     }
   ],
@@ -802,14 +803,14 @@
     "fabrication_folder": "hardware/fabrication",
     "resistors": {
       "R1..R12": "3k3 1 % electrode series, YAGEO RC2512FK-073K3L (2512, 1 W; Mouser 603-RC2512FK-073K3L; pulse capability NOT PROVEN, ADR-026), footprint FrutaMIDI:R_2512_HomeEtch_G5.0mm, lands 1.9 x 3.35 mm, land gap 5.0 mm",
-      "R13/R14": "4k7 1 % I2C pull-ups (SCL/SDA), YAGEO RC1206FR-074K7L (Mouser 603-RC1206FR-074K7L), FrutaMIDI:R_1206_HomeEtch, lands 1.15 x 1.8 mm",
-      "R15/R16": "220 Ohm 1 % I2C series (SCL/SDA), YAGEO RC1206FR-07220RL (Mouser 603-RC1206FR-07220RL), FrutaMIDI:R_1206_HomeEtch, lands 1.15 x 1.8 mm"
+      "R13/R14": "4k7 1 % I2C pull-ups (SCL/SDA), YAGEO RC1206FR-074K7L (Mouser 603-RC1206FR-074K7L), FrutaMIDI:R_1206_HomeEtch, lands 1.775 x 1.8 mm, inner gap 1.75 mm (T-103, F3-014)",
+      "R15/R16": "220 Ohm 1 % I2C series (SCL/SDA), YAGEO RC1206FR-07220RL (Mouser 603-RC1206FR-07220RL), FrutaMIDI:R_1206_HomeEtch, lands 1.775 x 1.8 mm, inner gap 1.75 mm (T-103, F3-014)"
     },
     "placement_mm": {
-      "frame": "board coordinates, origin at the top-left outline corner (KiCad page coordinates minus (50, 50)); footprint anchor (at) as in hardware/frutamidi.kicad_pcb at 5c92ca3 (T-092 holes, T-094 re-route, T-098 footprint rename)",
+      "frame": "board coordinates, origin at the top-left outline corner (KiCad page coordinates minus (50, 50)); footprint anchor (at) as in hardware/frutamidi.kicad_pcb, T-103 working tree on fd7140b",
       "A1": [
         4.5,
-        2.0
+        1.48
       ],
       "A2": [
         60.02,
@@ -836,39 +837,39 @@
       ],
       "SW1": [
         31.5,
-        30.23
+        29.71
       ],
       "C1": {
         "at": [
           30.0,
-          17.24
+          16.42
         ],
         "rotation_deg": -90.0
       },
       "R13": {
         "at": [
           85.0,
-          5.5
+          4.9
         ],
         "rotation_deg": -90.0
       },
       "R14": {
         "at": [
           88.81,
-          5.5
+          4.9
         ],
         "rotation_deg": -90.0
       },
       "R15": {
         "at": [
           85.0,
-          18.9
+          18.5
         ],
         "rotation_deg": 90.0
       },
       "R16": [
         27.6,
-        24.86
+        24.34
       ],
       "J2": [
         27.0,
@@ -891,11 +892,11 @@
         4.0
       ],
       "R1..R12": "one row, R1 at (33.35, 49.00) to R12 at (89.23, 49.00), rotation -90 deg, 5.08 mm pitch",
-      "label": "MEASUREMENT: read from the design file by the systems-engineer (T-093, re-read T-099: every anchor compared, only R15 changed); not a frozen mechanical interface, recorded for traceability",
+      "label": "MEASUREMENT: read from the design file by the systems-engineer (T-093, re-read T-099 and T-104: every anchor compared; T-104 changed A1, C1, R13..R16, SW1); not a frozen mechanical interface, recorded for traceability",
       "mounting_note": "H1..H4 positions set by electronics T-092; worst metal-bypass path 8.40 mm with the RC2512 (sim/electronics/calc/check_gap.out (e)); nylon hardware recommended"
     },
     "capacitors": {
-      "C1": "100 nF X7R +-10 %, Samsung CL31B104KBCNNNC (1206, Mouser 187-CL31B104KBCNNNC), footprint FrutaMIDI:C_1206_HomeEtch; pin 1 POT, pin 2 AGND (ADR-021, ADR-023)"
+      "C1": "100 nF X7R +-10 %, Samsung CL31B104KBCNNNC (1206, Mouser 187-CL31B104KBCNNNC), footprint FrutaMIDI:C_1206_HomeEtch, lands 1.875 x 1.8 mm, inner gap 1.75 mm (T-103); pin 1 POT, pin 2 AGND (ADR-021, ADR-023)"
     },
     "jumpers": {
       "JP1": "FrutaMIDI:SolderJumper_3_SMD_P3.81mm: 3 SMD pads 1.94 x 2.4 mm, pitch 3.81 mm, copper gap 1.87 mm between adjacent pads (pcb_rules_check, rule >= 1.8 mm, ADR-021), no holes"
@@ -906,14 +907,24 @@
     "holes": "4 x M3 NPTH drill 3.2 mm at H1..H4; no other hole on the board (pcb_rules_check; drill file frutamidi.drl)",
     "lands_mm": {
       "A1": "40 pads 1.6 x 4.2 mm, all etched (castellated Pico), gap 0.94 mm",
-      "A2": "20 pads 1.8 x 2.4 mm, gap 0.74 mm",
+      "A2": "20 pads, inner edges unchanged, gap 0.74 mm: electrode row 13 x 1.8 x 4.2 mm (1.73 mm beyond the module outline), S row 7 x 1.8 x 5.515 mm (1.775 mm beyond, overlapping its own J3 pad, same net) (T-103, F3-001)",
       "J1": "2 pads 2.2 mm",
       "J3": "7 pads 1.8 mm",
       "RV1": "3 pads 3.0 mm",
-      "SW1": "4 pads 1.55 x 1.3 mm"
+      "SW1": "4 pads 1.55 x 1.3 mm",
+      "C1": "2 pads 1.875 x 1.8 mm",
+      "R13..R16": "2 pads 1.775 x 1.8 mm each",
+      "R1..R12": "2 pads 1.9 x 3.35 mm each, land gap 5.0 mm",
+      "label": "MEASUREMENT on the design file; pcb_rules_check `REQ-029 land sizes match the v1.3 table after T-103`"
     },
-    "bom_note": "Every footprint carries Manufacturer, MPN and Mouser fields; the fabrication BOM has columns Ref, Value, Footprint, Manufacturer, MPN, Mouser, Qty (interface_check fab.bom_matches_board). Supplier Mouser Portugal (ADR-024); one-board Mouser total 13.84 EUR ex VAT and shipping (SOURCE T-096 prices, CALCULATION)."
+    "bom_note": "Every part footprint carries Manufacturer, MPN and Mouser fields; the fabrication BOM has columns Ref, Value, Footprint, Manufacturer, MPN, Mouser, Qty (interface_check fab.bom_matches_board). J1, J2, J3 and JP1 are copper only and excluded from the BOM (interface_check fab.copper_only_excluded_from_bom); the RV1 knob (Same Sky SPK-016A) has no symbol and is listed in hardware/README.md only (budgets C2). SW1 B3S-1000 is the genuine part (Mouser maker ARATAS, formerly Omron Components, T-103). Supplier Mouser Portugal (ADR-024); one-board Mouser total 13.84 EUR ex VAT and shipping (SOURCE T-096 prices, CALCULATION), unchanged by T-103.",
+    "pico_mounting": {
+      "supported_variants": "Raspberry Pi Pico (SC0915, recommended) and Pico 2 only; Pico W and Pico 2 W are not supported on the PCB (T-103, F3-003; interface_check doc.hw_readme.pico_variants)",
+      "position": "A1 anchor (4.50, 1.48) mm, rotation 0; Pico end 0.11 mm inside the board edge; USB receptacle face 1.19 mm beyond the edge (CALCULATION from SOURCE 1.30 mm face beyond the module end; pcb_rules_check ADR-028 D-1, limit 1.0 mm cutting tolerance ASSUMPTION). Accepted 0.11 mm short of flush (ADR-028 D-1).",
+      "keep_outs": "3 rule areas: TP/USB shell, SWD pads, Pico 2 TP7 (1V1); no copper inside (pcb_rules_check); copper >= 0.6 mm from all 11 Pico 2 underside features, worst 2.14 mm, TP7 3.66 mm (MEASUREMENT, electronics check_smd, T-103)"
+    }
   },
-  "frozen_by": "manager (ADR-027 D-4)",
-  "frozen_on": "2026-11-11 (frozen-8, manager freeze, ADR-027 D-4)"
+  "frozen_by": "pending (frozen-8 was frozen by the manager, ADR-027 D-4)",
+  "frozen_on": "frozen-9 pending manager freeze",
+  "changelog_frozen_6": "frozen-6 prepared by systems-engineer (T-077, 2026-11-07) on manager assignment under ADR-021, input a216c1b (freeze by the manager per T-077 assignment). Changes from frozen-5: C1 100 nF X7R 50 V (KEMET C322C104K5R5TA, 5.08 mm leads) from the pot wiper (POT) to AGND; RV1 mounting tabs (MP) on AGND; AGND membership is now exactly A1 pin 33, RV1 pin 3, RV1 MP and C1 pin 2; JP1 footprint SolderJumper_3_THT_P3.81mm (pitch 3.81 mm, pad gap 1.87 mm); J2 pads 3.0 x 4.5 mm oval (pad 1 rect), drill 1.4 mm offset 0.75 mm towards the block back. Pinout, terminal map, I2C, USB MIDI and build flags are unchanged. Evidence on a216c1b: sim/systems/interface_check.out 'SUMMARY: 85 checks, 85 PASS, 0 FAIL' (pcb.AGND_membership, pcb.AGND_no_shared_pad, pcb.AGND_parts_not_on_GND, pcb.RV1_MP, pcb.C1_wiper_filter, pcb.POT_membership PASS); sim/systems/pcb_rules_check.out 'SUMMARY: 19 checks, 19 PASS, 0 FAIL' (ADR-021 JP1 pad gap >= 1.8 mm PASS at 1.87 mm; ADR-021 J2 pads 3.0 x 4.5 mm PASS); sim/systems/budgets.out 'SUMMARY: 30 checks, 25 PASS, 5 FAIL' (A7 C1 settling PASS; the 5 FAILs are the pre-existing A3b, three 100 kHz latency rows and the BOM cost). These are design-file checks, not hardware validation."
 }

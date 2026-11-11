@@ -1,4 +1,4 @@
-# Electronics analysis — T-050 / T-052
+# Electronics analysis — T-050 / T-052 (updated to T-103)
 
 > **Scope note (T-092).** Sections 1-6 record the through-hole V1.2 design and stay as history. The current SMD design (CR-003, ADR-023) is in **section 7**, which supersedes them wherever they differ (3k3 → 3k0, THT parts, sockets, drills, end caps, H1-H4 positions).
 
@@ -127,9 +127,11 @@ Status: ERC 0, DRC 0 (with schematic parity), check_gap unchanged, check_silk PA
 Inputs: hardware/scripts/gen_pcb.py, gen_schematic.py @ f3a718a plus the T-092 working tree. Raw outputs: `sim/electronics/calc/*.out` (`sh sim/electronics/calc/run_all.sh`), copies in `reports/electronics/evidence/T-092/`. Nothing here is measured on hardware; "MEASUREMENT" means measured on the design file. ERC/DRC passing is not hardware validation.
 
 ### 7.1 What the board is
-100 × 70 mm, copper on F.Cu only, no vias, no pour, 4 holes (M3, NPTH). R1-R12 TT HPWC2512 3k0 ±5 % on a 1.9 × 3.35 mm land with G = 5.0 mm; Pico surface-soldered on castellations with two etched keep-outs (TP/USB and SWD pads); MPR121 module on butted header pins; R13-R16 and C1 in 1206; SW1 Omron B3S-1000; J2 and RV1 as solder-wire pads. Pin map unchanged (check_smd.out REQ-031).
+(At T-091 / T-092; R1-R12 changed in T-096, module and Pico lands in T-103: see section 8.) 100 × 70 mm, copper on F.Cu only, no vias, no pour, 4 holes (M3, NPTH). R1-R12 TT HPWC2512 3k0 ±5 % on a 1.9 × 3.35 mm land with G = 5.0 mm; Pico surface-soldered on castellations with two etched keep-outs (TP/USB and SWD pads); MPR121 module on butted header pins; R13-R16 and C1 in 1206; SW1 Omron B3S-1000; J2 and RV1 as solder-wire pads. Pin map unchanged (check_smd.out REQ-031).
 
-### 7.2 Results that changed with R = 3k3 → 3k0 ±5 %
+### 7.2 Results that changed with R = 3k3 → 3k0 ±5 % (SUPERSEDED)
+
+> **Superseded (T-096 / ADR-026, recorded in T-103):** R1-R12 are no longer TT HPWC2512 3k0 ±5 %. They are YAGEO RC2512FK-073K3L, 3k3 ±1 %, which has no pulse rating, so the "pulse rating PASS 4 kV" below does **not** apply to the current board. See section 8. The table is kept as the record of the T-091 / T-092 design.
 
 | Quantity | V1.2 (3k3 1 %) | SMD (3k0 ±5 %) | Label |
 |---|---|---|---|
@@ -187,4 +189,43 @@ Hardware: nylon screw and nylon washer recommended, pan head ≤ 5.6 mm, washer 
 - **Retired:** check_silk.py/.out and calc_pulse.py/.out moved to `sim/electronics/calc/retired/`. check_smd.py section 8 checks the assembly-map designators (SW1 ↔ R16 now 8+ mm apart).
 
 ### 7.6 Open
-Peel strength on home-etched copper, castellation hand-solder quality, ESD behaviour (REQ-023, R-006, R-010, R-011) and the pot wiring all need a physical build and test. HPWC stock and C1 datasheet not confirmed.
+Peel strength on home-etched copper, castellation hand-solder quality, ESD behaviour (REQ-023, R-006, R-010, R-011) and the pot wiring all need a physical build and test. HPWC stock and C1 datasheet not confirmed. (HPWC superseded by RC2512FK-073K3L, section 8.)
+
+## 8. Electrode resistor RC2512FK-073K3L (T-096, T-103)
+
+Inputs: YAGEO RC_L datasheet V.11 (copy in `reports/electronics/evidence/T-096/datasheets/`), `sim/electronics/calc/calc_pulse_rated.out`, `sim_electrode.out`, `check_gap.out`, handoff T-096. ADR-026 accepted that the pulse capability is not proven. Nothing here is measured on hardware.
+
+### 8.1 Part and ratings (SOURCE YAGEO RC_L V.11)
+R1-R12 = YAGEO RC2512FK-073K3L, 3.3 kΩ ±1 %, 1 W, 2512 thick film. L 6.35 ±0.10, W 3.10 ±0.15, I1 0.60 ±0.20 mm. Max working voltage 200 V, max overload 500 V, dielectric withstanding 500 V. **No pulse, surge or ESD rating is published.**
+
+### 8.2 Pulse capability: NOT PROVEN
+| Quantity | Value | Label |
+|---|---|---|
+| V across R, IEC 61000-4-2 4 kV contact | 3633 / 3636 / 3640 V at 3267 / 3300 / 3333 Ω; 7.3× the 500 V overload | CALCULATION |
+| V across R, 8 kV | 7273 V | CALCULATION |
+| Energy into R per strike, 4 / 8 kV | 1.09 / 4.36 mJ; τ = (330 + 3300) Ω × 150 pF = 0.544 µs | CALCULATION |
+| Peak power, 4 / 8 kV | 4007 / 16028 W | CALCULATION |
+| Energy of the old 1.2/50 µs acceptance pulse (MBE0414 chart 182 mJ; HPWC at 4596 V 231 mJ) | 167× / 212× one 4 kV strike | CALCULATION |
+| Adiabatic film temperature rise, 4 / 8 kV | 3.1 / 12.6 K; 31 / 126 K with an ASSUMED ×10 trim hot spot; whole body 0.034 K | CALCULATION on ASSUMPTION |
+| Mean field along the film | 0.71 kV/mm; field at the trim kerf unknown | CALCULATION |
+
+The energy comparison says that one 4 kV strike is far below the energy the earlier (rated) parts were accepted against, but it is not a rating for this part: thick-film failure under a fast pulse is governed by the local field and hot spot at the laser trim, which the datasheet does not cover. Status: **NOT PROVEN** at 4 kV and 8 kV. Gaps: no maker surge curve, no test of repeated strikes (resistance drift), no flashover test along the body. Only an ESD-gun test (4 kV contact, repeated, resistance logged before and after) can close it.
+
+### 8.3 Sensor pin current and what the margin compares
+Pin current at 4 kV: 1.10 A at 3300 Ω, 1.11 A at 3267 Ω, against the 1.33 A limit inferred from the MPR121 2 kV HBM rating (ASSUMPTION): margin **1.20-1.22** (CALCULATION). 8 kV: 2.20 A, FAIL.
+
+That margin compares **peak current only** (F3-005). The two pulses differ in charge and duration (CALCULATION):
+- charge: IEC 4 kV, 150 pF × 4 kV = **600 nC**; HBM 2 kV, 100 pF × 2 kV = **200 nC**: ratio **3.0×**;
+- decay time: IEC through 3.3 kΩ, (330 + 3300) Ω × 150 pF = **0.54 µs**; HBM, 1500 Ω × 100 pF = **0.15 µs**: ratio **3.6×**.
+
+So the pin sees a pulse with three times the charge and 3.6 times the duration of the pulse its rating is based on. If the pin's protection fails on charge or energy rather than peak current, the margin of 1.2 does not hold. Status: PASS on peak current against an ASSUMED limit; NOT PROVEN overall.
+
+### 8.4 Gaps around the resistor (MEASUREMENT on the design file, check_gap.out)
+Copper gap 5.00 mm, termination gap 4.65 mm (4.08 mm with ±0.5 mm placement): PASS against 3.5 mm (4 kV), FAIL against 7.5 mm (8 kV). Spark gap J2 pad to GND edge track 1.401 mm for all 12 electrodes. Sensitivity worst ratio 0.904 at 3267 / 3300 / 3333 Ω (SIMULATION, limit 0.90).
+
+### 8.5 T-103 layout changes that touch earlier numbers
+- **Module (A2) lands, F3-001:** the header strip now sits against the module underside, the pin legs (cut to 3.0 mm, ASSUMPTION) stand on lands 1.8 × 4.2 mm (electrode row) and 1.8 × 5.5 mm (S row) that run 1.73 / 1.78 mm beyond the module outline (CALCULATION, check_smd.out). Inner land edges unchanged: SDA to electrode pads still **3.30 mm**, SCL 5.30 mm (MEASUREMENT, `reports/electronics/evidence/T-103/measure_i2c_gap.out`). SDA-to-pad capacitance with the longer pads 36.6 fF (was 33.0 fF), SDA step on the electrode node 2.09 ADC counts (was 1.89) against the 12-count touch threshold (SIMULATION, calc_i2c_coupling.out, finest mesh).
+- **Ground bounce:** the module pin path is longer (3.0 mm leg + 2.5 mm strip + 1.6 mm board = 7.1 mm, ASSUMPTION; was 4.1 mm), so the pin inductance becomes 5.0-8.5 nH (was 2.9-4.9 nH, ASSUMPTION 0.7-1.2 nH/mm). Worst module-to-Pico GND bounce **330 V for about 1 ns** (was 236 V; CALCULATION on ASSUMPTION inputs, calc_gnd_bounce.out). Not measured; the ADC-capable pin HBM value is still NOT CONFIRMED.
+- **Pico position, F3-002:** pin 1 column at y 1.48 mm (was 2.0); USB end 0.11 mm inside the board edge, receptacle face 1.19 mm beyond it (CALCULATION from SOURCE 1.30 mm). Fully flush would put the pin 1 / 40 lands 0.495 mm from the etched outline line, below the 0.6 mm rule. calc_usb_pry re-run with the load at (13.39, 0.11) mm.
+- **Pico 2 keep-outs, F3-003:** TP7 (1V1) keep-out added; all 11 Pico 2 underside features (Pico 2 datasheet Fig. 5) checked: nearest copper 2.14 mm, TP7 3.66 mm (MEASUREMENT, check_smd.out). Pico W / Pico 2 W are not supported on the PCB until their underside is checked.
+- **1206 lands, F3-014:** lengthened outward to 1.775 mm (R) and 1.875 mm (C); copper beyond the body ≥ 1.05 mm (CALCULATION on SOURCE / ASSUMPTION body sizes, check_smd.out).

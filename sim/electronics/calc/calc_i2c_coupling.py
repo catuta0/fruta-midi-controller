@@ -2,7 +2,7 @@
 """T-094 / R-017: mutual capacitance from the SDA and SCL runs to the A2 electrode pads, before and after the re-route.
 
 CALCULATION: method of moments in free space with an effective permittivity, coplanar copper on one face.
-Conductors: 13 pads of the module electrode row (1.8 x 2.4 mm, 2.54 mm pitch, top edge y = 24.7 mm, pin 1 is GND),
+Conductors: 13 pads of the module electrode row (1.8 x 4.2 mm since T-103, 2.54 mm pitch, top edge y = 24.7 mm, pin 1 is GND),
 the SDA run and the SCL run (1.0 mm wide), the S1 supply run (1.2 mm wide, y = 15.74 mm) as a neighbouring conductor.
 Pure Python (the KiCad Python and system Python have no numpy): N x N LU, N up to about 900.
 Layout values are from hardware/scripts/gen_pcb.py.
@@ -21,9 +21,9 @@ import math
 
 EPS0 = 8.854e-12
 EPS_EFF = 2.75          # ASSUMPTION
-PAD_W, PAD_H = 1.8, 2.4
+PAD_W, PAD_H = 1.8, 4.2           # T-103 (F3-001): land lengthened downward, top edge unchanged
 PAD_XC = [44.78 + 2.54 * j for j in range(13)]
-PAD_YC = 25.9
+PAD_YC = 24.7 + PAD_H / 2         # 26.8
 MID = 6                 # electrode pad modelled as victim (E5)
 WINDOW = 9.0            # half length of each modelled run, mm
 

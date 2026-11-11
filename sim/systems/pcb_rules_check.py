@@ -245,25 +245,49 @@ LAND_MIN = 1.0                       # mm in both directions: the signal-track w
 small = sorted({(p["fp"].split(":")[1], p["sx"], p["sy"]) for p in copper_pads if min(p["sx"], p["sy"]) < LAND_MIN - 1e-9})
 check("REQ-029 every SMD land >= %.1f mm in both directions" % LAND_MIN, not small and bool(copper_pads),
       "smallest land %.2f mm; below the rule: %s" % (min(min(p["sx"], p["sy"]) for p in copper_pads), small))
-LANDS = {"A1": (40, (4.2, 1.6)), "A2": (20, (1.8, 2.4)), "J3": (7, (1.8, 1.8)), "J1": (2, (2.2, 2.2)), "RV1": (3, (3.0, 3.0)), "SW1": (4, (1.55, 1.3)),
-         "C1": (2, (1.15, 1.8)), "R13": (2, (1.15, 1.8)), "R14": (2, (1.15, 1.8)), "R15": (2, (1.15, 1.8)), "R16": (2, (1.15, 1.8))}
-for r in range(1, 13): LANDS["R%d" % r] = (2, (1.9, 3.35))
+# Land table (T-104 after T-103/F3-001, F3-014): ref -> {land size (x, y) in mm: count}
+LANDS = {"A1": {(4.2, 1.6): 40}, "A2": {(1.8, 4.2): 13, (1.8, 5.515): 7}, "J3": {(1.8, 1.8): 7}, "J1": {(2.2, 2.2): 2}, "RV1": {(3.0, 3.0): 3},
+         "SW1": {(1.55, 1.3): 4}, "C1": {(1.875, 1.8): 2}}
+for r in ("R13", "R14", "R15", "R16"): LANDS[r] = {(1.775, 1.8): 2}
+for r in range(1, 13): LANDS["R%d" % r] = {(1.9, 3.35): 2}
 bad = []
-for ref, (n, size) in sorted(LANDS.items()):
+for ref, want in sorted(LANDS.items()):
     ps = fps.get(ref, dict(pads=[]))["pads"]
-    if len(ps) != n or any((p["sx"], p["sy"]) != size for p in ps):
-        bad.append((ref, len(ps), sorted({(p["sx"], p["sy"]) for p in ps})))
-check("REQ-029 land sizes match the v1.3 table (A1, A2, J1, J3, RV1, SW1, C1, R1..R16)", not bad, "%d parts compared; mismatches: %s" % (len(LANDS), bad))
-if len(keepouts) == 2:
+    got = {}
+    for p in ps: got[(p["sx"], p["sy"])] = got.get((p["sx"], p["sy"]), 0) + 1
+    if got != want:
+        bad.append((ref, len(ps), sorted(got.items())))
+check("REQ-029 land sizes match the v1.3 table after T-103 (A1, A2, J1, J3, RV1, SW1, C1, R1..R16)", not bad, "%d parts compared; mismatches: %s" % (len(LANDS), bad))
+N_KO = 3                             # T-103 (F3-003): TP/USB, SWD pads and the Pico 2 TP7 keep-out
+if len(keepouts) == N_KO:
     viol = []
     for z in keepouts:
         pts = [(float(a), float(b)) for a, b in re.findall(r'\(xy ([-\d.]+) ([-\d.]+)\)', z)]
         ko = Item("ko", "", "keepout", list(zip(pts, pts[1:] + pts[:1])), 0.0, pts)
         for it in items:
             if dist(ko, it) <= 1e-6: viol.append(it.desc)
-    check("REQ-029 no bare copper in the 2 Pico keep-out rule areas", not viol, "2 keep-out polygons; copper inside: %s" % viol)
+    check("REQ-029 no bare copper in the %d Pico keep-out rule areas" % N_KO, not viol, "%d keep-out polygons; copper inside: %s" % (N_KO, viol))
 else:
-    check("REQ-029 no bare copper in the 2 Pico keep-out rule areas", False, "expected 2 keep-out rule areas, found %d" % len(keepouts))
+    check("REQ-029 no bare copper in the %d Pico keep-out rule areas" % N_KO, False, "expected %d keep-out rule areas, found %d" % (N_KO, len(keepouts)))
+
+# ---- ADR-028 D-1 (F3-002, T-103): Pico end and USB receptacle face against the board edge ---------------------
+# The Pico board end is the F.Fab line of A1 that spans the 21 mm module width (local y of its lowest such line);
+# the receptacle face is 1.30 mm beyond that end (SOURCE RP-008307 via T-090); cutting tolerance 1.0 mm (ASSUMPTION, T-103).
+USB_FACE, CUT_TOL = 1.30, 1.0
+a1 = fps.get("A1")
+fpblk = [b for b in blocks(t, "footprint") if re.search(r'\(property "Reference" "A1"', b)]
+wide = []
+if fpblk:
+    for x1, y1, x2, y2 in re.findall(r'\(fp_line\s+\(start ([-\d.]+) ([-\d.]+)\)\s+\(end ([-\d.]+) ([-\d.]+)\)[\s\S]*?\(layer "F\.Fab"\)', fpblk[0]):
+        if abs(float(y1) - float(y2)) < 1e-6 and abs(abs(float(x2) - float(x1)) - 21.0) < 0.05: wide.append(float(y1))
+if a1 and wide and edge and a1["ang"] == 0:
+    edge_y = min(ys)
+    end_y = a1["at"][1] + min(wide)
+    face_out = edge_y - (end_y - USB_FACE)
+    check("ADR-028 D-1 Pico end inside the board and USB face >= %.1f mm beyond the edge" % CUT_TOL, end_y >= edge_y - 1e-6 and face_out >= CUT_TOL - 1e-6,
+          "A1 at (%.2f, %.2f); Pico end %.2f mm inside the edge; face %.2f mm beyond it" % (a1["at"][0] - min(xs), a1["at"][1] - edge_y, end_y - edge_y, face_out))
+else:
+    check("ADR-028 D-1 Pico end inside the board and USB face >= %.1f mm beyond the edge" % CUT_TOL, False, "A1, its 21 mm F.Fab end line or the outline not found, or A1 rotated")
 
 # ---- REQ-023: R1-R12 land gap -------------------------------------------------------------------------------
 R_EL_FP = "R_2512_HomeEtch_G5.0mm"   # T-098; the YAGEO RC2512FK-073K3L (ADR-026) sits on the unchanged 2512 land

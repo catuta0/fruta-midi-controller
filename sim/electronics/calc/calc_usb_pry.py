@@ -7,7 +7,7 @@ screws, for the T-091 hole set and for the current one?
 
 Model (Ritz, Kirchhoff plate): rectangle 100 x 70 mm, free edges, Legendre polynomials of total degree <= p, screws as
 stiff point springs (w only, no clamping moment, conservative for the screw). Force normal to the board, on the board
-plane at the centre of the Pico USB end (13.39, 0.63) mm. The Pico is not modelled: it stiffens the board locally, so the
+plane at the centre of the Pico USB end (13.39, 0.11) mm (T-103; 0.63 before). The Pico is not modelled: it stiffens the board locally, so the
 absolute deflections are upper-side values; only the ratio between hole sets is used. Linear, no contact, no spacer
 compliance. Convergence: printed for several p.
 
@@ -30,7 +30,7 @@ ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
 PCB = os.path.join(ROOT, "hardware", "frutamidi.kicad_pcb")
 A, B, T = 0.100, 0.070, 1.6e-3
 E, NU, KS = 22e9, 0.15, 1e6
-LOAD = (13.39e-3, 0.63e-3)
+LOAD = (13.39e-3, 0.11e-3)         # T-103 (F3-002): Pico USB end at y 1.48 - 1.37 = 0.11 mm (was 0.63)
 OLD = [(8.0, 64.0), (95.0, 5.0), (96.0, 38.0), (88.5, 30.5)]        # T-091 positions (frutamidi.drl, evidence T-091)
 D = E * T ** 3 / (12 * (1 - NU ** 2))
 

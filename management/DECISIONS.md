@@ -161,3 +161,16 @@ User decision after discussing cost against the 4 kV target (user: pulse-proven 
 - D-3 R-016 accepted: Mouser stock 13 for 12 needed (one spare). The purchase list names a standard 3k3 ±1 % 2512 alternative on the same land.
 - D-4 INTERFACES frozen-8 frozen by the manager.
 - D-5 JP1 legend: etched ORIG/QT plus the assembly map is accepted (R-007, REQ-040 stays FAIL as an accepted risk). Project definition amendment was made in 410933d.
+
+## ADR-028 — CR-003 review dispositions for the T-103 board, 2026-11-11
+
+Context: independent review T-102 (reports/review/CR-003/findings.md, F3-001..F3-015); electronics fixes T-103 (management/handoffs/electronics-engineer-T-103.md); systems checks T-104.
+
+- D-1 Pico position (F3-002). The manager accepts the Pico end 0.11 mm short of flush, with the USB receptacle face 1.19 mm beyond the board edge (CALCULATION from SOURCE 1.30 mm; pcb_rules_check `ADR-028 D-1` PASS against the 1.0 mm cutting tolerance, an ASSUMPTION). Reason: flush would put the pin 1 and pin 40 (VBUS) lands 0.495 mm from the etched outline line, below the 0.6 mm clearance. The build checks the plug seat before soldering and measures the face after trimming (REQ-029 first-build list).
+- D-2 ORIG label (F3-006). The manager accepts the etched ORIG label where it is (left of JP1, beside the pad 2–1 gap) and the corrected text in hardware/README.md; no copper change. The manual must be corrected to the same text (interface_check `doc.manual.JP1_label_position`, FAIL until documentation T-105).
+- D-3 Pico variants (F3-003). The PCB supports the Raspberry Pi Pico (SC0915, recommended) and the Pico 2 only. Pico W and Pico 2 W are not supported on the PCB until their undersides are checked; the root README PCB firmware rows must say so (interface_check `doc.root_readme.pcb_variants`).
+- D-4 BOM consistency (F3-010). J1, J2, J3 and JP1 are copper only and excluded from the BOM; the RV1 knob is listed in hardware/README.md only; SW1 is the genuine B3S-1000 (ARATAS, formerly Omron Components). Cost unchanged: core 14.84–16.84 EUR ex VAT, ex shipping (budgets C1, C2 PASS).
+- D-5 R-016 alternative. Vishay CRCW25123K30FKEG (Mouser 71-CRCW25123K30FKEG) is named as the alternative; it may be used only after its datasheet is opened and check_gap (d) and sim_electrode are re-run with its body and termination values (+3.78 EUR for 12, CALCULATION).
+- D-6 Records (F3-009). INTERFACES moves to a frozen-9 proposal (T-104), frozen by the manager after review of the T-104 checks; the frozen-6 status note is moved to changelog_frozen_6. The ADR-026 stock date (2026-11-09) is to be read as superseded by the 2026-11-11 re-read (T96-S0b).
+- D-7 Residual items accepted for the first build, each on ASSUMPTION inputs and NOT RUN [PHYSICAL]: GND bounce 330 V for about 1 ns (R-010; budgets D1 PASS against the RP2040 FT-pin HBM equivalent, GP26/GP27 rating NOT CONFIRMED); SDA coupling 2.09 counts (R-017; budgets D2 PASS against the 3-count proposal); 35.6 N on the most loaded M3 screw at a 30 N USB pull (R-013; budgets D3 PASS against an unsourced 100 N ASSUMPTION).
+- D-8 INTERFACES frozen-9 is frozen by the manager after documentation T-105 and the CR-003 re-review, not before. Open for electronics: source an M3 nylon screw pull-through limit to replace the 100 N ASSUMPTION (budgets D3).

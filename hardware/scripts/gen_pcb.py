@@ -142,8 +142,17 @@ PICO_PAD_OFF = 1.3
 # y 0.48-14.98 mm at the V1.2 Pico position 4.5, 2.0). KO_DBG = the three SWD pads at the far end (T-090 Figure 5,
 # 6.68 mm across; centre (13.39, 50.03) in board coordinates, library footprint RaspberryPi_Pico_SMD): not part of the
 # T-090 union, added in T-091 because those pads are exposed metal too.
-KO_TP = (9.52 - 4.5, 0.48 - 2.0, 17.27 - 4.5, 14.98 - 2.0)
+# T-103 (F3-003): checked against the Pico 2 footprint (SOURCE Pico 2 datasheet Fig. 5, origin bottom-left of the 21 x 51 mm
+# board; footprint-local x = X - 1.61, y = 51 - Y - 1.37, CALCULATION). Pico 2 shell pad A (7.775, 49.5), 1.1 mm wide, needs
+# x >= 5.615 - 0.6 = 5.015, so KO_TP x1 moves from 5.02 to 5.0. Test points (8, 38..43), (9.5/11.5, 49.8), (10.5, 46.5)
+# and shell pads B-D lie inside KO_TP with >= 0.6 mm. TP7 (1V1) at (11.5, 30.5), 1.5 x 1.5 mm, is new: KO_TP7, centre
+# (9.89, 19.13), half size 0.75 + 0.6. Pico W / Pico 2 W undersides not checked (not supported on this PCB).
+KO_TP = (5.0, 0.48 - 2.0, 17.27 - 4.5, 14.98 - 2.0)
 KO_DBG = (9.45 - 4.5, 47.83 - 2.0, 17.33 - 4.5, 52.23 - 2.0)
+A2_PIN_EXPOSED = 3.0      # header leg below the strip after cutting (ASSUMPTION, standard 2.54 mm header; measure yours)
+A2_E_LAND = ((7.055 + 11.255) / 2, 11.255 - 7.055)     # (centre y, length) of the electrode-row land
+A2_S_LAND = ((-11.3 - 5.785) / 2, 11.3 - 5.785)       # (centre y, length) of the S-row land
+KO_TP7 = (9.89 - 1.35, 19.13 - 1.35, 9.89 + 1.35, 19.13 + 1.35)
 
 
 def build_footprints():
@@ -163,14 +172,18 @@ def build_footprints():
         add_pad(fp, str(41 - k), 17.78 + PICO_PAD_OFF, (k - 1) * 2.54, RECT, w, h)
     add_keepout(fp, *KO_TP)
     add_keepout(fp, *KO_DBG)
+    add_keepout(fp, *KO_TP7)
     add_rect(fp, pcbnew.F_Fab, -1.61, -1.37, 19.39, 49.63)
     add_rect(fp, pcbnew.F_Fab, 5.39, -2.67, 12.39, 3.5)                    # USB connector
     add_rect(fp, pcbnew.F_Fab, KO_TP[0], KO_TP[1], KO_TP[2], KO_TP[3], 0.05)
     add_text(fp, "no bare copper", 8.89, 3.2, size=1.0)
     add_rect(fp, pcbnew.F_Fab, KO_DBG[0], KO_DBG[1], KO_DBG[2], KO_DBG[3], 0.05)
     add_text(fp, "no copper", 8.89, 47.0, size=0.9)
+    add_rect(fp, pcbnew.F_Fab, KO_TP7[0], KO_TP7[1], KO_TP7[2], KO_TP7[3], 0.05)
+    add_text(fp, "TP7", 8.89, 22.0, size=0.9)
     add_text(fp, "USB", 8.89, 1.0, size=1.2)
-    add_text(fp, "1", -2.0, 2.0, size=1.2)
+    add_text(fp, "1", 1.8, 0.0, size=1.2)                                 # T-103 (F3-008): level with pin 1
+    add_rect(fp, pcbnew.F_Fab, -2.8, -0.45, -1.9, 0.45, 0.12)             # square inner marking on pad 1
     add_rect(fp, pcbnew.F_CrtYd, -3.7, -2.9, 21.5, 50.3, 0.05)
     add_model(fp, MODELS + "Module.3dshapes/RaspberryPi_Pico.step", offset=(8.89, -24.13, 0))
     out[name] = fp
@@ -179,18 +192,23 @@ def build_footprints():
     # Orientation as in V1.2 (rotated 180 deg from the Adafruit Eagle files, electrodes at the bottom).
     name = "Adafruit_MPR121_1982_SMD"
     fp = new_fp(name, "Adafruit MPR121 breakout (1982, original or STEMMA QT) on 1x13 + 1x7 header pins butted on surface pads")
+    # T-103 (F3-001 option a): the strip is pushed up against the module underside, the pin legs below it (about 3 mm,
+    # ASSUMPTION) stand on the lands, and each land runs outward beyond the module outline (inner edge unchanged) so the
+    # iron reaches the pin from outside: electrode row 1.8 x 4.2 mm (y 7.055..11.255, 1.73 mm beyond the outline 9.525);
+    # S row 1.8 x 5.515 mm (y -11.3..-5.785, 1.775 mm beyond), overlapping its own J3 wire pad (same net). CALCULATION.
     for j in range(13):
-        add_pad(fp, str(1 + j), -15.24 + 2.54 * j, 8.255, RECT, 1.8, 2.4)
+        add_pad(fp, str(1 + j), -15.24 + 2.54 * j, A2_E_LAND[0], RECT, 1.8, A2_E_LAND[1])
     for k in range(7):
-        add_pad(fp, str(14 + k), -7.62 + 2.54 * k, -6.985, RECT, 1.8, 2.4)
+        add_pad(fp, str(14 + k), -7.62 + 2.54 * k, A2_S_LAND[0], RECT, 1.8, A2_S_LAND[1])
     add_rect(fp, pcbnew.F_Fab, -16.51, -9.525, 16.51, 9.525)
     add_text(fp, "MPR121 (Adafruit 1982)", 0, 0.6, size=1.2)
     add_text(fp, "GND E0 ... E11", 0, 3.4, size=0.9)
     add_text(fp, "1", -15.24, 5.9, size=1.2)                               # pin 1 mark (electrode row, GND)
-    add_rect(fp, pcbnew.F_CrtYd, -17.0, -9.9, 17.0, 10.0, 0.05)
+    add_rect(fp, pcbnew.F_CrtYd, -17.0, -11.55, 17.0, 11.55, 0.05)
     hdr = MODELS + "Connector_PinHeader_2.54mm.3dshapes/PinHeader_1x%02d_P2.54mm_Vertical.step"
-    add_model(fp, hdr % 13, offset=(-15.24, -8.255, 0), rot=(0, 0, -90))
-    add_model(fp, hdr % 7, offset=(-7.62, 6.985, 0), rot=(0, 0, -90))
+    # T-103: strip raised by the exposed pin length (A2_PIN_EXPOSED, ASSUMPTION 3.0 mm) to the module underside
+    add_model(fp, hdr % 13, offset=(-15.24, -8.255, A2_PIN_EXPOSED), rot=(0, 0, -90))
+    add_model(fp, hdr % 7, offset=(-7.62, 6.985, A2_PIN_EXPOSED), rot=(0, 0, -90))
     out[name] = fp
 
     # --- Q-row surface wire pads S1..S7 (J3), each directly above a module S pin
@@ -199,13 +217,16 @@ def build_footprints():
     for k in range(7):
         add_pad(fp, str(k + 1), 2.54 * k, 0, CIRC, 1.8, 1.8)
         add_text(fp, "S%d" % (k + 1), 2.54 * k, -2.335, size=0.9)
-    add_rect(fp, pcbnew.F_CrtYd, -1.2, -3.0, 16.44, 1.2, 0.05)
+    # T-103: the A2 S-row lands now run up into the lower half of these pads (same nets); the courtyard stops at y 0.5,
+    # where the A2 courtyard begins, so the two do not overlap.
+    add_rect(fp, pcbnew.F_CrtYd, -1.2, -3.0, 16.44, 0.5, 0.05)
     fp.SetExcludedFromBOM(True)                    # copper only (matches the symbol)
     out[name] = fp
 
     # --- 2 surface pads for the two insulated configuration wires
     name = "Config_2pads_SMD"
     fp = new_fp(name, "2 surface pads for the I2C configuration wires: SCL (pad 1), SDA (pad 2)")
+    fp.SetExcludedFromBOM(True)                    # T-103 (F3-010): copper only (matches the symbol)
     for k, lab in enumerate(("SCL", "SDA")):
         add_pad(fp, str(1 + k), 3.81 * k, 0, RECT if k == 0 else CIRC, 2.2, 2.2)
         add_text(fp, lab, 3.81 * k, -2.3, size=0.9)
@@ -273,10 +294,15 @@ def build_footprints():
     for name, descr, mdl in (("R_1206_HomeEtch", "1206 chip resistor, IPC-7351 reflow land usable by hand", "Resistor_SMD.3dshapes/R_1206_3216Metric.step"),
                              ("C_1206_HomeEtch", "1206 chip capacitor, IPC-7351 reflow land usable by hand", "Capacitor_SMD.3dshapes/C_1206_3216Metric.step")):
         fp = new_fp(name, descr)
-        add_pad(fp, "1", 0, 0, RECT, 1.15, 1.8)
-        add_pad(fp, "2", 2.9, 0, RECT, 1.15, 1.8)
+        # T-103 (F3-014): inner edges unchanged (G 1.75), pads lengthened outward for the iron: outer edge `ext` mm
+        # outside the pad-1 origin. Copper beyond the body: R (YAGEO RC1206 L max 3.20, SOURCE RC_L) 1.20 - 0.15 =
+        # 1.05 mm; C (L max 3.40, ASSUMPTION 3.2 +- 0.2) 1.30 - 0.25 = 1.05 mm. CALCULATION.
+        ext = 1.2 if name.startswith("R_") else 1.3
+        ln = ext + 0.575
+        add_pad(fp, "1", (0.575 - ext) / 2, 0, RECT, ln, 1.8)
+        add_pad(fp, "2", 2.9 - (0.575 - ext) / 2, 0, RECT, ln, 1.8)
         add_rect(fp, pcbnew.F_Fab, -0.15, -0.8, 3.05, 0.8)
-        add_rect(fp, pcbnew.F_CrtYd, -0.85, -1.15, 3.75, 1.15, 0.05)
+        add_rect(fp, pcbnew.F_CrtYd, -ext - 0.25, -1.15, 2.9 + ext + 0.25, 1.15, 0.05)
         add_model(fp, MODELS + mdl, offset=(1.45, 0, 0))
         out[name] = fp
 
@@ -335,7 +361,10 @@ def read_netlist():
 # =========================================================================== board
 
 W, H = 100.0, 70.0
-PICO = (4.5, 2.0)                 # pin 1 column; the land centres are 1.3 mm outboard (V1.2 position, T-090 keep-out)
+# T-103 (F3-002): Pico moved up so its USB end is 0.11 mm inside the board edge (module end y = 1.48 - 1.37) and the
+# receptacle face 1.19 mm beyond it (SOURCE 1.30 mm, RP-008307 via T-090). Not fully flush: pin 1 / 40 lands (1.6 mm wide)
+# then sit 0.68 mm from the edge, the least that keeps 0.6 mm to the etched outline line (0.075 half width). CALCULATION.
+PICO = (4.5, 1.48)                # pin 1 column; the land centres are 1.3 mm outboard
 MOD_C = (60.02, 17.645)           # module centre (electrode row at y = 25.9, power/I2C S row at y = 10.66)
 CFG = (85.0, 12.5)                # J1 pad 1 (SCL); pad 2 (SDA) at +3.81 mm (right of the module)
 T0, TY = 27.0, 63.75              # first J2 pad centre (GND), pad row; 1.40 mm above the GND edge track (ADR-020)
@@ -352,23 +381,25 @@ W_SIG, W_PWR, W_STUB = 1.0, 1.2, 0.8
 R_PITCH = 6.9             # G 5.0 + pad 1.9 (CALCULATION)
 R_Y1 = 49.0               # pad 1 row; pad 2 row at 55.9, 5.6 mm above the J2 pad top edge (61.5)
 R_DX = 1.27               # resistor x = J2 x + R_DX
-E_STUB_Y = 27.9           # module side: straight drop from the electrode pin (y = 25.9) before the 45 deg run
+E_STUB_Y = 30.0           # module side: straight drop from the electrode pin (y = 25.9) before the 45 deg run
 R_ROT_DOWN = -90          # orientation that puts pad 2 below pad 1 (checked by check_vertical)
 R_ROT_UP = 90             # pad 2 above pad 1
 GND_DIAG = 72.6           # module GND run x + y = const: >= 0.6 mm from SW1 and from the ch.1 fan-out track (CALCULATION)
-PU_SCL = (85.0, 5.5)      # R13 pad 1 on 3V3; pad 2 2.9 mm below drops onto the SCL pad of J1
-PU_SDA = (88.81, 5.5)     # R14 pad 1 on 3V3; pad 2 drops onto the SDA pad of J1
+PU_SCL = (85.0, 4.9)      # R13 pad 1 on 3V3; pad 2 2.9 mm below drops onto the SCL pad of J1
+PU_SDA = (88.81, 4.9)     # R14 pad 1 on 3V3; pad 2 drops onto the SDA pad of J1
 SER_SDA = (27.6, 24.86)   # R16 pad 1 on the Pico side (pin 31 row)
 JP1 = (79.5, 15.74)       # selector upright: pad 1 (ORIG -> S1) bottom, pad 2 = 3V3, pad 3 (QT -> S7) top
 TOP_3V3_Y = 2.0           # 3V3 run along the top edge (above the S1..S7 wire pads)
 X_3V3_LEVEL = 31.5        # 3V3 leaves Pico pin 36 level to this x, then 45 deg up to RV1 pad 1 (keeps the area around H4 free)
 # T-094 (R-017): SDA and SCL moved up, away from the electrode row (pad top edge y 24.7): SDA 3.30 mm, SCL 5.30 mm edge to edge
 Y_S1, Y_SCL, Y_SDA = 15.74, 18.9, 20.9       # runs under the module (between the S row and the electrode row)
-SER_SCL = (85.0, Y_SCL)   # R15 pad 1 (Pico side) at the end of the SCL run; pad 2 2.9 mm above
+SER_SCL = (85.0, 18.5)    # R15 pad 1 (Pico side) at the end of the SCL run; pad 2 2.9 mm above. T-103: 0.4 mm above the
+                          # run so the lengthened lands keep 0.6 mm to the SDA run (y 20.4) and to J1 pad 1 (y 13.6)
 XC, XD = 38.5, 40.5       # x where SCL and SDA leave the Pico rows and climb to the module runs
 RV_PAD = (34.5, 8.42)     # RV1 pad 1 (3V3); pads 2 (wiper) and 3 (AGND) 5.08 mm apart below
-C1_POS = (30.0, 17.24)    # C1 pad 1 on the wiper row (Pico pin 34); pad 2 (AGND) 2.9 mm below
-SW_C = (31.5, 30.23)      # SW1 centre; pad rows at y = 27.98 (BTN) and 32.48 (GND = Pico pin 28 row)
+C1_POS = (30.0, PICO[1] + 6 * 2.54 - 0.3)      # C1 pad 1 by the wiper row (Pico pin 34); pad 2 (AGND) 2.9 mm below. T-103: 0.3 mm
+                                               # up so the lengthened pad 2 keeps 0.6 mm to the SCL run (pin 32 row)
+SW_C = (31.5, PICO[1] + 12 * 2.54 - 2.25)      # SW1 centre; pad rows BTN and GND (= Pico pin 28 row)
 GND_RAIL_L, GND_RAIL_R = 7.4, 19.4   # GND rails under the Pico, in the 3.61 mm channels beside the TP keep-out
 
 # The board sits away from the sheet corner so a printer at 100 % does not clip anything.
@@ -477,11 +508,15 @@ def place(bd, comps, pin_net, ref, x, y, rot=0, ref_at=None):
 
 def check_vertical(fp, x, y, pitch):
     """Fail the build if pad 2 of a part is not `pitch` mm directly below (pitch < 0: above) pad 1."""
+    # T-103: pads may be longer outward than inward (1206), so test the pad-pair midpoint, the column and the order.
     pos = {p.GetNumber(): p.GetPosition() for p in fp.Pads()}
     p1, p2 = pos["1"], pos["2"]
-    want1, want2 = VB(x, y), VB(x, y + pitch)
-    if abs(p1.x - want1.x) > 1000 or abs(p1.y - want1.y) > 1000 or \
-       abs(p2.x - want2.x) > 1000 or abs(p2.y - want2.y) > 1000:
+    mid = VB(x, y + pitch / 2.0)
+    want1 = VB(x, y)
+    if abs((p1.x + p2.x) / 2 - mid.x) > 1000 or abs((p1.y + p2.y) / 2 - mid.y) > 1000 or \
+       abs(p1.x - want1.x) > 1000 or abs(p2.x - want1.x) > 1000 or (p2.y - p1.y) * pitch <= 0 or \
+       not any(p.GetNumber() == "1" and p.HitTest(want1) for p in fp.Pads()) or \
+       not any(p.GetNumber() == "2" and p.HitTest(VB(x, y + pitch)) for p in fp.Pads()):
         raise SystemExit("part %s pads at %s/%s, expected pad 2 below pad 1"
                          % (fp.GetReference(), (p1.x, p1.y), (p2.x, p2.y)))
 
@@ -530,7 +565,7 @@ def build_board():
     check_vertical(fp, cx1, cy1, 2.9)
     bd.track([p34, C1_POS], N("A1", "34"))                                 # POT to C1 pad 1
     y2w = rvy + 5.08                                                       # RV1 pad 2 (wiper)
-    bd.track([C1_POS, (cx1 + 1.0, cy1), (rvx, cy1 - (rvx - cx1 - 1.0)), (rvx, y2w)], N("A1", "34"))
+    bd.track([C1_POS, (rvx - (cy1 - y2w), cy1), (rvx, y2w)], N("A1", "34"))   # level, then 45 deg onto the wiper pad
     agnd = N("A1", "33")
     c2 = (cx1, cy1 + 2.9)
     bd.track([p33, (cx1, p33[1])], agnd)                                   # AGND to C1 pad 2
@@ -551,7 +586,7 @@ def build_board():
     bd.track([(SER_SDA[0] + 2.9, p31[1]), (XD, p31[1]), (XD + (p31[1] - Y_SDA), Y_SDA),
               (cx + 3.81, Y_SDA), (cx + 3.81, cy)], N("J1", "2"))
     sx, sy = SER_SCL
-    bd.track([p32, (XC, p32[1]), (XC + (p32[1] - Y_SCL), Y_SCL), (sx, Y_SCL)], N("A1", "32"))
+    bd.track([p32, (XC, p32[1]), (XC + (p32[1] - Y_SCL), Y_SCL), (sx, Y_SCL), (sx, sy)], N("A1", "32"))
     fp = place(bd, comps, pin_net, "R15", sx, sy, rot=R_ROT_UP, ref_at=(2.6, -1.45))
     check_vertical(fp, sx, sy, -2.9)
     bd.track([(sx, sy - 2.9), (cx, cy)], N("J1", "1"))

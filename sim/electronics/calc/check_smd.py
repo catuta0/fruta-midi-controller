@@ -94,15 +94,35 @@ check("REQ-029 min track width >= 0.8 mm", min(min(v) for v in widths.values()) 
 check("REQ-029 power >= 1.2 mm", all(min(widths[n]) >= 1.2 - 1e-9 for n in NET_PWR if n in widths), {n: sorted(widths[n]) for n in NET_PWR if n in widths})
 check("REQ-029 signal >= 1.0 mm except short stubs", all(x[2] <= 6.0 for x in stubs), "%d stub segments below 1.0 mm, longest %.2f mm; nets %s" % (len(stubs), max([x[2] for x in stubs] or [0]), sorted({x[0] for x in stubs})))
 
-# 3. Pico keep-outs: tracks and every F.Cu pad (independent of the DRC rule area)
-KO = {"TP/USB (T-090)": (9.52, 0.48, 17.27, 14.98), "SWD pads": (9.45, 47.83, 17.33, 52.23)}
+# 3. Pico keep-outs: tracks and every F.Cu pad (independent of the DRC rule area). T-103: rectangles follow the A1
+# position read from the board (they were fixed board coordinates for A1 at (4.5, 2.0)).
+fa1 = board.FindFootprintByReference("A1")
+A1X, A1Y = fa1.GetPosition().x * TOMM - ox, fa1.GetPosition().y * TOMM - oy
+DY = A1Y - 2.0
+KO = {"TP/USB (T-090)": (9.52, 0.48 + DY, 17.27, 14.98 + DY), "SWD pads": (9.45, 47.83 + DY, 17.33, 52.23 + DY)}
 its = items(board)
 for it in its:
     it.segs = [((a[0] - ox, a[1] - oy), (b[0] - ox, b[1] - oy)) for a, b in it.segs]
 for name, r in KO.items():
     m = [(rect_margin(it, r), it.desc, it.net) for it in its]
     m.sort(key=lambda x: x[0])
-    check("copper outside Pico keep-out %s" % name, m[0][0] >= 0.0, "nearest copper margin %.2f mm: %s [%s]; rectangle %s" % (m[0][0], m[0][1], m[0][2], r))
+    check("copper outside Pico keep-out %s" % name, m[0][0] >= 0.0, "nearest copper margin %.2f mm: %s [%s]; rectangle %s" % (m[0][0], m[0][1], m[0][2], tuple(round(v, 2) for v in r)))
+# T-103 (F3-003): Pico 2 underside features, SOURCE Pico 2 datasheet Fig. 5 (origin bottom-left of the 21 x 51 mm board,
+# USB at the top): test points 1.5 x 1.5 mm; USB shell pads A-D taken as 1.8 x 1.8 mm squares (ASSUMPTION, the larger
+# dimension of the drawn 1.1 x 1.8 and 1.05 x 1.45 mm pads in both axes, conservative). Board x = A1X - 1.61 + X,
+# board y = A1Y - 1.37 + (51 - Y) (CALCULATION). Criterion: every copper item >= 0.6 mm from every feature.
+PICO2 = [("TP7 1V1", 11.5, 30.5, 1.5), ("TP (8,43)", 8.0, 43.0, 1.5), ("TP (8,40.5)", 8.0, 40.5, 1.5), ("TP (8,38)", 8.0, 38.0, 1.5),
+         ("TP (9.5,49.8)", 9.5, 49.8, 1.5), ("TP (11.5,49.8)", 11.5, 49.8, 1.5), ("TP (10.5,46.5)", 10.5, 46.5, 1.5),
+         ("shell A", 7.775, 49.5, 1.8), ("shell B", 13.225, 49.5, 1.8), ("shell C", 8.075, 46.47, 1.8), ("shell D", 12.925, 46.47, 1.8)]
+worst = []
+for name, X, Y, sz in PICO2:
+    cxp, cyp = A1X - 1.61 + X, A1Y - 1.37 + (51.0 - Y)
+    r = (cxp - sz / 2, cyp - sz / 2, cxp + sz / 2, cyp + sz / 2)
+    m = min((rect_margin(it, r), it.desc, it.net) for it in its)
+    worst.append((m[0], name, m[1], m[2]))
+worst.sort()
+check("T-103 copper >= 0.6 mm from every Pico 2 underside feature (11 features, Fig. 5)", worst[0][0] >= 0.6 - 1e-6,
+      "worst %.2f mm at %s: %s [%s]; TP7 %.2f mm" % (worst[0][0], worst[0][1], worst[0][2], worst[0][3], [w[0] for w in worst if w[1] == "TP7 1V1"][0]))
 
 # 4. no track under R1-R12 bodies between the pads
 fps = {fp.GetReference(): fp for fp in board.GetFootprints()}
@@ -138,8 +158,16 @@ check("A1 outer land edge inside board >= 0.5 mm", r1[0] >= 0.5, "%.2f mm" % r1[
 
 a2 = {p.GetNumber(): p for p in fps["A2"].Pads()}
 pos = lambda p: (p.GetPosition().x * TOMM - ox, p.GetPosition().y * TOMM - oy)
-check("A2 20 pads, pitch 2.54, rows 15.24 mm", len(a2) == 20 and abs(pos(a2["2"])[0] - pos(a2["1"])[0] - 2.54) < 1e-3 and abs(pos(a2["1"])[1] - pos(a2["14"])[1] - 15.24) < 1e-3, "%d pads, rows %.3f mm" % (len(a2), pos(a2["1"])[1] - pos(a2["14"])[1]))
-check("A2 pad 1.8 x 2.4 mm, gap >= 0.6", all(abs(p.GetSize(pcbnew.F_Cu).x * TOMM - 1.8) < 1e-3 and abs(p.GetSize(pcbnew.F_Cu).y * TOMM - 2.4) < 1e-3 for p in a2.values()), "gap %.2f mm" % (2.54 - 1.8))
+# T-103 (F3-001): lands lengthened outward, so test the header pin positions (module centre +- 8.255 / 6.985 mm, SOURCE
+# Adafruit 1982 Eagle files via T-090) against the lands instead of the pad centres.
+fa2 = fps["A2"]
+A2X, A2Y = fa2.GetPosition().x * TOMM - ox, fa2.GetPosition().y * TOMM - oy
+pins = {str(1 + j): (A2X - 15.24 + 2.54 * j, A2Y + 8.255) for j in range(13)}
+pins.update({str(14 + k): (A2X - 7.62 + 2.54 * k, A2Y - 6.985) for k in range(7)})
+inside = [n for n, (x, y) in pins.items() if not in_rect((x, y), (lambda r: (r[0] + 0.9 - 1e-3, r[1] + 1.2 - 1e-3, r[2] - 0.9 + 1e-3, r[3] - 1.2 + 1e-3))(pad_rect(a2[n])))]
+check("A2 20 lands, every header pin >= 0.9 mm (x) / 1.2 mm (y) inside its land", len(a2) == 20 and not inside and abs(pos(a2["2"])[0] - pos(a2["1"])[0] - 2.54) < 1e-3, "%d pads, pins not inside: %s" % (len(a2), inside))
+ag = min(pad_rect(a2[str(n + 1)])[0] - pad_rect(a2[str(n)])[2] for n in list(range(1, 13)) + list(range(14, 20)))
+check("A2 land gap >= 0.6 mm", ag >= 0.6 - 1e-6, "%.2f mm" % ag)
 
 r1p = {p.GetNumber(): p for p in fps["R1"].Pads()}
 g = pad_rect(r1p["2"])[1] - pad_rect(r1p["1"])[3]
@@ -175,7 +203,7 @@ cx, cy = sum(v[0] for v in holes.values()) / 4, sum(v[1] for v in holes.values()
 ring = sorted(holes.values(), key=lambda v: math.atan2(v[1] - cy, v[0] - cx))
 area = abs(sum(ring[i][0] * ring[(i + 1) % 4][1] - ring[(i + 1) % 4][0] * ring[i][1] for i in range(4))) / 2
 check("T-092 area of the hole quadrilateral >= 60 % of the board (criterion chosen in T-092)", area / (W * H) >= 0.60, "%.0f mm2 = %.1f %% of %.0f mm2" % (area, 100 * area / (W * H), W * H))
-USB_END = (PICO_X + 8.89, 0.63)                    # centre of the Pico USB end: pin 1 column + 8.89, module end y 2.0 - 1.37 (SOURCE RP-008307-DS-2 via T-090)
+USB_END = (A1X + 8.89, A1Y - 1.37)                 # centre of the Pico USB end: pin 1 column + 8.89, module end 1.37 above pin 1 (SOURCE RP-008307-DS-2 via T-090)
 d_usb = sorted((math.hypot(v[0] - USB_END[0], v[1] - USB_END[1]), k) for k, v in holes.items())
 check("T-092 nearest hole <= 20 mm from the centre of the Pico USB end (criterion chosen in T-092; T-091 had 63.6 mm)", d_usb[0][0] <= 20.0, "%s at %.2f mm; next %s at %.2f mm" % (d_usb[0][1], d_usb[0][0], d_usb[1][1], d_usb[1][0]))
 BOARD_T = 1.6                                       # ASSUMPTION standard FR-4
@@ -218,5 +246,40 @@ sw_r16 = [g for g in gaps if {g[1], g[2]} == {"R16", "SW1"}]
 check("T-092 SW1 and R16 designators >= 2.0 mm apart on the assembly map (criterion chosen in T-092)", sw_r16 and sw_r16[0][0] >= 2.0, "gap %.2f mm" % sw_r16[0][0])
 check("T-092 all reference designators apart >= 0.2 mm on the assembly map (F.Fab)", gaps[0][0] >= 0.2, "%d designators; worst %.2f mm (%s, %s)" % (len(boxes), gaps[0][0], gaps[0][1], gaps[0][2]))
 
+# 9. T-103: hand-soldered lands reach >= 1.0 mm beyond the part body (or the module outline including the header strip),
+# so the iron touches the land and the joint shows a fillet from outside. Bodies in footprint-local mm (largest size).
+BODY = {
+    "A1": ((-1.61, -1.37, 19.39, 49.63), "Pico 21 x 51 mm outline (SOURCE RP-008307-DS-2)"),
+    "A2": ((-16.51, -9.525, 16.51, 9.525), "module 33.02 x 19.05 mm incl. strips (SOURCE Adafruit 1982 Eagle via T-090)"),
+    "R": ((3.45 - 3.225, -1.675, 3.45 + 3.225, 1.675), "2512 L 6.45 W 3.35 max (SOURCE YAGEO RC_L; W tolerance ASSUMPTION +-0.15)"),
+    "RS": ((1.45 - 1.6, -0.85, 1.45 + 1.6, 0.85), "1206 L 3.20 W 1.70 max (SOURCE YAGEO RC_L; W ASSUMPTION)"),
+    "C1": ((1.45 - 1.7, -0.9, 1.45 + 1.7, 0.9), "1206 C L 3.40 W 1.80 max (ASSUMPTION 3.2/1.6 +- 0.2)"),
+    "SW1": ((-3.1, -3.1, 3.1, 3.1), "B3S 6.0 x 6.0 mm + 0.1 (SOURCE Omron B3S; tolerance ASSUMPTION)"),
+}
+def to_board(fp, x, y):
+    a = math.radians(fp.GetOrientationDegrees())
+    px, py = fp.GetPosition().x * TOMM - ox, fp.GetPosition().y * TOMM - oy
+    return px + x * math.cos(a) + y * math.sin(a), py - x * math.sin(a) + y * math.cos(a)
+LAND_MIN = 1.0
+for ref in ["A1", "A2", "SW1", "C1"] + ["R%d" % i for i in range(1, 17)]:
+    fp = fps[ref]
+    key = ref if ref in BODY else ("RS" if int(ref[1:]) >= 13 else "R")
+    (x1, y1, x2, y2), lab = BODY[key]
+    cs = [to_board(fp, x, y) for x, y in ((x1, y1), (x2, y1), (x2, y2), (x1, y2))]
+    b = (min(c[0] for c in cs), min(c[1] for c in cs), max(c[0] for c in cs), max(c[1] for c in cs))
+    out = []
+    for pd in fp.Pads():
+        r = pad_rect(pd)
+        out.append((max(b[0] - r[0], r[2] - b[2], b[1] - r[1], r[3] - b[3]), pd.GetNumber()))
+    w = min(out)
+    if ref in ("A1", "A2", "SW1", "C1", "R1", "R13"):
+        print("#   land beyond body %-3s min %.2f mm (pad %s), body %s" % (ref, w[0], w[1], lab))
+    check("T-103 %s every land >= %.1f mm of copper outside the body/strip outline" % (ref, LAND_MIN), w[0] >= LAND_MIN - 1e-6, "min %.2f mm (pad %s)" % w)
+# 10. T-103 (F3-002): the USB receptacle face stands out beyond the board edge by at least the cutting tolerance.
+USB_FACE = 1.30                                     # receptacle face beyond the module end (SOURCE RP-008307 via T-090)
+CUT_TOL = 1.0                                       # ASSUMPTION: 0.5 mm transfer/etch registration + 0.5 mm hand trim
+face = A1Y - 1.37 - USB_FACE
+check("T-103 USB receptacle face >= %.1f mm beyond the board edge (cutting tolerance)" % CUT_TOL, -face >= CUT_TOL - 1e-6,
+      "module end y %.2f mm, face y %.2f mm: %.2f mm beyond the edge y 0" % (A1Y - 1.37, face, -face))
 print("SUMMARY: %d checks, %d PASS, %d FAIL" % (len(res), res.count(True), res.count(False)))
 sys.exit(0 if all(res) else 1)

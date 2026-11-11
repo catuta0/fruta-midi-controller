@@ -1,23 +1,23 @@
 # calc_usb_pry.py  CALCULATION (T-092); plate D = 7.68 N m; inputs and limits in the header
 == T-091 hole set: holes [(8.0, 64.0), (95.0, 5.0), (96.0, 38.0), (88.5, 30.5)] mm
-   nearest hole to the USB end centre (13.39, 0.63) mm: 63.60 mm (CALCULATION)
-   p =  8: w at load 0.3129 mm/N; screw force per N applied [0.661, 0.941, -3.735, 3.133] (sum 1.000)
-   p = 10: w at load 0.3158 mm/N; screw force per N applied [0.67, 0.972, -3.669, 3.027] (sum 1.000)
-   p = 12: w at load 0.3179 mm/N; screw force per N applied [0.675, 0.992, -3.627, 2.96] (sum 1.000)
-   p = 14: w at load 0.3190 mm/N; screw force per N applied [0.678, 1.003, -3.602, 2.921] (sum 1.000)
-   sensitivity, screw spring 1e7 N/m at p = 14: w at load 0.2945 mm/N
+   nearest hole to the USB end centre (13.39, 0.11) mm: 64.12 mm (CALCULATION)
+   p =  8: w at load 0.3184 mm/N; screw force per N applied [0.659, 0.951, -3.764, 3.154] (sum 1.000)
+   p = 10: w at load 0.3214 mm/N; screw force per N applied [0.668, 0.982, -3.697, 3.047] (sum 1.000)
+   p = 12: w at load 0.3236 mm/N; screw force per N applied [0.673, 1.002, -3.654, 2.979] (sum 1.000)
+   p = 14: w at load 0.3246 mm/N; screw force per N applied [0.677, 1.013, -3.63, 2.94] (sum 1.000)
+   sensitivity, screw spring 1e7 N/m at p = 14: w at load 0.2998 mm/N
 == current hole set: holes [(5.0, 65.0), (96.0, 4.0), (96.5, 58.0), (29.8, 4.0)] mm
-   nearest hole to the USB end centre (13.39, 0.63) mm: 16.75 mm (CALCULATION)
-   p =  8: w at load 0.0250 mm/N; screw force per N applied [0.047, -0.113, -0.116, 1.182] (sum 1.000)
-   p = 10: w at load 0.0260 mm/N; screw force per N applied [0.049, -0.111, -0.118, 1.179] (sum 1.000)
-   p = 12: w at load 0.0264 mm/N; screw force per N applied [0.05, -0.11, -0.119, 1.179] (sum 1.000)
-   p = 14: w at load 0.0266 mm/N; screw force per N applied [0.05, -0.109, -0.119, 1.178] (sum 1.000)
-   sensitivity, screw spring 1e7 N/m at p = 14: w at load 0.0253 mm/N
+   nearest hole to the USB end centre (13.39, 0.11) mm: 16.86 mm (CALCULATION)
+   p =  8: w at load 0.0257 mm/N; screw force per N applied [0.041, -0.114, -0.118, 1.191] (sum 1.000)
+   p = 10: w at load 0.0267 mm/N; screw force per N applied [0.042, -0.111, -0.12, 1.189] (sum 1.000)
+   p = 12: w at load 0.0272 mm/N; screw force per N applied [0.043, -0.11, -0.121, 1.188] (sum 1.000)
+   p = 14: w at load 0.0274 mm/N; screw force per N applied [0.043, -0.11, -0.121, 1.188] (sum 1.000)
+   sensitivity, screw spring 1e7 N/m at p = 14: w at load 0.0261 mm/N
 
-F = 10 N: deflection at the USB end, linear model: T-091 3.19 mm; current 0.27 mm; ratio 12.0
-   largest screw force: T-091 36.0 N; current 11.8 N
-F = 30 N: deflection at the USB end, linear model: T-091 9.57 mm; current 0.80 mm; ratio 12.0
-   largest screw force: T-091 108.1 N; current 35.3 N
-RESULT: board deflection at the USB end reduced by a factor 12.0 by the new hole set (ratio, CALCULATION on ASSUMPTION inputs)
+F = 10 N: deflection at the USB end, linear model: T-091 3.25 mm; current 0.27 mm; ratio 11.9
+   largest screw force: T-091 36.3 N; current 11.9 N
+F = 30 N: deflection at the USB end, linear model: T-091 9.74 mm; current 0.82 mm; ratio 11.9
+   largest screw force: T-091 108.9 N; current 35.6 N
+RESULT: board deflection at the USB end reduced by a factor 11.9 by the new hole set (ratio, CALCULATION on ASSUMPTION inputs)
 NOT CHANGED: castellation peel margin 0.57-0.75 at 30 N (T-090, rigid carrier and module) does not depend on hole positions
 NOT QUANTIFIED: extra joint peel caused by carrier curvature; the Pico stiffening the carrier; in-plane plug forces

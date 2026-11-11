@@ -34,11 +34,12 @@ I30 = 2.0 * KV
 L_MM = (0.7e-9, 1.0e-9)
 # T-092, board without sockets (ADR-023). Series elements between the board trunk and the two IC grounds (ASSUMPTION):
 #   Pico castellation joint: 0.5 ... 1.5 nH (short solder fillet + module edge plating, about 1 mm at 0.5 ... 1.5 nH/mm)
-#   MPR121 module header pin butted on the pad: stand-off 2.5 mm (T-090 ASSUMPTION) + through the 1.6 mm module board
-#     (ASSUMPTION) = 4.1 mm at 0.7 ... 1.2 nH/mm = 2.9 ... 4.9 nH
+#   MPR121 module header pin on the pad (T-103, F3-001 option a): exposed leg 3.0 mm + strip 2.5 mm (ASSUMPTION, standard
+#     2.54 mm header) + through the 1.6 mm module board (ASSUMPTION) = 7.1 mm at 0.7 ... 1.2 nH/mm = 5.0 ... 8.5 nH
+#     (T-092 had 4.1 mm, 2.9 ... 4.9 nH, with the strip butted on the pad)
 # V1.2 used 3 ... 10 nH for female socket + male header pin.
 L_CAST = (0.5e-9, 1.5e-9)
-L_MODPIN = (2.9e-9, 4.9e-9)
+L_MODPIN = (5.0e-9, 8.5e-9)
 L_PIN = (L_CAST[0] + L_MODPIN[0], L_CAST[1] + L_MODPIN[1])
 R_SER, V_CLAMP = 220.0, 1.5       # R15/R16 (SOURCE schematic); two diode drops in the path (ASSUMPTION)
 HBM_RP2040_KV = 4.0               # SOURCE EE-S28: RP2040 HBM 4 kV (JEDEC JS-001, "Digital (FT) pins only"), CDM 500 V
@@ -88,9 +89,12 @@ def main():
             pads[(fp.GetReference(), p.GetNumber())] = (round(p.GetPosition().x * TOMM - ox, 3),
                                                         round(p.GetPosition().y * TOMM - oy, 3))
     p23 = pads[("A1", "23")]
-    mod_gnd = pads[("A2", "1")]
+    # T-103: the A2 land now runs outward past the pin, so take the header pin position (module centre - 15.24, + 8.255 mm,
+    # SOURCE Adafruit 1982 via T-090), where the GND track starts, instead of the land centre
+    fa2 = board.FindFootprintByReference("A2")
+    mod_gnd = (round(fa2.GetPosition().x * TOMM - ox - 15.24, 3), round(fa2.GetPosition().y * TOMM - oy + 8.255, 3))
     print("# calc_gnd_bounce.py  CALCULATION (T-073, C2-005; T-092 no sockets) on %s (KiCad %s)" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
-    print("# series elements (ASSUMPTION): castellation %.1f-%.1f nH + butted module pin %.1f-%.1f nH = %.1f-%.1f nH (V1.2: 3-10 nH socket + header)"
+    print("# series elements (ASSUMPTION): castellation %.1f-%.1f nH + module header pin %.1f-%.1f nH = %.1f-%.1f nH (V1.2: 3-10 nH socket + header)"
           % (L_CAST[0] * 1e9, L_CAST[1] * 1e9, L_MODPIN[0] * 1e9, L_MODPIN[1] * 1e9, L_PIN[0] * 1e9, L_PIN[1] * 1e9))
     # node where the module GND branch joins the terminal trunk: the vertex shared by the module->Pico and
     # terminal->Pico shortest paths that is farthest from the Pico

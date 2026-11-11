@@ -1,26 +1,27 @@
 # check_smd.py  MEASUREMENT on hardware/frutamidi.kicad_pcb (KiCad 10.0.4); board coordinates (mm) from the corner
 PASS  ADR-023 tracks only on F.Cu :: 121 segments on ['F.Cu']
 PASS  ADR-023 no vias :: 0 vias
-PASS  ADR-023 no copper pour (rule areas only) :: 0 board zones, 2 footprint rule areas, 0 copper zones
+PASS  ADR-023 no copper pour (rule areas only) :: 0 board zones, 3 footprint rule areas, 0 copper zones
 PASS  ADR-023 only SMD pads plus NPTH mounting holes :: plated/through [], on B.Cu []
 PASS  ADR-023 exactly 4 M3 holes in the board file :: NPTH [('H1', 3.2), ('H2', 3.2), ('H3', 3.2), ('H4', 3.2)]
 PASS  drill file merged holes :: 4 hits in hardware/fabrication/gerbers/frutamidi.drl (expected 4)
 PASS  REQ-029 min track width >= 0.8 mm :: min 0.80 mm
 PASS  REQ-029 power >= 1.2 mm :: {'/S7': [1.2], 'GND': [1.2], '+3V3': [1.2], '/S1': [1.2]}
 PASS  REQ-029 signal >= 1.0 mm except short stubs :: 5 stub segments below 1.0 mm, longest 5.08 mm; nets ['/S2', '/S3', '/S4', '/S5', '/S6']
-PASS  copper outside Pico keep-out TP/USB (T-090) :: nearest copper margin 1.52 mm: track (53.20,57.08)-(57.40,57.08) [GND]; rectangle (9.52, 0.48, 17.27, 14.98)
-PASS  copper outside Pico keep-out SWD pads :: nearest copper margin 2.05 mm: track (57.40,95.18)-(69.40,95.18) [GND]; rectangle (9.45, 47.83, 17.33, 52.23)
+PASS  copper outside Pico keep-out TP/USB (T-090) :: nearest copper margin 1.52 mm: track (57.40,56.56)-(57.40,94.66) [GND]; rectangle (9.52, -0.04, 17.27, 14.46)
+PASS  copper outside Pico keep-out SWD pads :: nearest copper margin 2.05 mm: track (57.40,94.66)-(69.40,94.66) [GND]; rectangle (9.45, 47.31, 17.33, 51.71)
+PASS  T-103 copper >= 0.6 mm from every Pico 2 underside feature (11 features, Fig. 5) :: worst 2.14 mm at TP (8,38): track (57.40,56.56)-(57.40,94.66) [GND]; TP7 3.66 mm
 PASS  ADR-023 no copper under R1-R12 bodies between the pads :: 0 intrusions [] (body width 3.2 mm, SOURCE YAGEO RC_L V.11 Table 1: W 3.10 +- 0.15 mm)
 PASS  A1 inner land width 16.18 mm (SOURCE RP-008307-DS-2 Fig. 5) :: 16.180 mm
 PASS  A1 outer edge = module edge + 1.79 mm (21 + 2*1.79 = 24.58) :: 24.580 mm
 PASS  A1 40 pads 1.6 x 4.2 mm :: 40 pads
 PASS  A1 pad gap >= 0.6 mm :: 0.94 mm
 PASS  A1 outer land edge inside board >= 0.5 mm :: 1.10 mm
-PASS  A2 20 pads, pitch 2.54, rows 15.24 mm :: 20 pads, rows 15.240 mm
-PASS  A2 pad 1.8 x 2.4 mm, gap >= 0.6 :: gap 0.74 mm
+PASS  A2 20 lands, every header pin >= 0.9 mm (x) / 1.2 mm (y) inside its land :: 20 pads, pins not inside: []
+PASS  A2 land gap >= 0.6 mm :: 0.74 mm
 PASS  R1-R12 land gap G = 5.0 mm (ADR-023) :: 5.000 mm
 PASS  RC2512 termination lands on the pad at all L, A (CALCULATION) :: termination inner edge 2.33..2.93, outer edge 3.12..3.23; pad 2.50..4.40 mm
-PASS  SW1 land 9.5 / 6.4 / 4.5 / 1.3 (SOURCE Omron B3S p.2): rows 4.5, centres 7.95 :: [('1L', (27.52499999999999, 27.97999999999999)), ('1R', (35.474999999999994, 27.97999999999999)), ('2L', (27.52499999999999, 32.47999999999999)), ('2R', (35.474999999999994, 32.47999999999999))]
+PASS  SW1 land 9.5 / 6.4 / 4.5 / 1.3 (SOURCE Omron B3S p.2): rows 4.5, centres 7.95 :: [('1L', (27.52499999999999, 27.459999999999994)), ('1R', (35.474999999999994, 27.459999999999994)), ('2L', (27.52499999999999, 31.959999999999994)), ('2R', (35.474999999999994, 31.959999999999994))]
 PASS  JP1 gap >= 1.8 mm :: pitch 3.81, pad 1.94, gap 1.87 mm (CALCULATION)
 PASS  REQ-031 A1 pin map unchanged :: {'31': '/SDA_PICO', '32': '/SCL_PICO', '29': '/BTN', '34': '/POT', '33': '/AGND', '36': '+3V3', '3': 'GND', '8': 'GND', '13': 'GND', '18': 'GND', '23': 'GND', '28': 'GND', '38': 'GND'}
 PASS  A1 connected pads = 13 (6 signal/power + 7 GND) :: 13
@@ -28,13 +29,13 @@ PASS  A1 connected pads = 13 (6 signal/power + 7 GND) :: 13
 PASS  T-092 one hole per board quadrant :: ['LB', 'LT', 'RB', 'RT']
 PASS  T-092 min distance between holes >= 45 mm (criterion chosen in T-092; T-091 had 10.6 mm) :: 54.00 mm (H2-H3)
 PASS  T-092 area of the hole quadrilateral >= 60 % of the board (criterion chosen in T-092) :: 4491 mm2 = 64.2 % of 7000 mm2
-PASS  T-092 nearest hole <= 20 mm from the centre of the Pico USB end (criterion chosen in T-092; T-091 had 63.6 mm) :: H4 at 16.75 mm; next H1 at 64.91 mm
+PASS  T-092 nearest hole <= 20 mm from the centre of the Pico USB end (criterion chosen in T-092; T-091 had 63.6 mm) :: H4 at 16.86 mm; next H1 at 65.43 mm
 PASS  T-092 H1 drill edge to board edge >= board thickness 1.6 mm :: 3.40 mm
-PASS  T-092 H1 washer r 3.5 mm clear of copper >= 0.6 mm :: washer 10.44 mm, pan head r 2.8 11.14 mm, nearest A1 pad 20 [unconnected-(A1-GPIO15-Pad20)]
-PASS  T-092 H1 washer r 3.5 mm clear of part courtyards :: washer 9.20 mm, pan head 9.90 mm, nearest courtyard A1
+PASS  T-092 H1 washer r 3.5 mm clear of copper >= 0.6 mm :: washer 10.96 mm, pan head r 2.8 11.66 mm, nearest A1 pad 20 [unconnected-(A1-GPIO15-Pad20)]
+PASS  T-092 H1 washer r 3.5 mm clear of part courtyards :: washer 9.72 mm, pan head 10.42 mm, nearest courtyard A1
 PASS  T-092 H2 drill edge to board edge >= board thickness 1.6 mm :: 2.40 mm
-PASS  T-092 H2 washer r 3.5 mm clear of copper >= 0.6 mm :: washer 2.86 mm, pan head r 2.8 3.56 mm, nearest R14 pad 1 [+3V3]
-PASS  T-092 H2 washer r 3.5 mm clear of part courtyards :: washer 2.57 mm, pan head 3.27 mm, nearest courtyard R14
+PASS  T-092 H2 washer r 3.5 mm clear of copper >= 0.6 mm :: washer 2.79 mm, pan head r 2.8 3.49 mm, nearest R14 pad 1 [+3V3]
+PASS  T-092 H2 washer r 3.5 mm clear of part courtyards :: washer 2.54 mm, pan head 3.24 mm, nearest courtyard R14
 PASS  T-092 H3 drill edge to board edge >= board thickness 1.6 mm :: 1.90 mm
 PASS  T-092 H3 washer r 3.5 mm clear of copper >= 0.6 mm :: washer 1.08 mm, pan head r 2.8 1.78 mm, nearest J2 pad 14 [GND]
 PASS  T-092 H3 washer r 3.5 mm clear of part courtyards :: washer 0.17 mm, pan head 0.87 mm, nearest courtyard J2
@@ -42,5 +43,32 @@ PASS  T-092 H4 drill edge to board edge >= board thickness 1.6 mm :: 2.40 mm
 PASS  T-092 H4 washer r 3.5 mm clear of copper >= 0.6 mm :: washer 0.60 mm, pan head r 2.8 1.30 mm, nearest track (34.50,8.42)-(34.50,2.00) [+3V3]
 PASS  T-092 H4 washer r 3.5 mm clear of part courtyards :: washer 0.30 mm, pan head 1.00 mm, nearest courtyard A1
 PASS  T-092 SW1 and R16 designators >= 2.0 mm apart on the assembly map (criterion chosen in T-092) :: gap 8.29 mm
-PASS  T-092 all reference designators apart >= 0.2 mm on the assembly map (F.Fab) :: 28 designators; worst 1.63 mm (R13, JP1)
-SUMMARY: 43 checks, 43 PASS, 0 FAIL
+PASS  T-092 all reference designators apart >= 0.2 mm on the assembly map (F.Fab) :: 28 designators; worst 2.23 mm (R13, JP1)
+#   land beyond body A1  min 1.79 mm (pad 21), body Pico 21 x 51 mm outline (SOURCE RP-008307-DS-2)
+PASS  T-103 A1 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.79 mm (pad 21)
+#   land beyond body A2  min 1.73 mm (pad 1), body module 33.02 x 19.05 mm incl. strips (SOURCE Adafruit 1982 Eagle via T-090)
+PASS  T-103 A2 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.73 mm (pad 1)
+#   land beyond body SW1 min 1.65 mm (pad 1), body B3S 6.0 x 6.0 mm + 0.1 (SOURCE Omron B3S; tolerance ASSUMPTION)
+PASS  T-103 SW1 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.65 mm (pad 1)
+#   land beyond body C1  min 1.05 mm (pad 2), body 1206 C L 3.40 W 1.80 max (ASSUMPTION 3.2/1.6 +- 0.2)
+PASS  T-103 C1 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.05 mm (pad 2)
+#   land beyond body R1  min 1.17 mm (pad 2), body 2512 L 6.45 W 3.35 max (SOURCE YAGEO RC_L; W tolerance ASSUMPTION +-0.15)
+PASS  T-103 R1 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R2 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R3 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R4 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R5 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R6 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R7 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R8 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R9 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R10 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R11 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+PASS  T-103 R12 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.17 mm (pad 2)
+#   land beyond body R13 min 1.05 mm (pad 2), body 1206 L 3.20 W 1.70 max (SOURCE YAGEO RC_L; W ASSUMPTION)
+PASS  T-103 R13 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.05 mm (pad 2)
+PASS  T-103 R14 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.05 mm (pad 2)
+PASS  T-103 R15 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.05 mm (pad 1)
+PASS  T-103 R16 every land >= 1.0 mm of copper outside the body/strip outline :: min 1.05 mm (pad 1)
+PASS  T-103 USB receptacle face >= 1.0 mm beyond the board edge (cutting tolerance) :: module end y 0.11 mm, face y -1.19 mm: 1.19 mm beyond the edge y 0
+SUMMARY: 65 checks, 65 PASS, 0 FAIL

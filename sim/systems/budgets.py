@@ -1,4 +1,4 @@
-"""System budgets for FrutaMIDI (systems-engineer). Revision 9 (T-099, ADR-026 YAGEO RC2512 3k3 R1..R12, Mouser BOM of T-096, PTV09A pot); revision 8 (T-093, CR-003 / ADR-023 SMD BOM, 3k0 R1..R12, off-board pot check A8); revision 7 (T-077, CR-002 C1 100 nF wiper filter: BOM row and settling check A7); revision 6 T-070 (R1..R12 price); revision 3 T-011, revision 2 was T-010, revision 1 T-009.
+"""System budgets for FrutaMIDI (systems-engineer). Revision 10 (T-104, T-103 board: BOM coverage check C2, board-level items D1-D3); revision 9 (T-099, ADR-026 YAGEO RC2512 3k3 R1..R12, Mouser BOM of T-096, PTV09A pot); revision 8 (T-093, CR-003 / ADR-023 SMD BOM, 3k0 R1..R12, off-board pot check A8); revision 7 (T-077, CR-002 C1 100 nF wiper filter: BOM row and settling check A7); revision 6 T-070 (R1..R12 price); revision 3 T-011, revision 2 was T-010, revision 1 T-009.
 
 T-011 changes: aftertouch burst plan = run-based reads from fm_mpr121.h (worst case over all 4096 masks);
 RP2040 pull-up 50..80 kOhm and IO levels from SOURCE S-17 (RP2040 datasheet Table 625); I2C series
@@ -435,17 +435,79 @@ PLANB_DELTA = 6.18                  # SOURCE T-097 handoff (CALCULATION there): 
 print("  INFO plan B (T-097, not adopted): +%.2f EUR -> core %s  CALCULATION" % (PLANB_DELTA, fmt((core[0] + PLANB_DELTA, core[1] + PLANB_DELTA), "EUR", 2)))
 print("  INFO R1..R12 stock 13 at Mouser PT for 12 needed (SOURCE T96-S0b, 2026-11-11); next delivery 2027-05-18")
 
+# C2 (T-104, F3-010): the budget BOM covers the fabrication BOM exactly; the knob is the only README-only part
+import csv as _csv, os as _os, re as _re
+_ROOT = _os.environ.get("FM_BUDGETS_ROOT") or _os.path.normpath(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "..", ".."))
+# FM_BUDGETS_ROOT (mutation tests only): read the BOM, README and calc outputs from a scratch tree and write budgets.md there
+BUDGET_MOUSER = {"358-SC0915": 1, "485-1982": 1, "603-RC2512FK-073K3L": 12, "603-RC1206FR-074K7L": 2, "603-RC1206FR-07220RL": 2,
+                 "187-CL31B104KBCNNNC": 1, "653-B3S-1000": 1, "652-PTV09A-4015FB103": 1}   # the BOM lines above, by Mouser number
+README_ONLY = {"179-SPK-016A": 1}                                                          # knob: no schematic symbol (T-103)
+csv_mouser = {}
+for row in _csv.DictReader(open(_os.path.join(_ROOT, "hardware", "fabrication", "bom-kicad.csv"), encoding="utf-8")):
+    csv_mouser[row["Mouser"]] = csv_mouser.get(row["Mouser"], 0) + int(row["Qty"])
+hw_readme_txt = open(_os.path.join(_ROOT, "hardware", "README.md"), encoding="utf-8").read()
+bom_q = sum(q for name, q, _, _ in BOM if not name.startswith(("Knob", "Single-sided")))
+check("C2 budget BOM = fabrication BOM (Mouser numbers and quantities); knob only in the README", csv_mouser == BUDGET_MOUSER and bom_q == sum(BUDGET_MOUSER.values())
+      and all(m in hw_readme_txt and m not in csv_mouser for m in README_ONLY),
+      "bom-kicad.csv %d lines / %d parts, budget %d parts; differences %s; knob in README %s"
+      % (len(csv_mouser), sum(csv_mouser.values()), bom_q, sorted(set(csv_mouser.items()) ^ set(BUDGET_MOUSER.items())), all(m in hw_readme_txt for m in README_ONLY)))
+ALT_EACH = 0.424                    # SOURCE T-103 (Mouser PT 71-CRCW25123K30FKEG, 10+ tier, 2026-11-11, ex VAT); datasheet NOT opened
+alt_delta = 12 * ALT_EACH - 12 * 0.109
+print("  INFO R-016 alternative Vishay CRCW25123K30FKEG: 12 x %.3f = %.2f EUR, +%.2f EUR -> core %s  CALCULATION (body size NOT CONFIRMED)"
+      % (ALT_EACH, 12 * ALT_EACH, alt_delta, fmt((core[0] + alt_delta, core[1] + alt_delta), "EUR", 2)))
+
+# =============================================================================================
+# (d) BOARD-LEVEL ITEMS FROM THE ELECTRONICS CALCULATIONS (T-104, after T-103); values read from the .out files
+# =============================================================================================
+print()
+print("=" * 90)
+print("(d) BOARD-LEVEL ITEMS (sim/electronics/calc outputs, T-103 board)")
+print("=" * 90)
+def _read(name):
+    try: return open(_os.path.join(_ROOT, "sim", "electronics", "calc", name), encoding="utf-8").read()
+    except OSError: return ""
+gb = _read("calc_gnd_bounce.out")
+m_v = _re.search(r"Worst case: module GND - Pico GND bounce ([\d.]+) V", gb)
+m_i = _re.search(r"<= ([\d.]+) A, <= ([\d.]+) nC per line", gb)
+HBM_I, HBM_Q = 2.67, 400.0          # SOURCE EE-S28 via calc_gnd_bounce: RP2040 HBM 4 kV, digital FT pins only (GP26/GP27 NOT CONFIRMED, R-010)
+if m_v and m_i:
+    vb, ii, qq = float(m_v.group(1)), float(m_i.group(1)), float(m_i.group(2))
+    print("  GND bounce module-Pico %.0f V for about 1 ns; per I2C line <= %.2f A, <= %.2f nC  CALCULATION on ASSUMPTION inputs (calc_gnd_bounce.out)" % (vb, ii, qq))
+    check("D1 injected I2C current and charge within the RP2040 HBM 4 kV equivalent (FT-pin rating; GP26/GP27 NOT CONFIRMED)", ii <= HBM_I and qq <= HBM_Q,
+          "%.2f A vs %.2f A (%.2fx), %.2f nC vs %.0f nC; bounce %.0f V / ~1 ns" % (ii, HBM_I, ii / HBM_I, qq, HBM_Q, vb))
+else:
+    check("D1 injected I2C current and charge within the RP2040 HBM 4 kV equivalent (FT-pin rating; GP26/GP27 NOT CONFIRMED)", False, "values not found in calc_gnd_bounce.out")
+ic = _read("calc_i2c_coupling.out")
+m_c = _re.findall(r"cell 0\.40 mm \(\d+ cells\): C\(SDA to pad\) ([\d.]+) fF", ic)
+m_n = _re.findall(r"= ([\d.]+) ADC counts \(touch threshold (\d+) counts\)", ic)
+COUPLE_MAX = 3.0                    # ASSUMPTION (REQ-038 proposal): half of RELEASE_THRESHOLD 6 (SOURCE FrutaMIDI.ino)
+if m_c and m_n:
+    cf, cnt, thr = float(m_c[-1]), float(m_n[-1][0]), int(m_n[-1][1])
+    print("  SDA to electrode pad %.1f fF; SDA full-swing step %.2f counts against TOUCH_THRESHOLD %d  CALCULATION (calc_i2c_coupling.out, current layout)" % (cf, cnt, thr))
+    check("D2 SDA coupling step <= %.0f counts (half RELEASE_THRESHOLD, REQ-038 proposal)" % COUPLE_MAX, cnt <= COUPLE_MAX, "%.2f counts (%.1f fF), touch threshold %d, margin %.1fx to the touch threshold" % (cnt, cf, thr, thr / cnt))
+else:
+    check("D2 SDA coupling step <= %.0f counts (half RELEASE_THRESHOLD, REQ-038 proposal)" % COUPLE_MAX, False, "values not found in calc_i2c_coupling.out")
+up = _read("calc_usb_pry.out")
+m_p = _re.search(r"F = 30 N:[^\n]*\n\s*largest screw force: T-091 [\d.]+ N; current ([\d.]+) N", up)
+SCREW_MAX = 100.0                   # ASSUMPTION (not sourced): allowable axial load on one M3 nylon screw in 1.6 mm FR-4, kept low for pull-through
+if m_p:
+    fs = float(m_p.group(1))
+    print("  USB pry 30 N: largest screw force %.1f N  CALCULATION on ASSUMPTION inputs (calc_usb_pry.out); castellation peel margin 0.57-0.75 at 30 N unchanged (R-013)" % fs)
+    check("D3 largest M3 screw force at a 30 N USB pull <= %.0f N (ASSUMPTION limit, not sourced)" % SCREW_MAX, fs <= SCREW_MAX, "%.1f N, %.1fx the applied 30 N" % (fs, fs / 30.0))
+else:
+    check("D3 largest M3 screw force at a 30 N USB pull <= %.0f N (ASSUMPTION limit, not sourced)" % SCREW_MAX, False, "value not found in calc_usb_pry.out")
+
 print()
 print("SUMMARY: %d checks, %d PASS, %d FAIL" % (len(checks), checks.count(True), checks.count(False)))
 
 # ---------------------------------------------------------------------------------------------
 # Generated report (review F-008): every number in reports/systems/budgets.md comes from this run.
 import os
-OUT_MD = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "reports", "systems", "budgets.md")
+OUT_MD = os.path.join(os.environ["FM_BUDGETS_ROOT"], "budgets.md") if os.environ.get("FM_BUDGETS_ROOT") else os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "reports", "systems", "budgets.md")
 L = []
 L.append("# FrutaMIDI system budgets")
 L.append("")
-L.append("Generated by `sim/systems/budgets.py` (revision 9, T-099, ADR-026: R1..R12 YAGEO RC2512FK-073K3L 3k3, Mouser BOM; revision 8 T-093 SMD board). Do not edit by hand: re-run the script. Raw output: `sim/systems/budgets.out`.")
+L.append("Generated by `sim/systems/budgets.py` (revision 10, T-104: T-103 board, BOM coverage, board-level items; revision 9 T-099 Mouser BOM). Do not edit by hand: re-run the script. Raw output: `sim/systems/budgets.out`.")
 L.append("Labels: SOURCE ids refer to `requirements/SOURCES_SYSTEMS.md`. Everything here is CALCULATION unless marked; nothing is MEASURED.")
 L.append("")
 L.append("**Checks:** %d PASS, %d FAIL." % (checks.count(True), checks.count(False)))
@@ -510,6 +572,12 @@ L.append("Basis: Mouser Portugal prices read 2026-11-11 (T-096), EUR excluding V
          "With VAT at 23 %% (ASSUMPTION rate) the core is %.2f–%.2f EUR. Shipping is NOT CONFIRMED. Excluded by ADR-007 D-7: consumables, wire, hot-melt, epoxy, USB cable, optional leads and hardware." % (mouser[0], core_vat[0], core_vat[1]))
 L.append("")
 L.append("Plan B (T-097 TVS clamps and 1 kOhm R1..R12, not adopted) adds %.2f EUR: core %.2f–%.2f EUR." % (PLANB_DELTA, core[0] + PLANB_DELTA, core[1] + PLANB_DELTA))
+L.append("")
+L.append("R-016 alternative Vishay CRCW25123K30FKEG at 0.424 EUR (10+, T-103) adds %.2f EUR: core %.2f–%.2f EUR (body size NOT CONFIRMED)." % (alt_delta, core[0] + alt_delta, core[1] + alt_delta))
+L.append("")
+L.append("## Board-level items (T-104, from sim/electronics/calc outputs)")
+L.append("")
+L.append("See checks D1–D3 above: GND bounce and injected I2C charge against the RP2040 FT-pin HBM equivalent (GP26/GP27 NOT CONFIRMED), SDA coupling against the 3-count REQ-038 proposal, and the largest M3 screw force at a 30 N USB pull against an unsourced 100 N ASSUMPTION limit.")
 L.append("")
 open(OUT_MD, "w").write("\n".join(L) + "\n")
 print("wrote reports/systems/budgets.md")

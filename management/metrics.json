@@ -264,6 +264,206 @@
       "label": "SIMULATION",
       "revision": "CR-003 (d7da0c2)",
       "evidence": "management/RISKS.md R-018, ADR-027 D-2"
+    },
+    {
+      "name": "v1.3_pico_anchor_y",
+      "value": 1.48,
+      "unit": "mm (board frame, origin top-left)",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out ADR-028 D-1; management/INTERFACES.json placement_mm A1"
+    },
+    {
+      "name": "v1.3_pico_end_inside_edge",
+      "value": 0.11,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out ADR-028 D-1 (design file; accepted short of flush, ADR-028 D-1)"
+    },
+    {
+      "name": "v1.3_usb_face_beyond_edge",
+      "value": 1.19,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out ADR-028 D-1 (SOURCE 1.30 mm face beyond the module end, RP-008307 via T-090); limit 1.0 mm cutting tolerance is an ASSUMPTION"
+    },
+    {
+      "name": "v1.3_cut_tolerance",
+      "value": 1.0,
+      "unit": "mm (0.5 transfer + 0.5 trim)",
+      "label": "ASSUMPTION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "management/handoffs/electronics-engineer-T-103.md; REQ-029 first-build list"
+    },
+    {
+      "name": "v1.3_a2_land_electrode_row",
+      "value": "1.8 x 4.2",
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out land table (13 pads)"
+    },
+    {
+      "name": "v1.3_a2_land_s_row",
+      "value": "1.8 x 5.515",
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out land table (7 pads, joined to J3)"
+    },
+    {
+      "name": "v1.3_a2_land_beyond_module_outline",
+      "value": "1.73-1.775",
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/electronics/calc/check_smd.out (T-103, design file)"
+    },
+    {
+      "name": "v1.3_module_header_strip_height",
+      "value": 2.5,
+      "unit": "mm",
+      "label": "ASSUMPTION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "management/handoffs/electronics-engineer-T-103.md; measure on first build (REQ-029)"
+    },
+    {
+      "name": "v1.3_module_pin_exposed_length",
+      "value": 3.0,
+      "unit": "mm",
+      "label": "ASSUMPTION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "hardware/README.md section 4 step 7 (cut length); measure on first build (REQ-029)"
+    },
+    {
+      "name": "v1.3_module_board_thickness",
+      "value": 1.6,
+      "unit": "mm",
+      "label": "ASSUMPTION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "management/handoffs/electronics-engineer-T-103.md; measure on first build (REQ-029)"
+    },
+    {
+      "name": "v1.3_module_underside_height",
+      "value": 5.5,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "3.0 mm pin + 2.5 mm strip (ASSUMPTIONS); hardware/README.md"
+    },
+    {
+      "name": "v1.3_module_board_top_height",
+      "value": 7.1,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "5.5 mm + 1.6 mm module board (ASSUMPTION); hardware/README.md"
+    },
+    {
+      "name": "v1.3_1206_resistor_land",
+      "value": "1.775 x 1.8",
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out land table (R13..R16)"
+    },
+    {
+      "name": "v1.3_c1_land",
+      "value": "1.875 x 1.8",
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out land table"
+    },
+    {
+      "name": "v1.3_c1_body_max",
+      "value": "3.4 x 1.8",
+      "unit": "mm",
+      "label": "ASSUMPTION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "management/handoffs/electronics-engineer-T-103.md (Samsung datasheet not opened)"
+    },
+    {
+      "name": "v1.3_keepout_areas",
+      "value": 3,
+      "unit": "rule areas",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out (TP/USB, SWD, Pico 2 TP7)"
+    },
+    {
+      "name": "v1.3_pico2_feature_clearance_worst",
+      "value": 2.14,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/electronics/calc/check_smd.out (T-103, 11 features, TP7 3.66 mm)"
+    },
+    {
+      "name": "v1.3_copper_clearance_min",
+      "value": 0.68,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out (C1.2 to SCL_PICO track)"
+    },
+    {
+      "name": "v1.3_copper_edge_clearance_min",
+      "value": 0.68,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/systems/pcb_rules_check.out (A1 pin 1)"
+    },
+    {
+      "name": "v1.3_gnd_bounce_worst",
+      "value": 330,
+      "unit": "V for about 1 ns",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/electronics/calc/calc_gnd_bounce.out (ASSUMPTION inputs); budgets D1"
+    },
+    {
+      "name": "v1.3_i2c_injected_peak",
+      "value": 1.49,
+      "unit": "A per line",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/electronics/calc/calc_gnd_bounce.out; budgets D1 (vs 2.67 A HBM FT-pin equivalent)"
+    },
+    {
+      "name": "v1.3_sda_pad_capacitance",
+      "value": 36.6,
+      "unit": "fF",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/electronics/calc/calc_i2c_coupling.out (0.40 mm mesh)"
+    },
+    {
+      "name": "v1.3_sda_coupling_step",
+      "value": 2.09,
+      "unit": "ADC counts (touch threshold 12)",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/electronics/calc/calc_i2c_coupling.out; budgets D2"
+    },
+    {
+      "name": "v1.3_usb_pry_screw_force_30N",
+      "value": 35.6,
+      "unit": "N",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "sim/electronics/calc/calc_usb_pry.out (ASSUMPTION inputs); budgets D3 (limit 100 N ASSUMPTION)"
+    },
+    {
+      "name": "v1.3_r016_alternative_12pcs",
+      "value": 5.09,
+      "unit": "EUR ex VAT",
+      "label": "CALCULATION",
+      "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
+      "evidence": "12 x 0.424 EUR SOURCE Mouser 71-CRCW25123K30FKEG via T-103; budgets.out INFO"
     }
   ]
 }
