@@ -3,11 +3,11 @@
 	(generator "pcbnew")
 	(generator_version "10.0")
 	(layer "F.Cu")
-	(descr "TT Electronics HPWC2512 pulse-rated chip resistor, land 1.9 x 3.35 mm, copper gap 5.0 mm (flashover rule)")
+	(descr "2512 chip resistor (YAGEO RC2512FK-073K3L), land 1.9 x 3.35 mm, copper gap 5.0 mm (flashover rule)")
 	(property "Reference" ""
 		(at 0 0 0)
 		(layer "F.Fab")
-		(uuid "cee6e332-7002-4e01-9cd1-9267441ee052")
+		(uuid "ec205266-fcfc-432f-857a-5a02328f5c50")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -18,7 +18,7 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "75746de3-eced-4f2a-baa1-2d160252ad44")
+		(uuid "a307c8df-4ed0-470a-994d-02c3f817d8f1")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -29,7 +29,7 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "b4321581-b976-414a-a84a-0e873300ae83")
+		(uuid "79062d99-fe4f-4daa-b6b7-dc0cda378357")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -40,7 +40,7 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "20223633-5916-46e7-82f3-84a02396271a")
+		(uuid "ab106330-9286-45c7-ae1e-5388d0697b72")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -57,7 +57,7 @@
 			(type default)
 		)
 		(layer "F.CrtYd")
-		(uuid "9ec93f9b-0940-422b-9d67-22b1661f4e3c")
+		(uuid "34758668-9858-4b74-94fd-0a9ee9dd74c0")
 	)
 	(fp_line
 		(start -1.2 1.925)
@@ -67,7 +67,7 @@
 			(type default)
 		)
 		(layer "F.CrtYd")
-		(uuid "2662c3fd-57e1-4e6d-89b1-522fd6eddf86")
+		(uuid "6d9166af-2e0c-44b6-bfd8-fc264ffd2284")
 	)
 	(fp_line
 		(start 8.1 -1.925)
@@ -77,7 +77,7 @@
 			(type default)
 		)
 		(layer "F.CrtYd")
-		(uuid "65ac4e1b-1202-44a5-b6ff-cab8a11bb1a1")
+		(uuid "18d9cfbc-2300-4e12-bb98-f9755f007aa0")
 	)
 	(fp_line
 		(start 8.1 1.925)
@@ -87,7 +87,7 @@
 			(type default)
 		)
 		(layer "F.CrtYd")
-		(uuid "c84da5bf-5523-437e-801b-8ae5a7adc238")
+		(uuid "d3789b14-dac4-43a0-89fe-af5efb3a60ee")
 	)
 	(fp_line
 		(start -0.95 -1.675)
@@ -97,7 +97,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "316a2550-8789-49ba-99d7-65f591891b12")
+		(uuid "0348fb42-2842-4d25-a763-d344825d10de")
 	)
 	(fp_line
 		(start -0.95 1.675)
@@ -107,27 +107,27 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "b40e380f-cd58-4717-9c03-c8c77fbd3ccb")
+		(uuid "30d8ecb6-657b-4c7a-a8e9-f0f49193ac27")
 	)
 	(fp_line
-		(start 0.2 -1.6)
-		(end 6.7 -1.6)
+		(start 0.275 -1.55)
+		(end 6.625 -1.55)
 		(stroke
 			(width 0.1)
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "7458e9f6-a092-4280-89b8-1a1c888fe573")
+		(uuid "c57cf9de-24f7-43d9-b251-4e69e6f5d073")
 	)
 	(fp_line
-		(start 0.2 1.6)
-		(end 0.2 -1.6)
+		(start 0.275 1.55)
+		(end 0.275 -1.55)
 		(stroke
 			(width 0.1)
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "ae1549f1-1836-48e4-ba89-57e19a841c7f")
+		(uuid "5c69e853-020d-4fd9-bfe0-211187e02a88")
 	)
 	(fp_line
 		(start 0.95 -1.675)
@@ -137,7 +137,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "3a30d30d-9c0b-4d6e-b5da-fe5a348df49e")
+		(uuid "f194cfb9-67d2-47f4-94fb-e47d9ca3d25f")
 	)
 	(fp_line
 		(start 0.95 1.675)
@@ -147,7 +147,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "4e147940-c40c-4e20-b3ad-4fb0c977d4df")
+		(uuid "6070679c-a2ca-40df-b490-a90afea7ae03")
 	)
 	(fp_line
 		(start 5.95 -1.675)
@@ -157,7 +157,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "e593ec99-b28e-4167-b5fe-9c234d548a44")
+		(uuid "b0991dcc-0da4-49c9-bfea-7ab032863f63")
 	)
 	(fp_line
 		(start 5.95 1.675)
@@ -167,27 +167,27 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "9326c993-34ea-4cf4-9358-1f65c9ae973b")
+		(uuid "d804bffe-11e5-4193-976b-69ff2db13e88")
 	)
 	(fp_line
-		(start 6.7 -1.6)
-		(end 6.7 1.6)
+		(start 6.625 -1.55)
+		(end 6.625 1.55)
 		(stroke
 			(width 0.1)
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "b6333e16-fcc8-45e1-b1b2-38c19dc7bdf1")
+		(uuid "9b4dd33a-44eb-4969-8a56-15e345a2ce5e")
 	)
 	(fp_line
-		(start 6.7 1.6)
-		(end 0.2 1.6)
+		(start 6.625 1.55)
+		(end 0.275 1.55)
 		(stroke
 			(width 0.1)
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "07c9371f-2971-42a9-be28-2eb4435b4905")
+		(uuid "8c311817-a94c-4855-8476-de86e28baae8")
 	)
 	(fp_line
 		(start 7.85 -1.675)
@@ -197,7 +197,7 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "54dd7881-fc6f-45e6-ae5b-ebec06454cf8")
+		(uuid "b25ba11e-48de-45e5-b3b5-d9af5a000f60")
 	)
 	(fp_line
 		(start 7.85 1.675)
@@ -207,21 +207,21 @@
 			(type default)
 		)
 		(layer "F.Fab")
-		(uuid "4e760286-ef10-417f-b232-76b9782c840a")
+		(uuid "f075d3e6-c6b9-4da9-b636-683f8c36eb58")
 	)
 	(pad "1" smd rect
 		(at 0 0)
 		(size 1.9 3.35)
 		(layers "F.Cu" "F.Mask" "F.Paste")
 		(thermal_bridge_angle 45)
-		(uuid "dbccf5fa-51c0-42ad-a553-d10c021e26dc")
+		(uuid "c2af8373-0ef8-4266-975c-ae5de85ff590")
 	)
 	(pad "2" smd rect
 		(at 6.9 0)
 		(size 1.9 3.35)
 		(layers "F.Cu" "F.Mask" "F.Paste")
 		(thermal_bridge_angle 45)
-		(uuid "56a54a0c-7e3e-4671-9811-0646cb589fd3")
+		(uuid "1e91e1f9-bd53-4019-93fa-51e712edd6b2")
 	)
 	(embedded_fonts no)
 	(model "${KICAD10_3DMODEL_DIR}/Resistor_SMD.3dshapes/R_2512_6332Metric.step"

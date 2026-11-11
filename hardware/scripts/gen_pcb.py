@@ -258,13 +258,13 @@ def build_footprints():
             item.SetPosition(V(7.0, 0.0))
     out[name] = fp
 
-    # --- R1-R12: TT HPWC2512, hand-solder land: pad 1.9 x 3.35 mm, copper gap G = 5.0 mm (T-090, ADR-023 D-1).
+    # --- R1-R12: 2512 chip (T-096 / ADR-026: YAGEO RC2512FK-073K3L; footprint name kept, it is in INTERFACES.json), hand-solder land: pad 1.9 x 3.35 mm, copper gap G = 5.0 mm (T-090, ADR-023 D-1).
     # Origin at pad 1 (ELE side); pad 2 at +6.9 mm along x (CALCULATION: 5.0 + 1.9).
     name = "R_2512_HPWC_G5.0mm"
-    fp = new_fp(name, "TT Electronics HPWC2512 pulse-rated chip resistor, land 1.9 x 3.35 mm, copper gap 5.0 mm (flashover rule)")
+    fp = new_fp(name, "2512 chip resistor (YAGEO RC2512FK-073K3L), land 1.9 x 3.35 mm, copper gap 5.0 mm (flashover rule)")
     add_pad(fp, "1", 0, 0, RECT, 1.9, 3.35)
     add_pad(fp, "2", 6.9, 0, RECT, 1.9, 3.35)
-    add_rect(fp, pcbnew.F_Fab, 0.2, -1.6, 6.7, 1.6)                        # body 6.5 x 3.2 mm nominal (SOURCE TT HPWC 09.23)
+    add_rect(fp, pcbnew.F_Fab, 0.275, -1.55, 6.625, 1.55)                  # body 6.35 x 3.1 mm nominal (SOURCE Mouser / YAGEO RC_L)
     add_rect(fp, pcbnew.F_CrtYd, -1.2, -1.925, 8.1, 1.925, 0.05)
     add_model(fp, MODELS + "Resistor_SMD.3dshapes/R_2512_6332Metric.step", offset=(3.45, 0, 0))
     out[name] = fp
@@ -630,7 +630,7 @@ def build_board():
     for k, lab in enumerate(("1 3V3", "2 WIPER", "3 AGND")):
         bd.text(lab, 39.6, RV_PAD[1] + 5.08 * k, pcbnew.F_Fab, 0.8)
     bd.text("SCALE", SW_C[0], SW_C[1] + 4.2, pcbnew.F_Fab, 1.0)
-    bd.text("R1 ... R12 = 3k0 HPWC2512 (E0 ... E11), keep solder and flux off the 5 mm gap", 61.0, 46.4, pcbnew.F_Fab, 0.9)
+    bd.text("R1 ... R12 = 3k3 1 % 2512 (E0 ... E11), keep solder and flux off the 5 mm gap", 61.0, 46.4, pcbnew.F_Fab, 0.9)
     for k, line in enumerate(("JP1 3V3 selector:", "ORIG = no white connectors", "QT = 2 white connectors")):
         bd.text(line, 75.0, 29.5 + 1.55 * k, pcbnew.F_Fab, 0.8)
     bd.text("ORIG", JP1[0] - 3.9, JP1[1], pcbnew.F_Fab, 0.9)

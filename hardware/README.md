@@ -1,6 +1,6 @@
 # FrutaMIDI: single-sided SMD PCB (version 1.3)
 
-A 100 × 70 mm board with copper on the **component side only**, designed for chemical etching at home (toner transfer or photosensitive board). Everything is surface-mounted, so the only holes are the 4 M3 mounting holes. The board carries a Raspberry Pi Pico soldered on its castellations, an Adafruit MPR121 module (1982) on butted header pins, 14 solder-wire pads for the electrodes and GND, a button, three wire pads for an off-board potentiometer, a 3.0 kΩ pulse-rated series resistor on each electrode, two I²C pull-up resistors and two 220 Ω I²C series resistors.
+A 100 × 70 mm board with copper on the **component side only**, designed for chemical etching at home (toner transfer or photosensitive board). Everything is surface-mounted, so the only holes are the 4 M3 mounting holes. The board carries a Raspberry Pi Pico soldered on its castellations, an Adafruit MPR121 module (1982) on butted header pins, 14 solder-wire pads for the electrodes and GND, a button, three wire pads for an off-board potentiometer, a 3.3 kΩ series resistor on each electrode, two I²C pull-up resistors and two 220 Ω I²C series resistors.
 
 ![Render of the board](fabrication/images/board-top.png)
 
@@ -31,7 +31,7 @@ A 100 × 70 mm board with copper on the **component side only**, designed for ch
 | [`fabrication/2-assembly-map.pdf`](fabrication/2-assembly-map.pdf) | Where each component goes, with references and pin 1. There is no silkscreen on the board: keep this page at the bench |
 | [`fabrication/frutamidi-schematic.pdf`](fabrication/frutamidi-schematic.pdf) | Schematic |
 | [`fabrication/gerbers/`](fabrication/gerbers/) | Gerbers + Excellon drill files, if you prefer to order the board |
-| [`fabrication/bom-kicad.csv`](fabrication/bom-kicad.csv) | BOM exported from KiCad, with manufacturer and part number columns |
+| [`fabrication/bom-kicad.csv`](fabrication/bom-kicad.csv) | BOM exported from KiCad, with manufacturer, part number and Mouser number columns |
 | `frutamidi.kicad_pro` / `.kicad_sch` / `.kicad_pcb` | KiCad 10 project, with its own libraries (`FrutaMIDI.kicad_sym`, `FrutaMIDI.pretty/`) |
 | [`scripts/`](scripts/) | Schematic and PCB generators, and `build_all.sh` (regenerates, checks and exports) |
 
@@ -39,16 +39,19 @@ A 100 × 70 mm board with copper on the **component side only**, designed for ch
 
 ### Components
 
+All parts below are sold by Mouser. One board costs about 13.84 EUR at Mouser Portugal prices of 2026-11-11 (12 resistors at the 10+ price, everything else at the single-unit price), excluding shipping and tax.
+
 | Ref. | Part | Qty | Notes |
 | --- | --- | --- | --- |
-| A1 | Raspberry Pi Pico, Raspberry Pi **SC0915** (Pico, Pico W, Pico 2, Pico 2 W; the castellated pads must be free, so **no** H version with headers fitted) | 1 | Surface-soldered on its castellated edge pads. There are no sockets: a failed Pico must be desoldered from the surface |
-| A2 | Adafruit MPR121 12-key capacitive touch breakout, Adafruit **1982** | 1 | Original or STEMMA QT: both work (section 5). Use the male headers supplied with it |
-| R1–R12 | Pulse-rated chip resistor 3.0 kΩ ±5 %, 2512, TT Electronics **HPWC2512-3K0JT18** (part number built from the datasheet pattern; no offer found at LCSC or in the Mouser search on 2026-11-09, replacement is an open decision, T-094) | 12 | One in series with each electrode. Do not substitute an ordinary 2512: this part is chosen for its pulse rating and for its 4.4 mm gap between terminations |
-| R13, R14 | Resistor 4.7 kΩ 1 %, 1206, thick film, FOJAN **FRC1206F4701TS** (LCSC C2907387, sold in 100s) | 2 | I²C pull-ups (SCL, SDA) |
-| R15, R16 | Resistor 220 Ω 1 %, 1206, thick film, FOJAN **FRC1206F2200TS** (LCSC C2933642, sold in 100s) | 2 | In series in SCL (R15) and SDA (R16), on the Pico side; they limit the current if a configuration wire goes to the wrong pad |
-| C1 | Ceramic capacitor 100 nF 50 V X7R, 1206, Samsung **CL31B104KBCNNNC** (LCSC C24497, sold in 20s) | 1 | Potentiometer wiper to AGND, near the Pico |
-| SW1 | Tactile switch, Omron **B3S-1000** (6 × 6 mm, SMD; LCSC C2733655, sold in 5s) | 1 | Height 4.3 mm |
-| RV1 | 10 kΩ linear potentiometer (B10K) off-board, Alps **RK09D1130C2P** (LCSC C361173; insulated flat shaft, 25 mm, taper 1B, Alps product page), connected by 3 wires, with an **insulated (plastic) shaft and insulating knob**. No knob in stock at LCSC on 2026-11-09; buy one that fits a flat shaft | 1 | Mount it in your enclosure. See [Electrical safety](#electrical-safety): a metal shaft is not protected. Keep the wires as short as your enclosure allows |
+| A1 | Raspberry Pi Pico, Raspberry Pi **SC0915** (Mouser 358-SC0915; Pico, Pico W, Pico 2, Pico 2 W also fit; the castellated pads must be free, so **no** H version with headers fitted) | 1 | Surface-soldered on its castellated edge pads. There are no sockets: a failed Pico must be desoldered from the surface |
+| A2 | Adafruit MPR121 12-key capacitive touch breakout, Adafruit **1982** (Mouser 485-1982) | 1 | Original or STEMMA QT: both work (section 5). Use the male headers supplied with it |
+| R1–R12 | Thick-film chip resistor 3.3 kΩ ±1 %, 1 W, 2512, YAGEO **RC2512FK-073K3L** (Mouser 603-RC2512FK-073K3L) | 12 | One in series with each electrode. **Stock is tight:** Mouser showed 13 in stock on 2026-11-11, next delivery May 2027. Any 3.3 kΩ ±1 % 2512 chip with a body 6.35 × 3.1 mm fits the same pads. This part has no published surge rating, see [Electrical safety](#electrical-safety) |
+| R13, R14 | Resistor 4.7 kΩ 1 %, 1206, YAGEO **RC1206FR-074K7L** (Mouser 603-RC1206FR-074K7L) | 2 | I²C pull-ups (SCL, SDA) |
+| R15, R16 | Resistor 220 Ω 1 %, 1206, YAGEO **RC1206FR-07220RL** (Mouser 603-RC1206FR-07220RL) | 2 | In series in SCL (R15) and SDA (R16), on the Pico side; they limit the current if a configuration wire goes to the wrong pad |
+| C1 | Ceramic capacitor 100 nF 50 V X7R, 1206, Samsung **CL31B104KBCNNNC** (Mouser 187-CL31B104KBCNNNC) | 1 | Potentiometer wiper to AGND, near the Pico |
+| SW1 | Tactile switch **B3S-1000** (6 × 6 mm, SMD, height 4.3 mm; Mouser 653-B3S-1000, listed under the maker name Aratas) | 1 | |
+| RV1 | 10 kΩ linear potentiometer, Bourns **PTV09A-4015F-B103** (Mouser 652-PTV09A-4015FB103; 9 mm, insulated flatted shaft 6 mm, 15 mm long, no bushing, PC pins), off-board, connected by 3 wires | 1 | Mount it in your enclosure and solder the 3 wires to its pins. See [Electrical safety](#electrical-safety): keep the insulated shaft and use a plastic knob. If the octave goes down when you turn clockwise, swap the two outer wires |
+| — | Knob for RV1, Same Sky **SPK-016A** (Mouser 179-SPK-016A; ABS, 11 mm, for 6 mm shafts) | 1 | Whether its bore grips the flatted shaft is not confirmed; check the fit, or use any plastic knob for a 6 mm flatted (D) shaft |
 | JP1 | Solder bridge on 3 surface pads (no part) | — | Bridged with a short tinned wire off-cut, see section 5 |
 | — | Thin insulated solid wire (from network cable, for example) | ~10 cm | The 2 configuration wires (SDA, SCL) |
 | — | Electrode wire, insulated, 0.25–0.5 mm² | 12 + GND | Soldered to the J2 pads, then strain-relieved with hot-melt glue |
@@ -125,7 +128,7 @@ If you like, tin the bare copper with the iron or apply protective lacquer after
 Use the [assembly map](fabrication/2-assembly-map.pdf). Work from the lowest parts to the tallest. **Clean flux from around R1–R12 afterwards with isopropyl alcohol:** residue on the bare FR-4 between the two ends of each resistor shortens the surface path that the 4 kV estimate relies on.
 
 1. **R13–R16 (1206) and C1 (1206).** Tin one pad, place the part with tweezers, solder that end, then the other. C1 is not polarised.
-2. **R1–R12 (HPWC2512, 3.0 kΩ).** One per electrode, in one row between the module and J2. Keep solder off the 5.0 mm gap between the two pads and do not let any wire or solder cross it.
+2. **R1–R12 (2512, 3.3 kΩ).** One per electrode, in one row between the module and J2. Keep solder off the 5.0 mm gap between the two pads and do not let any wire or solder cross it.
 3. **Button SW1** (B3S-1000). Align all four legs on their pads and solder them all.
 4. **[Run section 6 now](#6-test-before-soldering-the-pico-and-the-module)**, before the Pico and the module go on. After that you cannot get under them.
 5. **Pico (A1).** Flash the firmware first, while the Pico is still loose (section 7). Check that no bare copper shows under the test-point areas marked on the assembly map. Align the castellations over the pads, hold the board flat, tack two opposite corner pads, check alignment, then solder all 40 pads from the outer edge of each castellation. All 40 are anchors, even those without a track.
@@ -134,6 +137,8 @@ Use the [assembly map](fabrication/2-assembly-map.pdf). Work from the lowest par
 8. **JP1 and the 2 configuration wires** (section 5).
 9. **RV1 wires.** Three insulated wires to pads 1 (3V3), 2 (wiper), 3 (AGND) to your off-board pot. Add a small bead of hot-melt over the wires, on the pads, for strain relief. Keep the wires short.
 10. **Electrode and GND wires (J2).** Solder each wire onto the upper half of its pad, leaving the part of the pad next to the board edge clean. Add a bead of hot-melt over the wire and the upper pad. **Keep the glue away from the 1.4 mm gap at the bottom of the pad:** the spark gap must stay open air.
+
+**Optional: silicone over R1–R12.** It is not needed to meet the 3.5 mm gap rule, which the resistor terminations already meet. If you want an extra cover against dust and moisture, apply it only after cleaning and after the tests in section 6, as one continuous bead without bubbles or voids over each resistor and its two pads. Use only a **neutral-cure, electronics-grade** silicone, never an acetic-cure (vinegar-smelling) bathroom silicone, which corrodes copper and solder. No particular product has been checked for this board.
 
 **Mounting (M3).** The four holes are at H1 (5.0, 65.0), H2 (96.0, 4.0), H3 (96.5, 58.0) and H4 (29.8, 4.0) mm from the top-left board corner, as seen on the assembly map; the outer circle drawn around each hole is the 7 mm area kept free of copper. H4 is the screw closest to the USB end of the Pico: fit it if you fit any, because it stops the board bending when a cable is pulled. It does not make the Pico solder joints stronger, so the epoxy bead and a strain-relieved cable stay necessary.
 
@@ -171,7 +176,7 @@ Use insulated solid wire, run flat on the board and as short as the route allows
 With the multimeter, after step 3 of section 4 and **before the Pico and the module go on**, because you cannot reach underneath them afterwards:
 
 - [ ] Continuity between the **JP1 centre pad** (3V3) and a **GND** pad of J2: it must **not** beep.
-- [ ] Resistance between each electrode pad of J2 and the matching pin pad of the 1×13 module row: about **3.0 kΩ** (2850–3150 Ω). It does not beep in continuity mode.
+- [ ] Resistance between each electrode pad of J2 and the matching pin pad of the 1×13 module row: about **3.3 kΩ** (3267–3333 Ω, plus your meter's error). It does not beep in continuity mode.
 - [ ] Continuity between neighbouring J2 pads (0–1, 1–2, …): it does **not** beep.
 - [ ] Continuity between the two GND pads at the ends of J2: it beeps.
 - [ ] Resistance between the pads of pin 31 and pin 32 of the Pico footprint and the J1 SDA / SCL pads (through R16 / R15): about **220 Ω**.
@@ -219,7 +224,7 @@ If you compile it yourself, uncomment `#define FRUTAMIDI_PCB` at the start of [`
 | Nothing happens when plugged in | Bad Pico castellation joint, or charge-only cable | Re-flow the Pico joints; change the cable |
 | One electrode is always playing | Copper or solder bridge between tracks | Look with a magnifier in the electrode fan-out and the resistor row; cut with a craft knife |
 | Two electrodes play together | Short between neighbouring tracks | Same procedure |
-| One electrode never plays | Resistor of that electrode not soldered, or broken track | Measure about 3.0 kΩ from the wire to the module pad (section 6); re-solder |
+| One electrode never plays | Resistor of that electrode not soldered, or broken track | Measure about 3.3 kΩ from the wire to the module pad (section 6); re-solder |
 | The potentiometer does not change the octave | Breadboard firmware, or a broken RV1 wire | Upload the **pcb** `.uf2`; check the three wires |
 | The octave jumps by itself | RV1 wire badly soldered | Re-solder and strain-relieve the wires |
 
@@ -227,7 +232,7 @@ Sensitivity problems (fruit, cables, ground) are the same as on the breadboard: 
 
 ## Electrical safety
 
-Each electrode has a 3.0 kΩ pulse-rated chip resistor (R1–R12) between the wire pad and the sensor. Its protection against IEC 61000-4-2 contact discharge at ±4 kV is an estimate that rests on assumptions (the sensor pin's surge limit is inferred, not specified), not a pass. The resistor's 1.2/50 µs rating at 3.0 kΩ (about 4.5 kV, read from the maker's chart) covers the about 3.6 kV across it at 4 kV, but not the about 7.2 kV at 8 kV. A spark could also try to jump around the resistor: its copper pads are 5.0 mm apart and its metal terminations at least 4.4 mm apart (datasheet), above the 3.5 mm estimated for 4 kV and below the 7.5 mm estimated for 8 kV. Each electrode pad is 1.40 mm from the GND track along the board edge, so a strong discharge will most likely jump to GND there instead of reaching the sensor; keep that gap open. Only an ESD-gun test can confirm the protection. The board has not been evaluated for higher discharge levels or for touching while it is connected to mains-powered equipment. <!-- EVIDENCE --> See the [electronics analysis](../reports/electronics/analysis.md). Never connect the electrodes to anything plugged into mains power.
+Each electrode has a 3.3 kΩ chip resistor (R1–R12) between the wire pad and the sensor. It limits the current into the sensor pin during an IEC 61000-4-2 contact discharge to about 1.1 A at ±4 kV, below the about 1.33 A inferred from the sensor's 2 kV HBM rating (the sensor pin's surge limit is inferred, not specified). Whether the resistor itself survives is **not proven**: at 4 kV about 3.6 kV appears across it for under a microsecond, more than seven times its 500 V overload rating, and the maker publishes no surge rating for it. The energy is small (about 1 mJ per discharge) and the estimated heating is small, but local damage at the trim cut, a shift in resistance after repeated discharges, or an arc along the resistor cannot be excluded without a test. A spark could also try to jump around the resistor: its copper pads are 5.0 mm apart and its metal terminations at least 4.65 mm apart (from the datasheet dimensions), above the 3.5 mm estimated for 4 kV and below the 7.5 mm estimated for 8 kV. Each electrode pad is 1.40 mm from the GND track along the board edge, so a strong discharge will most likely jump to GND there instead of reaching the sensor; keep that gap open. That spark gap is also unproven. Only an ESD-gun test can confirm the protection. The board has not been evaluated for higher discharge levels or for touching while it is connected to mains-powered equipment. <!-- EVIDENCE --> See the [electronics analysis](../reports/electronics/analysis.md). Never connect the electrodes to anything plugged into mains power.
 
 **The potentiometer.** RV1 is off-board and its frame is not connected to the board. Use an **insulated shaft and an insulating knob**. A metal shaft is not protected: a finger discharge can jump inside the pot to one of the three wires, and those wires have no series resistor into the Pico. An exact figure is not available, because the Pico's analog pads and the pot's internal gaps are not specified (risk R-011 and R-010, physical test only).
 

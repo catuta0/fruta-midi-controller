@@ -20,9 +20,9 @@
   3V3 path 120 mm x 1.2 mm: R = 49.1 mOhm, drop at 4.4 mA = 0.218 mV (CALCULATION, length ASSUMPTION)
 
 ## Dissipation. CALCULATION
-  Octave pot 10k: P = V^2/R = 1.16 mW vs 50 mW rating (SOURCE Alps RK09K1130A5R page, V1.2 part; the off-board pot needs an equal or higher rating, ASSUMPTION) -> margin 43x
-  Series R 3k0 (HPWC2512, ADR-023), DC: P = (63 uA)^2 * 3k0 = 1.19e-05 W (negligible)
-  Series R 3k0, one IEC 8 kV contact pulse: E = 4.32 mJ in 0.50 us (CALCULATION); pulse rating: calc_pulse_rated.out
+  Octave pot 10k: P = V^2/R = 1.16 mW vs 50 mW rating (SOURCE Bourns PTV09 datasheet, PTV09A-4015F-B103) -> margin 43x
+  Series R 3k3 (RC2512FK-073K3L, ADR-026), DC: P = (63 uA)^2 * 3k3 = 1.31e-05 W (negligible)
+  Series R 3k3, one IEC 8 kV contact pulse: E = 4.36 mJ in 0.54 us (CALCULATION); pulse rating: calc_pulse_rated.out
   Board total from 3V3: P = 14.7 mW
 
 ## Clearance vs voltage

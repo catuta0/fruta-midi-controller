@@ -1,0 +1,434 @@
+=== PAGE 1 ===
+*RoHS COMPLIANT
+Features
+n Lead free as standard**
+n ESD protection 30 kV max.
+n Low capacitance
+~
+1.0 pF
+n Protects 1 line
+n Uni/bidirectional configuration
+Applications
+n HDMI 1.4
+n Digital Visual Interface (DVI)
+n USB 3.0 / USB OTG
+n Memory protection
+n SIM card ports
+LEAD FREE
+CDSOD323-TxxLC - TVS Diode Series
+Additional Information
+Click these links for more information:
+UNIDIRECTIONAL
+1
+BIDIRECTIONAL
+1
+General Information
+Portable communications, computing and video
+equipment manufacturers are challenging the
+semiconductor industry to develop increasingly smaller
+LEAD FREE
+electronic components.
+VERSIONS ARE
+RoHS COMPLIANT*
+Bourns offers Transient Voltage Suppressor Diodes
+for surge and ESD protection applications in SOD323
+package size format. The Transient Voltage Suppressor
+Diode series offers a choice of voltage types ranging
+from 5 V to 24 V in a unidirectional or bidirectional
+configuration.
+2
+2
+Bourns® Chip Diodes conform to JEDEC standards, are easy to handle on standard pick
+and place equipment and their flat configuration minimizes roll away. The Bourns® device
+will assist compliance with IEC 61000-4-2 (ESD), IEC 61000-4-4 (EFT) and IEC 61000-4-5
+(Surge) requirements.
+Note:  For 12 V and 24 V VDSL applications, the CDSOD323-TxxC-DSL family of devices is
+recommended.
+Electrical & Thermal Characteristics (@ TA = 25 °C Unless Otherwise Noted)
+PRODUCT
+TECHNICAL
+INVENTORY SAMPLES CONTACT
+SELECTOR
+LIBRARY
+Parameter Symbol Value Unit
+Peak Pulse Power (tp = 8/20 µs) PPP 350 W
+Operating Temperature TL -55 to +150 ºC
+Storage Temperature TSTG -55 to +150 ºC
+ESD Protection (per IEC 61000-4-2)
+Contact - Min.
+Contact - Max.
+Air - Min.
+Air - Max.
+ESD
+±8
+±30
+±15
+±30
+kV
+Min. Breakdown Voltage @ 1 mA VBR 6.0 6.0 8.5 8.5 13.3 13.3 V
+VM 5.0 5.0 8.0 8.0 12.0 12.0 V
+Maximum Clamping Voltage @ IP = 1 A VC 9.8 9.8 13.4 13.4 19.0 19.0 V
+CDSOD323-
+Parameter Symbol
+Uni-
+T05L
+Bi-
+T05LC
+Uni-
+T08L
+Bi-
+T08LC
+Uni-
+T12L
+Bi-
+T12LC
+Unit
+Working Peak Voltage Typical Clamping Voltage
+@ 8/20 µs @ IPP
+VC
+18.3 V @
+15 A
+18.3 V @
+15 A
+18.3 V @
+15 A
+18.3 V
+@ 15 A
+28.6 V @
+11 A
+28.6 V @
+11 A V
+Notes:
+1. Part numbers with suffix “C” indicate bidirectional device, i.e. CDSOD323-T05LC.
+2. For bidirectional devices only, the electrical specifications apply in both directions.
+3. Unidirectional only: Positive potential is applied from pin 1 to 2.
+Maximum Leakage Current @ VWM ID 5 5 2 2 1 1 µA
+Typical Capacitance @ 0 V, 1 MHz CP 1.0 pF
+WARNING Cancer and Reproductive Harm - www.P65Warnings.ca.gov*RoHS Directive 2015/863, Mar 31, 2015 and Annex.
+**No lead detected in standard tests of homogeneous materials.
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 2 ===
+CDSOD323-TxxLC - TVS Diode Series
+Electrical & Thermal Characteristics (@ TA = 25 °C Unless Otherwise Noted)
+Uni-
+T15L
+Min. Breakdown Voltage @ 1 mA VBR 16.7 16.7 20.0 20.0 26.7 26.7 V
+VM 15.0 15.0 18.0 18.0 24.0 24.0 V
+Maximum Clamping Voltage @ IP = 1 A VC 24.0 24.0 29.0 29.0 43.0 43.0 V
+Maximum Leakage Current @ VWM ID 1 µA
+Typical Capacitance @ 0 V, 1 MHz CJ 1.0 pF
+CDSOD323-
+Parameter Symbol
+Bi-
+T15LC
+Uni-
+T18L
+Bi-
+T18LC
+Uni-
+T24L
+Bi-
+T24LC
+Unit
+Working Peak Voltage Typical Clamping Voltage
+@ 8/20 µs @ IPP
+VC
+31.8 V
+@ 10 A
+31.8 V
+@ 10 A
+45.0 V
+@ 8 A
+45.0 V
+@ 8 A
+56.0 V
+@ 6 A
+56.0 V
+@ 6 A V
+Notes:
+1. Part numbers with suffix “C” indicate bidirectional device, i.e. CDSOD323-T05LC.
+2. For bidirectional devices only, the electrical specifications apply in both directions.
+3. Unidirectional only: Positive potential is applied from pin 1 to 2.
+Performance Graphs
+Peak Pulse Power vs. Pulse Time 10,000
+1,000
+100
+10
+Block Diagram tt
+PPP – Peak Pulse Power (W)
+350 W, 8/20 µs Waveform
+et
+td = t|IPP/2
+1
+1,000
+0.1 10 100 10,000
+td – Pulse Duration (µs)
+UNIDIRECTIONAL
+1
+BIDIRECTIONAL
+1
+2
+2
+Pulse Waveform
+120
+IPP – Peak Pulse Current (% of IPP)
+100
+80
+60
+40
+20
+0
+How to Order
+Common Code
+Chip Diode
+Package
+• SOD323 = SOD-323 Package
+Model
+T = Transient Voltage Suppressor
+Working Peak Reverse Voltage
+05 = 5 VRWM (Volts)
+Suffix
+L = Ultralow Capacitance Unidirectional Diode
+LC = Ultralow Capacitance Bidirectional Diode
+Test Waveform Parameters
+tt = 8 µs
+td = 20 µs
+0 30
+5
+10
+15
+20
+25
+t – Time (µs)
+CD SOD323 - T 05 LC
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 3 ===
+CDSOD323-TxxLC - TVS Diode Series
+C
+A
+E
+Product Dimensions
+This is a molded JEDEC SOD-323 package with lead free 100 % Sn
+B
+plating on the terminations. It weighs approximately 30 mg and has
+a flammability rating of UL 94V-0.
+C
+F
+A
+Recommended Footprint
+Recommended Footprint
+W
+L S L
+D
+H
+E
+Dimensions (Nominal)
+J
+B
+W
+L 0.80
+(0.031)
+S 1.40
+(0.055)
+L S L
+F
+D
+H
+W 0.50
+(0.020)
+J
+Dimensions
+DIMENSIONS: MM
+(INCHES)
+A 1.60 - 1.90
+(0.063 - 0.075)
+B 1.15 - 1.45
+(0.045 - 0.057)
+C 2.39 - 2.70
+(0.094 - 0.106)
+D 0.92 - 1.14
+(0.036 - 0.045)
+E 0.25 - 0.40
+(0.010 - 0.016)
+F 0.08 - 0.20
+(0.003 - 0.008)
+H 0.13 MAX. (0.005) .........
+J 0.30 - 0.45
+(0.012 - 0.018)
+DIMENSIONS: MM
+(INCHES)
+Typical Part Marking
+Each device has device marking outlined below and the
+unidirectional devices have an additional Polarity Band indicating
+the cathode.
+CDSOD323-T05L ...........................................................................T5
+CDSOD323-T05LC.........................................................................S5
+CDSOD323-T08L ...........................................................................T8
+CDSOD323-T08LC.........................................................................S8
+CDSOD323-T12L .........................................................................T12
+CDSOD323-T12LC.......................................................................S12
+CDSOD323-T15L........................................................................ T15
+CDSOD323-T15LC.......................................................................S15
+CDSOD323-T18L .........................................................................T18
+CDSOD323-T18LC.......................................................................S18
+CDSOD323-T24L .........................................................................T24
+CDSOD323-T24LC.......................................................................S24
+Environmental Specifications
+Moisture Sensitivity Level ................................................................. 1
+ESD Classification (HBM)...............................................................3B
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific legal disclaimers as set forth on the last page of this document, and at www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 4 ===
+CDSOD323-TxxLC - TVS Diode Series
+Packaging Information
+The surface mount product is packaged in an 8 mm x 4 mm tape and reel format per EIA-481 standard.
+d
+P 0
+P 1
+E T
+Index Hole
+120 °
+F
+D2
+W
+B
+End
+P A
+C
+Product
+Trailer Device
+Orientation Leader
+.......
+.......
+....... .......
+.......
+.......
+....... .......
+10 pitches (min.)
+10 pitches (min.)
+D D
+1
+W1
+Start
+Direction of Feed
+DIMENSIONS: MM
+(INCHES)
+Devices are packed in accordance with EIA standard
+RS-481-A.
+Item Symbol SOD323
+Carrier Width A 1.55 ± 0.10
+(0.061 ± 0.004)
+Carrier Length B 2.90 ± 0.10
+(0.114 ± 0.004)
+Carrier Depth C 1.35 ± 0.10
+(0.053 ± 0.004)
+Sprocket Hole d 1.55 ± 0.05
+(0.061 ± 0.002)
+Reel Outside Diameter D 178
+(7.008)
+Reel Inner Diameter D1
+80.0 ...
+(3.150) Min.
+13.0 ± 0.20
+Feed Hole Diameter D2
+(0.512 ± 0.008)
+Sprocket Hole Position E 1.75 ± 0.10
+(0.069 ± 0.004)
+Punch Hole Position F 3.50 ± 0.05
+(0.138 ± 0.002)
+Punch Hole Pitch P 4.00 ± 0.10
+(0.157 ± 0.004)
+4.00 ± 0.10
+Sprocket Hole Pitch P0
+(0.157 ± 0.004)
+2.00 ± 0.05
+Embossment Center P1
+(0.079 ± 0.002)
+Overall Tape Thickness T 0.20 ± 0.10
+(0.008 ± 0.004)
+Tape Width W 8.00 ± 0.20
+(0.315 ± 0.008)
+Reel Width W1
+13.5 .
+(0.531) Max.
+Quantity per Reel -- 3,000
+Asia-Pacific: Tel: +886-2 2562-4117
+Email: asiacus@bourns.com
+EMEA: Tel: +36 88 885 877
+Email: eurocus@bourns.com
+The Americas: Tel: +1-951 781-5500
+Email: americus@bourns.com
+www.bourns.com
+REV. 04/25/23
+Specifications are subject to change without notice.
+Users should verify actual device performance in their specific applications.
+The products described herein and this document are subject to specific
+legal disclaimers as set forth on the last page of this document, and at
+www.bourns.com/docs/legal/disclaimer.pdf.
+=== PAGE 5 ===
+Legal Disclaimer Notice
+This legal disclaimer applies to purchasers and users of Bourns® products manufactured by or on behalf of Bourns, Inc. and its affiliates (collectively,
+“Bourns”).
+Unless otherwise expressly indicated in writing, Bourns® products and data sheets relating thereto are subject to change without notice. Users should check
+for and obtain the latest relevant information and verify that such information is current and complete before placing orders for Bourns® products.
+The characteristics and parameters of a Bourns® product set forth in its data sheet are based on laboratory conditions, and statements regarding the
+suitability of products for certain “typical” applications are based on Bourns’ knowledge of typical requirements in generic applications. Bourns assumes
+that “typical” applications include failsafe/backup features to address critical risks to users and are designed to allow rework of Bourns® product to
+avoid scrap of a device solely due to malfunctioning Bourns® product. The characteristics and parameters of a Bourns® product in a user application
+may vary from the data sheet characteristics and parameters due to (i) the combination of the Bourns® product with other components in the user’s
+application, or (ii) the environment of the user application itself. The characteristics and parameters of a Bourns® product also can and do vary in
+different applications and actual performance may vary over time. Thus, users should always verify the actual performance of the Bourns® product in
+their specific devices and applications and make their own independent judgments regarding the suitability of Bourns® product and the amount of
+additional test margin to design into their device or application to compensate for differences between laboratory and real-world conditions.
+Unless Bourns has explicitly designated an individual Bourns® product as meeting the requirements of a particular industry standard (e.g., IATF
+16949) or a particular qualification (e.g., UL listed or recognized), Bourns is not responsible for any failure of an individual Bourns® product to meet
+the requirements of such industry standard or particular qualification even if such industry standard or qualification is a “state of art”. Users of Bourns®
+products are responsible for ensuring compliance with safety-related requirements and standards applicable to their devices or applications.
+Bourns® products are not recommended, authorized or intended for use in applications where failure or malfunction may result in personal injury,
+death, or severe property or environmental damage, such as without limitation nuclear, life-critical medical and certain automotive and aviation
+applications. Except as set forth in the bullet points below or unless expressly and specifically approved in writing on a case-by-case basis by an
+authorized Bourns’ representative, use of any Bourns® products in such unauthorized high-risk applications is at the user’s sole risk.
+•
+Bourns considers implantable/invasive devices and devices/procedures designed as life-supporting or life-sustaining by the U.S. Food and Drug
+Administration or equivalent organizations outside of the United States as “life-critical” medical applications. Bourns expressly identifies those
+Bourns® standard products that are suitable for use in typical medical applications that are not life-critical in its publication entitled “Bourns
+Medical Grade Component Guide.”
+•
+•
+•
+Bourns expressly identifies those Bourns® standard products that are suitable for use in typical automotive applications associated with any
+Automate Safety Integrity Level (ASIL) in its publication entitled “Bourns Automotive Grade Component Guide.” Bourns’ designation of Bourns®
+product as compliant with the AEC-Q standard does not by itself mean that Bourns has approved such product for use in an automotive
+application.
+Bourns expressly identifies Bourns® standard products that are suitable for use in the typical aviation applications/systems requiring System
+Design Assurance Level (RTCA DO-254 DAL) of C, D or E in its publication entitled “Bourns Civilian Aerospace/Aviation Grade Component Guide.”
+Bourns does not test its products for compliance with United States Federal Aviation Administration standards or any other generally equivalent
+governmental organization standard applicable to products designed or manufactured for use in aviation applications. Use of Bourns® standard
+components in aviation applications associated with RTCA DO-254 DAL A or B without proper approval noted above shall be at the user’s sole
+risk.
+Bourns will review and authorize on a case-by-case basis the use of Bourns® standard products which are at least AEC-Q compliant in space-
+related civil applications (rockets, satellites) with a negotiated cross-waiver and indemnity agreement.
+The use and level of testing applicable to Bourns® custom products shall be negotiated on a case-by-case basis by Bourns and the user for which such
+Bourns® custom products are specially designed. Absent a written agreement between Bourns and the user regarding the use and level of such testing,
+the above provisions applicable to Bourns® standard products shall also apply to such Bourns® custom products.
+Use of Bourns® products or Bourns’ technology in military/defense applications must be reviewed with Bourns for compliance with applicable export
+control laws and embargoes. Users shall not sell, transfer, export or re-export (which includes transfers within a country) any Bourns® products or
+technology or technical data for use in activities which involve the design, development, production, use or stockpiling of nuclear, chemical or
+biological weapons or missiles, nor shall they use Bourns® products or technology or technical data in any facility which engages in activities relating
+to such devices. Further, Bourns® products and Bourns’ technology and technical data may not under any circumstance be exported or re-exported to
+countries subject to international sanctions or embargoes. Bourns® products and technology may not, without prior authorization from Bourns and/or
+the Government of a country where such product/technology is designed and/or manufactured, be resold, transferred, or re-exported (including within
+the same country) to any party not eligible to receive commodities, software, and technical data originating in such country.
+To the maximum extent permitted by applicable law, Bourns disclaims (i) any and all liability for special, punitive, consequential, incidental or indirect
+damages or lost revenues or lost profits, and (ii) any and all implied warranties (those not based on parameters specified in Bourns’ data sheets and/or
+specifications), including implied warranties of fitness for particular purpose, non-infringement and merchantability.
+For your convenience, copies of this Legal Disclaimer Notice with German, Spanish, Japanese, Traditional Chinese and Simplified Chinese bilingual versions are
+available at:
+Web Page: https://www.bourns.com/legal/disclaimers-terms-and-policies
+PDF: https://www.bourns.com/docs/Legal/disclaimer.pdf
+K2540 05/26R

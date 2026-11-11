@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""T-060 / CR-002, updated T-092 for the SMD board (R1-R12 = HPWC2512 3k0 +-5 %, ADR-023): flashover across the electrode
+"""T-060 / CR-002, updated T-096 for the SMD board (R1-R12 = RC2512FK-073K3L 3k3 +-1 %, ADR-026): flashover across the electrode
 series resistor and between channels. CALCULATION.
 
 Question: what minimum air gap must separate copper (pads, tracks) and leads of net Ex (terminal side,
 reached by the discharge) from net ELEx (MPR121 side, same channel) and from any other channel's ELEy,
-so that an IEC 61000-4-2 contact discharge cannot arc around the 3k0 series resistor?
+so that an IEC 61000-4-2 contact discharge cannot arc around the 3k3 series resistor?
 
 Inputs and labels
   IEC 61000-4-2 source: 150 pF / 330 ohm, contact levels 4 kV and 8 kV (SOURCE EE-S16, IEC 61000-4-2).
-  R = 3.0 kOhm +-5 % (SOURCE TT HPWC 09.23 tolerance, ADR-023). The rule is taken at the highest R (3150 ohm), which
-  gives the largest V_gap; the nominal row is printed for reference. V1.2 used 3.3 kOhm.
+  R = 3.3 kOhm +-1 % (SOURCE Mouser / YAGEO RC_L, ADR-026). The rule is taken at the highest R (3333 ohm), which
+  gives the largest V_gap; the nominal row is printed for reference.
   The ELE side is held near 0..3.3 V by the MPR121 pin structure (ASSUMPTION: clamp drop << kV), so the
   peak voltage across the gap is V_gap = V * R / (R + 330)  (CALCULATION, resistive divider at t = 0+;
   the series inductance of the gun and the sub-ns first peak are ignored - ASSUMPTION, conservative for
@@ -39,8 +39,8 @@ Output: required gap per model and level, and the design rule chosen for the PCB
 """
 import math
 
-C_IEC, R_IEC, R_NOM = 150e-12, 330.0, 3000.0
-R = 3150.0                                          # worst case for V_gap: R +5 % (T-092)
+C_IEC, R_IEC, R_NOM = 150e-12, 330.0, 3300.0
+R = 3333.0                                          # worst case for V_gap: R +1 % (T-096)
 LEVELS = (4000.0, 8000.0)
 
 
@@ -88,10 +88,10 @@ def iec_f2(u_kv, col):
     return float("nan")
 
 
-print("# calc_flashover.py  CALCULATION (T-060, CR-002; T-092 SMD 3k0)")
-print("# IEC source 150 pF / 330 ohm, R = 3.0 kOhm +5 %% = %.0f ohm; V_gap = V * R / (R + 330)" % R)
+print("# calc_flashover.py  CALCULATION (T-060, CR-002; T-096 SMD 3k3)")
+print("# IEC source 150 pF / 330 ohm, R = 3.3 kOhm +1 %% = %.0f ohm; V_gap = V * R / (R + 330)" % R)
 for v in LEVELS:
-    print("#   nominal 3k0: V_gap(%.0f kV) = %.0f V; R +5 %%: %.0f V" % (v / 1000, v * R_NOM / (R_NOM + R_IEC), v_gap(v)))
+    print("#   nominal 3k3: V_gap(%.0f kV) = %.0f V; R +1 %%: %.0f V" % (v / 1000, v * R_NOM / (R_NOM + R_IEC), v_gap(v)))
 rows = {}
 for v in LEVELS:
     vg = v_gap(v)
@@ -121,12 +121,13 @@ for d in (0.5, 1.0, 2.0, 5.0, 10.0):
           % (d, v_paschen(d), v_empirical_kv(d) * 1000))
 
 print()
-print("# SMD board (T-091): 2512 land copper gap 5.00 mm (MEASUREMENT, check_smd.out); HPWC2512 termination gap B min 4.4 mm")
-print("#   (SOURCE TT HPWC 09.23); worst termination pair over placement error in check_gap.out (d).")
+B_MIN = 6.35 - 0.10 - 2 * (0.60 + 0.20)            # mm, L min - 2 x I1 max (SOURCE YAGEO RC_L V.11 Table 1), CALCULATION
+print("# SMD board (T-091): 2512 land copper gap 5.00 mm (MEASUREMENT, check_smd.out); RC2512 termination gap min %.2f mm" % B_MIN)
+print("#   (CALCULATION from YAGEO RC_L V.11 L and I1); worst termination pair over placement error in check_gap.out (d).")
 for v in LEVELS:
     vg = v_gap(v)
-    print("  %.0f kV: V_gap %.0f V vs B min 4.4 mm: uniform 3 kV/mm withstands %.0f V, IEC F.2 case A needs %.2f mm -> %s"
-          % (v / 1000, vg, 4.4 * 3000, iec_f2(vg / 1000, 0), "below the gap" if iec_f2(vg / 1000, 0) <= 4.4 else "EXCEEDS the gap"))
+    print("  %.0f kV: V_gap %.0f V vs B min %.2f mm: uniform 3 kV/mm withstands %.0f V, IEC F.2 case A needs %.2f mm -> %s"
+          % (v / 1000, vg, B_MIN, B_MIN * 3000, iec_f2(vg / 1000, 0), "below the gap" if iec_f2(vg / 1000, 0) <= B_MIN else "EXCEEDS the gap"))
 
 # Design rule: the most pessimistic credible model at 4 kV (M4 eta=0.3 or IEC case A at the full 4 kV level,
 # whichever is larger), rounded up to 0.5 mm. 8 kV is reported against IEC case A.

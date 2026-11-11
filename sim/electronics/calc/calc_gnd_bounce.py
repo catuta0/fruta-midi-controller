@@ -140,8 +140,8 @@ def main():
                                                               i2c / i_hbm))
     print("  NOT CONFIRMED: GP26/GP27 (I2C1 on the PCB) are ADC-capable pins; the extracted RP2040 table gives HBM 4 kV for"
           " FT pins and CDM 500 V, no separate HBM value for these pins was found (EE-S28)")
-    print("  without the arc (strike through Rx into the MPR121 pin): pin current %.2f A (R 3k0 + 330 ohm source, CALCULATION), bounce"
-          " scaled by %.2f -> %.0f V" % (KV * 1e3 / 3330, KV * 1e3 / 3330 / I_PK, vb * KV * 1e3 / 3330 / I_PK))
+    print("  without the arc (strike through Rx into the MPR121 pin): pin current %.2f A (R 3k3 + 330 ohm source, CALCULATION), bounce"
+          " scaled by %.2f -> %.0f V" % (KV * 1e3 / 3630, KV * 1e3 / 3630 / I_PK, vb * KV * 1e3 / 3630 / I_PK))
     print("DECISION INPUT: the 1.40 mm gap acts as a spark gap to GND at every terminal; it keeps the strike off the"
           " MPR121 pin; residual risk = %.0f V / ~1 ns GND bounce between module and Pico (ASSUMPTION-based), not measured"
           % vb)

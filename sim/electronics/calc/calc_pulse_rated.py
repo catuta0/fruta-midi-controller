@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """T-060 / CR-002: pulse rating of candidate 3k3 THT resistors vs one IEC 61000-4-2 contact discharge (V1.2 record).
-T-092 / ADR-023: section for the selected SMD part HPWC2512 3k0 +-5 % at the end of the output.
+T-096 / ADR-026: context section for the selected SMD part YAGEO RC2512FK-073K3L (no pulse rating) at the end of the output.
 
 Requirement (CR-002): datasheet single-pulse / overload voltage >= V_R = V * R / (R + 330) = 3636 V at 4 kV
 (7273 V at 8 kV reported).  CALCULATION unless labelled.
@@ -21,7 +21,7 @@ SOURCE EE-S18: Vishay BCcomponents LSR37 "High Voltage Surge Resistor", doc. 287
   (typical +-10 %)"; D 4.0, L1 9.0, L2 10.0, lead 0.7 mm; minimum pitch for automatic insertion 15 mm.
 SOURCE EE-S14b (calc_pulse.py): Yageo MFR-12: max overload voltage 400 V, no short-pulse rating.
 SOURCE T90-S2 TT Electronics HPWC Series 09.23: 1.2/50 us chart, raster, read in T-090 (reports/electronics/evidence/T-090/
-  charts/chartread_raw.txt, top curve = 2512): 2850 ohm 4352-4472 V, 3000 ohm 4472 V, 3150 ohm 4596 V. Reading uncertainty
+  charts/chartread_raw.txt, top curve = 2512): 2850 ohm 4352-4472 V, 3000 ohm 4472 V, 3150 ohm 4596 V, 3300 ohm 4596 V. Reading uncertainty
   +-5 % (ASSUMPTION). It is a 1.2/50 us rating, not an IEC 61000-4-2 ESD rating (same basis as ADR-019).
 """
 import math
@@ -112,17 +112,45 @@ print("V1.2 (superseded by ADR-023): Vishay MBE/SMA 0414, 3k3 1 %% (MBE04140C330
 print("V1.2 alternative for 8 kV: Vishay LSR37 3k3 10 % (LSR3700003301KA100), ESD 12 kV rated; tolerance +-10 % and up to"
       " +-20 % drift after 100 strikes")
 
-# ---- T-092: selected SMD part (ADR-023 D-1)
+# ---- T-096 / ADR-026: selected part YAGEO RC2512FK-073K3L, 3k3 +-1 %, 1 W, thick film (HPWC2512 of ADR-023/025 dropped)
+# SOURCE YAGEO RC_L V.11 (evidence/T-096/datasheets/yageo_rc_group51.pdf), RC2512 1 W row: max working voltage 200 V, max overload
+# voltage 500 V, dielectric withstanding voltage 500 V; Table 1 L 6.35 +-0.10, W 3.10 +-0.15, H 0.55 +-0.10, I1 0.60 +-0.20 mm.
+# The datasheet gives NO pulse, surge or ESD capability. The checks below are context, not a rating.
 print()
-print("# SMD board: TT Electronics HPWC2512 3k0 +-5 %; ratings SOURCE T90-S2 chart read (T-090), +-5 % reading ASSUMPTION")
-HPWC = ((2850.0, 4352.0), (3000.0, 4472.0), (3150.0, 4596.0))
-print("%-9s %10s %11s %11s %9s %9s %10s %10s %10s" % ("R ohm", "rating V", "V_R@4kV", "V_R@8kV", "m@4kV", "m@8kV", "m@4kV -5%", "E@4kV mJ", "Ipk@4kV A"))
-worst4 = float("inf")
-for r_h, rate in HPWC:
-    v4, v8 = 4000.0 * r_h / (r_h + R_IEC), 8000.0 * r_h / (r_h + R_IEC)
-    worst4 = min(worst4, rate / v4)
-    print("%-9.0f %10.0f %11.0f %11.0f %9.2f %9.2f %10.2f %10.2f %10.2f" % (
-        r_h, rate, v4, v8, rate / v4, rate / v8, 0.95 * rate / v4, 0.5 * C_IEC * 4000.0 ** 2 * r_h / (r_h + R_IEC) * 1e3, 4000.0 / (r_h + R_IEC)))
-print("SELECTED: HPWC2512 3k0: rating margin at 4 kV >= %.2f over the tolerance band -> %s; at 8 kV margin %.2f -> FAIL (R-006 open)"
-      % (worst4, "PASS" if worst4 >= 1.0 else "FAIL", 4472.0 / (8000.0 * 3000.0 / 3330.0)))
-print("  with -5 %% chart reading error, worst margin at 4 kV: %.2f (%s)" % (0.95 * worst4, "PASS" if 0.95 * worst4 >= 1.0 else "FAIL"))
+print("# SMD board: YAGEO RC2512FK-073K3L 3k3 +-1 % (ADR-026). No sourced pulse capability for the IEC or the 1.2/50 us case.")
+V_WORK, V_OVL = 200.0, 500.0
+for r_y in (3267.0, 3300.0, 3333.0):
+    v4, v8 = 4000.0 * r_y / (r_y + R_IEC), 8000.0 * r_y / (r_y + R_IEC)
+    print("  R %.0f ohm: V_R %.0f V at 4 kV, %.0f V at 8 kV = %.1fx / %.1fx the 500 V overload voltage (SOURCE limit; CALCULATION)"
+          % (r_y, v4, v8, v4 / V_OVL, v8 / V_OVL))
+RY = 3300.0
+tau_y = (RY + R_IEC) * C_IEC
+e4y = 0.5 * C_IEC * 4000.0 ** 2 * RY / (RY + R_IEC)
+e8y = 0.5 * C_IEC * 8000.0 ** 2 * RY / (RY + R_IEC)
+p4y = (4000.0 * RY / (RY + R_IEC)) ** 2 / RY
+p8y = (8000.0 * RY / (RY + R_IEC)) ** 2 / RY
+e_hpwc = 4596.0 ** 2 / RY * i_v2
+print("  energy into R: %.2f mJ at 4 kV, %.2f mJ at 8 kV; tau = %.3f us; peak power %.0f W (4 kV), %.0f W (8 kV)   CALCULATION"
+      % (e4y * 1e3, e8y * 1e3, tau_y * 1e6, p4y, p8y))
+print("  old criterion (CR-002, 1.2/50 us chart): rating pulse energy %.0f mJ (MBE0414 3k3 curve, above) and %.0f mJ (HPWC2512 4596 V);"
+      " one IEC 4 kV strike is %.0fx and %.0fx smaller   CALCULATION" % (e_rate * 1e3, e_hpwc * 1e3, e_rate / e4y, e_hpwc / e4y))
+# temperature rise, adiabatic (the pulse is much shorter than the thermal time of the film; diffusion into the substrate ignored)
+FILM_L = 6.35 - 2 * 0.60          # mm, film length between terminations, nominal (CALCULATION from SOURCE L and I1)
+FILM_W = 3.10 - 2 * 0.20          # mm, ASSUMPTION: 0.2 mm side margin
+FILM_T = 10e-3                    # mm, ASSUMPTION: thick film 8-15 um, 10 um used
+CV_FILM = 2.5e6                   # J/(m3 K), ASSUMPTION: RuO2-glass composite
+CV_AL2O3 = 3.0e6                  # J/(m3 K), ASSUMPTION: alumina 3900 kg/m3 x 775 J/(kg K)
+ALPHA_AL2O3 = 1.0e-5              # m2/s, ASSUMPTION: alumina thermal diffusivity
+K_TRIM = 10.0                     # ASSUMPTION: local power density factor at the laser-trim kerf (current crowding)
+c_film = CV_FILM * FILM_L * FILM_W * FILM_T * 1e-9
+c_body = CV_AL2O3 * 6.35 * 3.10 * 0.55 * 1e-9
+d_diff = (ALPHA_AL2O3 * tau_y) ** 0.5 * 1e6
+print("  film %.2f x %.2f x %.3f mm: heat capacity %.2e J/K; adiabatic film rise %.1f K (4 kV), %.1f K (8 kV); with a x%.0f trim hot spot %.0f K / %.0f K"
+      % (FILM_L, FILM_W, FILM_T, c_film, e4y / c_film, e8y / c_film, K_TRIM, K_TRIM * e4y / c_film, K_TRIM * e8y / c_film))
+print("  whole body %.3f J/K: rise %.3f K (4 kV); heat diffusion length in alumina during tau %.1f um (ASSUMPTION alpha)   CALCULATION"
+      % (c_body, e4y / c_body, d_diff))
+print("  mean field along the film %.2f kV/mm at 4 kV (V_R / film length); the field across the laser-trim kerf is unknown"
+      % (4000.0 * RY / (RY + R_IEC) / 1000.0 / FILM_L))
+print("RC2512FK-073K3L pulse capability at IEC 4 kV: NOT PROVEN (no sourced rating; energy and heating are small, the voltage is %.1fx the"
+      " overload voltage; unknown: hot-spot or kerf breakdown, resistance drift, repeated strikes). 8 kV: NOT PROVEN." % (4000.0 * RY / (RY + R_IEC) / V_OVL))
+print("The Ex to GND 1.40 mm spark gap is a separate mechanism and is also unproven (check_gap.out, calc_gnd_bounce.out).")

@@ -67,6 +67,14 @@ R      C_ext    pairs   CDC_uA   CDT_us    cnt/pF     ratio  worst/pF worstrat  
 3k        500pF    28       36     32.0     1.335     0.970     0.924    0.920     9.0pF
 3k       1000pF    15       63     32.0     0.604     0.997     0.470    0.904    19.9pF
 3k       2000pF     0  -- no valid CDC/CDT pair (OOR) --
+3.135k     10pF    43       31      2.0    25.006     0.980    17.773    0.938     0.5pF
+3.135k     20pF    35       42      2.0    18.053     0.948    12.508    0.911     0.7pF
+3.135k     50pF    39       19      8.0    10.280     0.965     6.952    0.909     1.2pF
+3.135k    100pF    40       63      4.0     5.551     0.905     4.053    0.917     2.2pF
+3.135k    200pF    39       59      8.0     3.067     0.925     2.235    0.923     3.9pF
+3.135k    500pF    28       36     32.0     1.335     0.970     0.924    0.920     9.0pF
+3.135k   1000pF    15       63     32.0     0.604     0.996     0.470    0.904    19.9pF
+3.135k   2000pF     0  -- no valid CDC/CDT pair (OOR) --
 3.15k      10pF    43       31      2.0    25.004     0.980    17.769    0.938     0.5pF
 3.15k      20pF    35       42      2.0    18.051     0.948    12.505    0.911     0.7pF
 3.15k      50pF    39       19      8.0    10.280     0.965     6.951    0.908     1.2pF
@@ -181,6 +189,7 @@ R=2.673k min nominal ratio=0.927  min worst-case ratio=0.921  MEETS (>=0.90 nomi
 R=2.727k min nominal ratio=0.926  min worst-case ratio=0.905  MEETS (>=0.90 nominal, >=0.80 worst)
 R=2.85k  min nominal ratio=0.926  min worst-case ratio=0.905  MEETS (>=0.90 nominal, >=0.80 worst)
 R=3k     min nominal ratio=0.925  min worst-case ratio=0.904  MEETS (>=0.90 nominal, >=0.80 worst)
+R=3.135k min nominal ratio=0.905  min worst-case ratio=0.904  MEETS (>=0.90 nominal, >=0.80 worst)
 R=3.15k  min nominal ratio=0.905  min worst-case ratio=0.904  MEETS (>=0.90 nominal, >=0.80 worst)
 R=3.267k min nominal ratio=0.904  min worst-case ratio=0.904  MEETS (>=0.90 nominal, >=0.80 worst)
 R=3.3k   min nominal ratio=0.904  min worst-case ratio=0.904  MEETS (>=0.90 nominal, >=0.80 worst)
@@ -194,5 +203,10 @@ R=10k    min nominal ratio=0.679  min worst-case ratio=0.435  does not meet
 R=22k    min nominal ratio=0.264  min worst-case ratio=0.125  does not meet
 R=47k    min nominal ratio=0.074  min worst-case ratio=0.023  does not meet
 R=100k   min nominal ratio=0.041  min worst-case ratio=0.007  does not meet
+
+# T-096 / ADR-026 R1-R12 = RC2512FK-073K3L 3k3 +-1 %, limit: worst-case ratio >= 0.90, C_ext 10..1000 pF. SIMULATION
+PASS -1 % corner 3267 ohm: worst 0.904 vs 0.90 (SIMULATION)
+PASS nominal 3300 ohm: worst 0.904 vs 0.90 (SIMULATION)
+PASS +1 % corner 3333 ohm: worst 0.904 vs 0.90 (SIMULATION)
 
 # CALCULATION cross-check: V_TL = TL/256*VDD = 2.313 V; I*R <= 10% of V_TL gives R <= 3672 ohm at CDC=63 uA, R <= 11566 ohm at 20 uA

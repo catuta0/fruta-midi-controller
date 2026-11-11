@@ -18,5 +18,5 @@ Worst case: module GND - Pico GND bounce 236 V for ~1 ns; after the first peak (
   through R15/R16 (220 ohm, then the BSS138 level shifters on the module): <= 1.06 A, <= 0.64 nC per line
   RP2040 HBM 4 kV (SOURCE EE-S28, stated for digital FT pins only) = 2.67 A peak, 400 nC -> injected charge 0.2 % of the HBM charge, peak 0.40x the HBM peak
   NOT CONFIRMED: GP26/GP27 (I2C1 on the PCB) are ADC-capable pins; the extracted RP2040 table gives HBM 4 kV for FT pins and CDM 500 V, no separate HBM value for these pins was found (EE-S28)
-  without the arc (strike through Rx into the MPR121 pin): pin current 1.20 A (R 3k0 + 330 ohm source, CALCULATION), bounce scaled by 0.07 -> 16 V
+  without the arc (strike through Rx into the MPR121 pin): pin current 1.10 A (R 3k3 + 330 ohm source, CALCULATION), bounce scaled by 0.06 -> 15 V
 DECISION INPUT: the 1.40 mm gap acts as a spark gap to GND at every terminal; it keeps the strike off the MPR121 pin; residual risk = 236 V / ~1 ns GND bounce between module and Pico (ASSUMPTION-based), not measured

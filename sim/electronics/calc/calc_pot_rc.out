@@ -6,4 +6,6 @@ worst (R +20 %, C +10 % tol, +15 % temp)   R_th 3000 ohm  C 126 nF  tau 0.380 ms
     full-scale step to 1/2 LSB (10-bit): 7.62 tau = 2.89 ms; read period 30 ms = 79 tau; margin 10.4x
     ramp lag at a 100 ms full turn: 3.9 counts (zone width 205 counts, hysteresis ~41 counts)
 ADC sample-capacitor charge sharing (C_sample <= 10 pF ASSUMPTION): <= 0.102 LSB (10-bit) per conversion
+ADC loading: R_th max 3000 ohm vs RIN_ADC 100 kohm -> error at mid travel <= 1.46 % of full scale = 14.9 counts, 10-bit (zone width 205 counts, hysteresis ~41 counts) PASS
+Residual resistance: 500 ohm of 8000 ohm = 6.25 % of travel at each end -> zone position reached 0.31 / 4.69 (needs < 0.80 and > 4.20 to reach the outer octaves) PASS
 PASS worst-case settling 2.89 ms vs read period 30 ms (criterion: margin >= 5x, ASSUMPTION)

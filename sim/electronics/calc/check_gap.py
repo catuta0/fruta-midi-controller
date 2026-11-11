@@ -12,9 +12,10 @@ What is measured on hardware/frutamidi.kicad_pcb (F.Cu copper: pads and tracks; 
       SDA/SCL, 3V3, button, pot, AGND ...), i.e. every net except E0..E11 and GND;
   (c) reported only: Ex <-> Ey (an arc between two electrodes still passes a series resistor) and Ex <-> GND
       (an arc to GND bypasses no IC pin; it diverts the discharge to ground, see calc_gnd_bounce.py).
-  (d) metal terminations of the HPWC2512 chips (CALCULATION from the land positions): E termination <-> ELE termination
-      of the same chip and of any other chip, with L 6.5 +-0.3 mm, A 0.6 +-0.3 mm, W 3.2 +-0.2 mm (SOURCE, TT HPWC 09.23; L - 2A = B min
-      4.4 mm) and a hand-placement error along the axis 0, +-0.25, +-0.5 mm per part
+  (d) metal terminations of the 2512 chips (T-096 / ADR-026: YAGEO RC2512FK-073K3L; CALCULATION from the land positions): E termination
+      <-> ELE termination of the same chip and of any other chip, with L 6.35 +-0.10 mm, termination length A = I1 0.60 +-0.20 (top) /
+      I2 0.50 +-0.20 (bottom) swept 0.3 ... 0.8 mm, W 3.10 +-0.15 mm (SOURCE YAGEO RC_L V.11 Table 1; L min - 2 I1 max = 4.65 mm)
+      and a hand-placement error along the axis 0, +-0.25, +-0.5 mm per part
       (ASSUMPTION), worst sign per pair.
   (e) floating metal at the mounting holes H1..H4 (screw head / washer on the copper side, radius 2.8 ... 3.5 mm,
       ASSUMPTION ISO 7045 M3 pan head dk 5.6 mm, ISO 7089 M3 washer 7.0 mm): an arc ELEx -> screw -> Ex bypasses Rx;
@@ -34,10 +35,10 @@ import pcbnew
 ROOT = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
 PCB = sys.argv[1] if len(sys.argv) > 1 else os.path.join(ROOT, "hardware", "frutamidi.kicad_pcb")   # optional: other board file
 RULE_4KV, RULE_8KV = 3.5, 7.5          # mm, from calc_flashover.out (CALCULATION)
-W_MAX = 3.4                            # mm, HPWC2512 body width upper bound (W_LABEL)
-W_LABEL = "SOURCE TT HPWC 09.23: W 3.2 +- 0.2 mm"
-L_SWEEP = (6.2, 6.8)                   # mm, body length (SOURCE TT HPWC 09.23)
-A_SWEEP = (0.3, 0.9)                   # mm, termination length (SOURCE TT HPWC 09.23)
+W_MAX = 3.25                           # mm, RC2512 body width upper bound (W_LABEL)
+W_LABEL = "SOURCE YAGEO RC_L V.11 Table 1: W 3.10 +- 0.15 mm"
+L_SWEEP = (6.25, 6.45)                 # mm, body length (SOURCE YAGEO RC_L V.11: 6.35 +- 0.10)
+A_SWEEP = (0.3, 0.8)                   # mm, termination length (SOURCE YAGEO RC_L V.11: I1 0.60 +- 0.20, I2 0.50 +- 0.20)
 DELTAS = (0.0, 0.25, 0.5)              # mm, axial placement error per part (ASSUMPTION; hand soldering)
 SPARK_NOM, SPARK_TOL = 1.40, 0.05      # mm, ADR-020
 SCREW_R = (2.8, 3.5)                   # mm, screw head / washer / spacer radius (ASSUMPTION)
@@ -208,7 +209,7 @@ def main():
     # ---- (d) terminations of the 2512 chips
     rs = resistors(board, ox, oy)
     print()
-    print("(d) terminations of R1..R12 (HPWC2512, W %.1f mm, %d resistors); gap in mm" % (W_MAX, len(rs)))
+    print("(d) terminations of R1..R12 (RC2512, W %.2f mm, %d resistors); gap in mm" % (W_MAX, len(rs)))
     print("    %-6s %-6s %-6s %12s %12s   worst cross-channel pair" % ("L", "A", "delta", "same-ch", "cross-ch"))
     cap_rows = []
     for L in L_SWEEP:
@@ -233,7 +234,7 @@ def main():
                                 if better(d, pair, cross):
                                     cross = (d, pair)
                 cap_rows.append((L, A, delta, same[0], cross[0]))
-                print("    %-6.1f %-6.1f %-6.2f %12.2f %12.2f   %s <-> %s" % (L, A, delta, same[0], cross[0], *cross[1]))
+                print("    %-6.2f %-6.2f %-6.2f %12.2f %12.2f   %s <-> %s" % (L, A, delta, same[0], cross[0], *cross[1]))
 
     # ---- (e) floating metal at the mounting holes (copper side only)
     print()

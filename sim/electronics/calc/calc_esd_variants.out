@@ -9,8 +9,9 @@ R           Ipk@2kV     Ipk@4kV     Ipk@6kV     Ipk@8kV    tau@R (us)  E_R@8kV (
 2.7k          0.66A       1.32A       1.98A       2.64A         0.455          4.28
 2.85k         0.63A       1.26A       1.89A       2.52A         0.477          4.30
 3k            0.60A       1.20A       1.80A       2.40A         0.500          4.32
-3.15k         0.57A       1.15A       1.72A       2.30A         0.522          4.34
+3.267k        0.56A       1.11A       1.67A       2.22A         0.540          4.36
 3.3k          0.55A       1.10A       1.65A       2.20A         0.544          4.36
+3.333k        0.55A       1.09A       1.64A       2.18A         0.549          4.37
 4.7k          0.40A       0.80A       1.19A       1.59A         0.755          4.49
 6.8k          0.28A       0.56A       0.84A       1.12A         1.070          4.58
 10k           0.19A       0.39A       0.58A       0.77A         1.549          4.65
@@ -35,12 +36,12 @@ R_min for Ipk <= 1.33 A at 8 kV contact: 5670 ohm   (charge 1.20 uC = 6.0 x HBM 
 # Variant comparison at identical inputs (IEC contact 4 kV and 8 kV, CDC_min = 1 uA, C_ext 10..1000 pF)
 variant                                Ipk@4kV   Ipk@8kV   C_add pF  leak/1uA % parts                  single-layer home-etch
 a) none                                 15.00A    30.00A        0.0         0.0 n/a                    yes (no parts)
-b) series R 3k0 2512 (selected)          1.20A     2.40A        0.0         0.0 HPWC2512               yes, as routed (T-091)
-b1) series R 3k0 at -5 %                 1.26A     2.52A        0.0         0.0 HPWC2512               yes, as routed (T-091)
+b) series R 3k3 2512 (selected)          1.10A     2.20A        0.0         0.0 RC2512                 yes, as routed (T-091)
+b1) series R 3k3 at -1 %                 1.11A     2.22A        0.0         0.0 RC2512                 yes, as routed (T-091)
 b') series R 10k                         0.39A     0.77A        0.0         0.0 2512                   yes
-c) R 3k0 + TPD4E05U06 x3 to GND          1.20A     2.40A        0.5         1.0 SMD USON-10 2.5x1 mm   no: 0.5 mm pitch vs 0.6 mm clearance rule
-d) R 3k0 + 2x1N4148 to 3V3/GND           1.20A     2.40A        8.0         5.0 DO-35 or SOD           partial: 3V3 bus crosses 12 tracks (no bridges on one layer)
+c) R 3k3 + TPD4E05U06 x3 to GND          1.10A     2.20A        0.5         1.0 SMD USON-10 2.5x1 mm   no: 0.5 mm pitch vs 0.6 mm clearance rule
+d) R 3k3 + 2x1N4148 to 3V3/GND           1.10A     2.20A        8.0         5.0 DO-35 or SOD           partial: 3V3 bus crosses 12 tracks (no bridges on one layer)
 
-# Current / I_lim = 1.33 A:  a) 11.2x over at 4 kV  b) 3k0 0.90x (4 kV), 1.80x (8 kV)  b1) 2850 ohm 0.94x (4 kV), 1.89x (8 kV)  b') 0.58x (8 kV)
-# Margin I_lim / Ipk at 4 kV: 3k0 1.11, 2850 ohm 1.06, V1.2 3k3 1.21 (CALCULATION; I_lim is an ASSUMPTION for an IEC-shaped pulse)
-# Sensitivity: see sim_electrode.out, rows 2.85k / 3k / 3.15k (selected part) and 10k (b').
+# Current / I_lim = 1.33 A:  a) 11.2x over at 4 kV  b) 3k3 0.83x (4 kV), 1.65x (8 kV)  b1) 3267 ohm 0.83x (4 kV), 1.67x (8 kV)  b') 0.58x (8 kV)
+# Margin I_lim / Ipk at 4 kV: 3k3 1.21, 3267 ohm 1.20, 3333 ohm 1.22 (CALCULATION; I_lim is an ASSUMPTION for an IEC-shaped pulse)
+# Sensitivity: see sim_electrode.out, rows 3.267k / 3.3k / 3.333k (selected part) and 10k (b').

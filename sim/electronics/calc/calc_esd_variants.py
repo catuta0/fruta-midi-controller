@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""T-050, updated T-092 for the SMD board (R1-R12 = 3k0 +-5 %, ADR-023; V1.2 was 3k3): ESD current limiting and variant
+"""T-050, updated T-096 for the SMD board (R1-R12 = RC2512FK-073K3L 3k3 +-1 %, ADR-026): ESD current limiting and variant
 comparison for the electrode path. CALCULATION.
 
 Inputs (labels):
@@ -15,7 +15,7 @@ C_IEC, R_IEC = 150e-12, 330.0
 C_HBM, R_HBM, V_HBM = 100e-12, 1500.0, 2000.0
 I_LIM = V_HBM / R_HBM
 LEVELS = [2000, 4000, 6000, 8000]          # IEC contact levels 1..4 (SOURCE IEC 61000-4-2 Table 1)
-R_SWEEP = [0, 1e3, 2.2e3, 2.7e3, 2.85e3, 3.0e3, 3.15e3, 3.3e3, 4.7e3, 6.8e3, 10e3, 22e3, 47e3, 100e3]
+R_SWEEP = [0, 1e3, 2.2e3, 2.7e3, 2.85e3, 3.0e3, 3.267e3, 3.3e3, 3.333e3, 4.7e3, 6.8e3, 10e3, 22e3, 47e3, 100e3]
 
 
 def ipk(v, r):
@@ -51,8 +51,8 @@ print("  Sweep 10 pF..1000 pF covers object + 1 m wire (ASSUMPTION 30-50 pF/m) u
 print("  contact (+100..300 pF) with margin; 2000 pF is the MPR121 datasheet upper bound (SOURCE).")
 
 # ---------------------------------------------------------------- variant comparison
-R_SEL = 3.0e3            # ADR-023 D-1, HPWC2512 3k0
-R_LOW = R_SEL * 0.95     # -5 % tolerance (SOURCE TT HPWC 09.23): worst for the current
+R_SEL = 3.3e3            # ADR-026, RC2512FK-073K3L 3k3
+R_LOW = R_SEL * 0.99     # -1 % tolerance (SOURCE Mouser / YAGEO RC_L): worst for the current
 print()
 print("# Variant comparison at identical inputs (IEC contact 4 kV and 8 kV, CDC_min = 1 uA, C_ext 10..1000 pF)")
 LEAK_1N4148 = 25e-9      # A, max at VR = 20 V, 25 C (SOURCE Vishay 1N4148 datasheet); value at <=3.3 V is lower (ASSUMPTION: use the bound)
@@ -61,11 +61,11 @@ LEAK_TPD = 10e-9         # A max (SOURCE TI TPD4E05U06 product page)
 C_TPD = 0.5e-12          # F typ (SOURCE TI TPD4E05U06 product page)
 variants = [
     ("a) none", 0, 0, 0, "n/a", "yes (no parts)"),
-    ("b) series R 3k0 2512 (selected)", R_SEL, 0, 0, "HPWC2512", "yes, as routed (T-091)"),
-    ("b1) series R 3k0 at -5 %", R_LOW, 0, 0, "HPWC2512", "yes, as routed (T-091)"),
+    ("b) series R 3k3 2512 (selected)", R_SEL, 0, 0, "RC2512", "yes, as routed (T-091)"),
+    ("b1) series R 3k3 at -1 %", R_LOW, 0, 0, "RC2512", "yes, as routed (T-091)"),
     ("b') series R 10k", 10e3, 0, 0, "2512", "yes"),
-    ("c) R 3k0 + TPD4E05U06 x3 to GND", R_SEL, C_TPD, LEAK_TPD, "SMD USON-10 2.5x1 mm", "no: 0.5 mm pitch vs 0.6 mm clearance rule"),
-    ("d) R 3k0 + 2x1N4148 to 3V3/GND", R_SEL, 2 * C_1N4148, 2 * LEAK_1N4148, "DO-35 or SOD", "partial: 3V3 bus crosses 12 tracks (no bridges on one layer)"),
+    ("c) R 3k3 + TPD4E05U06 x3 to GND", R_SEL, C_TPD, LEAK_TPD, "SMD USON-10 2.5x1 mm", "no: 0.5 mm pitch vs 0.6 mm clearance rule"),
+    ("d) R 3k3 + 2x1N4148 to 3V3/GND", R_SEL, 2 * C_1N4148, 2 * LEAK_1N4148, "DO-35 or SOD", "partial: 3V3 bus crosses 12 tracks (no bridges on one layer)"),
 ]
 print("%-36s %9s %9s %10s %11s %-22s %s" % ("variant", "Ipk@4kV", "Ipk@8kV", "C_add pF", "leak/1uA %", "parts", "single-layer home-etch"))
 for name, r, c_add, leak, parts, layout in variants:
@@ -77,9 +77,9 @@ for name, r, c_add, leak, parts, layout in variants:
     print("%-36s %8.2fA %8.2fA %10.1f %11.1f %-22s %s" %
           (name, i4, i8, c_add * 1e12, leak / 1e-6 * 100, parts, layout))
 print()
-print("# Current / I_lim = %.2f A:  a) %.1fx over at 4 kV  b) 3k0 %.2fx (4 kV), %.2fx (8 kV)  b1) 2850 ohm %.2fx (4 kV), %.2fx (8 kV)  b') %.2fx (8 kV)" %
+print("# Current / I_lim = %.2f A:  a) %.1fx over at 4 kV  b) 3k3 %.2fx (4 kV), %.2fx (8 kV)  b1) 3267 ohm %.2fx (4 kV), %.2fx (8 kV)  b') %.2fx (8 kV)" %
       (I_LIM, ipk(4000, 0) / I_LIM, ipk(4000, R_SEL) / I_LIM, ipk(8000, R_SEL) / I_LIM,
        ipk(4000, R_LOW) / I_LIM, ipk(8000, R_LOW) / I_LIM, ipk(8000, 10e3) / I_LIM))
-print("# Margin I_lim / Ipk at 4 kV: 3k0 %.2f, 2850 ohm %.2f, V1.2 3k3 %.2f (CALCULATION; I_lim is an ASSUMPTION for an IEC-shaped pulse)"
-      % (I_LIM / ipk(4000, R_SEL), I_LIM / ipk(4000, R_LOW), I_LIM / ipk(4000, 3.3e3)))
-print("# Sensitivity: see sim_electrode.out, rows 2.85k / 3k / 3.15k (selected part) and 10k (b').")
+print("# Margin I_lim / Ipk at 4 kV: 3k3 %.2f, 3267 ohm %.2f, 3333 ohm %.2f (CALCULATION; I_lim is an ASSUMPTION for an IEC-shaped pulse)"
+      % (I_LIM / ipk(4000, R_SEL), I_LIM / ipk(4000, R_LOW), I_LIM / ipk(4000, 3333.0)))
+print("# Sensitivity: see sim_electrode.out, rows 3.267k / 3.3k / 3.333k (selected part) and 10k (b').")

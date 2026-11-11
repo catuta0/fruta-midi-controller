@@ -1,36 +1,36 @@
-# calc_flashover.py  CALCULATION (T-060, CR-002; T-092 SMD 3k0)
-# IEC source 150 pF / 330 ohm, R = 3.0 kOhm +5 % = 3150 ohm; V_gap = V * R / (R + 330)
-#   nominal 3k0: V_gap(4 kV) = 3604 V; R +5 %: 3621 V
-#   nominal 3k0: V_gap(8 kV) = 7207 V; R +5 %: 7241 V
+# calc_flashover.py  CALCULATION (T-060, CR-002; T-096 SMD 3k3)
+# IEC source 150 pF / 330 ohm, R = 3.3 kOhm +1 % = 3333 ohm; V_gap = V * R / (R + 330)
+#   nominal 3k3: V_gap(4 kV) = 3636 V; R +1 %: 3640 V
+#   nominal 3k3: V_gap(8 kV) = 7273 V; R +1 %: 7279 V
 
-== IEC contact 4 kV: V_gap = 3621 V (CALCULATION); peak current with arc bypassing R = 12.1 A (= V / 330 ohm), with R in circuit = 1.15 A
-  M1 uniform 2.0 kV/mm                       required gap   1.81 mm
-  M1 uniform 2.5 kV/mm                       required gap   1.45 mm
+== IEC contact 4 kV: V_gap = 3640 V (CALCULATION); peak current with arc bypassing R = 12.1 A (= V / 330 ohm), with R in circuit = 1.09 A
+  M1 uniform 2.0 kV/mm                       required gap   1.82 mm
+  M1 uniform 2.5 kV/mm                       required gap   1.46 mm
   M1 uniform 3.0 kV/mm                       required gap   1.21 mm
-  M1 uniform 3.5 kV/mm                       required gap   1.03 mm
-  M1 uniform 4.5 kV/mm                       required gap   0.80 mm
+  M1 uniform 3.5 kV/mm                       required gap   1.04 mm
+  M1 uniform 4.5 kV/mm                       required gap   0.81 mm
   M2 Paschen (Townsend form)                 required gap   0.67 mm
   M3 empirical uniform air                   required gap   0.73 mm
-  M4 non-uniform eta=0.7                     required gap   1.16 mm
-  M4 non-uniform eta=0.5                     required gap   1.78 mm
-  M4 non-uniform eta=0.3                     required gap   3.31 mm
+  M4 non-uniform eta=0.7                     required gap   1.17 mm
+  M4 non-uniform eta=0.5                     required gap   1.79 mm
+  M4 non-uniform eta=0.3                     required gap   3.33 mm
   M5 IEC 60664-1 F.2 case B (homog.)         required gap   1.04 mm
-  M5 IEC 60664-1 F.2 case A (inhomog.)       required gap   2.59 mm
+  M5 IEC 60664-1 F.2 case A (inhomog.)       required gap   2.61 mm
   M5 F.2 case A at the full level            required gap   3.00 mm
 
-== IEC contact 8 kV: V_gap = 7241 V (CALCULATION); peak current with arc bypassing R = 24.2 A (= V / 330 ohm), with R in circuit = 2.30 A
-  M1 uniform 2.0 kV/mm                       required gap   3.62 mm
-  M1 uniform 2.5 kV/mm                       required gap   2.90 mm
-  M1 uniform 3.0 kV/mm                       required gap   2.41 mm
-  M1 uniform 3.5 kV/mm                       required gap   2.07 mm
-  M1 uniform 4.5 kV/mm                       required gap   1.61 mm
-  M2 Paschen (Townsend form)                 required gap   1.55 mm
-  M3 empirical uniform air                   required gap   1.78 mm
-  M4 non-uniform eta=0.7                     required gap   2.75 mm
-  M4 non-uniform eta=0.5                     required gap   4.11 mm
-  M4 non-uniform eta=0.3                     required gap   7.42 mm
-  M5 IEC 60664-1 F.2 case B (homog.)         required gap   2.61 mm
-  M5 IEC 60664-1 F.2 case A (inhomog.)       required gap   7.03 mm
+== IEC contact 8 kV: V_gap = 7279 V (CALCULATION); peak current with arc bypassing R = 24.2 A (= V / 330 ohm), with R in circuit = 2.18 A
+  M1 uniform 2.0 kV/mm                       required gap   3.64 mm
+  M1 uniform 2.5 kV/mm                       required gap   2.91 mm
+  M1 uniform 3.0 kV/mm                       required gap   2.43 mm
+  M1 uniform 3.5 kV/mm                       required gap   2.08 mm
+  M1 uniform 4.5 kV/mm                       required gap   1.62 mm
+  M2 Paschen (Townsend form)                 required gap   1.56 mm
+  M3 empirical uniform air                   required gap   1.79 mm
+  M4 non-uniform eta=0.7                     required gap   2.77 mm
+  M4 non-uniform eta=0.5                     required gap   4.14 mm
+  M4 non-uniform eta=0.3                     required gap   7.46 mm
+  M5 IEC 60664-1 F.2 case B (homog.)         required gap   2.63 mm
+  M5 IEC 60664-1 F.2 case A (inhomog.)       required gap   7.07 mm
   M5 F.2 case A at the full level            required gap   8.00 mm
 
 # Check of the models at known points (sanity, CALCULATION):
@@ -40,14 +40,14 @@
   d =   5.0 mm: Paschen  19483 V   empirical  17121 V   (textbook: ~4.5 kV at 1 mm, ~30 kV at 10 mm)
   d =  10.0 mm: Paschen  35509 V   empirical  31440 V   (textbook: ~4.5 kV at 1 mm, ~30 kV at 10 mm)
 
-# SMD board (T-091): 2512 land copper gap 5.00 mm (MEASUREMENT, check_smd.out); HPWC2512 termination gap B min 4.4 mm
-#   (SOURCE TT HPWC 09.23); worst termination pair over placement error in check_gap.out (d).
-  4 kV: V_gap 3621 V vs B min 4.4 mm: uniform 3 kV/mm withstands 13200 V, IEC F.2 case A needs 2.59 mm -> below the gap
-  8 kV: V_gap 7241 V vs B min 4.4 mm: uniform 3 kV/mm withstands 13200 V, IEC F.2 case A needs 7.03 mm -> EXCEEDS the gap
+# SMD board (T-091): 2512 land copper gap 5.00 mm (MEASUREMENT, check_smd.out); RC2512 termination gap min 4.65 mm
+#   (CALCULATION from YAGEO RC_L V.11 L and I1); worst termination pair over placement error in check_gap.out (d).
+  4 kV: V_gap 3640 V vs B min 4.65 mm: uniform 3 kV/mm withstands 13950 V, IEC F.2 case A needs 2.61 mm -> below the gap
+  8 kV: V_gap 7279 V vs B min 4.65 mm: uniform 3 kV/mm withstands 13950 V, IEC F.2 case A needs 7.07 mm -> EXCEEDS the gap
 
-DESIGN RULE (a) ELEx <-> Ex same channel, copper and leads:  gap >= 3.5 mm  (4 kV, worst of M4 eta=0.3 3.31 mm and IEC F.2 case A at 4 kV 3.00 mm, rounded up)
+DESIGN RULE (a) ELEx <-> Ex same channel, copper and leads:  gap >= 3.5 mm  (4 kV, worst of M4 eta=0.3 3.33 mm and IEC F.2 case A at 4 kV 3.00 mm, rounded up)
 DESIGN RULE (b) Ex <-> ELEy any other channel (and any MPR121 / Pico net): gap >= 3.5 mm (same V_gap)
-REPORTED 8 kV: gap >= 7.5 mm would be needed (worst of IEC F.2 case A 7.03 mm and M4 eta=0.3 7.42 mm)
+REPORTED 8 kV: gap >= 7.5 mm would be needed (worst of IEC F.2 case A 7.07 mm and M4 eta=0.3 7.46 mm)
 NOT COVERED: flashover along the resistor body itself -> resistor pulse/ESD rating (datasheet), see calc_pulse_rated.py
 RULE_4KV_MM=3.5
 RULE_8KV_MM=7.5

@@ -45,7 +45,7 @@ value comes from a search-engine extract of the document; it was not opened, so 
 | ID | Source | Values used | How |
 |---|---|---|---|
 | T90-S1 | Raspberry Pi Pico datasheet RP-008307-DS-2, sha256 757ff485...aa89eb, `sim/systems/datasheets/pico-datasheet.pdf` | Figures 3, 5, 6: castellation land 16.18 / 22.58 mm, 1.6 mm pad, 2.54 mm pitch; TP positions; USB shell pads; module end to pin 1 column 1.37 mm | Read (pages 7, 10, 11 rendered) |
-| T90-S2 | TT Electronics HPWC Series 09.23, sha256 1088aba0...eb1a, `evidence/T-090/datasheets/tt_hpwc_0923.pdf` | 2512: L 6.5 ±0.3, A 0.6 ±0.3, W 3.2 ±0.2, B min 4.4 mm; ±5 %; 1.2/50 µs chart: 4352-4472 V at 2850 Ω, 4472 V at 3000 Ω, 4596 V at 3150 Ω (raster chart, ±5 % reading ASSUMPTION, `evidence/T-090/charts/chartread_raw.txt`) | Read |
+| T90-S2 | TT Electronics HPWC Series 09.23, sha256 1088aba0...eb1a, `evidence/T-090/datasheets/tt_hpwc_0923.pdf` | 2512: L 6.5 ±0.3, A 0.6 ±0.3, W 3.2 ±0.2, B min 4.4 mm; ±5 %; 1.2/50 µs chart: 4352-4472 V at 2850 Ω, 4472 V at 3000 Ω, 4596 V at 3150 Ω and at 3300 Ω (chartread_raw.txt) (raster chart, ±5 % reading ASSUMPTION, `evidence/T-090/charts/chartread_raw.txt`) | Read |
 | T90-S3 | Vishay CMA 0204, CMB 0207, doc. 28956 rev. 29-Mar-2023, sha256 3bd3f934...8c61 | Dimensions, ESD, chart (rejected option) | Read |
 | T90-S4 | Vishay MMU 0102, MMA 0204, MMB 0207, doc. 28963 rev. 02-Jun-2026, sha256 07bf424d...7969 | Chart, dimensions (rejected option) | Read |
 | T90-S5 | Vishay MMA 0204 HV, MMB 0207 HV, doc. 28880, sha256 0f8dca2b...6519 | Range 340 kΩ-10 MΩ (excluded) | Read |
@@ -88,3 +88,15 @@ Distributor data (Cxxxxx, stock, price, minimum and multiple) and the list of pa
 | FOJAN FRC1206F4701TS, FRC1206F2200TS, Samsung CL31B104KBCNNNC | R13-R16, C1 | LCSC listing parameters only; **manufacturer datasheets NOT opened**; 1206 land from T90-S6 |
 | ZX-PZ2.54-1-16PZZ | A2 header (optional) | LCSC listing only; **drawing NOT opened** |
 | TME, DigiKey, Farnell pages | Fallback information | **NOT opened** (see the evidence file) |
+
+## T-096 (2026-11-09)
+
+| Id | Source | Used for | Status |
+|---|---|---|---|
+| T96-S0 | YAGEO RC_L series datasheet V.11 (May 15 / Jul. 7, 2020), sha256 6b39ec0f...a197, `evidence/T-096/datasheets/yageo_rc_group51.pdf` (copy hosted by rcscomponents.kiev.ua; the yageo.com links returned 404) | RC2512 Table 1: L 6.35 ±0.10, W 3.10 ±0.15, H 0.55 ±0.10, I1 0.60 ±0.20, I2 0.50 ±0.20 mm; Table 2, 1 W row: max working 200 V, max overload 500 V, dielectric withstanding 500 V. No pulse, surge or ESD rating | Text extracted (`evidence/T-096/text/`) |
+| T96-S0b | Mouser Portugal page, RC2512FK-073K3L, Mouser No. 603-RC2512FK-073K3L | 3.3 kΩ 1 % 1 W 200 V, 6.35 x 3.1 x 0.55 mm; stock 13, 68,000 on order expected 18 May 2027; 1 at 0.189, 10 at 0.109 EUR | Read 2026-11-09 and again 2026-11-11 (unchanged) |
+| T96-S1 | Mouser Portugal page, HPWC2512-3K3JT1 (ADR-025, superseded by ADR-026), Mouser No. 756-HPWC2512-3K3JT1 | 3.3 kΩ 5 % 2512 2 W 500 V; stock 2,381; 1 at 2.05, 10 at 1.25, 25 at 1.01, 100 at 0.90 EUR | Read 2026-11-09 |
+| T96-S2 | Mouser Portugal page, PTV09A-4015F-B103, Mouser No. 652-PTV09A-4015FB103 | 10 kΩ ±20 %, linear, 50 mW, flatted 6 mm shaft 15 mm, carbon, insulated shaft; stock 772; 1 at 0.765 EUR | Read 2026-11-09. The Mouser number has no hyphen before B103 |
+| T96-S3 | Bourns PTV09 series datasheet, sha256 411cdb6a...8558, `evidence/T-096/datasheets/bourns_ptv09.pdf` | ±20 %; residual resistance "500 ohms or ±1 % max."; 0.05 W; 20 VDC; 280° ±10°; insulated shaft; ordering code; -4 = horizontal, bushingless | Text extracted, page 2 drawing inspected. No numeric linearity tolerance in the datasheet |
+| T96-S4 | Mouser Portugal page, Chip Quik EGS10C-20G, Mouser No. 910-EGS10C-20G | Optional silicone candidate; stock 601; 1 at 4.26 EUR | Listing only; **datasheet NOT opened, cure type NOT CONFIRMED** |
+| T96-S5 | Mouser numbers, stock and prices (re-read 2026-11-11: SC0915 3.44 EUR stock 9,200; 1982 6.84 EUR stock 168; RC1206FR-074K7L and -07220RL 0.086 EUR; CL31B104KBCNNNC 0.12 EUR; B3S-1000 0.697 EUR; PTV09A-4015F-B103 0.765 EUR stock 752; SPK-016A 0.327 EUR) of 358-SC0915, 485-1982, 603-RC1206FR-074K7L, 603-RC1206FR-07220RL, 187-CL31B104KBCNNNC, 653-B3S-1000, 179-SPK-016A | BOM | T-095 / ADR-024 list; 358-SC0915 and 485-1982 figures come from the user's own check. Manufacturer datasheets of the YAGEO resistors and the Samsung capacitor **NOT opened**. Knob bore against the flatted shaft **NOT CONFIRMED** |

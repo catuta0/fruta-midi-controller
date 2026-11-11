@@ -1,7 +1,7 @@
 # check_gap.py  MEASUREMENT on the design file hardware/frutamidi.kicad_pcb (KiCad 10.0.4)
 # rule (calc_flashover.out): 4 kV 3.5 mm, 8 kV 7.5 mm; coordinates relative to the board corner
 # copper = F.Cu pads and tracks (MEASUREMENT); terminations/screws = CALCULATION with the ASSUMPTIONS in the header
-# W_MAX = 3.4 mm (SOURCE TT HPWC 09.23: W 3.2 +- 0.2 mm)
+# W_MAX = 3.2 mm (SOURCE YAGEO RC_L V.11 Table 1: W 3.10 +- 0.15 mm)
   channel E0   ELE0  <-> E0  copper gap   5.00 mm
   channel E1   ELE1  <-> E1  copper gap   5.00 mm
   channel E2   ELE2  <-> E2  copper gap   5.00 mm
@@ -20,30 +20,30 @@
 (c) Ex <-> Ey copper (reported)              min   1.66 mm   R1 pad 2 [/E0] <-> track (37.16,57.17)-(37.16,63.75) [/E1]
 (c) Ex <-> GND copper (reported)             min   1.40 mm   J2 pad 2 [/E0] <-> track (27.00,68.00)-(93.04,68.00) [GND]
 
-(d) terminations of R1..R12 (HPWC2512, W 3.4 mm, 12 resistors); gap in mm
+(d) terminations of R1..R12 (RC2512, W 3.25 mm, 12 resistors); gap in mm
     L      A      delta       same-ch     cross-ch   worst cross-channel pair
-    6.2    0.3    0.00           5.60         5.85   R1 E-term <-> R2 ELE-term
-    6.2    0.3    0.25           5.60         5.37   R1 E-term <-> R2 ELE-term
-    6.2    0.3    0.50           5.60         4.90   R1 E-term <-> R2 ELE-term
-    6.2    0.9    0.00           4.40         4.71   R1 E-term <-> R2 ELE-term
-    6.2    0.9    0.25           4.40         4.25   R1 E-term <-> R2 ELE-term
-    6.2    0.9    0.50           4.40         3.79   R1 E-term <-> R2 ELE-term
-    6.8    0.3    0.00           6.20         6.42   R1 E-term <-> R2 ELE-term
-    6.8    0.3    0.25           6.20         5.94   R1 E-term <-> R2 ELE-term
-    6.8    0.3    0.50           6.20         5.46   R1 E-term <-> R2 ELE-term
-    6.8    0.9    0.00           5.00         5.27   R1 E-term <-> R2 ELE-term
-    6.8    0.9    0.25           5.00         4.80   R1 E-term <-> R2 ELE-term
-    6.8    0.9    0.50           5.00         4.34   R1 E-term <-> R2 ELE-term
+    6.25   0.30   0.00           5.65         5.94   R1 E-term <-> R2 ELE-term
+    6.25   0.30   0.25           5.65         5.47   R1 E-term <-> R2 ELE-term
+    6.25   0.30   0.50           5.65         5.00   R1 E-term <-> R2 ELE-term
+    6.25   0.80   0.00           4.65         5.00   R1 E-term <-> R2 ELE-term
+    6.25   0.80   0.25           4.65         4.54   R1 E-term <-> R2 ELE-term
+    6.25   0.80   0.50           4.65         4.08   R1 E-term <-> R2 ELE-term
+    6.45   0.30   0.00           5.85         6.13   R1 E-term <-> R2 ELE-term
+    6.45   0.30   0.25           5.85         5.65   R1 E-term <-> R2 ELE-term
+    6.45   0.30   0.50           5.85         5.18   R1 E-term <-> R2 ELE-term
+    6.45   0.80   0.00           4.85         5.18   R1 E-term <-> R2 ELE-term
+    6.45   0.80   0.25           4.85         4.72   R1 E-term <-> R2 ELE-term
+    6.45   0.80   0.50           4.85         4.26   R1 E-term <-> R2 ELE-term
 
 (e) floating metal at H1..H4 (radius 2.8 / 3.5 mm): bypass ELEx -> metal -> Ex = sum of the two gaps, worst channel
-    r 2.8 H1  at (5.00,65.00): copper side  50.45 mm (ELE0 27.66 + E0 22.79)
-    r 2.8 H2  at (96.00,4.00): copper side  73.98 mm (ELE11 25.87 + E11 48.10)
-    r 2.8 H3  at (96.50,58.00): copper side   9.66 mm (ELE11 6.74 + E11 2.91)
-    r 2.8 H4  at (29.80,4.00): copper side  71.63 mm (ELE0 23.75 + E0 47.89)
-    r 3.5 H1  at (5.00,65.00): copper side  49.05 mm (ELE0 26.96 + E0 22.09)
-    r 3.5 H2  at (96.00,4.00): copper side  72.58 mm (ELE11 25.17 + E11 47.40)
-    r 3.5 H3  at (96.50,58.00): copper side   8.26 mm (ELE11 6.04 + E11 2.21)
-    r 3.5 H4  at (29.80,4.00): copper side  70.23 mm (ELE0 23.05 + E0 47.19)
+    r 2.8 H1  at (5.00,65.00): copper side  50.57 mm (ELE0 27.79 + E0 22.79)
+    r 2.8 H2  at (96.00,4.00): copper side  74.11 mm (ELE11 25.87 + E11 48.24)
+    r 2.8 H3  at (96.50,58.00): copper side   9.80 mm (ELE11 6.89 + E11 2.91)
+    r 2.8 H4  at (29.80,4.00): copper side  71.76 mm (ELE0 23.75 + E0 48.01)
+    r 3.5 H1  at (5.00,65.00): copper side  49.17 mm (ELE0 27.09 + E0 22.09)
+    r 3.5 H2  at (96.00,4.00): copper side  72.71 mm (ELE11 25.17 + E11 47.54)
+    r 3.5 H3  at (96.50,58.00): copper side   8.40 mm (ELE11 6.19 + E11 2.21)
+    r 3.5 H4  at (29.80,4.00): copper side  70.36 mm (ELE0 23.05 + E0 47.31)
 
 (f) ADR-020 spark gap: electrode J2 pad <-> nearest GND copper (should be the edge track at y = 68.0)
     E0    to edge track 1.401 mm; to any GND copper 1.401 mm
@@ -63,10 +63,10 @@ PASS (a) copper gap 5.00 mm vs rule 3.5 mm (4 kV)
 FAIL (a) copper gap 5.00 mm vs rule 7.5 mm (8 kV)
 PASS (b) copper gap 5.29 mm vs rule 3.5 mm (4 kV)
 FAIL (b) copper gap 5.29 mm vs rule 7.5 mm (8 kV)
-PASS (d) terminations worst 4.40 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.00 mm]
-PASS (d) terminations worst 4.25 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.25 mm]
-PASS (d) terminations worst 3.79 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.50 mm]
-PASS (e) floating-metal bypass worst 8.26 mm vs rule 3.5 mm (4 kV); PASS vs 7.5 mm (8 kV)
+PASS (d) terminations worst 4.65 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.00 mm]
+PASS (d) terminations worst 4.54 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.25 mm]
+PASS (d) terminations worst 4.08 mm vs rule 3.5 mm (4 kV); FAIL vs 7.5 mm (8 kV)   [placement error +-0.50 mm]
+PASS (e) floating-metal bypass worst 8.40 mm vs rule 3.5 mm (4 kV); PASS vs 7.5 mm (8 kV)
 PASS (f) spark gap: 12 electrode pads, min 1.401 / max 1.401 mm vs 1.40 +/- 0.05 mm; nearest GND is the edge track
 SUMMARY: copper PASS (4 kV rule, (a) and (b)); terminations PASS at 4 kV over the swept ASSUMPTIONS; mounting metal PASS; spark gap PASS
-SUMMARY 8 kV: copper FAIL; terminations FAIL (worst 3.79 mm vs 7.5 mm)
+SUMMARY 8 kV: copper FAIL; terminations FAIL (worst 4.08 mm vs 7.5 mm)

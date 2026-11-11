@@ -144,12 +144,12 @@ check("A2 pad 1.8 x 2.4 mm, gap >= 0.6", all(abs(p.GetSize(pcbnew.F_Cu).x * TOMM
 r1p = {p.GetNumber(): p for p in fps["R1"].Pads()}
 g = pad_rect(r1p["2"])[1] - pad_rect(r1p["1"])[3]
 check("R1-R12 land gap G = 5.0 mm (ADR-023)", abs(g - 5.0) < 1e-3, "%.3f mm" % g)
-L_T = (6.2, 6.8)
-A_T = (0.3, 0.9)
+L_T = (6.25, 6.45)          # SOURCE YAGEO RC_L V.11 Table 1, RC2512 L 6.35 +- 0.10 mm
+A_T = (0.3, 0.8)            # SOURCE same table, I1 0.60 +- 0.20, I2 0.50 +- 0.20 mm
 pad_inner, pad_outer = 2.5, 4.4
 term_in = min(L_T) / 2 - max(A_T)
 term_out = max(L_T) / 2
-check("HPWC2512 termination lands on the pad at all L, A (CALCULATION)", term_in <= pad_outer and term_out <= pad_outer and max(L_T) / 2 - min(A_T) >= pad_inner, "termination inner edge %.2f..%.2f, outer edge %.2f..%.2f; pad %.2f..%.2f mm" % (term_in, max(L_T) / 2 - min(A_T), min(L_T) / 2, term_out, pad_inner, pad_outer))
+check("RC2512 termination lands on the pad at all L, A (CALCULATION)", term_in <= pad_outer and term_out <= pad_outer and max(L_T) / 2 - min(A_T) >= pad_inner, "termination inner edge %.2f..%.2f, outer edge %.2f..%.2f; pad %.2f..%.2f mm" % (term_in, max(L_T) / 2 - min(A_T), min(L_T) / 2, term_out, pad_inner, pad_outer))
 
 sw = {p.GetNumber() + ("L" if pos(p)[0] < fps["SW1"].GetPosition().x * TOMM - ox else "R"): pos(p) for p in fps["SW1"].Pads()}
 check("SW1 land 9.5 / 6.4 / 4.5 / 1.3 (SOURCE Omron B3S p.2): rows 4.5, centres 7.95", abs(sw["2L"][1] - sw["1L"][1] - 4.5) < 1e-3 and abs(sw["1R"][0] - sw["1L"][0] - 7.95) < 1e-3, str(sorted(sw.items())))

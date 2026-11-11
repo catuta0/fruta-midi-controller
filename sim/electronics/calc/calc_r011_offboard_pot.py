@@ -6,7 +6,7 @@ Inputs
   IEC 61000-4-2 contact network 150 pF / 330 ohm, first peak 3.75 A/kV, I(30 ns) 2 A/kV  SOURCE EE-S16 (recalled, standard not opened)
   Wire inductance 0.8 ... 1.2 uH/m (ASSUMPTION, single wire, no return plane)
   Wire length 0.05 ... 0.30 m (ASSUMPTION: builder's choice, no enclosure defined; to be measured on the unit)
-  Frame-to-lug clearance inside the pot 0.5 ... 2.0 mm (ASSUMPTION: Alps/panel pot, drawing not opened)
+  Frame-to-lug clearance inside the pot 0.5 ... 2.0 mm (ASSUMPTION: not stated in the Bourns PTV09 datasheet; RV1 = PTV09A-4015F-B103, insulated shaft SOURCE)
   Flashover rule worst model calc_flashover.py: 3.5 mm at 4 kV (CALCULATION, ASSUMPTION inputs)
   C1 100 nF +-10 % X7R (T-090, datasheet not opened), 3.3 V bias derating ignored (ASSUMPTION, << 50 V rating)
 NOT available (stay unquantified): RP2040 ADC/AGND pad ESD rating (R-010: HBM rating found covers digital FT pins only),

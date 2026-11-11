@@ -1,0 +1,610 @@
+=== PAGE 1 ===
+Important notice
+Dear Customer,
+On 7 February 2017 the former NXP Standard Product business became a new company with the
+tradename Nexperia. Nexperia is an industry leading supplier of Discrete, Logic and PowerMOS
+semiconductors with its focus on the automotive, industrial, computing, consumer and wearable
+application markets
+In data sheets and application notes which still contain NXP or Philips Semiconductors references, use
+the references to Nexperia, as shown below.
+Instead of http://www.nxp.com, http://www.philips.com/ or http://www.semiconductors.philips.com/,
+use http://www.nexperia.com
+Instead of sales.addresses@www.nxp.com or sales.addresses@www.semiconductors.philips.com, use
+salesaddresses@nexperia.com (email)
+Replace the copyright notice at the bottom of each page or elsewhere in the document, depending on
+the version, as shown below:
+- © NXP N.V. (year). All rights reserved or © Koninklijke Philips Electronics N.V. (year). All rights
+reserved
+Should be replaced with:
+- © Nexperia B.V. (year). All rights reserved.
+If you have any questions related to the data sheet, please contact our nearest sales office via e-mail
+or telephone (details via salesaddresses@nexperia.com). Thank you for your cooperation and
+understanding,
+Kind regards,
+Team Nexperia
+=== PAGE 2 ===
+PESD5V0S1BA;PESD5V0S1BB;
+PESD5V0S1BL
+Low capacitance bidirectional ESD protection diodes
+Rev. 04 — 20 August 2009 Product data sheet
+1. Product profile
+1.1 General description
+Low capacitance ElectroStatic Discharge (ESD) protection diodes in ultra small SMD
+plastic packages designed to protect one signal line from the damage caused by ESD and
+other transients.
+Table 1. Product overview
+Type number Package
+NXP JEITA
+PESD5V0S1BA SOD323 SC-76
+PESD5V0S1BB SOD523 SC-79
+PESD5V0S1BL SOD882 -
+1.2 Features
+s Bidirectional ESD protection of one line s ESD protection > 30 kV
+s Max. peak pulse power: PPP = 130 W s IEC 61000-4-2, level 4 (ESD)
+s Low clamping voltage: V(CL)R = 14 V s IEC 61000-4-5 (surge); IPP = 12 A
+s Ultra low leakage current: IRM = 5 nA s Ultra small SMD plastic packages
+1.3 Applications
+s Cellular handsets and accessories s Portable electronics s Computers and peripherals
+s Communication systems
+s Audio and video equipment
+1.4 Quick reference data
+Table 2. Quick reference data
+Symbol Parameter Conditions Min Typ Max Unit
+VRWM reverse stand-off voltage - - 5 V
+Cd diode capacitance VR = 0 V;
+f = 1 MHz
+- 35 45 pF
+=== PAGE 3 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+2. Pinning information
+Table 3. Pinning
+Pin Description Simplified outline Symbol
+SOD323, SOD523
+1 cathode 1
+2 cathode 2
+1
+2
+1 2
+sym045
+001aab540
+SOD882
+1 cathode 1
+2 cathode 2
+1
+2
+1
+2
+Transparent
+top view
+sym045
+3. Ordering information
+Table 4. Ordering information
+Type number Package
+Name Description Version
+PESD5V0S1BA SC-76 plastic surface mounted package; 2 leads SOD323
+PESD5V0S1BB SC-79 plastic surface mounted package; 2 leads SOD523
+PESD5V0S1BL - leadless ultra small plastic package; 2 terminals;
+body 1.0 × 0.6 × 0.5 mm
+SOD882
+4. Marking
+Table 5. Marking codes
+Type number Marking code
+PESD5V0S1BA E6
+PESD5V0S1BB L7
+PESD5V0S1BL F1
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 2 of 15
+=== PAGE 4 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+5. Limiting values
+Table 6. Limiting values
+In accordance with the Absolute Maximum Rating System (IEC 60134).
+Symbol Parameter Conditions Min Max Unit
+Per diode
+PPP peak pulse power 8/20 µs [1][2] - 130 W
+IPP peak pulse current 8/20 µs [1][2] - 12 A
+Tj junction temperature - 150°C
+Tamb ambient temperature−65 +150°C
+Tstg storage temperature−65 +150°C
+[1] [2] Non-repetitive current pulse 8/20 µs exponentially decaying waveform according to IEC61000-4-5; see
+Figure 1.
+Measured from pin 1 to pin 2.
+Table 7. ESD maximum ratings
+Symbol Parameter Conditions Min Max Unit
+ESD electrostatic discharge
+capability
+IEC 61000-4-2 (contact
+discharge)
+[1][2] - 30 kV
+HBM MIL-Std 883 - 10 kV
+[1] [2] Measured from pin 1 to pin 2.
+Device stressed with ten non-repetitive ElectroStatic Discharge (ESD) pulses; see Figure 2.
+Table 8. ESD standards compliance
+Standard Conditions
+IEC 61000-4-2, level 4 (ESD); Figure 2 > 15 kV (air); > 8 kV (contact)
+HBM MIL-STD 883; class 3 > 4 kV
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 3 of 15
+=== PAGE 5 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+001aaa191
+mle218
+120
+Ipp
+(%)
+80
+Ipp
+100 %
+90 %
+100 % Ipp; 8 µs
+e−t
+50 % Ipp; 20 µs
+40
+10 %
+0
+0 10
+20
+30
+40
+tr = 0.7 to 1 ns
+30 ns
+t
+t (µs)
+60 ns
+Fig 1. 8/20 µs pulse waveform according to
+IEC 61000-4-5
+Fig 2. ElectroStatic Discharge (ESD) pulse waveform
+according to IEC 61000-4-2
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 4 of 15
+=== PAGE 6 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+6. Characteristics
+Table 9. Characteristics
+T amb = 25°C unless otherwise specified
+Symbol Parameter Conditions Min Typ Max Unit
+Per diode
+VRWM reverse stand-off voltage - - 5 V
+IRM reverse leakage current VRWM = 5 V;
+see Figure 6
+- 5 100 nA
+V(CL)R clamping voltage IPP = 1 A [1][2] - - 10 V
+IPP = 12 A [1][2] - - 14 V
+V(BR) breakdown voltage IR = 1 mA 5.5 - 9.5 V
+rdif differential resistance IR = 1 mA - - 50 Ω
+Cd diode capacitance VR = 0 V; f = 1 MHz;
+see Figure 5
+- 35 45 pF
+[1] [2] Non-repetitive current pulse 8/20 µs exponentially decaying waveform according to IEC61000-4-5; see Figure 1.
+Measures from pin 1 to pin 2.
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 5 of 15
+=== PAGE 7 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+001aaa202
+001aaa193
+103
+Ppp
+(W)
+102
+1.2
+PPP
+10
+PPP(25°C)
+0.8
+0.4
+0
+10 102
+1 104
+103
+tp (µs)
+0 200 150
+50 100
+Tj (°C)
+Fig 3. Tamb = 25°C
+Peak pulse power dissipation as a function of
+exponential time duration tp; typical values
+Fig 4. Relative variation of peak pulse power as a
+function of junction temperature; typical
+values
+001aaa203
+001aaa204
+38
+Cd
+(pF)
+34
+30
+26
+22
+102
+IRM(Tj)
+IRM(Tj=85°C)
+10
+1
+10−1
+1
+2 3
+0 5 4
+VR (V)
+75 150 125
+100
+Tj (°C)
+Fig 5. Tamb = 25°C; f = 1 MHz
+Diode capacitance as a function of reverse
+voltage; typical values
+Fig 6. Relative variation of reverse leakage current
+as a function of junction temperature; typical
+values
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 6 of 15
+=== PAGE 8 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+ESD TESTER RZ
+450 Ω
+RG 223/U
+50 Ω coax
+4 GHz DIGITAL
+OSCILLOSCOPE
+10×
+ATTENUATOR
+CZ
+50 Ω
+PESD5V0S1Bx
+IEC 61000-4-2 network
+CZ = 150 pF; RZ = 330 Ω
+vertical scale = 200 V/div
+horizontal scale = 50 ns/div
+vertical scale = 10 V/div
+horizontal scale = 50 ns/div
+GND
+GND
+unclamped +1 kV ESD voltage waveform
+(IEC61000-4-2 network)
+clamped +1 kV ESD voltage waveform
+(IEC61000-4-2 network)
+GND
+GND
+Fig 7. vertical scale = 200 V/div
+horizontal scale = 50 ns/div
+unclamped −1 kV ESD voltage waveform
+(IEC61000-4-2 network)
+ESD clamping test setup and waveforms
+vertical scale = 10 V/div
+horizontal scale = 50 ns/div
+clamped −1 kV ESD voltage waveform
+(IEC61000-4-2 network)
+006aaa056
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 7 of 15
+=== PAGE 9 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+7. Application information
+PESD5V0S1Bx series is designed for the protection of one bidirectional signal line from
+the damage caused by ElectroStatic Discharge (ESD) and surge pulses. The devices may
+be used on lines where the signal polarities are above and below ground. They provide a
+surge capability of up to 130 W per line for a 8/20 µs waveform.
+signal line
+PESD5V0S1Bx
+GND
+006aaa057
+Fig 8. Bidirectional protection of one signal line
+Circuit board layout and protection device placement:
+Circuit board layout is critical for the suppression of ESD, EFT and surge transients.
+The following guidelines are recommended:
+1. Place the protection device as close to the input terminal or connector as possible.
+2. The path length between the protection device and the protected line should be
+minimized.
+3. Keep parallel signal paths to a minimum.
+4. Avoid running protection conductors in parallel with unprotected conductor.
+5. Minimize all printed-circuit board conductive loops including power and ground loops.
+6. Minimize the length of the transient return path to ground.
+7. Avoid using shared transient return paths to a common ground point.
+8. Ground planes should be used whenever possible. For multilayer printed-circuit
+boards, use ground vias.
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 8 of 15
+=== PAGE 10 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+8. Package outline
+Plastic surface-mounted package; 2 leads
+SOD323
+D
+A
+E
+X
+HD v A M
+1
+2
+bp
+A
+(1)
+Q
+c
+A1
+2 mm
+Lp
+detail X
+0 1
+scale
+DIMENSIONS (mm are the original dimensions)
+UNIT A
+A1
+max
+bp c D E HD Q
+Lp v
+mm 0.05 1.1
+0.40
+0.8
+0.25
+0.25
+0.10
+1.8
+1.6
+1.35
+1.15
+2.7
+2.3
+0.45
+0.15
+0.25
+0.15
+0.2
+Note
+1. The marking bar indicates the cathode
+OUTLINE
+VERSION
+REFERENCES
+IEC JEDEC JEITA
+SOD323 SC-76
+EUROPEAN
+PROJECTION ISSUE DATE
+03-12-17
+06-03-16
+Fig 9. Package outline SOD323 (SC-76)
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 9 of 15
+=== PAGE 11 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+Plastic surface-mounted package; 2 leads SOD523
+A
+c
+HE
+v M A
+D
+1 2
+A
+0 0.5 1 mm
+E bp
+scale
+DIMENSIONS (mm are the original dimensions)
+A HE
+UNIT bp c D E v
+mm
+0.65
+0.58
+0.34
+0.26
+0.17
+1.25
+0.85
+1.65
+0.11 0.1
+1.15
+0.75
+1.55
+Note
+1. The marking bar indicates the cathode.
+REFERENCES
+OUTLINE
+VERSION
+(1)
+EUROPEAN
+PROJECTION ISSUE DATE
+IEC JEDEC JEITA
+SOD523 SC-79 02-12-13
+06-03-16
+Fig 10. Package outline SOD523 (SC-79)
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 10 of 15
+=== PAGE 12 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+Leadless ultra small plastic package; 2 terminals; body 1.0 x 0.6 x 0.5 mm SOD882
+L
+L
+1
+2
+b
+e1
+A
+A1
+E
+D
+(2)
+0 0.5 1 mm
+scale
+DIMENSIONS (mm are the original dimensions)
+UNIT A1
+D E
+A(1) b e1 L
+max.
+mm 0.50
+0.46
+0.55
+0.03 0.62
+1.02
+0.47
+0.55 0.65
+0.95
+0.30
+0.22
+Notes
+1. Including plating thickness
+2. The marking bar indicates the cathode
+OUTLINE
+VERSION
+REFERENCES
+EUROPEAN
+PROJECTION ISSUE DATE
+IEC JEDEC JEITA
+SOD882 03-04-16
+03-04-17
+Fig 11. Package outline SOD882
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 11 of 15
+=== PAGE 13 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+9. Packing information
+Table 10. Packing methods
+The indicated -xxx are the last three digits of the 12NC ordering code.[1]
+Type number Package Description Packing quantity
+3000 10000
+PESD5V0S1BA SOD323 4 mm pitch, 8 mm tape and reel -115 -135
+PESD5V0S1BB SOD523 4 mm pitch, 8 mm tape and reel -115 -135
+PESD5V0S1BL SOD882 4 mm pitch, 8 mm tape and reel - -315
+[1] For further information and the availability of packing methods, see Section 12.
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 12 of 15
+=== PAGE 14 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+10. Revision history
+Table 11. Revision history
+Document ID Release date Data sheet status Change notice Supersedes
+PESD5V0S1BA_BB_BL_4 20090820 Product data sheet - PESD5V0S1BA_BB_BL_3
+Modifications:• This data sheet was changed to reflect the new company name NXP Semiconductors,
+including new legal definitions and disclaimers. No changes were made to the technical
+content.
+• Table 3 “Pinning”: amended
+• Figure 9 “Package outline SOD323 (SC-76)”: updated
+• Figure 10 “Package outline SOD523 (SC-79)”: updated
+PESD5V0S1BA_BB_BL_3 20041217 Product data sheet - PESD5V0S1BA_BB_BL_2
+PESD5V0S1BA_BB_BL_2 20040802 Product data sheet - PESD5V0S1BA_1
+PESD5V0S1BB_1
+PESD5V0S1BA_1 20040322 Product specification - -
+PESD5V0S1BB_1 20040304 Product specification - -
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 13 of 15
+=== PAGE 15 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+11. Legal information
+11.1 Data sheet status
+Document status[1][2] Product status[3] Definition
+Objective [short] data sheet Development This document contains data from the objective specification for product development.
+Preliminary [short] data sheet Qualification This document contains data from the preliminary specification.
+Product [short] data sheet Production This document contains the product specification.
+[1] [2] [3] Please consult the most recently issued document before initiating or completing a design.
+The term ‘short data sheet’ is explained in section “Definitions”.
+The product status of device(s) described in this document may have changed since this document was published and may differ in case of multiple devices. The latest product status
+information is available on the Internet at URL http://www.nxp.com.
+11.2 Definitions
+Draft — The document is a draft version only. The content is still under
+internal review and subject to formal approval, which may result in
+modifications or additions. NXP Semiconductors does not give any
+representations or warranties as to the accuracy or completeness of
+information included herein and shall have no liability for the consequences of
+use of such information.
+Short data sheet — A short data sheet is an extract from a full data sheet
+with the same product type number(s) and title. A short data sheet is intended
+for quick reference only and should not be relied upon to contain detailed and
+full information. For detailed and full information see the relevant full data
+sheet, which is available on request via the local NXP Semiconductors sales
+office. In case of any inconsistency or conflict with the short data sheet, the
+full data sheet shall prevail.
+damage. NXP Semiconductors accepts no liability for inclusion and/or use of
+NXP Semiconductors products in such equipment or applications and
+therefore such inclusion and/or use is at the customer’s own risk.
+Applications — Applications that are described herein for any of these
+products are for illustrative purposes only. NXP Semiconductors makes no
+representation or warranty that such applications will be suitable for the
+specified use without further testing or modification.
+Limiting values — Stress above one or more limiting values (as defined in
+the Absolute Maximum Ratings System of IEC 60134) may cause permanent
+damage to the device. Limiting values are stress ratings only and operation of
+the device at these or any other conditions above those given in the
+Characteristics sections of this document is not implied. Exposure to limiting
+values for extended periods may affect device reliability.
+Terms and conditions of sale — NXP Semiconductors products are sold
+subject to the general terms and conditions of commercial sale, as published
+at http://www.nxp.com/profile/terms, including those pertaining to warranty,
+11.3 Disclaimers
+General — Information in this document is believed to be accurate and
+reliable. However, NXP Semiconductors does not give any representations or
+warranties, expressed or implied, as to the accuracy or completeness of such
+information and shall have no liability for the consequences of use of such
+information.
+Right to make changes — NXP Semiconductors reserves the right to make
+changes to information published in this document, including without
+limitation specifications and product descriptions, at any time and without
+notice. This document supersedes and replaces all information supplied prior
+to the publication hereof.
+Suitability for use — NXP Semiconductors products are not designed,
+authorized or warranted to be suitable for use in medical, military, aircraft,
+space or life support equipment, nor in applications where failure or
+malfunction of an NXP Semiconductors product can reasonably be expected
+to result in personal injury, death or severe property or environmental
+intellectual property rights infringement and limitation of liability, unless
+explicitly otherwise agreed to in writing by NXP Semiconductors. In case of
+any inconsistency or conflict between information in this document and such
+terms and conditions, the latter will prevail.
+No offer to sell or license — Nothing in this document may be interpreted
+or construed as an offer to sell products that is open for acceptance or the
+grant, conveyance or implication of any license under any copyrights, patents
+or other industrial or intellectual property rights.
+Export control — This document as well as the item(s) described herein
+may be subject to export control regulations. Export might require a prior
+authorization from national authorities.
+Quick reference data — The Quick reference data is an extract of the
+product data given in the Limiting values and Characteristics sections of this
+document, and as such is not complete, exhaustive or legally binding.
+11.4 Trademarks
+Notice: All referenced brands, product names, service names and trademarks
+are the property of their respective owners.
+12. Contact information
+For more information, please visit: http://www.nxp.com
+For sales office addresses, please send an email to: salesaddresses@nxp.com
+PESD5V0S1BA_BB_BL_4 © NXP B.V. 2009. All rights reserved.
+Product data sheet Rev. 04 — 20 August 2009 14 of 15
+=== PAGE 16 ===
+NXP Semiconductors PESD5V0S1BA/BB/BL
+Low capacitance bidirectional ESD protection diodes
+13. Contents
+1 Product profile . . . . . . . . . . . . . . . . . . . . . . . . . . 1
+1.1 General description. . . . . . . . . . . . . . . . . . . . . . 1
+1.2 Features . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 1
+1.3 Applications . . . . . . . . . . . . . . . . . . . . . . . . . . . 1
+1.4 Quick reference data. . . . . . . . . . . . . . . . . . . . . 1
+2 Pinning information . . . . . . . . . . . . . . . . . . . . . . 2
+3 Ordering information . . . . . . . . . . . . . . . . . . . . . 2
+4 Marking . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 2
+5 Limiting values. . . . . . . . . . . . . . . . . . . . . . . . . . 3
+6 Characteristics. . . . . . . . . . . . . . . . . . . . . . . . . . 5
+7 Application information. . . . . . . . . . . . . . . . . . . 8
+8 Package outline . . . . . . . . . . . . . . . . . . . . . . . . . 9
+9 Packing information. . . . . . . . . . . . . . . . . . . . . 12
+10 Revision history. . . . . . . . . . . . . . . . . . . . . . . . 13
+11 Legal information. . . . . . . . . . . . . . . . . . . . . . . 14
+11.1 Data sheet status . . . . . . . . . . . . . . . . . . . . . . 14
+11.2 Definitions. . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+11.3 Disclaimers . . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+11.4 Trademarks. . . . . . . . . . . . . . . . . . . . . . . . . . . 14
+12 Contact information. . . . . . . . . . . . . . . . . . . . . 14
+13 Contents . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . 15
+Please be aware that important notices concerning this document and the product(s)
+described herein, have been included in section ‘Legal information’.
+© NXP B.V. 2009. All rights reserved.
+For more information, please visit: http://www.nxp.com
+For sales office addresses, please send an email to: salesaddresses@nxp.com
+Date of release: 20 August 2009
+Document identifier: PESD5V0S1BA_BB_BL_4

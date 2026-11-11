@@ -5,8 +5,9 @@ octave-potentiometer ADC input settling with C1 = 100 nF from the wiper (POT) to
 Source resistance seen by C1 = Thevenin resistance of the pot divider, R_th = Ra * Rb / (Ra + Rb), maximum R/4 at
 mid travel (both ends tied to 3V3 / AGND, which are low impedance).
 Inputs:
-  R_pot 10 kOhm +-20 %          ASSUMPTION for the bought off-board pot: same value and tolerance as the V1.2 Alps part
-                                (SOURCE EE-S13 for that part); the off-board pot has no chosen MPN (ADR-023 D-2)
+  R_pot 10 kOhm +-20 %          SOURCE Bourns PTV09 datasheet and Mouser page, PTV09A-4015F-B103 (T-096)
+  Residual resistance 500 ohm max (the datasheet states "500 ohms or +-1 % max.", ends of travel)   SOURCE Bourns PTV09 datasheet
+  RIN_ADC 100 kOhm              SOURCE RP2040 datasheet extract, sim/systems/datasheets/rp2040-datasheet-adc.txt
   C1 100 nF +-10 % X7R 1206     ASSUMPTION: code K = +-10 % on the 1206 example KEMET C1206C104K5RACTU; datasheet NOT opened (T-090)
   X7R capacitance change over temperature: +-15 %   ASSUMPTION: EIA X7R class figure, 1206 datasheet not opened (T-090)
   X7R DC bias at 3.3 V on a 50 V part ignored (ASSUMPTION; 6.6 % of rating, would lower C, which shortens tau)
@@ -48,5 +49,19 @@ print("ADC sample-capacitor charge sharing (C_sample <= %.0f pF ASSUMPTION): <= 
       % (C_SAMPLE * 1e12, share, N_BITS))
 tau_w = r_th_max * c_max
 ok = T_READ / (math.log(2 ** (N_BITS + 1)) * tau_w) >= 5
+# T-096: RV1 PTV09A-4015F-B103 against the ADC input and the firmware zones (fm_pot.h: 5 zones, 10-bit, hysteresis 0.7 zone from centre)
+R_IN = 100e3
+ZONE = 1024 / 5.0
+r_th_load = (R_NOM * (1 + R_TOL)) / 4
+err_frac = 0.5 * r_th_load / (r_th_load + R_IN)            # wiper at mid travel, resistive load to ground treated as a bound (ASSUMPTION)
+err_cnt = err_frac * 1024
+print("ADC loading: R_th max %.0f ohm vs RIN_ADC %.0f kohm -> error at mid travel <= %.2f %% of full scale = %.1f counts, 10-bit (zone width %.0f counts, hysteresis ~41 counts) %s"
+      % (r_th_load, R_IN / 1e3, err_frac * 100, err_cnt, ZONE, "PASS" if err_cnt < 41 else "FAIL"))
+r_low = R_NOM * (1 - R_TOL)
+end = 500.0 / r_low
+pos_low, pos_high = end * 5, 5 - end * 5
+ok_end = pos_low < 0.8 and pos_high > 4.2
+print("Residual resistance: 500 ohm of %.0f ohm = %.2f %% of travel at each end -> zone position reached %.2f / %.2f (needs < 0.80 and > 4.20 to reach the outer octaves) %s"
+      % (r_low, end * 100, pos_low, pos_high, "PASS" if ok_end else "FAIL"))
 print("%s worst-case settling %.2f ms vs read period %.0f ms (criterion: margin >= 5x, ASSUMPTION)"
       % ("PASS" if ok else "FAIL", math.log(2 ** (N_BITS + 1)) * tau_w * 1e3, T_READ * 1e3))
