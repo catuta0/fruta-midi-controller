@@ -116,3 +116,65 @@ Status: PASS for the three items. Nothing is committed.
 - SDA coupling label: no change. The 36.6 fF and 2.09 counts come from sim/electronics/calc/calc_i2c_coupling.py, whose docstring and output header both say "CALCULATION" (method of moments). The metrics, budgets and this handoff already say CALCULATION. The electronics T-103 handoff (line 88) calls the result SIMULATION, so that handoff is mislabelled. Reported, not changed: it is not my file.
 - budgets: `SUMMARY: 35 checks, 31 PASS, 4 FAIL` (unchanged baseline FAILs).
 - Mutations (T-106 copy of the harness): `MUTATION SUMMARY: 86 proved, 0 not proved`. The two T-104 inverse proofs (each check passes on a corrected copy) became MUT-BAD once the documents were fixed. That is expected: those proofs only work while the document fails. They were replaced by forward mutations on stale copies, all proved. The T-104 record is unchanged.
+
+# T-110 — systems-engineer (re-review T-108, ADR-029)
+
+Status: PARTIAL. All four items are done. Three of the new documentation rules FAIL, as expected, until T-109 and the documentation update land. REQ-036 goes from PASS to FAIL on those rules. Nothing is committed. I did not edit hardware/README.md, analysis.md or check_smd (T-109 holds their locks).
+
+Inputs: change/CR-003 at f0c016b (the board file is unchanged against f0c016b); reports/review/CR-003/findings-T-108.md; DECISIONS.md ADR-029. hardware/README.md was read while T-109 was editing it.
+
+1. RISKS R-013: the mitigation now follows ADR-029 D-1.
+   - Side beads go over pins 1–3 and 38–40.
+   - No epoxy on the USB end face and none beyond the board edge.
+   - The plug seat is re-checked after curing.
+2. F4-007: geometry read from the design file is relabelled CALCULATION (design file). The counts of changed labels are:
+   - REQUIREMENTS.md 5, requirements.csv 5, RISKS.md 6, INTERFACES.json 4;
+   - metrics.json 20 entries. host_free_disk and report_pages stay MEASUREMENT because they are real measurements.
+   - budgets.md and the systems .out files had none (`grep -c MEASUREMENT` = 0).
+   - Requirements are now draft-15, because evidence text and one status changed.
+3. New interface_check rules:
+   - `doc.usb_epoxy_not_on_end_face` (F4-001): FAIL. Offending text:
+     - root README line 16;
+     - manual bullet "USB end: epoxy bead" and its table row "Epoxy bead at the USB end";
+     - hardware README BOM row "epoxy at the Pico USB end", which is still stale in T-109's draft.
+   - `doc.usb_epoxy_side_beads` (F4-001): FAIL. The hardware README passes (side beads present, re-check after curing present); the manual is not done yet.
+   - `doc.hw_readme.continuity_37_38` (F4-002): PASS on the T-109 README in progress (the 37–38 checklist line is present and the wrong "39 and 40 lie 0.94 mm" text is gone).
+   - `doc.jp1_before_module` (F4-003): FAIL. The hardware README passes (JP1 is step 7, the module is step 8, and it says ORIG is hidden); the manual assembly order still puts the module before JP1.
+   - Proof (T-110/rule_proofs.py): `RULE PROOF SUMMARY: 12 proved, 0 not proved`.
+     - On the corrected scratch copies all 4 rules PASS.
+     - Each of 10 single mutations turns its own rule to FAIL.
+     - On the HEAD documents that T-108 reviewed, the F4-001, F4-002 and F4-003 rules all FAIL, so these rules would have caught them.
+   - The good set is built on the T-109 README as it stood during this run. If T-109 changes those passages, re-run the proof.
+4. INTERFACES frozen-9 against the board at f0c016b (`git show f0c016b:hardware/frutamidi.kicad_pcb`): it matches.
+   - `placement mismatches []`; R1 and R12 at x 33.35 and 89.23.
+   - Land table, BOM exclusions (J1, J2, J3, JP1) and R1..R12 footprint all match.
+   - pcb_rules_check on that file: `SUMMARY: 26 checks, 26 PASS, 0 FAIL`, `A1 at (4.50, 1.48); Pico end 0.11 mm inside the edge; face 1.19 mm beyond it`.
+   - frozen-9 is ready to freeze, provided T-109 makes no copper change (ADR-029 says none).
+
+Check results:
+- interface_check: `SUMMARY hardware/firmware: 90 checks, 90 PASS, 0 FAIL`, `SUMMARY documentation: 35 checks, 32 PASS, 3 FAIL`, `SUMMARY: 125 checks, 122 PASS, 3 FAIL`
+- pcb_rules_check: `SUMMARY: 26 checks, 26 PASS, 0 FAIL`
+- budgets: `SUMMARY: 35 checks, 31 PASS, 4 FAIL` (the unchanged baseline)
+- Full mutation harness (T-110 copy): `MUTATION SUMMARY: 86 proved, 0 not proved`
+
+Requirement counts (draft-15): PASS 17, PARTIAL 18, FAIL 3 (REQ-018, REQ-036, REQ-040), NOT RUN 4, BLOCKED 0; total 42.
+
+For the manager:
+- REQ-036 returns to PASS once T-109 and the documentation update land and interface_check gives 125/125.
+- Re-run rule_proofs.py and interface_check at that point.
+
+# T-112 — systems-engineer (after T-109 and documentation T-111)
+
+Status: PASS for the three items. Nothing is committed.
+
+1. interface_check: `SUMMARY documentation: 35 checks, 35 PASS, 0 FAIL`, `SUMMARY: 125 checks, 125 PASS, 0 FAIL`. REQ-036 is now PASS (draft-16), with the same scope note as before (consistency only, nothing built).
+2. Rule proofs: the T-110 script stopped with "text not found". It built its good set by patching stale text, and that text is now fixed. I wrote a T-112 copy whose good set is the current documents.
+   - Its first run gave 11 of 12. The "manual loses the 38–40 bead" mutation survived because it removed only the first of two mentions in the manual. I corrected the mutation to remove every mention; the rule was not changed.
+   - Final result: `RULE PROOF SUMMARY: 12 proved, 0 not proved` (T-112/rule_proofs.txt).
+3. INTERFACES references: REQUIREMENTS.md now says "frozen-9 frozen by the manager (ADR-028 D-8)" in the header, the evidence-path list and the draft-16 note. The older draft notes stay as history. The frozen-9 state itself (`frozen` true, ADR-028 D-8) is the manager's.
+4. Re-runs:
+   - budgets: `SUMMARY: 35 checks, 31 PASS, 4 FAIL` (the unchanged baseline; C2 PASS);
+   - pcb_rules_check: `SUMMARY: 26 checks, 26 PASS, 0 FAIL`;
+   - mutations: `MUTATION SUMMARY: 86 proved, 0 not proved` (T-112/mutation_results.txt).
+
+Requirement counts (draft-16): PASS 18, PARTIAL 18, FAIL 2 (REQ-018, REQ-040), NOT RUN 4, BLOCKED 0; total 42.

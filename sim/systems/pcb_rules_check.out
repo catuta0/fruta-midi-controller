@@ -12,10 +12,10 @@ PASS  REQ-028 board outline 100 x 70 mm :: outline 100.000 x 70.000 mm (4 Edge.C
 PASS  REQ-029 track width >= 0.8 mm everywhere :: widths used [0.8, 1.0, 1.2] mm
 PASS  REQ-029 power tracks >= 1.2 mm :: power nets ['+3V3', '/S1', '/S7', 'GND']; below 1.2 mm: []
 PASS  REQ-029 signal tracks >= 1.0 mm except stubs <= 6.0 mm :: 5 segments below 1.0 mm, longest 5.08 mm, nets ['/S2', '/S3', '/S4', '/S5', '/S6']; too long: []
-PASS  REQ-029 copper clearance >= 0.6 mm between different nets (pads and tracks) :: minimum 0.680 mm between C1.2 [/AGND] and track#93 (73.58,71.80)-(88.50,71.80) w1.00 [/SCL_PICO] (etched text excluded, see DRC)
+PASS  REQ-029 copper clearance >= 0.6 mm between different nets (pads and tracks) :: minimum 0.680 mm between C1.2 [/AGND] and track#94 (73.58,71.80)-(88.50,71.80) w1.00 [/SCL_PICO] (etched text excluded, see DRC)
 PASS  REQ-029 copper >= 0.5 mm from the board edge (min_copper_edge_clearance, hardware/frutamidi.kicad_pro) :: minimum 0.680 mm at A1.1
-PASS  REQ-029 remaining holes: drill >= 0.8 mm, copper >= 0.5 mm from the hole edge (min_hole_clearance, frutamidi.kicad_pro) :: per hole (nearest copper): H4 2.50 mm to track#7 (84.50,58.42)-(84.50,52.00) w1.20, H1 12.86 mm to A1.20, H3 2.98 mm to J2.14, H2 4.69 mm to R14.1
-INFO  M3 metal head/washer overlap, nearest copper from hole centre minus radius (2.8, 3.5) mm: H4 head +1.30 / washer +0.60 mm, H1 head +11.66 / washer +10.96 mm, H3 head +1.78 / washer +1.08 mm, H2 head +3.49 / washer +2.79 mm
+PASS  REQ-029 remaining holes: drill >= 0.8 mm, copper >= 0.5 mm from the hole edge (min_hole_clearance, frutamidi.kicad_pro) :: per hole (nearest copper): H4 2.50 mm to track#2 (84.50,58.42)-(84.50,52.00) w1.20, H2 4.69 mm to R14.1, H3 2.98 mm to J2.14, H1 12.86 mm to A1.20
+INFO  M3 metal head/washer overlap, nearest copper from hole centre minus radius (2.8, 3.5) mm: H4 head +1.30 / washer +0.60 mm, H2 head +3.49 / washer +2.79 mm, H3 head +1.78 / washer +1.08 mm, H1 head +11.66 / washer +10.96 mm
 PASS  REQ-029 every SMD land >= 1.0 mm in both directions :: smallest land 1.30 mm; below the rule: []
 PASS  REQ-029 land sizes match the v1.3 table after T-103 (A1, A2, J1, J3, RV1, SW1, C1, R1..R16) :: 23 parts compared; mismatches: []
 PASS  REQ-029 no bare copper in the 3 Pico keep-out rule areas :: 3 keep-out polygons; copper inside: []
@@ -25,5 +25,5 @@ PASS  REQ-023 R1-R12 land gap >= 3.5 mm (4 kV rule) and = 5.0 mm (ADR-023) :: la
 PASS  ADR-021/ADR-023 JP1 is a 3-pad SMD bridge, pads 1.94 x 2.4 mm, pitch 3.81 mm, gap >= 1.8 mm :: SolderJumper_3_SMD_P3.81mm: types ['smd'], pitch [3.81, 3.81] mm, gaps [1.87, 1.87] mm
 PASS  ADR-023 J2 is 14 SMD solder-wire pads 3.0 x 4.5 mm at 5.08 mm pitch :: 14 pads, sizes [(3.0, 4.5)], types ['smd'], shapes ['oval', 'rect'], pitch [5.08] mm
 PASS  ADR-020 Ex <-> GND edge-track spark gap 1.40 +/- 0.05 mm :: 12 electrode pads; gap min 1.400 / max 1.400 mm; nearest GND track is the edge track for 12 of 12; per pad E0=1.400, E1=1.400, E2=1.400, E3=1.400, E4=1.400, E5=1.400, E6=1.400, E7=1.400, E8=1.400, E9=1.400, E10=1.400, E11=1.400
-INFO  nearest I2C copper to electrode copper (REQ-038): 3.30 mm between track#98 (93.94,70.90)-(138.81,70.90) w1.00 [/SDA] and A2.10 [/ELE8]
+INFO  nearest I2C copper to electrode copper (REQ-038): 3.30 mm between track#99 (93.94,70.90)-(138.81,70.90) w1.00 [/SDA] and A2.10 [/ELE8]
 SUMMARY: 26 checks, 26 PASS, 0 FAIL

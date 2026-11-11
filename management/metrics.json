@@ -77,7 +77,7 @@
       "name": "esd_gap_ele_e_min",
       "value": 13.04,
       "unit": "mm",
-      "label": "MEASUREMENT (design file)",
+      "label": "CALCULATION (design file)",
       "revision": "CR-002 T-060",
       "evidence": "sim/electronics/calc/check_gap.out"
     },
@@ -85,7 +85,7 @@
       "name": "esd_gap_e_other_min",
       "value": 10.92,
       "unit": "mm",
-      "label": "MEASUREMENT (design file)",
+      "label": "CALCULATION (design file)",
       "revision": "CR-002 T-060",
       "evidence": "sim/electronics/calc/check_gap.out"
     },
@@ -133,7 +133,7 @@
       "name": "jp1_pad_gap",
       "value": 1.87,
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-002 T-077 (a216c1b)",
       "evidence": "sim/systems/pcb_rules_check.out (read from the design file)"
     },
@@ -141,7 +141,7 @@
       "name": "j2_pad_size",
       "value": "3.0 x 4.5",
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-002 T-077 (a216c1b)",
       "evidence": "sim/systems/pcb_rules_check.out (read from the design file)"
     },
@@ -149,7 +149,7 @@
       "name": "c1_drill",
       "value": 0.9,
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-002 T-080/T-081 (a51dfff)",
       "evidence": "hardware/frutamidi.kicad_pcb; sim/systems/pcb_rules_check.out"
     },
@@ -173,7 +173,7 @@
       "name": "drill_holes_total",
       "value": 133,
       "unit": "holes",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-002 T-080/T-081 (a51dfff)",
       "evidence": "hardware/fabrication frutamidi.drl (counted)"
     },
@@ -181,7 +181,7 @@
       "name": "ex_gnd_spark_gap",
       "value": 1.4,
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-002 T-080/T-081 (a51dfff)",
       "evidence": "sim/systems/pcb_rules_check.out (12/12 pads, design file)"
     },
@@ -205,7 +205,7 @@
       "name": "v1.3_drill_holes_total",
       "value": 4,
       "unit": "holes",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 (d7da0c2)",
       "evidence": "hardware/fabrication/gerbers/frutamidi.drl"
     },
@@ -237,7 +237,7 @@
       "name": "v1.3_r1_r12_copper_gap",
       "value": 5.0,
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 (d7da0c2)",
       "evidence": "sim/electronics/calc/check_gap.out (design file)"
     },
@@ -245,7 +245,7 @@
       "name": "v1.3_sda_to_electrode_pad",
       "value": 3.3,
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 (d7da0c2)",
       "evidence": "reports/electronics/evidence/T-094/measure_i2c_gap.out"
     },
@@ -269,7 +269,7 @@
       "name": "v1.3_pico_anchor_y",
       "value": 1.48,
       "unit": "mm (board frame, origin top-left)",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/systems/pcb_rules_check.out ADR-028 D-1; management/INTERFACES.json placement_mm A1"
     },
@@ -301,7 +301,7 @@
       "name": "v1.3_a2_land_electrode_row",
       "value": "1.8 x 4.2",
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/systems/pcb_rules_check.out land table (13 pads)"
     },
@@ -309,7 +309,7 @@
       "name": "v1.3_a2_land_s_row",
       "value": "1.8 x 5.515",
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/systems/pcb_rules_check.out land table (7 pads, joined to J3)"
     },
@@ -317,7 +317,7 @@
       "name": "v1.3_a2_land_beyond_module_outline",
       "value": "1.73-1.775",
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/electronics/calc/check_smd.out (T-103, design file)"
     },
@@ -365,7 +365,7 @@
       "name": "v1.3_1206_resistor_land",
       "value": "1.775 x 1.8",
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/systems/pcb_rules_check.out land table (R13..R16)"
     },
@@ -373,7 +373,7 @@
       "name": "v1.3_c1_land",
       "value": "1.875 x 1.8",
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/systems/pcb_rules_check.out land table"
     },
@@ -389,7 +389,7 @@
       "name": "v1.3_keepout_areas",
       "value": 3,
       "unit": "rule areas",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/systems/pcb_rules_check.out (TP/USB, SWD, Pico 2 TP7)"
     },
@@ -397,7 +397,7 @@
       "name": "v1.3_pico2_feature_clearance_worst",
       "value": 2.14,
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/electronics/calc/check_smd.out (T-103, 11 features, TP7 3.66 mm)"
     },
@@ -405,7 +405,7 @@
       "name": "v1.3_copper_clearance_min",
       "value": 0.68,
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/systems/pcb_rules_check.out (C1.2 to SCL_PICO track)"
     },
@@ -413,7 +413,7 @@
       "name": "v1.3_copper_edge_clearance_min",
       "value": 0.68,
       "unit": "mm",
-      "label": "MEASUREMENT",
+      "label": "CALCULATION (design file)",
       "revision": "CR-003 T-104 (fd7140b + T-103 working tree)",
       "evidence": "sim/systems/pcb_rules_check.out (A1 pin 1)"
     },

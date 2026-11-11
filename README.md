@@ -12,10 +12,10 @@ The MPR121 detects the touch, the Pico turns it into MIDI notes and the computer
 - **Breadboard:** no soldering. This README.
 - **Single-sided PCB, version 1.3**, for etching at home with the chemical method, with KiCad schematic, BOM and assembly guide: [`hardware/`](hardware/).
   The board has one copper layer, on the component side, and every part is surface-mounted (SMD), so the only holes are the 4 optional M3 mounting holes. All parts are sold by Mouser; one board costs about 13.84 EUR at Mouser Portugal prices of 2026-11-11, excluding shipping and tax (a calculation from list prices). What to know before you start (details in the [assembly guide](hardware/README.md)):
-  - The **Pico and the MPR121 module are soldered flat** onto surface pads, with no sockets. Only the Pico (SC0915) and the Pico 2 are supported on the PCB, not Pico W or Pico 2 W. Flash the firmware before soldering the Pico. Replacing a failed one means desoldering it, which is harder than with sockets.
-  - The **USB end** of the Pico gets a small bead of 2-part epoxy; use a strain-relieved USB cable and do not lever on the plug.
-  - **Electrode wires** are soldered onto pads and held with hot-melt glue. The **octave potentiometer** sits off the board on 3 wires: use one with an insulated shaft and a plastic knob.
-  - Module configuration: **JP1** is a surface solder bridge (ORIG or QT) and **J1** takes two short wire links.
+  - The **Pico is soldered flat** on its castellations and the **MPR121 module stands on its header pins**, both soldered onto surface pads, with no sockets. Only the Pico (SC0915) and the Pico 2 are supported on the PCB, not Pico W or Pico 2 W; with a Pico 2, check that the USB plug seats fully before soldering it. Flash the firmware before soldering the Pico. Replacing a failed one means desoldering it, which is harder than with sockets.
+  - **USB end:** two small beads of 2-part epoxy along the long sides of the Pico, over pins 1–3 and 38–40; none on the USB end face or beyond the board edge, and check again after curing that the plug seats fully. Use a strain-relieved USB cable and do not lever on the plug.
+  - **Electrode wires** are soldered onto pads and held with hot-melt glue. The **octave potentiometer** sits off the board on 3 wires: use one with an insulated shaft and a plastic knob. It has no bushing; the guide suggests mounting it on a small piece of perfboard behind the panel hole (not tried).
+  - Module configuration: **JP1** is a surface solder bridge (ORIG or QT), set **before the module is fitted** because the module hides the ORIG label, and **J1** takes two short wire links.
   - **ESD:** each electrode has a 3.3 kΩ chip resistor. It is **not proven** that these standard resistors survive the project's ±4 kV static-discharge target; nothing has been tested (see [Safety](#design-notes) below).
 
 [![PCB render](hardware/fabrication/images/board-3d.png)](hardware/)

@@ -104,13 +104,17 @@ PASS  doc.hw_readme.version :: title line '# FrutaMIDI: single-sided SMD PCB (ve
 PASS  doc.hw_readme.R1_R12_part :: RC2512FK-073K3L, its Mouser number and 3.3 kOhm stated; stale R1-R12 terms: []
 PASS  doc.hw_readme.mouser_numbers :: Mouser numbers of the parts table missing from hardware/README.md: []
 PASS  doc.hw_readme.only_4_holes :: rule table says only the 4 M3 holes; bit 3.2 mm; no other drill size named
-PASS  doc.hw_readme.no_sockets :: 1 mentions of sockets, not 'no sockets': []; female headers or screw terminals mentioned: False
+PASS  doc.hw_readme.no_sockets :: 2 mentions of sockets, not 'no sockets': []; female headers or screw terminals mentioned: False
 PASS  doc.hw_readme.RV1_insulated :: RV1: PTV09A with insulated shaft, insulating knob required, metal-shaft warning present (R-011)
 PASS  doc.hw_readme.pico_variants :: A1 row names SC0915 and Pico 2 and excludes Pico W / Pico 2 W; firmware rows for W variants say not supported on this PCB
 PASS  doc.hw_readme.R016_alternative :: Vishay CRCW25123K30FKEG named with its Mouser number and the datasheet caveat (ADR-027 D-3, R-016)
 PASS  doc.hw_readme.knob_and_sw1_notes :: knob listed in the README only and said so; SW1 maker note (ARATAS, formerly Omron)
 PASS  doc.manual.JP1_label_position :: ORIG is etched left of JP1 beside the pad 2-1 gap (ADR-028 D-2); 'ORIG etched below' in the manual: False, in hardware/README.md: False
 PASS  doc.root_readme.pcb_variants :: PCB firmware rows for Pico W / Pico 2 W without 'not supported' (root README or manual): []
+PASS  doc.usb_epoxy_not_on_end_face :: ADR-029 D-1 / F4-001: sentences that put epoxy at the USB end (hardware README, root README, manual): []
+PASS  doc.usb_epoxy_side_beads :: side beads at pins 1-3 and 38-40: hardware README True, manual True; plug-seat re-check after curing in the hardware README True
+PASS  doc.hw_readme.continuity_37_38 :: F4-002: checklist line 'pad 37 (3V3_EN) to 38 (GND) must not beep' present True; wrong 'pads 39 and 40 ... 0.94 mm' text present False
+PASS  doc.jp1_before_module :: ADR-029 D-2 / F4-003: hardware README JP1 step 7 before module step 8; manual assembly order puts JP1 before the module True; README says ORIG is hidden by the module True
 PASS  doc.hw_readme.JP1_smd :: JP1 described as surface bridge with the 1.87 mm gap
 PASS  doc.manual.matches_v1.3 :: docs/manual/MANUAL.md: 'version 1.2' present: False; stale v1.2 terms: []
 PASS  doc.root_readme.matches_v1.3 :: README.md stale PCB terms: []
@@ -126,5 +130,5 @@ PASS  doc.hw_readme.SCL :: SCL pin 32 GP27
 PASS  doc.hw_readme.Button :: Button pin 29 GP22
 PASS  doc.hw_readme.Potentiometer :: Potentiometer pin 34 GP28
 SUMMARY hardware/firmware: 90 checks, 90 PASS, 0 FAIL
-SUMMARY documentation: 31 checks, 31 PASS, 0 FAIL
-SUMMARY: 121 checks, 121 PASS, 0 FAIL
+SUMMARY documentation: 35 checks, 35 PASS, 0 FAIL
+SUMMARY: 125 checks, 125 PASS, 0 FAIL

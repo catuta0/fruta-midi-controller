@@ -1,6 +1,6 @@
 # calc_gnd_bounce.py  CALCULATION (T-073, C2-005; T-092 no sockets) on hardware/frutamidi.kicad_pcb (KiCad 10.0.4)
 # series elements (ASSUMPTION): castellation 0.5-1.5 nH + module header pin 5.0-8.5 nH = 5.5-10.0 nH (V1.2: 3-10 nH socket + header)
-GND path lengths (MEASUREMENT, design file): J2 pad 1 (GND terminal) -> Pico pin 23 22.51 mm; module GND pin -> Pico pin 23 31.42 mm; shared section from node (27.00,45.60) to pin 23 4.36 mm
+GND path lengths (CALCULATION (design file)): J2 pad 1 (GND terminal) -> Pico pin 23 22.51 mm; module GND pin -> Pico pin 23 31.42 mm; shared section from node (27.00,45.60) to pin 23 4.36 mm
 Arc entry: E pad -> edge track (y = 68.00) -> J2 pad 1: up to 65.2 mm (E11); this section and the trunk to the node are common to module and Pico (whole-board rise, no differential at IC pins)
 
 IEC 61000-4-2 4 kV contact (SOURCE EE-S16 from memory, upper tolerance): Ipk 17.2 A, tr 0.6-1.0 ns, I(30 ns) 8 A

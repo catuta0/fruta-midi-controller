@@ -38,8 +38,8 @@
 
 \title{FrutaMIDI: capacitive USB MIDI controller\\[2pt]\large Engineering report}
 \author{FrutaMIDI engineering project}
-\date{FrutaMIDI v1.3 (change request CR-003), interfaces frozen-8 (frozen-9 proposed), requirements draft-14, 2026-11-11\\[2pt]
-\small Branch \texttt{change/CR-003} at \texttt{f6693c9}; v1.3 is not released.
+\date{FrutaMIDI v1.3 (change request CR-003), interfaces frozen-9 (frozen), requirements draft-16, 2026-11-11\\[2pt]
+\small Branch \texttt{change/CR-003} at \texttt{f0c016b} plus the T-109/T-111 fixes; v1.3 is not released.
 Previous release: V1.2 (git tag \texttt{v1.2.0})}
 
 \begin{document}
@@ -58,7 +58,8 @@ mounting holes remain instead of 133. The electrode resistors become standard
 the user accepted to keep the core BOM at 14.84--16.84\,EUR excluding VAT and
 shipping (\lbl{CALCULATION}). An independent review (T-102) found the first
 layout not ready for a first build; its fifteen findings were fixed or ruled
-(ADR-028). The sections after Section~\ref{sec:cr003} keep the v1.2 analyses for
+(ADR-028). A second independent re-review (T-108) found it ready for the first
+build after ten assembly-text and label fixes, which were made (ADR-029). The sections after Section~\ref{sec:cr003} keep the v1.2 analyses for
 traceability. Version 1.2 (change request CR-002) replaced the
 electrode series resistors by pulse-rated parts lying flat. By analysis of the
 design files, a \qty{4}{\kilo\volt} contact discharge should then neither arc

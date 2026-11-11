@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""T-091 / CR-003: MEASUREMENT on the design file of the single-layer SMD rules, the Pico keep-outs and the footprint fit.
+"""T-091 / CR-003: CALCULATION (design file) of the single-layer SMD rules, the Pico keep-outs and the footprint fit.
 
 Runs with the KiCad Python (pcbnew). Optional arguments: board file, drill file.
 Criteria: REQ-029 (home-etch rules), ADR-023 (F.Cu only, 4 holes, no vias, no pour), REQ-031 (pin map), T-090 land geometry.
@@ -51,7 +51,7 @@ def rect_margin(it, r):
 board = pcbnew.LoadBoard(PCB)
 o = board.GetDesignSettings().GetAuxOrigin()
 ox, oy = o.x * TOMM, o.y * TOMM
-print("# check_smd.py  MEASUREMENT on %s (KiCad %s); board coordinates (mm) from the corner" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
+print("# check_smd.py  CALCULATION (design file) on %s (KiCad %s); board coordinates (mm) from the corner" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
 
 # 1. layers, vias, zones, holes
 tracks = list(board.GetTracks())
@@ -191,7 +191,7 @@ used = sum(1 for p in a1.values() if p.GetNetname() and not p.GetNetname().start
 check("A1 connected pads = 13 (6 signal/power + 7 GND)", used == 13, "%d" % used)
 # 7. mounting holes (T-092): spread, USB end, head / washer clearance
 holes = {fp.GetReference(): pos_fp for fp, pos_fp in ((f, (f.GetPosition().x * TOMM - ox, f.GetPosition().y * TOMM - oy)) for f in board.GetFootprints()) if re.fullmatch(r"H\d", fp.GetReference())}
-print("# mounting holes (MEASUREMENT, design file): %s" % {k: (round(v[0], 2), round(v[1], 2)) for k, v in sorted(holes.items())})
+print("# mounting holes (CALCULATION (design file)): %s" % {k: (round(v[0], 2), round(v[1], 2)) for k, v in sorted(holes.items())})
 W, H = 100.0, 70.0
 quad = sorted(("L" if x < W / 2 else "R") + ("T" if y < H / 2 else "B") for x, y in holes.values())
 check("T-092 one hole per board quadrant", quad == ["LB", "LT", "RB", "RT"], str(quad))

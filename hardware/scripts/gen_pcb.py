@@ -369,7 +369,7 @@ MOD_C = (60.02, 17.645)           # module centre (electrode row at y = 25.9, po
 CFG = (85.0, 12.5)                # J1 pad 1 (SCL); pad 2 (SDA) at +3.81 mm (right of the module)
 T0, TY = 27.0, 63.75              # first J2 pad centre (GND), pad row; 1.40 mm above the GND edge track (ADR-020)
 # T-092: well-spread support, one hole per board quadrant (check_smd.py). H4 is as close to the USB end of the Pico as the
-# layout allows: it cannot go left of or above the module (Pico lands reach x 25.68, module end y 0.63), so it sits just
+# layout allows: it cannot go left of or above the module (Pico lands reach x 25.68, module end y 0.63 at T-092; 0.11 since T-103), so it sits just
 # right of the lands, x fixed by 0.6 mm from the 3.5 mm washer radius to the lands and to the 3V3 riser at x 34.5.
 # H3 cannot go nearer its corner: J2 pad 14 and the spark-gap track fill the bottom edge up to x 94.54.
 HOLES = [(5.0, 65.0), (96.0, 4.0), (96.5, 58.0), (29.8, 4.0)]

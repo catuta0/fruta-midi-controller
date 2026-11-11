@@ -1,0 +1,14 @@
+PROOF-OK   good set: all four rules PASS -> {'doc.usb_epoxy_not_on_end_face': 'PASS', 'doc.usb_epoxy_side_beads': 'PASS', 'doc.hw_readme.continuity_37_38': 'PASS', 'doc.jp1_before_module': 'PASS'}
+PROOF-OK   [doc.usb_epoxy_not_on_end_face] root README back to 'USB end gets a bead' -> {'doc.usb_epoxy_not_on_end_face': 'FAIL'}
+PROOF-OK   [doc.usb_epoxy_not_on_end_face] hardware README step 6 'along the end of the Pico at the USB connector' -> {'doc.usb_epoxy_not_on_end_face': 'FAIL'}
+PROOF-OK   [doc.usb_epoxy_not_on_end_face] manual table row 'Epoxy bead at the USB end' -> {'doc.usb_epoxy_not_on_end_face': 'FAIL'}
+PROOF-OK   [doc.usb_epoxy_side_beads] manual loses every 38–40 bead -> {'doc.usb_epoxy_side_beads': 'FAIL'}
+PROOF-OK   [doc.usb_epoxy_side_beads] hardware README loses the re-check after curing -> {'doc.usb_epoxy_side_beads': 'FAIL'}
+PROOF-OK   [doc.hw_readme.continuity_37_38] 37–38 checklist line removed -> {'doc.hw_readme.continuity_37_38': 'FAIL'}
+PROOF-OK   [doc.hw_readme.continuity_37_38] old 'pads 39 and 40 ... lie 0.94 mm' text back -> {'doc.hw_readme.continuity_37_38': 'FAIL'}
+PROOF-OK   [doc.jp1_before_module] hardware README module step before JP1 -> {'doc.jp1_before_module': 'FAIL'}
+PROOF-OK   [doc.jp1_before_module] manual order puts the module before JP1 -> {'doc.jp1_before_module': 'FAIL'}
+PROOF-OK   [doc.jp1_before_module] 'ORIG is hidden' statement removed -> {'doc.jp1_before_module': 'FAIL'}
+HEAD documents (as reviewed in T-108): {'doc.usb_epoxy_not_on_end_face': 'FAIL', 'doc.usb_epoxy_side_beads': 'FAIL', 'doc.hw_readme.continuity_37_38': 'FAIL', 'doc.jp1_before_module': 'FAIL'}
+PROOF-OK   HEAD documents: F4-001, F4-002 and F4-003 rules FAIL -> {'doc.usb_epoxy_not_on_end_face': 'FAIL', 'doc.hw_readme.continuity_37_38': 'FAIL', 'doc.jp1_before_module': 'FAIL'}
+RULE PROOF SUMMARY: 12 proved, 0 not proved

@@ -11,7 +11,7 @@ plane at the centre of the Pico USB end (13.39, 0.11) mm (T-103; 0.63 before). T
 absolute deflections are upper-side values; only the ratio between hole sets is used. Linear, no contact, no spacer
 compliance. Convergence: printed for several p.
 
-Inputs: board 100 x 70 x 1.6 mm (MEASUREMENT outline; thickness ASSUMPTION standard FR-4), E = 22 GPa, nu = 0.15
+Inputs: board 100 x 70 x 1.6 mm (CALCULATION (design file) outline; thickness ASSUMPTION standard FR-4), E = 22 GPa, nu = 0.15
 (ASSUMPTION, typical FR-4 values, not from a laminate datasheet; deflection scales with 1/E), screw spring 1e6 N/m
 (ASSUMPTION; result insensitive, printed), F = 10 and 30 N (T-090 pry cases, ASSUMPTION).
 

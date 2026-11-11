@@ -166,7 +166,7 @@ print("  QFN-20 3 x 3 mm: terminal width %.2f, pitch %.2f (SOURCE) -> gap betwee
 print()
 
 print("== 6. Hole count ==")
-print("  V1.2: 133 drilled holes (MEASUREMENT, CR-003 frutamidi.drl). Proposal: 4 M3 holes -> %.1f %% fewer" % (100 * (133 - 4) / 133))
+print("  V1.2: 133 drilled holes (CALCULATION (design file), CR-003 frutamidi.drl). Proposal: 4 M3 holes -> %.1f %% fewer" % (100 * (133 - 4) / 133))
 print()
 
 print("== 7. Other values ==")

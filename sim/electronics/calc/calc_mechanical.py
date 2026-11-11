@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """T-050: drill vs component pin, read from the generated board. Run with the KiCad Python (pcbnew).
 
-Drill and pad sizes are MEASUREMENT of the design file (hardware/frutamidi.kicad_pcb).
+Drill and pad sizes are CALCULATION (design file) (hardware/frutamidi.kicad_pcb).
 Pin sizes are SOURCE where a datasheet was read, otherwise ASSUMPTION (stated per row).
 Rule of thumb used (ASSUMPTION, common THT practice): drill >= pin max diagonal (square) or diameter + 0.2 mm
 (the "gap" column is diametral, drill - pin; the radial clearance is half of it; T-073 / C2-008),
@@ -47,7 +47,7 @@ for fp in b.GetFootprints():
         key = (name, round(d, 3), round(s, 3), p.GetAttribute() == pcbnew.PAD_ATTRIB_NPTH)
         rows[key] = rows.get(key, 0) + 1
 
-print("# calc_mechanical.py  drill (MEASUREMENT of design file) vs pin (SOURCE/ASSUMPTION)")
+print("# calc_mechanical.py  drill (CALCULATION (design file)) vs pin (SOURCE/ASSUMPTION)")
 print("%-42s %6s %7s %6s %7s %8s %7s  %s" % ("footprint", "drill", "pad_min", "count", "ring", "pin_max", "gap", "verdict / pin data"))
 fails = 0
 for (name, d, s, npth), n in sorted(rows.items()):

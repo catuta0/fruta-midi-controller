@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """T-094: measure, on the generated board, the smallest edge-to-edge distance from every I2C track to the A2 electrode pads.
-Run with KiCad Python. MEASUREMENT on the design file."""
+Run with KiCad Python. CALCULATION (design file)."""
 import math
 import pcbnew
 
@@ -34,7 +34,7 @@ for t in b.GetTracks():
         continue
     nets.setdefault(t.GetNetname(), []).append(t)
 
-print("# measure_i2c_gap.py  MEASUREMENT on hardware/frutamidi.kicad_pcb")
+print("# measure_i2c_gap.py  CALCULATION (design file) on hardware/frutamidi.kicad_pcb")
 for name in sorted(nets):
     if "SDA" not in name and "SCL" not in name:
         continue

@@ -1,14 +1,15 @@
 \section{PCB v1.3: single-sided SMD board (CR-003)}
 \label{sec:cr003}
 
-Inputs: branch \texttt{change/CR-003} at \texttt{f6693c9}. Sources:
+Inputs: branch \texttt{change/CR-003} at \texttt{f0c016b} with the T-109 working tree (assembly text and labels only; copper identical to \texttt{f0c016b}, T-109 \nolinkurl{compare_copper.out}). Sources:
 \begin{itemize}[noitemsep]
   \item change request and decisions: \ev{changes/CR-003.md},
-        \ev{management/DECISIONS.md} (ADR-023 to ADR-028);
+        \ev{management/DECISIONS.md} (ADR-023 to ADR-029);
   \item electronics analysis section~8: \ev{reports/electronics/analysis.md};
   \item handoffs: \ev{management/handoffs/electronics-engineer-T-103.md},
         \ev{management/handoffs/systems-engineer-T-104.md};
-  \item review: \ev{reports/review/CR-003/findings.md};
+  \item review T-102: \ev{reports/review/CR-003/findings.md};
+  \item re-review T-108: \ev{reports/review/CR-003/findings-T-108.md};
   \item budgets and metrics: \ev{sim/systems/budgets.out},
         \ev{management/metrics.json}.
 \end{itemize}
@@ -24,9 +25,9 @@ rules checks passing do not validate the hardware.
 \subsection{Reasons for the change}
 
 The user makes boards at home by chemical etching and does not want to drill them
-(CR-003, 2026-11-09). V1.2 had 133 drilled holes (\lbl{MEASUREMENT}, drill file,
+(CR-003, 2026-11-09). V1.2 had 133 drilled holes (\lbl{CALCULATION}, design file: drill file,
 \ev{changes/CR-003.md}); v1.3 has 4, the optional M3 mounting holes
-(\lbl{MEASUREMENT}, \texttt{v1.3\_drill\_holes\_total} in
+(\lbl{CALCULATION}, design file, \texttt{v1.3\_drill\_holes\_total} in
 \ev{management/metrics.json}). The conversion (ADR-023, ADR-026):
 \begin{itemize}[noitemsep]
   \item one copper layer, on the component side (F.Cu); surface-mount parts only;
@@ -68,28 +69,28 @@ The user makes boards at home by chemical etching and does not want to drill the
 
 {\small
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.42\linewidth}>{\raggedright\arraybackslash}p{0.26\linewidth}>{\raggedright\arraybackslash}p{0.28\linewidth}@{}}
-\caption{v1.3 board values after T-103 (from \nolinkurl{management/metrics.json}).}\label{tab:v13-geometry}\\
+\caption{v1.3 board values after T-103 (from \nolinkurl{management/metrics.json}). Values read from the design file are \lbl{CALCULATION} (design file), not measurements (ADR-029 D-4).}\label{tab:v13-geometry}\\
 \toprule
 Quantity & Value & Label \\
 \midrule\endfirsthead
 \toprule Quantity & Value & Label \\ \midrule\endhead
-Board outline & 100 $\times$ 70\,mm & \lbl{MEASUREMENT} (REQ-028) \\
-Pico (A1) anchor & y = 1.48\,mm & \lbl{MEASUREMENT} (design file) \\
+Board outline & 100 $\times$ 70\,mm & \lbl{CALCULATION} (design file; REQ-028) \\
+Pico (A1) anchor & y = 1.48\,mm & \lbl{CALCULATION} (design file) \\
 Pico end inside the board edge & 0.11\,mm & \lbl{CALCULATION} \\
 USB receptacle face beyond the edge & 1.19\,mm (limit 1.0\,mm) & \lbl{CALCULATION} from \lbl{SOURCE} 1.30\,mm; limit \lbl{ASSUMPTION} \\
 Cutting tolerance & 1.0\,mm (0.5 transfer + 0.5 trim) & \lbl{ASSUMPTION} \\
-A2 lands, electrode row / S row & 1.8 $\times$ 4.2\,mm / 1.8 $\times$ 5.515\,mm & \lbl{MEASUREMENT} (design file) \\
-A2 lands beyond the module outline & 1.73--1.775\,mm & \lbl{MEASUREMENT} (design file) \\
+A2 lands, electrode row / S row & 1.8 $\times$ 4.2\,mm / 1.8 $\times$ 5.515\,mm & \lbl{CALCULATION} (design file) \\
+A2 lands beyond the module outline & 1.73--1.775\,mm & \lbl{CALCULATION} (design file) \\
 Header strip, cut pin, module board & 2.5 / 3.0 / 1.6\,mm & \lbl{ASSUMPTION} (first-build list) \\
 Module underside / board top above the copper & 5.5 / 7.1\,mm & \lbl{CALCULATION} on the \lbl{ASSUMPTION}s above \\
-1206 lands, R13--R16 / C1 & 1.775 $\times$ 1.8 / 1.875 $\times$ 1.8\,mm & \lbl{MEASUREMENT} (design file) \\
-Keep-out rule areas under the Pico & 3 & \lbl{MEASUREMENT} (design file) \\
-Copper to the nearest Pico~2 underside feature & 2.14\,mm (11 features) & \lbl{MEASUREMENT} (design file) \\
-Minimum copper clearance between nets & 0.680\,mm (rule 0.6\,mm) & \lbl{MEASUREMENT} (design file) \\
-Minimum copper to board edge & 0.680\,mm (rule 0.5\,mm) & \lbl{MEASUREMENT} (design file) \\
-JP1 pad gap & 1.87\,mm & \lbl{MEASUREMENT} (design file) \\
-Electrode pad to GND edge track (spark gap) & 1.401\,mm, all 12 & \lbl{MEASUREMENT} (design file) \\
-SDA track to nearest electrode pad & 3.30\,mm & \lbl{MEASUREMENT} (design file) \\
+1206 lands, R13--R16 / C1 & 1.775 $\times$ 1.8 / 1.875 $\times$ 1.8\,mm & \lbl{CALCULATION} (design file) \\
+Keep-out rule areas under the Pico & 3 & \lbl{CALCULATION} (design file) \\
+Copper to the nearest Pico~2 underside feature & 2.14\,mm (11 features) & \lbl{CALCULATION} (design file) \\
+Minimum copper clearance between nets & 0.680\,mm (rule 0.6\,mm) & \lbl{CALCULATION} (design file) \\
+Minimum copper to board edge & 0.680\,mm (rule 0.5\,mm) & \lbl{CALCULATION} (design file) \\
+JP1 pad gap & 1.87\,mm & \lbl{CALCULATION} (design file) \\
+Electrode pad to GND edge track (spark gap) & 1.401\,mm, all 12 & \lbl{CALCULATION} (design file) \\
+SDA track to nearest electrode pad & 3.30\,mm & \lbl{CALCULATION} (design file) \\
 \bottomrule
 \end{longtable}
 }
@@ -194,7 +195,7 @@ Sensor pin current at 4\,kV & 1.10\,A (1.11\,A at 3267\,$\Omega$) vs 1.33\,A inf
 Charge, IEC 4\,kV vs HBM 2\,kV & 600 vs 200\,nC (3.0$\times$) & \lbl{CALCULATION} \\
 Decay time, IEC through 3.3\,k$\Omega$ vs HBM & 0.54 vs 0.15\,\textmu s (3.6$\times$) & \lbl{CALCULATION} \\
 Pin current at 8\,kV & 2.20\,A: FAIL & \lbl{CALCULATION} \\
-Copper gap across R / termination gap & 5.00\,mm / 4.65\,mm (4.08\,mm at $\pm$0.5\,mm placement) & \lbl{MEASUREMENT} (design file) / \lbl{CALCULATION} \\
+Copper gap across R / termination gap & 5.00\,mm / 4.65\,mm (4.08\,mm at $\pm$0.5\,mm placement) & \lbl{CALCULATION} (design file) / \lbl{CALCULATION} \\
 Gap rule at 4\,kV / 8\,kV & $\ge$ 3.5 / $\ge$ 7.5\,mm: PASS / FAIL & \lbl{CALCULATION} on \lbl{ASSUMPTION} models \\
 Electrode sensitivity, worst ratio at 3267--3333\,$\Omega$ & 0.904 (limit 0.90) & \lbl{SIMULATION} \\
 \bottomrule
@@ -252,7 +253,7 @@ ready for the first home-etched build}: F3-001 blocked, F3-002 and F3-003 had to
 fixed or scoped first \ev{reports/review/CR-003/findings.md}. The fixes are T-103
 (electronics), T-104 (systems) and T-105 (documentation); the manager's rulings are
 ADR-028. Status below is the result of the check named for each fix on the design
-files or documents; a re-review of the fixes is NOT RUN (ADR-028 D-8).
+files or documents. The fixes were re-reviewed in T-108 (Section~\ref{sec:cr003-rereview}).
 
 {\footnotesize
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}p{0.10\linewidth}@{}}
@@ -269,7 +270,7 @@ F3-005 & minor & Pin margin compares peak current only. & Charge 3.0$\times$ and
 F3-006 & minor & ORIG label is left of JP1, not below. & Copper unchanged; guide (T-103) and manual (T-105) describe the real position (ADR-028 D-2). & PASS (documents) \\
 F3-007 & minor & No post-solder short checks for VBUS/VSYS and BTN/RUN. & Checks added: pads 36, 39, 40 not to GND; BTN not to pin 30. & PASS (document) \\
 F3-008 & minor & Pin-1 mark level with pin 2. & Mark moved level with pin 1, square drawn in pad 1. & PASS (render inspected) \\
-F3-009 & minor & Records disagree (REQ-032, check counts, stock date, INTERFACES). & Requirements draft-13/14 and INTERFACES frozen-9 proposal (T-104); ADR-026 stock date superseded (ADR-028 D-6); frozen-9 not yet frozen. & PARTIAL \\
+F3-009 & minor & Records disagree (REQ-032, check counts, stock date, INTERFACES). & Requirements draft-13 to 16 and INTERFACES frozen-9, proposed in T-104 and frozen by the manager (ADR-028 D-8); ADR-026 stock date superseded (ADR-028 D-6); frozen-9 frozen. & PASS (records) \\
 F3-010 & minor & J1 in the BOM without MPN; knob outside the KiCad BOM; SW1 maker. & J1, J2, J3, JP1 copper only; knob in the guide only; SW1 genuine B3S-1000 (ADR-028 D-4). & PASS (budgets C2) \\
 F3-011 & info & Wire direction and strip length at J2. & Wires leave upward, strip 3--4\,mm. & PASS (document) \\
 F3-012 & info & Solder at the USB shell pins can tilt the Pico. & Rocking check before tacking. & PASS (document) \\
@@ -279,6 +280,48 @@ F3-015 & info & Regeneration not byte-identical (UUIDs). & No action; geometry i
 \bottomrule
 \end{longtable}
 }
+
+\subsection{Independent re-review T-108 and dispositions}
+\label{sec:cr003-rereview}
+
+A second independent reviewer, who did not see the work, re-reviewed
+\texttt{f0c016b} \ev{reports/review/CR-003/findings-T-108.md}. Verdict: \textbf{ready
+for the first build after fixes}; no critical finding, and no copper change
+needed. The reviewer's own checks on a git archive (kicad-cli 10.0.4 via pcgate)
+repeat ERC 0, DRC 0 / 0 unconnected / 0 parity and the board values of
+Table~\ref{tab:v13-geometry} (smallest net gap 0.680\,mm, 0.605\,mm to the etched
+outline line; A2 lands 1.730 / 1.775\,mm beyond the outline; 12 Pico~2 underside
+features $\ge$ 2.14\,mm from copper; all \lbl{CALCULATION} from the design file).
+Review status: PARTIAL (design-file review complete; everything physical NOT RUN
+\lbl{[PHYSICAL]}). The manager accepted all ten findings (ADR-029); the electronics
+fixes are T-109 \ev{management/handoffs/electronics-engineer-T-109.md}
+(assembly text and labels only, copper identical, ERC 0, DRC 0,
+\nolinkurl{check_smd} 65/65), and this documentation update is T-111.
+
+{\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.07\linewidth}>{\raggedright\arraybackslash}p{0.30\linewidth}>{\raggedright\arraybackslash}p{0.40\linewidth}>{\raggedright\arraybackslash}p{0.10\linewidth}@{}}
+\caption{CR-003 re-review findings and dispositions (ADR-029).}\label{tab:review-cr003-t108}\\
+\toprule
+ID & Sev. & Finding & Disposition & Status \\
+\midrule\endfirsthead
+\toprule ID & Sev. & Finding & Disposition & Status \\ \midrule\endhead
+F4-001 & major & Epoxy bead at the USB end has no board to bond to (Pico end 0.11\,mm inside the edge) and would hang where the plug moulding seats. & Beads on the two long sides over pins 1--3 and 38--40; none on the end face or beyond the edge; plug-seat re-check after curing (ADR-029 D-1). Guide, manual and root README. & PASS (documents) \\
+F4-002 & minor & Pad 40 is 3.48\,mm from GND pad 38, not 0.94\,mm; pad 37 (3V3\_EN) to 38 (0.94\,mm) not checked. & Sentence corrected; ``37 to 38 must not beep'' and a troubleshooting line added. & PASS (documents) \\
+F4-003 & minor & About 98\,\% of the etched ORIG lies under the module, and JP1 was bridged after the module. & JP1 before the module; pads identified by position; text says ORIG is hidden; label move deferred to the next copper change (ADR-029 D-2). & PASS (documents) \\
+F4-004 & minor & S-row pins 2.54\,mm inside the module outline (electrode row 1.27\,mm); joints visible only from a low angle. & Low-angle inspection described; S pad to module-pin continuity check added. & PASS (documents) \\
+F4-005 & minor & Bushless PTV09A with no mounting method. & Perfboard mounting behind a 7\,mm panel hole (\lbl{ASSUMPTION}; method not tried) (ADR-029 D-3). & PASS (documents) \\
+F4-006 & minor & ``Soldered flat'' is wrong for the module. & ``The module stands on its header pins.'' & PASS (documents) \\
+F4-007 & info & Design-file geometry labelled MEASUREMENT. & Relabelled \lbl{CALCULATION} (design file) in check scripts, analysis, metrics, requirements, manual and this report (ADR-029 D-4). & PASS (documents) \\
+F4-008 & info & Stale ``module end y 0.63''. & Marked as T-092 history (comment and analysis only). & PASS (documents) \\
+F4-009 & info & 0.8\,mm S-row stubs lie inside lands and pads. & Note in the design-rule table. & PASS (document) \\
+F4-010 & info & USB overhang 1.30\,mm sourced for the Pico only. & Plug-seat check made explicit for the Pico~2. & PASS (documents) \\
+\bottomrule
+\end{longtable}
+}
+
+Not checked by the reviewer: the S-row order of both module versions (Adafruit
+Eagle files not on disk), the Pico~2 USB overhang, tenting of the Pico and Pico~2
+underside vias, Mouser stock, a bushed PTV09A variant, and anything physical.
 
 \subsection{First-build measurement list}
 \label{sec:v13-first-build}
@@ -302,26 +345,26 @@ FB-2 & Exposed pin length after cutting, all 20 & 3.0\,mm (\lbl{ASSUMPTION}) & C
 FB-3 & Module board thickness; module underside and top above the copper & 1.6\,mm (\lbl{ASSUMPTION}); 5.5 / 7.1\,mm (\lbl{CALCULATION}) & Caliper \\
 FB-4 & C1 body, and copper beyond it & up to 3.4 $\times$ 1.8\,mm (\lbl{ASSUMPTION}); $\ge$ 1.0\,mm & Caliper on the fitted part \\
 FB-5 & B3S body & 6.0 + 0.1\,mm (\lbl{ASSUMPTION}) & Caliper \\
-FB-6 & USB receptacle face beyond the trimmed edge; Pico end inside the edge & 1.19\,mm (limit 1.0\,mm); 0.11\,mm (\lbl{CALCULATION}) & Caliper after trimming; plug fully seated before soldering \\
+FB-6 & USB receptacle face beyond the trimmed edge; Pico end inside the edge & 1.19\,mm (limit 1.0\,mm); 0.11\,mm (\lbl{CALCULATION}) & Caliper after trimming; plug fully seated before soldering, explicitly with a Pico~2 (overhang sourced for the Pico only, F4-010), and again after the epoxy beads cure (F4-001) \\
 FB-7 & One RC2512 body L and termination I1 & L 6.35 $\pm$0.10, I1 0.60 $\pm$0.20\,mm (\lbl{SOURCE}) & Caliper; inside 6.25--6.45 and 0.40--0.80\,mm, else re-run \nolinkurl{check_gap} (d) \\
 FB-8 & R1--R12 before soldering and after the ESD series & 3267--3333\,$\Omega$ (3.3\,k$\Omega$ $\pm$1\,\%, \lbl{CALCULATION}) & Ohmmeter; after the series every part within 3234--3366\,$\Omega$, else plan B \\
 FB-9 & Pico flat before tacking & --- & Must not rock at any corner \\
-FB-10 & Post-solder continuity & --- & Pico pads 36, 39, 40 not shorted to GND; SW1 BTN not to pad 30; JP1 centre only to S1 (ORIG) or S7 (QT) \\
+FB-10 & Post-solder continuity & --- & Pico pads 36, 39, 40 not shorted to GND; pad 37 not to pad 38 (F4-002); SW1 BTN not to pad 30; JP1 centre only to S1 (ORIG) or S7 (QT); each S pad to its own module-top pin and not to the neighbour (F4-004) \\
 FB-11 & ESD series $\pm$4\,kV contact on E0--E11 and the RV1 knob & --- & REQ-023 plan steps (1)--(3); arc path, resets and resistor values recorded \\
 FB-12 & SDA coupling step, GND bounce effects, USB pull & 2.09 counts; 330\,V / 1\,ns; 35.6\,N (Section~\ref{sec:v13-esd}) & Touch data during I\textsuperscript{2}C traffic; behaviour during strikes; no pad lift at a 30\,N pull \\
 \bottomrule
 \end{longtable}
 }
 
-\subsection{Requirement status for CR-003 (draft-14)}
+\subsection{Requirement status for CR-003 (draft-16)}
 
-Requirements draft-14 (T-106), 42 requirements: PASS 18, PARTIAL 18, FAIL 2
+Requirements draft-16 (T-112), 42 requirements: PASS 18, PARTIAL 18, FAIL 2
 (REQ-018, REQ-040), NOT RUN 4 \ev{requirements/requirements.csv}. Rows
 touched by CR-003:
 
 {\small
 \begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.10\linewidth}>{\raggedright\arraybackslash}p{0.24\linewidth}>{\raggedright\arraybackslash}p{0.11\linewidth}>{\raggedright\arraybackslash}p{0.51\linewidth}@{}}
-\caption{CR-003 requirements in draft-14.}\label{tab:v13-req}\\
+\caption{CR-003 requirements in draft-16.}\label{tab:v13-req}\\
 \toprule
 ID & Title & Status & Basis \\
 \midrule\endfirsthead
@@ -334,7 +377,7 @@ REQ-029 & Home-etch and SMD land rules & PASS & Design file only; etching and ha
 REQ-030 & Electrode wire pads & PASS & Design file \\
 REQ-031 & Pin map consistency & PASS & interface\_check, 0 pin mismatches \\
 REQ-032 & Core BOM cost & PASS & 14.84--16.84\,EUR ex VAT, ex shipping (ADR-027 D-1); shipping NOT CONFIRMED \\
-REQ-036 & User and assembly manual & PASS & Draft-14 (T-106): interface\_check 121/121, documentation 31/31, after T-105. Covers consistency of the manual and READMEs with the design files only; the hand-assembly steps have not been tried \\
+REQ-036 & User and assembly manual & PASS & Draft-16 (T-112): interface\_check 125/125, documentation 35/35, after T-111. Covers consistency of the manual and READMEs with the design files only; the hand-assembly steps have not been tried \\
 REQ-040 & JP1 wrong-position tolerance & FAIL & Accepted risk R-007 (ADR-027 D-5) \\
 \bottomrule
 \end{longtable}

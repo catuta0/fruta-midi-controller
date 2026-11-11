@@ -40,7 +40,7 @@
   d =   5.0 mm: Paschen  19483 V   empirical  17121 V   (textbook: ~4.5 kV at 1 mm, ~30 kV at 10 mm)
   d =  10.0 mm: Paschen  35509 V   empirical  31440 V   (textbook: ~4.5 kV at 1 mm, ~30 kV at 10 mm)
 
-# SMD board (T-091): 2512 land copper gap 5.00 mm (MEASUREMENT, check_smd.out); RC2512 termination gap min 4.65 mm
+# SMD board (T-091): 2512 land copper gap 5.00 mm (CALCULATION (design file), check_smd.out); RC2512 termination gap min 4.65 mm
 #   (CALCULATION from YAGEO RC_L V.11 L and I1); worst termination pair over placement error in check_gap.out (d).
   4 kV: V_gap 3640 V vs B min 4.65 mm: uniform 3 kV/mm withstands 13950 V, IEC F.2 case A needs 2.61 mm -> below the gap
   8 kV: V_gap 7279 V vs B min 4.65 mm: uniform 3 kV/mm withstands 13950 V, IEC F.2 case A needs 7.07 mm -> EXCEEDS the gap

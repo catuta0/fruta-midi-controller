@@ -65,7 +65,7 @@ Rule 3.5 mm, 2x series: per-gap requirement at 4 kV (V/2) is below 3.2 and 4.4 m
   QFN-20 3 x 3 mm: terminal width 0.20, pitch 0.40 (SOURCE) -> gap between terminals 0.20 mm vs 0.6 mm rule (ratio 0.33); pitch alone is below the 0.6 mm clearance
 
 == 6. Hole count ==
-  V1.2: 133 drilled holes (MEASUREMENT, CR-003 frutamidi.drl). Proposal: 4 M3 holes -> 97.0 % fewer
+  V1.2: 133 drilled holes (CALCULATION (design file), CR-003 frutamidi.drl). Proposal: 4 M3 holes -> 97.0 % fewer
 
 == 7. Other values ==
   C1: V working 3.3 V on 50 V rated -> 6.6 % of rating

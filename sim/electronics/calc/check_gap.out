@@ -1,6 +1,6 @@
-# check_gap.py  MEASUREMENT on the design file hardware/frutamidi.kicad_pcb (KiCad 10.0.4)
+# check_gap.py  CALCULATION (design file) hardware/frutamidi.kicad_pcb (KiCad 10.0.4)
 # rule (calc_flashover.out): 4 kV 3.5 mm, 8 kV 7.5 mm; coordinates relative to the board corner
-# copper = F.Cu pads and tracks (MEASUREMENT); terminations/screws = CALCULATION with the ASSUMPTIONS in the header
+# copper = F.Cu pads and tracks (CALCULATION (design file)); terminations/screws = CALCULATION with the ASSUMPTIONS in the header
 # W_MAX = 3.2 mm (SOURCE YAGEO RC_L V.11 Table 1: W 3.10 +- 0.15 mm)
   channel E0   ELE0  <-> E0  copper gap   5.00 mm
   channel E1   ELE1  <-> E1  copper gap   5.00 mm

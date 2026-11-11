@@ -174,3 +174,12 @@ Context: independent review T-102 (reports/review/CR-003/findings.md, F3-001..F3
 - D-6 Records (F3-009). INTERFACES moves to a frozen-9 proposal (T-104), frozen by the manager after review of the T-104 checks; the frozen-6 status note is moved to changelog_frozen_6. The ADR-026 stock date (2026-11-09) is to be read as superseded by the 2026-11-11 re-read (T96-S0b).
 - D-7 Residual items accepted for the first build, each on ASSUMPTION inputs and NOT RUN [PHYSICAL]: GND bounce 330 V for about 1 ns (R-010; budgets D1 PASS against the RP2040 FT-pin HBM equivalent, GP26/GP27 rating NOT CONFIRMED); SDA coupling 2.09 counts (R-017; budgets D2 PASS against the 3-count proposal); 35.6 N on the most loaded M3 screw at a 30 N USB pull (R-013; budgets D3 PASS against an unsourced 100 N ASSUMPTION).
 - D-8 INTERFACES frozen-9 is frozen by the manager after documentation T-105 and the CR-003 re-review, not before. Open for electronics: source an M3 nylon screw pull-through limit to replace the 100 N ASSUMPTION (budgets D3).
+
+## ADR-029 — CR-003 re-review (T-108) dispositions, 2026-11-11
+
+Context: independent re-review T-108 (reports/review/CR-003/findings-T-108.md): ready for the first build after fixes, no critical finding, no copper change needed.
+
+- D-1 USB strain relief (F4-001, R-013): epoxy beads on the two long sides of the Pico over pins 1-3 and 38-40, kept off the USB end face; no epoxy beyond the board edge; re-check that the plug seats fully after curing.
+- D-2 JP1 (F4-003): JP1 is bridged before the module is fitted; the text relies on the pad position and states that the ORIG label is hidden by the module. Moving the label is deferred to the next copper change.
+- D-3 RV1 (F4-005): the bushless PTV09A stays (cost); the guide gives a mounting method (for example a small piece of perfboard or hot glue behind the panel hole).
+- D-4 All other F4 findings are fixed as the reviewer suggested; design-file geometry is labelled CALCULATION, not MEASUREMENT.

@@ -4,9 +4,10 @@
 Baseline: release V1\_BASELINE, git tag \texttt{v1.1.0-baseline} (048023c,
 2026-11-04), board label ``FrutaMIDI v1.1'', interfaces frozen-3. V1.2 (CR-002) was
 released as git tag \texttt{v1.2.0}. Current: FrutaMIDI v1.3 on branch
-\texttt{change/CR-003} at f6693c9 (review fixes T-103/T-104, interfaces frozen-8
-with a frozen-9 proposal, requirements draft-14), not released. Sources:
-\texttt{git log v1.1.0-baseline..a51dfff} and \texttt{git log 8e963d0..f6693c9},
+\texttt{change/CR-003} at f0c016b plus the uncommitted T-109/T-111 fixes
+(re-review T-108, ADR-029; interfaces frozen-9 frozen,
+requirements draft-16), not released. Sources:
+\texttt{git log v1.1.0-baseline..a51dfff} and \texttt{git log 8e963d0..f0c016b},
 the commit messages quoted below, \ev{changes/CR-002.md}, \ev{changes/CR-003.md},
 ADR-019 to ADR-028 \ev{management/DECISIONS.md}.
 
@@ -18,7 +19,7 @@ Commit & Change & Effect on nets, copper and checks \\
 21a4919 & Schematic readability: A3 sheet, framed functional blocks, electrode chain drawn with wires. Layout of the schematic only. & Netlist identical (127 nets, compared node by node); PCB unchanged; ERC 0, DRC 0, parity 0 (commit message). \\
 b1e4bf5 & The unconnected BOM-only socket symbols J4--J7 are removed; the female-header sockets become a Socket field of A1/A2; the BOM gains a Socket column. & Netlist unchanged apart from the removed J4--J7 no-connect nets; PCB copper identical (tracks and pads compared); ERC 0, DRC 0, parity 0 (commit message). \\
 130e754 & CR-002 opened: electrode resistor flashover and pulse rating; supersedes candidate CR-001. & Documents only. \\
-3a3684b & CR-002 T-060: R1--R12 become Vishay MBE04140C3301FC100 (DIN0414, lying flat, 15.24\,mm pitch); relayout (module A2 15.1\,mm up and 2.54\,mm right; J1, JP1 upright, R13--R15 right of the module; H4 moved); analysis.md \S5; ADR-019. & ELE--E gap 0.94 $\rightarrow$ 13.04\,mm, E--other net 1.99 $\rightarrow$ 10.92\,mm (\lbl{MEASUREMENT}, design file); nets and pinout unchanged; ERC 0, DRC 0, parity 0; pcb\_rules\_check 16/16. \\
+3a3684b & CR-002 T-060: R1--R12 become Vishay MBE04140C3301FC100 (DIN0414, lying flat, 15.24\,mm pitch); relayout (module A2 15.1\,mm up and 2.54\,mm right; J1, JP1 upright, R13--R15 right of the module; H4 moved); analysis.md \S5; ADR-019. & ELE--E gap 0.94 $\rightarrow$ 13.04\,mm, E--other net 1.99 $\rightarrow$ 10.92\,mm (\lbl{CALCULATION}, design file); nets and pinout unchanged; ERC 0, DRC 0, parity 0; pcb\_rules\_check 16/16. \\
 8394b41 & CR-002 T-070: REQUIREMENTS draft-6, INTERFACES frozen-4, budgets revision~6 (core BOM 23.78--37.72\,EUR, \lbl{CALCULATION}), risks R-006 rewritten and R-008 added; board label ``FrutaMIDI v1.2''. & Label text only on the board; gap check unchanged (re-run in T-072). \\
 dcdb1fc & CR-002 T-072: this report, the user manual and figures updated for v1.2. & Documents only. \\
 1247c44 & CR-002 T-071: independent re-review findings C2-001 to C2-013 recorded (Section~\ref{sec:cr002-review}). & Documents only. \\
@@ -35,7 +36,7 @@ a51dfff & T-080/T-081, final re-review fixes (ADR-022): C1 drill 0.8 $\rightarro
 \multicolumn{3}{@{}l}{\textbf{CR-003: SMD board for home chemical etching (v1.3)}} \\
 8e5f595 & CR-003 opened: SMD conversion, impact analysis. & Documents only. \\
 8c89555 & T-090: SMD feasibility study; ADR-023 user decisions. & Documents only. \\
-f3a718a & T-091: SMD schematic and single-layer layout on F.Cu with 4 holes; SMD checks; assembly guide. & Full re-layout; holes 133 $\rightarrow$ 4 (\lbl{MEASUREMENT}, CR-003); pin map unchanged. \\
+f3a718a & T-091: SMD schematic and single-layer layout on F.Cu with 4 holes; SMD checks; assembly guide. & Full re-layout; holes 133 $\rightarrow$ 4 (\lbl{CALCULATION}, design file, CR-003); pin map unchanged. \\
 76027e9 & T-092: mounting holes moved for USB support; calculations re-run for the SMD board. & Hole positions only. \\
 410933d & T-093: requirements draft-10, SMD rules and interface checks, budgets, risks R-012 to R-017, INTERFACES frozen-8 proposal; project definition amended. & Checks and documents. \\
 463f18c & T-094: SDA re-routed 3.30\,mm from the electrode pads (R-017). & One track moved. \\
@@ -46,7 +47,12 @@ f3a718a & T-091: SMD schematic and single-layer layout on F.Cu with 4 holes; SMD
 fd7140b & T-102: independent review findings F3-001 to F3-015, verdict not ready for the first build (Section~\ref{sec:cr003-review}). & Documents only. \\
 f6693c9 & T-103/T-104: review fixes (A2 lands outside the module, Pico moved and Pico~2 keep-out, 1206 lands, J1 out of the BOM), systems re-checks, requirements draft-13, ADR-028. & ERC 0, DRC 0, parity 0; check\_smd 65/65; pcb\_rules\_check 26/26 (T-103/T-104 handoffs). \\
 (T-105) & This report (Section~\ref{sec:cr003}, v1.3 figures), user manual and root README updated after T-103/T-104. & Documents only; interface\_check 121/121. \\
-(T-106, T-107) & Requirements draft-14 (REQ-036 PASS); this report updated to draft-14. & Documents only. \\
+f0c016b (T-105..T-107) & Requirements draft-14 (REQ-036 PASS); this report updated to draft-14. & Documents only. \\
+(T-110) & Systems: requirements draft-15 (REQ-036 FAIL on three new ADR-029 documentation checks), labels in metrics and requirements relabelled \lbl{CALCULATION} (design file). & Checks and records only. \\
+(T-108) & Independent re-review of f0c016b: ready for the first build after fixes, findings F4-001 to F4-010, no critical (Section~\ref{sec:cr003-rereview}); ADR-029. & Documents only. \\
+(T-109) & Electronics: assembly text in \nolinkurl{hardware/README.md} (epoxy beads on the long sides, 37--38 check, JP1 before the module, S-row inspection and continuity, RV1 perfboard mounting, Pico~2 plug seat); design-file geometry relabelled \lbl{CALCULATION} (design file) in the check scripts and analysis. & Copper identical to f0c016b (\nolinkurl{compare_copper.out}); ERC 0, DRC 0, parity 0; check\_smd 65/65 (T-109 handoff). \\
+(T-111) & This report (re-review section, labels, first-build list), user manual and root README updated after T-109. & Documents only. \\
+(T-112, T-113) & Requirements draft-16 (REQ-036 PASS); INTERFACES frozen-9 frozen (ADR-028 D-8); this report and the manual header updated. & Documents and records only. \\
 \bottomrule
 \end{longtable}
 }
@@ -64,8 +70,9 @@ test); REQ-006 stays PARTIAL (C1 settling by calculation only); REQ-032 stays FA
 a larger overrun (8.62\,EUR instead of 0.40\,EUR, \lbl{CALCULATION})
 \ev{management/REQUIREMENTS.md}.
 
-\paragraph{Requirement status after CR-003.} Counts in REQUIREMENTS draft-14 (T-106):
+\paragraph{Requirement status after CR-003.} Counts in REQUIREMENTS draft-16 (T-112):
 PASS 18, PARTIAL 18, FAIL 2, NOT RUN 4. REQ-032 moved from FAIL to PASS on the
 ADR-027 D-1 basis; REQ-036 moved from PASS to FAIL while the documents followed the
-board (draft-10) and back to PASS in draft-14 after T-105 (document consistency
-only); REQ-023 stays PARTIAL \ev{management/REQUIREMENTS.md}.
+board (draft-10), back to PASS in draft-14 after T-105 and to FAIL again in
+draft-15 on the new ADR-029 documentation checks, and back to PASS in draft-16
+after T-111 (interface\_check 125/125; document consistency only); REQ-023 stays PARTIAL \ev{management/REQUIREMENTS.md}.

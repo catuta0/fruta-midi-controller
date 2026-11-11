@@ -122,7 +122,7 @@ for d in (0.5, 1.0, 2.0, 5.0, 10.0):
 
 print()
 B_MIN = 6.35 - 0.10 - 2 * (0.60 + 0.20)            # mm, L min - 2 x I1 max (SOURCE YAGEO RC_L V.11 Table 1), CALCULATION
-print("# SMD board (T-091): 2512 land copper gap 5.00 mm (MEASUREMENT, check_smd.out); RC2512 termination gap min %.2f mm" % B_MIN)
+print("# SMD board (T-091): 2512 land copper gap 5.00 mm (CALCULATION (design file), check_smd.out); RC2512 termination gap min %.2f mm" % B_MIN)
 print("#   (CALCULATION from YAGEO RC_L V.11 L and I1); worst termination pair over placement error in check_gap.out (d).")
 for v in LEVELS:
     vg = v_gap(v)

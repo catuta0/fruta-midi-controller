@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""T-091 / CR-003 (SMD board, supersedes the T-060 THT version in git history): MEASUREMENT (on the design file) of the
+"""T-091 / CR-003 (SMD board, supersedes the T-060 THT version in git history): CALCULATION (design file) of the
 copper gaps that an ESD strike on an electrode could arc across, compared with the CALCULATION rule of calc_flashover.py.
 
 Runs with the KiCad Python (pcbnew):
@@ -167,9 +167,9 @@ def main():
     ox, oy = origin.x * TOMM, origin.y * TOMM
     e_items = sorted([i for i in its if chan(i.net)[0] == "E"], key=lambda i: natkey(i.desc))
     others = sorted([i for i in its if chan(i.net)[0] != "E"], key=lambda i: natkey(i.desc))
-    print("# check_gap.py  MEASUREMENT on the design file %s (KiCad %s)" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
+    print("# check_gap.py  CALCULATION (design file) %s (KiCad %s)" % (os.path.relpath(PCB, ROOT), pcbnew.Version()))
     print("# rule (calc_flashover.out): 4 kV %.1f mm, 8 kV %.1f mm; coordinates relative to the board corner" % (RULE_4KV, RULE_8KV))
-    print("# copper = F.Cu pads and tracks (MEASUREMENT); terminations/screws = CALCULATION with the ASSUMPTIONS in the header")
+    print("# copper = F.Cu pads and tracks (CALCULATION (design file)); terminations/screws = CALCULATION with the ASSUMPTIONS in the header")
     print("# W_MAX = %.1f mm (%s)" % (W_MAX, W_LABEL))
     worst = {k: (float("inf"), None) for k in ("a", "b", "EE", "GND")}
     per_ch = {}

@@ -2,13 +2,13 @@
 """T-073 / C2-005, inductances updated T-092 for the SMD board (no sockets): ESD strike on a terminal that arcs across the
 1.40 mm E-pad <-> GND edge-track gap.
 
-Every J2 electrode pad is 1.40 mm (MEASUREMENT, check_gap.out (c)) from the GND track along the bottom edge. That
+Every J2 electrode pad is 1.40 mm (CALCULATION (design file), check_gap.out (c)) from the GND track along the bottom edge. That
 is below the breakdown distance of every model in calc_flashover.out at 3.6 kV, so a 4 kV contact strike most
 likely arcs to GND instead of driving 1.1 A through Rx into the MPR121 pin. This script estimates what the arc
 current does on the way out (to the host through the Pico USB GND), in particular the voltage between the MPR121
 module GND and the Pico GND (the only difference that reaches IC pins; a common rise of the whole board is not).
 
-Runs with the KiCad Python (pcbnew): GND track lengths are MEASUREMENT on hardware/frutamidi.kicad_pcb.
+Runs with the KiCad Python (pcbnew): GND track lengths are CALCULATION (design file) on hardware/frutamidi.kicad_pcb.
 Labels: SOURCE (EE-S16 IEC 61000-4-2 values from memory, not re-read; EE-S28 RP2040 ESD; EE-S01 MPR121 ESD),
 ASSUMPTION (inductances, stated with a sweep), CALCULATION (everything else).
 """
@@ -104,7 +104,7 @@ def main():
     shared = [v for v in path_t0 if v in set(path_mod)]
     n = shared[0]
     l_np23, _ = shortest(g, n, p23)
-    print("GND path lengths (MEASUREMENT, design file): J2 pad 1 (GND terminal) -> Pico pin 23 %.2f mm; module GND pin ->"
+    print("GND path lengths (CALCULATION (design file)): J2 pad 1 (GND terminal) -> Pico pin 23 %.2f mm; module GND pin ->"
           " Pico pin 23 %.2f mm; shared section from node (%.2f,%.2f) to pin 23 %.2f mm" % (l_t0, l_mod, n[0], n[1], l_np23))
     # longest arc path: farthest electrode pad along the edge track to J2 pad 1
     edge_y = max(v[1] for v in g)

@@ -1,10 +1,11 @@
 \section{Interfaces}
 \label{sec:interfaces}
 
-\paragraph{v1.3 note.} The current revision is \texttt{frozen-8} (CR-003, frozen by
-the manager, ADR-027 D-4), with a \texttt{frozen-9} proposal for the T-103 board
-(A2 lands, module height, Pico mounting and keep-outs, 1206 lands, J1 out of the
-BOM) to be frozen after documentation T-105 and the CR-003 re-review (ADR-028 D-8)
+\paragraph{v1.3 note.} The current revision is \texttt{frozen-9} (CR-003 SMD board after the review
+fixes T-103/T-109; A2 lands, module height, Pico mounting and keep-outs, 1206
+lands, J1 out of the BOM), frozen by the manager on 2026-11-11 after documentation
+T-105 and the re-review T-108 (ADR-028 D-8); it replaces \texttt{frozen-8}
+(ADR-027 D-4)
 \ev{management/INTERFACES.json}. Nets, pin map, I\textsuperscript{2}C, USB MIDI and
 build flags are unchanged in v1.3. The text below describes the v1.2 revisions.
 
@@ -49,7 +50,7 @@ IF-PCB-AUX & Documentation-only (review N-003): J3 = the S1--S7 wire holes (Frut
 ``FrutaMIDI v1.2'' (ADR-019 D-2; text in \nolinkurl{hardware/scripts/gen_pcb.py}
 and \nolinkurl{hardware/frutamidi.kicad_pcb}), fabrication folder
 \nolinkurl{hardware/fabrication}. The placement recorded in frozen-6 and frozen-7 (for
-example A2 at (60.02, 17.645)\,mm, H4 at (88.5, 30.5)\,mm, C1 at (31.2, 5.3)\,mm, \lbl{MEASUREMENT} on the
+example A2 at (60.02, 17.645)\,mm, H4 at (88.5, 30.5)\,mm, C1 at (31.2, 5.3)\,mm, \lbl{CALCULATION} on the
 design file) is for traceability and is not a frozen mechanical interface. Mounting
 hole H3 moved from (95, 48) to (96, 38)\,mm in T-073 (review finding C2-009); the
 placement record in \nolinkurl{management/INTERFACES.json} was updated by systems

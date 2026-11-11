@@ -412,6 +412,33 @@ check("doc.manual.JP1_label_position", not re.search(r"ORIG\*\* etched below", m
       % (bool(re.search(r"ORIG\*\* etched below", manual)), bool(re.search(r"ORIG\*\* etched below", hw_readme))))
 w_pcb = [l.strip()[:90] for txt in (readme, manual) for l in txt.split("\n") if re.search(r"FrutaMIDI-pcb-rpipico2?w\.uf2", l) and "not supported" not in l]
 check("doc.root_readme.pcb_variants", not w_pcb, "PCB firmware rows for Pico W / Pico 2 W without 'not supported' (root README or manual): %s" % w_pcb)
+# T-110 rules for the re-review findings F4-001..F4-003 (ADR-029); expected to FAIL until T-109 and documentation land
+def _sentences(txt):
+    return [x.strip() for x in re.split(r"(?<=[.!?])\s+|\n+", txt) if x.strip()]
+_NEG = re.compile(r"off the (USB )?end face|not (on|at) the (USB )?end|no epoxy (on|at)|away from the (USB )?end face", re.I)   # negations about the end face only
+_END = re.compile(r"along the end of the Pico|\b(at|on|to) the (Pico )?USB end\b|USB end\W{0,4} of the Pico gets|bead at the USB end|on the (USB )?end face", re.I)
+_docs = {"hardware/README.md": hw_readme, "README.md": readme, "docs/manual/MANUAL.md": manual}
+on_end = ["%s: %s" % (n, x[:90]) for n, t in _docs.items() for x in _sentences(t)
+          if "epoxy" in x.lower() and _END.search(x) and not _NEG.search(x) and not re.search(r"long side|pins 1\s*[–-]\s*3", x)]
+check("doc.usb_epoxy_not_on_end_face", not on_end,
+      "ADR-029 D-1 / F4-001: sentences that put epoxy at the USB end (hardware README, root README, manual): %s" % on_end)
+def _side(t):
+    return any("epoxy" in x.lower() and re.search(r"1\s*[–-]\s*3", x) and re.search(r"38\s*[–-]\s*40", x) for x in _sentences(t))
+seat = any(re.search(r"\bcur(ed|ing|es)\b", x, re.I) and re.search(r"seat|fully home|goes (fully )?in", x, re.I) for x in _sentences(hw_readme))
+check("doc.usb_epoxy_side_beads", _side(hw_readme) and _side(manual) and seat,
+      "side beads at pins 1-3 and 38-40: hardware README %s, manual %s; plug-seat re-check after curing in the hardware README %s" % (_side(hw_readme), _side(manual), seat))
+c3738 = [l for l in hw_readme.split("\n") if l.startswith("- [ ]") and re.search(r"\b37\b", l) and re.search(r"\b38\b", l) and "not" in l and "beep" in l]
+wrong_40 = bool(re.search(r"[Pp]ads 39 and 40[^.;\n]{0,60}\blie 0\.94 mm", hw_readme))
+check("doc.hw_readme.continuity_37_38", bool(c3738) and not wrong_40,
+      "F4-002: checklist line 'pad 37 (3V3_EN) to 38 (GND) must not beep' present %s; wrong 'pads 39 and 40 ... 0.94 mm' text present %s" % (bool(c3738), wrong_40))
+steps = {int(m.group(1)): m.group(2) for m in re.finditer(r"^(\d+)\. \*\*([^*]+)\*\*", hw_readme, re.M)}
+s_jp1 = min([k for k, v in steps.items() if "JP1" in v] or [99]); s_mod = min([k for k, v in steps.items() if v.startswith("Module")] or [0])
+m_ord = re.search(r"Then flash[^\n]*", manual)
+man_ok = bool(m_ord) and "JP1" in m_ord.group(0) and "module" in m_ord.group(0) and m_ord.group(0).index("JP1") < m_ord.group(0).index("module")
+hidden = any("ORIG" in x and "hidden" in x for x in _sentences(hw_readme))
+check("doc.jp1_before_module", s_jp1 < s_mod and man_ok and hidden,
+      "ADR-029 D-2 / F4-003: hardware README JP1 step %s before module step %s; manual assembly order puts JP1 before the module %s; README says ORIG is hidden by the module %s"
+      % (s_jp1, s_mod, man_ok, hidden))
 check("doc.hw_readme.JP1_smd", "3-pad solder bridge" in hw_readme and "1.87 mm" in hw_readme, "JP1 described as surface bridge with the 1.87 mm gap")
 # The user manual and the root README must describe the same board (REQ-036). They are not owned by the systems engineer.
 stale = lambda txt: sorted({w for w in ("PCB v1.2", "MBE0414", "DIN0414", "HPWC", "screw-terminal pads", "screw terminals", "Drill R1", "S holes") if w in txt})

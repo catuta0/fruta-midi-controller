@@ -4,7 +4,7 @@ Author: electronics-engineer. Date: 2026-11-09. Scope: feasibility and part sele
 
 Status: **PARTIAL.** Every point was analysed against datasheets, but nothing here is measured on hardware, and the routing conclusion is an estimate until a layout exists.
 
-Numbers carry one label: SOURCE (datasheet opened, section 9), CALCULATION (`sim/electronics/calc/calc_smd_feasibility.py`, output `.out`), ASSUMPTION, MEASUREMENT.
+Numbers carry one label: SOURCE (datasheet opened, section 9), CALCULATION (`sim/electronics/calc/calc_smd_feasibility.py`, output `.out`), ASSUMPTION, CALCULATION (design file) for geometry read from the KiCad files (relabelled from MEASUREMENT in T-109, F4-007).
 
 ## 1. Result in one page
 
@@ -171,7 +171,7 @@ Both revisions stay on one footprint, since their pin rows do not change (REQ-02
 
 No enclosure is defined in the project documents searched, so an off-board pot needs somewhere to live. That is the user's call.
 
-**Holes:** 133 (MEASUREMENT, CR-003) to **4** M3 mounting holes (CALCULATION, 97 % fewer), or 9 if the THT pot stays, or 0 with adhesive feet. Every hole left is justified by mounting force. The mounting metal check (floating-metal bypass, ADR-020) must be redone against the new R positions.
+**Holes:** 133 (CALCULATION (design file), CR-003 drill file) to **4** M3 mounting holes (CALCULATION, 97 % fewer), or 9 if the THT pot stays, or 0 with adhesive feet. Every hole left is justified by mounting force. The mounting metal check (floating-metal bypass, ADR-020) must be redone against the new R positions.
 
 ## 6. R13-R16 and C1
 
