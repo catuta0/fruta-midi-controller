@@ -10,11 +10,13 @@ The MPR121 detects the touch, the Pico turns it into MIDI notes and the computer
 
 **Two ways to build it:**
 - **Breadboard:** no soldering. This README.
-- **Single-sided PCB**, for etching at home with the chemical method, with KiCad schematic, BOM and assembly guide: [`hardware/`](hardware/).
-  Board version 1.2 adds a few parts and pad changes compared with the breadboard; the [assembly guide](hardware/README.md) has the details:
-  - **C1**, a 100 nF ceramic capacitor with 5.08 mm lead spacing (KEMET C322C104K5R5TA), sits just above the octave potentiometer and smooths its reading. Solder the potentiometer's two metal tabs too: they are connected to its ground (AGND). Because of that, fit a **plastic (insulating) knob, at most 15 mm in diameter, covering the whole shaft**, preferably on a potentiometer with an insulated shaft: a metal shaft or knob would bring a finger's static discharge straight onto the analog ground, and a wider knob would hit C1 (see the [assembly guide](hardware/README.md#bill-of-materials)).
-  - **JP1** pads are 3.81 mm apart (1.87 mm gap). Bridge the centre pad to one side with a generous solder blob or, more easily, an off-cut of an R13–R16 lead (0.5 mm).
-  - The **screw-terminal pads** are 3.0 × 4.5 mm ovals, which give more copper under the screw force.
+- **Single-sided PCB, version 1.3**, for etching at home with the chemical method, with KiCad schematic, BOM and assembly guide: [`hardware/`](hardware/).
+  The board has one copper layer, on the component side, and every part is surface-mounted (SMD), so the only holes are the 4 optional M3 mounting holes. All parts are sold by Mouser; one board costs about 13.84 EUR at Mouser Portugal prices of 2026-11-11, excluding shipping and tax (a calculation from list prices). What to know before you start (details in the [assembly guide](hardware/README.md)):
+  - The **Pico and the MPR121 module are soldered flat** onto surface pads, with no sockets. Flash the firmware before soldering the Pico. Replacing a failed one means desoldering it, which is harder than with sockets.
+  - The **USB end** of the Pico gets a small bead of 2-part epoxy; use a strain-relieved USB cable and do not lever on the plug.
+  - **Electrode wires** are soldered onto pads and held with hot-melt glue. The **octave potentiometer** sits off the board on 3 wires: use one with an insulated shaft and a plastic knob.
+  - Module configuration: **JP1** is a surface solder bridge (ORIG or QT) and **J1** takes two short wire links.
+  - **ESD:** each electrode has a 3.3 kΩ chip resistor. It is **not proven** that these standard resistors survive the project's ±4 kV static-discharge target; nothing has been tested (see [Safety](#design-notes) below).
 
 [![PCB render](hardware/fabrication/images/board-3d.png)](hardware/)
 
@@ -67,7 +69,7 @@ The essentials cost about 23–31 €. This total excludes the 14 recommended re
 | Male-to-male jumper wires | 10 | Breadboard connections | 2 € | |
 | Leads with alligator clips on both ends | 12 | Connect each pad to an object | 5 € (pack of 10) | Buy 2 packs |
 | Screw terminal strip, 12 ways | 1 | Sturdy connection point for the alligator clips | 2 € | 5 mm pitch is the easiest to tighten |
-| Resistor 3.3 kΩ (3k3), axial | 12 | One in series with each electrode (ESD protection) | — | Recommended. The PCB v1.2 uses the larger pulse-rated Vishay MBE04140C3301FC100 (DIN0414); see the [assembly guide](hardware/README.md#bill-of-materials) |
+| Resistor 3.3 kΩ (3k3), axial | 12 | One in series with each electrode (ESD protection) | — | Recommended. The PCB (v1.3) uses 3.3 kΩ ±1 % surface-mount chip resistors in the 2512 size (YAGEO RC2512FK-073K3L); see the [assembly guide](hardware/README.md#bill-of-materials) |
 | Resistor 4.7 kΩ (4k7), axial | 2 | I²C pull-ups, SDA and SCL to 3V3 | — | Recommended, because the firmware runs I²C at 400 kHz (Yageo MFR-12FTF52-4K7) |
 | 6 mm push button | 1 | Change scale / recalibrate | 0.20 € | Optional, but very useful |
 | 10 kΩ linear potentiometer (B10K) + knob | 1 | Change octave | 1.50 € | Optional |
@@ -214,7 +216,7 @@ What matters most for the result is not the code: it is the objects, the cables 
 - Terminal strip or 4 mm binding posts on the lid, numbered 0–11, and holes for the USB and the button.
 - Use a plastic or wooden box: metal near the electrodes takes away sensitivity.
 
-**Safety.** FrutaMIDI is USB-powered with 3.3 V logic. On the [PCB v1.2](hardware/README.md#electrical-safety), each electrode has a pulse-rated 3.3 kΩ series resistor (DIN0414, lying flat). Its protection against IEC 61000-4-2 contact discharge at ±4 kV is an estimate resting on assumptions, not a pass, and has not been tested; it does not cover 8 kV. The PCB has not been evaluated beyond that. The breadboard build has no ESD protection on the electrodes beyond the MPR121's internal protection (HBM ±2 kV): the module connects its electrode pins straight to its header. The recommended 3.3 kΩ series resistors (see [Wiring](#wiring)) have the same value as the PCB's protection, but a small resistor is not rated for the ESD pulse, and no resistor has been evaluated in a breadboard layout. Neither build has been evaluated for touching while connected to mains-powered equipment. <!-- EVIDENCE --> Never connect the electrodes to anything plugged into mains power.
+**Safety.** FrutaMIDI is USB-powered with 3.3 V logic. On the [PCB (v1.3)](hardware/README.md#electrical-safety), each electrode has a 3.3 kΩ series chip resistor (2512 size) and sits next to a spark gap to GND. The protection target is an IEC 61000-4-2 contact discharge of ±4 kV, and that target is itself an assumption. Whether the resistors survive it is **not proven**: they are standard parts with no published surge rating, a choice accepted to keep the board cheap. If the planned physical ESD test shows damage (a resistor whose value shifts, a channel that stops detecting touch, or a spark across a resistor), the fallback is a board revision with clamp diodes. Nothing has been tested, and the board does not cover 8 kV. The PCB has not been evaluated beyond that. Use an insulated-shaft potentiometer with a plastic knob on the PCB: a metal shaft is not protected. The breadboard build has no ESD protection on the electrodes beyond the MPR121's internal protection (HBM ±2 kV): the module connects its electrode pins straight to its header. The recommended 3.3 kΩ series resistors (see [Wiring](#wiring)) have the same value as the PCB's protection, but a small resistor is not rated for the ESD pulse, and no resistor has been evaluated in a breadboard layout. Neither build has been evaluated for touching while connected to mains-powered equipment. <!-- EVIDENCE --> Never connect the electrodes to anything plugged into mains power.
 
 ## Step-by-step assembly
 

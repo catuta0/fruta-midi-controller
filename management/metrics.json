@@ -200,6 +200,70 @@
       "label": "MEASUREMENT",
       "revision": "CR-002 T-082",
       "evidence": "management/handoffs/documentation-engineer/T-082/frutamidi_report.log"
+    },
+    {
+      "name": "v1.3_drill_holes_total",
+      "value": 4,
+      "unit": "holes",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 (d7da0c2)",
+      "evidence": "hardware/fabrication/gerbers/frutamidi.drl"
+    },
+    {
+      "name": "v1.3_mouser_parts_one_board",
+      "value": 13.84,
+      "unit": "EUR ex VAT ex shipping",
+      "label": "CALCULATION",
+      "revision": "CR-003 (d7da0c2)",
+      "evidence": "management/handoffs/electronics-engineer-T-096.md (Mouser prices 2026-11-11)"
+    },
+    {
+      "name": "v1.3_core_bom",
+      "value": "14.84-16.84",
+      "unit": "EUR ex VAT ex shipping",
+      "label": "CALCULATION",
+      "revision": "CR-003 (d7da0c2)",
+      "evidence": "sim/systems/budgets.out rev 9"
+    },
+    {
+      "name": "v1.3_r1_r12_termination_gap_worst",
+      "value": 4.65,
+      "unit": "mm",
+      "label": "CALCULATION",
+      "revision": "CR-003 (d7da0c2)",
+      "evidence": "sim/electronics/calc/check_gap.out (d), placement error 0"
+    },
+    {
+      "name": "v1.3_r1_r12_copper_gap",
+      "value": 5.0,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 (d7da0c2)",
+      "evidence": "sim/electronics/calc/check_gap.out (design file)"
+    },
+    {
+      "name": "v1.3_sda_to_electrode_pad",
+      "value": 3.3,
+      "unit": "mm",
+      "label": "MEASUREMENT",
+      "revision": "CR-003 (d7da0c2)",
+      "evidence": "reports/electronics/evidence/T-094/measure_i2c_gap.out"
+    },
+    {
+      "name": "v1.3_sensitivity_worst",
+      "value": 0.904,
+      "unit": "ratio",
+      "label": "SIMULATION",
+      "revision": "CR-003 (d7da0c2)",
+      "evidence": "sim_electrode, T-096 (3k3 +-1 %)"
+    },
+    {
+      "name": "v1.3_plan_b_window",
+      "value": "3234-3366",
+      "unit": "ohm",
+      "label": "SIMULATION",
+      "revision": "CR-003 (d7da0c2)",
+      "evidence": "management/RISKS.md R-018, ADR-027 D-2"
     }
   ]
 }
