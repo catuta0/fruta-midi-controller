@@ -154,3 +154,10 @@ User decision after discussing cost against the 4 kV target (user: pulse-proven 
 - R1-R12: Yageo RC2512FK-073K3L, 3k3 ±1 %, 1 W, 200 V rated. Mouser 603-RC2512FK-073K3L: 12 for 1.31 EUR at 0.109 EUR, stock 13, next delivery 2027-05-18 (SOURCE, Mouser Portugal, 2026-11-09). One-board quote about 13.8 EUR excluding shipping and taxes (CALCULATION).
 - Accepted by the user: no sourced pulse capability, so survival of a 4 kV strike is NOT PROVEN. The ±4 kV target of REQ-023 was itself an ASSUMPTION (IEC 61000-4-2 level 2, standard not read). Possible effects: resistance drift or a dead channel; in the worst case an arc reaches the module. Energy of a 4 kV IEC-style strike into R is about 1 mJ against 182 mJ behind the earlier 1.2/50 us chart criterion (CALCULATION, T-060/T-090).
 - REQ-023 stays PARTIAL at best; the physical ESD test decides. Selection by multimeter (ADR-025) no longer applies. Silicone stays optional.
+
+## ADR-027 — CR-003 rulings after T-099, 2026-11-11
+- D-1 REQ-032 basis: core BOM excluding shipping, consumables and tools, as in every earlier revision. VAT does not change the verdict: 14.84–16.84 EUR ex VAT, 18.25–20.71 EUR with 23 % VAT (ASSUMPTION), both under 30 EUR (CALCULATION, budgets.out revision 9). REQ-032: PASS on this basis; shipping stays NOT CONFIRMED and is reported beside it.
+- D-2 Plan B (R-018) accepted: if after the physical ESD series any R1-R12 reads outside 3234–3366 ohm, a channel stops detecting touch, or an arc crosses a resistor, move to the T-097 clamp (Bourns CDSOD323-T05LC) with R1-R12 at 1 kohm, after confirming its maximum capacitance and leakage.
+- D-3 R-016 accepted: Mouser stock 13 for 12 needed (one spare). The purchase list names a standard 3k3 ±1 % 2512 alternative on the same land.
+- D-4 INTERFACES frozen-8 frozen by the manager.
+- D-5 JP1 legend: etched ORIG/QT plus the assembly map is accepted (R-007, REQ-040 stays FAIL as an accepted risk). Project definition amendment was made in 410933d.

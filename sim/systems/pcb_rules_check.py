@@ -266,6 +266,9 @@ else:
     check("REQ-029 no bare copper in the 2 Pico keep-out rule areas", False, "expected 2 keep-out rule areas, found %d" % len(keepouts))
 
 # ---- REQ-023: R1-R12 land gap -------------------------------------------------------------------------------
+R_EL_FP = "R_2512_HomeEtch_G5.0mm"   # T-098; the YAGEO RC2512FK-073K3L (ADR-026) sits on the unchanged 2512 land
+bad_fp = sorted(r for r in ("R%d" % k for k in range(1, 13)) if fps.get(r, dict(name=""))["name"].split(":")[-1] != R_EL_FP)
+check("ADR-026 R1-R12 on footprint %s" % R_EL_FP, not bad_fp, "R1..R12 not on it: %s" % bad_fp)
 gaps = {}
 for r in range(1, 13):
     ps = fps.get("R%d" % r, dict(pads=[]))["pads"]

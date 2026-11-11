@@ -10,7 +10,7 @@
   RP2040 I2C internal pull-ups               0.000 .. 0.132 mA      CALCULATION, RPU 50..80 kOhm SOURCE S-17 Table 625
   Octave pot 10k +-20 %                      0.275 .. 0.412 mA      CALCULATION V/R
   Button pull-up (pressed)                   0.000 .. 0.066 mA      CALCULATION, RPU >= 50 kOhm SOURCE S-17
-  Electrode series R1..R12 3k0               0.000 .. 0.000 mA      CALCULATION: no DC path (MPR121 charge current only, inside IDD)
+  Electrode series R1..R12 3k3               0.000 .. 0.000 mA      CALCULATION: no DC path (MPR121 charge current only, inside IDD)
   External 3V3 load, 1 sensor                1.495 .. 6.085 mA  CALCULATION (sum)
   External 3V3 load, 2 sensors               2.715 .. 10.155 mA  CALCULATION (+ second module, breadboard)
 PASS  A1 3V3 external load <= 300 mA with >= 50 % margin :: worst 10.15 mA (2 sensors) vs 300 mA, margin 96.6 %
@@ -88,34 +88,36 @@ PASS  B7 I2C high seen by RP2040 (VIH 2.0 V) :: 3.30 V vs 2.0 V, margin 1.30 V
 PASS  B8 I2C high seen by MPR121 (VIH 0.7*VDD_max; module side pulled to its own VDD) :: module side high = VDD, margin 0.3*VDD >= 0.93 V (VIH up to 2.38 V)
 PASS  B9 data wire on a supply hole: pad fault current <= 50 mA IOVDD total (S-17 IIOVDD_MAX) :: 15.5 mA per line at 3.4 V (2 lines 30.9 mA)
   220 Ohm x 10 pF pad capacitance (ASSUMPTION) = 2.2 ns: negligible against 300 ns  CALCULATION
-  series 3k0 +5%: C   20 pF, tau 0.06 us vs CDT 1 us (ratio 0.06); IR at 63 uA = 0.198 V  CALCULATION
-  series 3k0 +5%: C  100 pF, tau 0.32 us vs CDT 4 us (ratio 0.08); IR at 63 uA = 0.198 V  CALCULATION
-  series 3k0 +5%: C  500 pF, tau 1.57 us vs CDT 32 us (ratio 0.05); IR at 63 uA = 0.198 V  CALCULATION
-  series 3k0 +5%: C 1000 pF, tau 3.15 us vs CDT 32 us (ratio 0.10); IR at 63 uA = 0.198 V  CALCULATION
+  series 3k3 +1%: C   20 pF, tau 0.07 us vs CDT 1 us (ratio 0.07); IR at 63 uA = 0.210 V  CALCULATION
+  series 3k3 +1%: C  100 pF, tau 0.33 us vs CDT 4 us (ratio 0.08); IR at 63 uA = 0.210 V  CALCULATION
+  series 3k3 +1%: C  500 pF, tau 1.67 us vs CDT 32 us (ratio 0.05); IR at 63 uA = 0.210 V  CALCULATION
+  series 3k3 +1%: C 1000 pF, tau 3.33 us vs CDT 32 us (ratio 0.10); IR at 63 uA = 0.210 V  CALCULATION
 
 ==========================================================================================
 (c) BOM COST (ADR-007 D-7 core definition)
 ==========================================================================================
-  A1 Raspberry Pi Pico SC0915 (no headers); Pico W/2/2 W also fit x1  4.07 .. 8.00 EUR   low SOURCE S-45 (DigiKey NL, qty 1, ex VAT); high ASSUMPTION (Pico W / 2 W variants, kept from revision 7)
-  A2 Adafruit MPR121 breakout 1982 (male headers supplied) x1  9.00 .. 12.00 EUR  ASSUMPTION; SOURCE S-05 USD 7.95 list (1-9 pcs) before EU shipping/VAT
-  SW1 Omron B3S-1000 SMD tactile switch                x1  0.74 .. 0.82 EUR   low SOURCE S-46 (DigiKey AT, qty 1, ex VAT); high RS (per unit in packs of 5, search extract S-46)
-  RV1 10k linear pot, insulated shaft, plastic knob (off-board) x1  1.00 .. 1.50 EUR   ASSUMPTION (unchanged from revision 7, no insulated-shaft part selected)
-  R1..R12 3k0 5 % TT HPWC2512-3K0JT18                  x12 4.26 .. 27.13 EUR  ASSUMPTION: 3k0 not listed by any distributor found (S-40); equal price to sibling values S-41/S-42, USD converted
-  C1 100 nF X7R 50 V 1206 KEMET C1206C104K5RACTU       x1  0.01 .. 0.40 EUR   SOURCE S-43, USD converted (ASSUMPTION rate); qty 1 tier not stated
-  R13/R14 4k7, R15/R16 220R, 1 % 1206 thick film (generic) x4  0.02 .. 0.70 EUR   SOURCE S-44 listings for one 1206 part, USD converted (ASSUMPTION rate); qty 1 tier not stated
-  Single-sided copper clad 100x70 mm                   x1  1.00 .. 3.00 EUR   ASSUMPTION (part of the assembled board)
-  Core BOM (ADR-007 definition)                            20.10 .. 53.55 EUR  CALCULATION
+  A1 Raspberry Pi Pico SC0915 (358-SC0915)                     x1  3.44 .. 3.44 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  A2 Adafruit MPR121 breakout 1982 (485-1982)                  x1  6.84 .. 6.84 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  R1..R12 YAGEO RC2512FK-073K3L 3k3 1 % (603-RC2512FK-073K3L)  x12 1.31 .. 1.31 EUR   SOURCE T96-S0b (10+ tier 0.109; 1 pc 0.189), ex VAT
+  R13/R14 RC1206FR-074K7L, R15/R16 RC1206FR-07220RL            x4  0.34 .. 0.34 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  C1 Samsung CL31B104KBCNNNC 100 nF 1206 (187-CL31B104KBCNNNC) x1  0.12 .. 0.12 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  SW1 Omron B3S-1000 (653-B3S-1000)                            x1  0.70 .. 0.70 EUR   SOURCE T96-S5 (Mouser PT, 2026-11-11, ex VAT)
+  RV1 Bourns PTV09A-4015F-B103 (652-PTV09A-4015FB103)          x1  0.77 .. 0.77 EUR   SOURCE T96-S2/T96-S5 (Mouser PT, ex VAT)
+  Knob Same Sky SPK-016A (179-SPK-016A)                        x1  0.33 .. 0.33 EUR   SOURCE T96-S5; bore fit on the flatted shaft NOT CONFIRMED
+  Single-sided copper clad 100x70 mm                           x1  1.00 .. 3.00 EUR   ASSUMPTION (part of the assembled board; no price opened)
+  Mouser lines only                                                13.84 .. 13.84 EUR  CALCULATION (T-096 quotes 13.84 EUR)
+  Core BOM (ADR-007 definition)                                    14.84 .. 16.84 EUR  CALCULATION (ex VAT, ex shipping)
+  INFO core with VAT 23 % (ASSUMPTION rate): 18.25 .. 20.71 EUR  CALCULATION; shipping NOT CONFIRMED (no Mouser checkout opened)
+  excluded: Shipping (Mouser PT, one order)                NOT CONFIRMED
+  excluded: VAT                                            NOT CONFIRMED
   excluded: Etchant/toner consumables                      0.50 .. 2.00 EUR  ASSUMPTION
   excluded: Micro-USB data cable                           3.00 .. 3.00 EUR  ASSUMPTION
   excluded: Electrode, pot and link wire, hot-melt, epoxy  1.00 .. 3.00 EUR  ASSUMPTION
   excluded: Crocodile leads x12 (optional)                 5.00 .. 10.00 EUR  ASSUMPTION
   excluded: M3 nylon hardware (optional)                   2.00 .. 2.00 EUR  ASSUMPTION
-FAIL  C1 core BOM upper bound <= 30 EUR :: core 20.10 .. 53.55 EUR
-  removed from the V1.2 BOM: Female headers 2x 1x20, 1x13, 1x7 (sockets) 1.90 .. 1.90 EUR  revision 7 figures
-  removed from the V1.2 BOM: J2 screw terminals 7 x 2-way               2.00 .. 3.00 EUR  revision 7 figures
-  removed from the V1.2 BOM: R1..R12 Vishay MBE04140C3301FC100 (12 x 0.30-0.66) 3.60 .. 7.92 EUR  revision 7 figures
-  SENSITIVITY: R1..R12 at listed TME sibling prices instead of the 1 pc figure: 3.63 .. 10.94 EUR -> core 19.47 .. 37.36 EUR  CALCULATION
-  AVAILABILITY: if HPWC2512 3k0 is sold only at the sibling MOQ of 150 pcs at USD 1.139, the buy-in is 145.22 .. 162.31 EUR for one board (not in the core range)  CALCULATION
+PASS  C1 core BOM upper bound <= 30 EUR (ex VAT, ex shipping) :: core 14.84 .. 16.84 EUR
+  INFO plan B (T-097, not adopted): +6.18 EUR -> core 21.02 .. 23.02 EUR  CALCULATION
+  INFO R1..R12 stock 13 at Mouser PT for 12 needed (SOURCE T96-S0b, 2026-11-11); next delivery 2027-05-18
 
-SUMMARY: 31 checks, 26 PASS, 5 FAIL
+SUMMARY: 31 checks, 27 PASS, 4 FAIL
 wrote reports/systems/budgets.md

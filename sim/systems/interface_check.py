@@ -8,6 +8,7 @@ Cross-checks, by parsing the files (read-only):
     requirements/SOURCES_SYSTEMS.md S-06/S-07) and the 180-degree footprint rotation in gen_pcb.py
   - README.md / hardware/README.md pin tables
 T-093 (CR-003, ADR-023): adapted to the v1.3 SMD board: footprints, MPNs, pad types, label, AGND without RV1 tabs, BOM file, manual.
+T-099 (ADR-024 BOM at Mouser, ADR-026 R1-R12 YAGEO RC2512FK-073K3L 3k3, T-098 footprint R_2512_HomeEtch_G5.0mm, RV1 Bourns PTV09A).
 Prints one line per check: PASS / FAIL, and a final summary line.
 Usage: python3 sim/systems/interface_check.py [board.kicad_pcb [hardware_README.md [MANUAL.md [bom.csv [README.md]]]]]   (scratch copies for mutation tests)
 """
@@ -298,36 +299,40 @@ fp_info = {}
 for blk in re.split(r"\n\t\(footprint ", pcb)[1:]:
     ref = re.search(r'\(property "Reference" "([^"]+)"', blk)
     mpn = re.search(r'\(property "MPN" "([^"]*)"', blk)
-    fp_info[ref.group(1) if ref else None] = (blk.split('"')[1], mpn.group(1) if mpn else None)
-R_EL_FP = "FrutaMIDI:R_2512_HPWC_G5.0mm"
-R_EL_MPN = "HPWC2512-3K0JT18"
+    mou = re.search(r'\(property "Mouser" "([^"]*)"', blk)
+    fp_info[ref.group(1) if ref else None] = (blk.split('"')[1], mpn.group(1) if mpn else None, mou.group(1) if mou else None)
+R_EL_FP = "FrutaMIDI:R_2512_HomeEtch_G5.0mm"       # T-098 rename, geometry unchanged
+R_EL_MPN = "RC2512FK-073K3L"                       # ADR-026
+R_EL_MOUSER = "603-RC2512FK-073K3L"
 r_el = ["R%d" % i for i in range(1, 13)]
 bad_fp = {r: fp_info.get(r, (None,))[0] for r in r_el if fp_info.get(r, (None,))[0] != R_EL_FP}
 check("pcb.R1_R12_footprint", not bad_fp, "R1..R12 footprint %s (mismatches: %s)" % (R_EL_FP, bad_fp))
 bad_mpn = {r: fp_info.get(r, (None, None))[1] for r in r_el if fp_info.get(r, (None, None))[1] != R_EL_MPN}
 check("pcb.R1_R12_MPN", R_EL_MPN in sch_py and not bad_mpn,
-      "R1..R12 MPN TT Electronics %s in gen_schematic.py and on the PCB (mismatches: %s)" % (R_EL_MPN, bad_mpn))
-bad_val = {r: VALUES.get(r) for r in r_el if VALUES.get(r) != "3k0"}
-check("pcb.R1_R12_value", not bad_val, "R1..R12 value 3k0 (ADR-023 D-1; mismatches: %s)" % bad_val)
-PARTS = {
-    "A1": ("FrutaMIDI:RaspberryPi_Pico_Castellated_HomeEtch", "SC0915"),
-    "A2": ("FrutaMIDI:Adafruit_MPR121_1982_SMD", "1982"),
-    "C1": ("FrutaMIDI:C_1206_HomeEtch", "C1206C104K5RACTU"),
-    "SW1": ("FrutaMIDI:SW_SPST_B3S-1000_HomeEtch", "B3S-1000"),
-    "R13": ("FrutaMIDI:R_1206_HomeEtch", "4k7 1 % thick film, 1206"),
-    "R14": ("FrutaMIDI:R_1206_HomeEtch", "4k7 1 % thick film, 1206"),
-    "R15": ("FrutaMIDI:R_1206_HomeEtch", "220R 1 % thick film, 1206"),
-    "R16": ("FrutaMIDI:R_1206_HomeEtch", "220R 1 % thick film, 1206"),
-    "RV1": ("FrutaMIDI:WirePads_1x03_P5.08mm", None),
-    "J1": ("FrutaMIDI:Config_2pads_SMD", None),
-    "J2": ("FrutaMIDI:WirePads_1x14_P5.08mm", None),
-    "J3": ("FrutaMIDI:WirePads_1x07_P2.54mm", None),
-    "JP1": ("FrutaMIDI:SolderJumper_3_SMD_P3.81mm", None),
+      "R1..R12 MPN YAGEO %s in gen_schematic.py and on the PCB (mismatches: %s)" % (R_EL_MPN, bad_mpn))
+bad_mou = {r: fp_info.get(r, (None, None, None))[2] for r in r_el if fp_info.get(r, (None, None, None))[2] != R_EL_MOUSER}
+check("pcb.R1_R12_Mouser", not bad_mou, "R1..R12 Mouser number %s (mismatches: %s)" % (R_EL_MOUSER, bad_mou))
+bad_val = {r: VALUES.get(r) for r in r_el if VALUES.get(r) != "3k3"}
+check("pcb.R1_R12_value", not bad_val, "R1..R12 value 3k3 (ADR-026; mismatches: %s)" % bad_val)
+PARTS = {   # ref: (footprint, MPN, Mouser number); None = no part number on this footprint (copper only)
+    "A1": ("FrutaMIDI:RaspberryPi_Pico_Castellated_HomeEtch", "SC0915", "358-SC0915"),
+    "A2": ("FrutaMIDI:Adafruit_MPR121_1982_SMD", "1982", "485-1982"),
+    "C1": ("FrutaMIDI:C_1206_HomeEtch", "CL31B104KBCNNNC", "187-CL31B104KBCNNNC"),
+    "SW1": ("FrutaMIDI:SW_SPST_B3S-1000_HomeEtch", "B3S-1000", "653-B3S-1000"),
+    "R13": ("FrutaMIDI:R_1206_HomeEtch", "RC1206FR-074K7L", "603-RC1206FR-074K7L"),
+    "R14": ("FrutaMIDI:R_1206_HomeEtch", "RC1206FR-074K7L", "603-RC1206FR-074K7L"),
+    "R15": ("FrutaMIDI:R_1206_HomeEtch", "RC1206FR-07220RL", "603-RC1206FR-07220RL"),
+    "R16": ("FrutaMIDI:R_1206_HomeEtch", "RC1206FR-07220RL", "603-RC1206FR-07220RL"),
+    "RV1": ("FrutaMIDI:WirePads_1x03_P5.08mm", "PTV09A-4015F-B103", "652-PTV09A-4015FB103"),
+    "J1": ("FrutaMIDI:Config_2pads_SMD", None, None),
+    "J2": ("FrutaMIDI:WirePads_1x14_P5.08mm", None, None),
+    "J3": ("FrutaMIDI:WirePads_1x07_P2.54mm", None, None),
+    "JP1": ("FrutaMIDI:SolderJumper_3_SMD_P3.81mm", None, None),
 }
-for ref, (want_fp, want_mpn) in sorted(PARTS.items()):
-    got_fp, got_mpn = fp_info.get(ref, (None, None))
-    ok = got_fp == want_fp and (want_mpn is None or got_mpn == want_mpn)
-    check("pcb.part.%s" % ref, ok, "footprint %s, MPN %r (expected %s, %r)" % (got_fp, got_mpn, want_fp, want_mpn))
+for ref, (want_fp, want_mpn, want_mou) in sorted(PARTS.items()):
+    got_fp, got_mpn, got_mou = fp_info.get(ref, (None, None, None))
+    ok = got_fp == want_fp and got_mpn == want_mpn and got_mou == want_mou
+    check("pcb.part.%s" % ref, ok, "footprint %s, MPN %r, Mouser %r (expected %s, %r, %r)" % (got_fp, got_mpn, got_mou, want_fp, want_mpn, want_mou))
 holes_fp = sorted(r for r in fps if re.fullmatch(r"H\d+", r))
 check("pcb.part.H1_H4", holes_fp == ["H1", "H2", "H3", "H4"] and all(fp_info[r][0] == "FrutaMIDI:MountingHole_3.2mm_M3" for r in holes_fp),
       "%s footprint %s" % (holes_fp, sorted({fp_info[r][0] for r in holes_fp})))
@@ -345,13 +350,14 @@ for row in csv.DictReader(open(bom_path, encoding="utf-8")):
         refs += ["%s%d" % (m.group(1), k) for k in range(int(m.group(2)), int(m.group(3)) + 1)] if m else [part.strip()]
     bom_refs |= set(refs)
     for r in refs:
-        got = fp_info.get(r, (None, None))
-        if got[0] != row["Footprint"] or (row["MPN"] and got[1] != row["MPN"]):
-            bom_bad.append((r, row["Footprint"], row["MPN"], got))
+        got = fp_info.get(r, (None, None, None))
+        if got[0] != row["Footprint"] or got[1] != (row["MPN"] or None) or got[2] != (row.get("Mouser") or None):
+            bom_bad.append((r, row["Footprint"], row["MPN"], row.get("Mouser"), got))
 want_bom = set(PARTS) | set(r_el)
 want_bom -= {"J2", "J3", "JP1"}                  # copper-only items, excluded from the BOM by the generator (T-091)
-check("fab.bom_matches_board", not bom_bad and bom_refs == want_bom, "BOM refs %d; mismatches %s; missing %s; extra %s"
-      % (len(bom_refs), bom_bad, sorted(want_bom - bom_refs), sorted(bom_refs - want_bom)))
+bom_cols = open(bom_path, encoding="utf-8").readline()
+check("fab.bom_matches_board", not bom_bad and bom_refs == want_bom and '"Mouser"' in bom_cols, "BOM refs %d, Mouser column %s; mismatches %s; missing %s; extra %s"
+      % (len(bom_refs), '"Mouser"' in bom_cols, bom_bad, sorted(want_bom - bom_refs), sorted(bom_refs - want_bom)))
 
 # Documentation vs the current PCB topology (T-010)
 if "JP1" in fps:
@@ -360,13 +366,16 @@ if "JP1" in fps:
           "hardware/README.md must not instruct a J1 3V3 wire / J1 3V3 hole")
 series = [r for r in fps if r.startswith("R") and r != "RV1" and set().union(*fps[r].values()) & {"E0"}]
 m_cont = re.search(r"Resistance between each electrode pad of J2[^\n]*", hw_readme)
-check("doc.hw_readme.continuity_through_series_R", bool(series) and bool(m_cont) and "3.0 k" in m_cont.group(0) and "not beep" in m_cont.group(0),
+check("doc.hw_readme.continuity_through_series_R", bool(series) and bool(m_cont) and "3.3 k" in m_cont.group(0) and "not beep" in m_cont.group(0),
       "electrode pad to module pin passes through %s; README line: %s" % (series, m_cont.group(0)[:140] if m_cont else None))
 # v1.3 assembly guide content (ADR-023)
 check("doc.hw_readme.version", "(version 1.3)" in hw_readme.split("\n")[0] and "v1.2" not in hw_readme,
       "title line %r; 'v1.2' present: %s" % (hw_readme.split("\n")[0], "v1.2" in hw_readme))
-check("doc.hw_readme.R1_R12_part", "HPWC2512-3K0JT18" in hw_readme and "3.0 kΩ" in hw_readme and "MBE0414" not in hw_readme,
-      "HPWC2512-3K0JT18 and 3.0 kOhm stated, no MBE0414")
+stale_r = sorted({w for w in ("HPWC", "MBE0414", "3.0 kΩ", "3k0", "CMB0207") if w in hw_readme})
+check("doc.hw_readme.R1_R12_part", "RC2512FK-073K3L" in hw_readme and "603-RC2512FK-073K3L" in hw_readme and "3.3 kΩ" in hw_readme and not stale_r,
+      "RC2512FK-073K3L, its Mouser number and 3.3 kOhm stated; stale R1-R12 terms: %s" % stale_r)
+miss_mou = sorted({m for v in PARTS.values() for m in [v[2]] if m and m not in hw_readme})
+check("doc.hw_readme.mouser_numbers", not miss_mou, "Mouser numbers of the parts table missing from hardware/README.md: %s" % miss_mou)
 check("doc.hw_readme.only_4_holes", "Only the 4 M3 mounting holes" in hw_readme and "**3.2 mm**" in hw_readme and not re.search(r"\b(0\.8|0\.9|1\.0|1\.1|1\.4) ?mm (bit|drill)", hw_readme),
       "rule table says only the 4 M3 holes; bit 3.2 mm; no other drill size named")
 sock = [m.start() for m in re.finditer(r"socket", hw_readme, re.I)]
@@ -374,14 +383,15 @@ sock_bad = [hw_readme[max(0, i - 25):i + 8].replace("\n", " ") for i in sock if 
 check("doc.hw_readme.no_sockets", not sock_bad and "female" not in hw_readme.lower() and "screw terminal" not in hw_readme.lower(),
       "%d mentions of sockets, not 'no sockets': %s; female headers or screw terminals mentioned: %s"
       % (len(sock), sock_bad, "female" in hw_readme.lower() or "screw terminal" in hw_readme.lower()))
-check("doc.hw_readme.RV1_insulated", "insulated (plastic) shaft" in hw_readme and "metal shaft is not protected" in hw_readme,
-      "RV1: insulated shaft required, metal shaft warning present (R-011)")
+check("doc.hw_readme.RV1_insulated", "PTV09A-4015F-B103" in hw_readme and "insulated flatted shaft" in hw_readme
+      and "insulated shaft and an insulating knob" in hw_readme and "metal shaft is not protected" in hw_readme,
+      "RV1: PTV09A with insulated shaft, insulating knob required, metal-shaft warning present (R-011)")
 check("doc.hw_readme.JP1_smd", "3-pad solder bridge" in hw_readme and "1.87 mm" in hw_readme, "JP1 described as surface bridge with the 1.87 mm gap")
 # The user manual and the root README must describe the same board (REQ-036). They are not owned by the systems engineer.
-stale = lambda txt: sorted({w for w in ("PCB v1.2", "MBE0414", "DIN0414", "screw-terminal pads", "screw terminals", "Drill R1", "S holes") if w in txt})
+stale = lambda txt: sorted({w for w in ("PCB v1.2", "MBE0414", "DIN0414", "HPWC", "screw-terminal pads", "screw terminals", "Drill R1", "S holes") if w in txt})
 check("doc.manual.matches_v1.3", "1.3" in manual and "version 1.2" not in manual and not stale(manual),
       "docs/manual/MANUAL.md: 'version 1.2' present: %s; stale v1.2 terms: %s" % ("version 1.2" in manual, stale(manual)))
-root_stale = sorted({w for w in ("PCB v1.2", "MBE0414", "DIN0414") if w in readme})
+root_stale = sorted({w for w in ("PCB v1.2", "MBE0414", "DIN0414", "HPWC") if w in readme})
 check("doc.root_readme.matches_v1.3", not root_stale, "README.md stale PCB terms: %s" % root_stale)
 for name, txt in (("README.md", readme), ("hardware/README.md", hw_readme)):
     base = ROOT if name == "README.md" else P("hardware")
