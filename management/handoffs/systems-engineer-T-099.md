@@ -74,3 +74,34 @@ Open decisions for the manager:
 5. Still open from T-093: the PD amendment; REQ-036 (the manual and root README are a documentation task); REQ-040 JP1 legend; R-010 GP26/GP27 rating; the REQ-038 3-count criterion. Knob bore fit NOT CONFIRMED.
 
 Next actions: documentation updates docs/manual/MANUAL.md and README.md to v1.3 (this clears the two doc FAILs and REQ-036). After the manager rules on items 1–4, systems updates the REQ-032 status and freezes the INTERFACES text as directed.
+
+# T-100 — systems-engineer (ADR-027 applied)
+
+Status: PARTIAL. All five ADR-027 rulings are recorded: D-1 to D-3 and D-5 in the requirements and risks, and D-4 in INTERFACES.json, which the manager froze. The two documentation FAILs remain because docs/manual/MANUAL.md and README.md are still being edited by documentation in parallel. Nothing was raised to PASS on hardware grounds. Nothing is committed.
+
+Requirements addressed: REQ-032 (PARTIAL → PASS, ADR-027 D-1), REQ-023 (plan-B trigger accepted, D-2; status PARTIAL unchanged), REQ-040 (FAIL kept as an accepted risk, D-5). Risks: R-007 (legend text, D-5), R-016 (OPEN → ACCEPTED, D-3), R-018 (trigger accepted, D-2; stays OPEN until the physical test).
+
+Inputs: branch change/CR-003 at 9505245 (clean apart from .claude/ and CLAUDE.md); management/DECISIONS.md ADR-027.
+
+Outputs (uncommitted): management/REQUIREMENTS.md draft-12, requirements/requirements.csv, management/RISKS.md. management/INTERFACES.json was NOT edited, because it is frozen by the manager (`frozen` true, `frozen_on` "2026-11-11 (frozen-8, manager freeze, ADR-027 D-4)").
+
+Checks performed (Python 3.9.6):
+- `python3 sim/systems/budgets.py`: `SUMMARY: 31 checks, 27 PASS, 4 FAIL` (A3b and three 100 kHz latency rows; C1 cost PASS)
+- `python3 sim/systems/interface_check.py`: `SUMMARY hardware/firmware: 89 checks, 89 PASS, 0 FAIL`, `SUMMARY documentation: 26 checks, 24 PASS, 2 FAIL`, `SUMMARY: 115 checks, 113 PASS, 2 FAIL` (doc.manual.matches_v1.3, doc.root_readme.matches_v1.3; exit 1)
+- `python3 sim/systems/pcb_rules_check.py`: `SUMMARY: 25 checks, 25 PASS, 0 FAIL`
+- The three .out files are byte-identical to the T-099 versions committed in 9505245 (git shows no change).
+- The patch script asserts that MD and CSV status counts are equal and that the evidence text of the patched rows is equal in both files. No non-ASCII characters outside the allowed set.
+- Mutation harness: not re-run, because no check code changed (T-099: `MUTATION SUMMARY: 61 proved, 0 not proved`).
+
+Requirement counts (draft-12): PASS 17, PARTIAL 18, FAIL 3 (REQ-018, REQ-036, REQ-040), NOT RUN 4, BLOCKED 0; total 42.
+
+Numerical findings (unchanged from T-099): core 14.84–16.84 EUR ex VAT (CALCULATION), 18.25–20.71 EUR with 23 % VAT (ASSUMPTION rate), shipping NOT CONFIRMED; plan B 21.02–23.02 EUR (CALCULATION).
+
+Errors: none.
+
+Open items for the manager:
+1. INTERFACES.json is frozen, but two of its text fields still read as a proposal: `revision` says "frozen-8 proposal ... freeze by the manager" and `frozen_by` says "manager (pending)". These are the manager's fields, so I did not edit them.
+2. ADR-027 D-3 says the purchase list names a standard 3k3 ±1 % 2512 alternative. I did not find one in hardware/README.md on 2026-11-11. R-016 records this.
+3. Still open: REQ-036 (documentation in progress); after it lands, interface_check must be re-run to clear the two doc FAILs. Also R-010, the REQ-038 3-count criterion, the knob bore fit, and the shipping cost.
+
+Next actions: re-run interface_check when documentation finishes MANUAL.md and README.md, and then update REQ-036.
