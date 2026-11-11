@@ -258,9 +258,9 @@ def build_footprints():
             item.SetPosition(V(7.0, 0.0))
     out[name] = fp
 
-    # --- R1-R12: 2512 chip (T-096 / ADR-026: YAGEO RC2512FK-073K3L; footprint name kept, it is in INTERFACES.json), hand-solder land: pad 1.9 x 3.35 mm, copper gap G = 5.0 mm (T-090, ADR-023 D-1).
+    # --- R1-R12: 2512 chip (T-096 / ADR-026: YAGEO RC2512FK-073K3L; T-098: part-neutral footprint name), hand-solder land: pad 1.9 x 3.35 mm, copper gap G = 5.0 mm (T-090, ADR-023 D-1).
     # Origin at pad 1 (ELE side); pad 2 at +6.9 mm along x (CALCULATION: 5.0 + 1.9).
-    name = "R_2512_HPWC_G5.0mm"
+    name = "R_2512_HomeEtch_G5.0mm"
     fp = new_fp(name, "2512 chip resistor (YAGEO RC2512FK-073K3L), land 1.9 x 3.35 mm, copper gap 5.0 mm (flashover rule)")
     add_pad(fp, "1", 0, 0, RECT, 1.9, 3.35)
     add_pad(fp, "2", 6.9, 0, RECT, 1.9, 3.35)

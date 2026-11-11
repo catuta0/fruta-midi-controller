@@ -305,7 +305,7 @@ def build():
         mx, my, _ = s.pin_end(mod, MX, MY, str(2 + i))
         rx = 297.18
         r = s.symbol("Device", "R", "R%d" % (i + 1), "3k3", rx, my,
-                     "FrutaMIDI:R_2512_HPWC_G5.0mm", fields=R_FIELDS, hide_ref=True,
+                     "FrutaMIDI:R_2512_HomeEtch_G5.0mm", fields=R_FIELDS, hide_ref=True,
                      rot=90)              # rows are 2.54 mm apart: designators are given by the column title
         r1x, r1y, _ = s.pin_end(r, rx, my, "1")
         r2x, r2y, _ = s.pin_end(r, rx, my, "2")
