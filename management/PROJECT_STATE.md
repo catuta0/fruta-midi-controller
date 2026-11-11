@@ -2,7 +2,7 @@
 
 | Field | Value |
 | --- | --- |
-| Current gate | G5 (v1.3) waiting for the user — releases/V1.3, tag v1.3.0; GitHub release v1.3.0 not published |
+| Current gate | G5 (v1.3) closed — releases/V1.3, tag v1.3.0, GitHub release v1.3.0 published |
 | Baseline under work | `main` (CR-003 merged); releases V1_BASELINE (v1.1.0-baseline), V1.2 (v1.2.0), V1.3 (v1.3.0) |
 | Phase | CR-003 complete (SMD board for home etching); only the physical first build remains (out of scope) |
 | Last update | 2026-11-11 |

@@ -29,4 +29,4 @@
 | T-108 | CR-003 independent re-review | independent-reviewer | DONE (ready after fixes) | reports/review/CR-003/findings-T-108.md |
 | T-109…T-113 | F4 fixes, rules, REQ-036 PASS, frozen-9, report | electronics/systems/documentation | PASS | handoffs/*-T-109..T-113 |
 | T-114 | releases/V1.3, merge, tag v1.3.0 | manager | DONE | releases/V1.3/ |
-| T-115 | GitHub release v1.3.0 | manager | WAITING (user approval) | — |
+| T-115 | GitHub release v1.3.0 | manager | DONE (user approved 2026-11-11) | https://github.com/catuta0/fruta-midi-controller/releases/tag/v1.3.0 |
